@@ -1,6 +1,7 @@
 pragma solidity ^0.4.22;
 
 import "./Utils/Ownable.sol";
+import "./Image/DigitalPrintImage.sol";
 
 contract Marketplace is Ownable {
 
@@ -12,6 +13,8 @@ contract Marketplace is Ownable {
         uint timestamp;
     }
 
+
+    DigitalPrintImage digitalPrintImageContract;
 
     uint public numberOfAds;
     uint [] public imagesOnSale;
@@ -26,6 +29,7 @@ contract Marketplace is Ownable {
     function sell(uint _imageId, uint _price) public {
 
     }
+
     /// @notice Function to edit your Ad which is already on Marketplace
     /// @dev only image owner can edit Ad
     /// @param _imageId is id of image you've put on Marketplace
@@ -33,11 +37,13 @@ contract Marketplace is Ownable {
     function edit(uint _imageId, uint _price) public {
 
     }
+
     /// @notice Function to buy image from Marketplace
     /// param _imageId is Id of image we are going to buy
     function buy(uint _imageId) public payable {
 
     }
+
     /// @notice Function to remove image from Marketplace
     /// @dev image can be withdrawed only by its owner
     /// param _imageId is id of image we would like to get back
@@ -45,5 +51,10 @@ contract Marketplace is Ownable {
 
     }
 
+    /// @notice Function to assign digitalPrintImage contract
+    /// @param _digitalPrintImageContract is address of that contract
+    function addDigitalPrintImageContract(address _digitalPrintImageContract) {
+
+    }
 
 }

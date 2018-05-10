@@ -10,6 +10,7 @@ contract ImageToken is Ownable,ERC721 {
     mapping (address => uint[]) public tokensOwned;
     mapping (uint => uint) public tokenPosInArr;
 
+
     string public name;
     string public symbol;
     uint public numOfImages;
@@ -18,9 +19,13 @@ contract ImageToken is Ownable,ERC721 {
     event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
     event Mint(address indexed _to, uint256 indexed _tokenId);
 
+
+    /// @notice Function constructor
+    /// @dev will set name, symbol, and initial number of existing images to zero.
     constructor () public {
         name = "ImageToken";
         symbol = "IMT";
+        numOfImages = 0;
     }
 
     /// @notice create image for specific owner
@@ -36,6 +41,7 @@ contract ImageToken is Ownable,ERC721 {
     function transfer(address _to, uint256 _imageId) public {
 
     }
+
     /// @notice approving image to be taken from specific address
     /// @param _to address that we give permission to take image
     /// @param _imageId is id of image we are going to give
@@ -77,7 +83,7 @@ contract ImageToken is Ownable,ERC721 {
     }
 
     function ownerOf(uint256 _imageId) public view returns (address) {
-        return tokensForOwner[_cardId];
+        return tokensForOwner[_imageId];
     }
 
     function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256) {
@@ -88,10 +94,8 @@ contract ImageToken is Ownable,ERC721 {
         return tokensOwned[_owner];
     }
 
-    function _getApproved(uint _cardId) internal view returns (address) {
-        return tokensForApproved[_cardId];
+    function _getApproved(uint _imageId) internal view returns (address) {
+        return tokensForApproved[_imageId];
     }
-
-
 
 }

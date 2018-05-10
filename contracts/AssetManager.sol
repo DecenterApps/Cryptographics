@@ -30,6 +30,8 @@ contract AssetManager is Ownable {
     mapping (uint => address) assetIdToOwner;
     mapping (uint => address) assetPackIdToOwner;
     mapping (address => uint []) allAssetBought;
+    mapping (address => uint []) allAssetPackBought;
+
 
     /// Every assetPack can contain maximum 50 assets - can be changed
     uint ASSET_PACK_LENGTH = 50;
