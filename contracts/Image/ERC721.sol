@@ -1,4 +1,4 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.23;
 
 contract ERC721 {
     function implementsERC721() public pure returns (bool);

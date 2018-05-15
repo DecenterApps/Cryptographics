@@ -1,4 +1,4 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.23;
 
 import "./ImageToken.sol";
 import "../AssetManager.sol";
@@ -14,7 +14,7 @@ contract DigitalPrintImage is ImageToken {
         uint timestamp;
     }
 
-    mapping (uint => ImageMetadata) public imageInfo;
+    mapping (uint => ImageMetadata) public imageIdToInfo;
 
     AssetManager assetManager;
 
@@ -32,6 +32,12 @@ contract DigitalPrintImage is ImageToken {
     /// @dev during testing can be changed, after deployment to main network can be set only once
     /// @param _assetManager is address of assetManager contract
     function addAssetManager(address _assetManager) public onlyOwner {
+
+    }
+
+    /// @notice Function to validate is image unique
+    /// @dev still not defined exact way we're going to save this
+    function validateImage() {
 
     }
 

@@ -74,9 +74,11 @@ contract AssetManager is Ownable {
     /// @dev just compare mappings, but will be cleaner code
     /// @param _address is address for which we would like to check permision
     /// @param _assetId is id of asset we'd like to check
-    function checkPermision(address _address, uint _assetId) public view {
+    function checkPermission(address _address, uint _assetId) public view {
 
     }
+
+
 
 
 
