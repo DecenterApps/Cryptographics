@@ -1,4 +1,6 @@
 .env
+FE/.env
+FE/__pycache__
 node_modules
 build
 .DS_STORE
@@ -7,7 +9,6 @@ scripts/doxity/node_modules
 dev-scripts
 contracts/.env
 yarn.lock
-.doxityrc
 
 lib/core/metadata.js
 lib/core/MetadataBlog.js

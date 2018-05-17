@@ -1,0 +1,29 @@
+{
+  "name": "digitalprint",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "config": "^1.30.0",
+    "solc": "^0.4.23",
+    "truffle-hdwallet-provider-privkey": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DecenterApps/DigitalPrint.git"
+  },
+  "author": "Nikola Madjarevic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DecenterApps/DigitalPrint/issues"
+  },
+  "homepage": "https://github.com/DecenterApps/DigitalPrint#readme"
+}

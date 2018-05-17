@@ -1,0 +1,34 @@
+{
+  "docs": {
+    "Docusaurus": [
+      "doc1"
+    ],
+    "First Category": [
+      "doc2"
+    ],
+    "Second Category": [
+      "doc3"
+    ]
+  },
+  "docs-other": {
+    "First Category": [
+      "doc4",
+      "doc5"
+    ]
+  },
+  "docs-api": {
+    "IMAGE": [
+      "Image_DigitalPrintImage",
+      "Image_ERC721",
+      "Image_ImageToken"
+    ],
+    "UTILS": [
+      "Utils_Ownable"
+    ],
+    "UNCATEGORIZED": [
+      "AssetManager",
+      "Marketplace",
+      "Migrations"
+    ]
+  }
+}

@@ -53,7 +53,7 @@ def generateBytes(n):
     final_hex = hex(int(final_bit,2))[2:]
     arrayHex = split2len(hex(int(final_bit,2))[2:],62)
     for i in range(0,len(arrayHex)):
-        print '[HEX] : ' + arrayHex[i]
+        print ('[HEX] : ' + arrayHex[i])
     print ('[BIN] :  ----> ' + final_bit)
     # print('Array of bytes32' , arrayHex )
     return arrayHex
