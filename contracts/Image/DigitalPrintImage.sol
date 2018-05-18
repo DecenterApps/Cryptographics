@@ -7,11 +7,20 @@ import "../AssetManager.sol";
 contract DigitalPrintImage is ImageToken {
 
     struct ImageMetadata {
-        bytes32[] _assets;
+        uint random_seed;
+        uint timestamp;
         string author;
         address owner;
     }
 
+    bytes32[] randomHashes;
+
+    constructor() public {
+        for(uint i = block.number - 101; i < block.number; i++){
+            randomHashes.push(blockhash(i));
+        }
+    }
+    mapping (uint => bool) seedExists;
     mapping (uint => ImageMetadata) public imageIdToInfo;
 
     AssetManager assetManager;
@@ -19,14 +28,14 @@ contract DigitalPrintImage is ImageToken {
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated
     /// @dev _txHash and _timestamp together with keccak256 will give us randomSeed for user
-    /// @param _txHash is hash which is given to user equals to hash of last generated block at that moment
+    /// @param _random_seed is random seed
     /// @param _timestamp is time when user asked for random_seed
     /// @param _iterations is number of how many times he generated random asset positions until he liked what he got
-    /// @param _assets is bytes array of assets where info about every asset (id,x,y,zoom,rotation) will be encoded
+    /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
     /// @return returns id of created image
-    function createImage(bytes32 _txHash, uint _timestamp, uint _iterations,
-        bytes32 [] _assets, string _author) public returns (uint) {
+    function createImage(uint _random_seed, uint _timestamp, uint _iterations, bytes32 _potentialAssets, string _author) public returns (uint) {
+        require(seedExists[_random_seed] == false);
 
     }
 
@@ -38,34 +47,22 @@ contract DigitalPrintImage is ImageToken {
     }
 
 
-    /// @notice Function which is going to decode bytes32 and validate positions of assets, randomnes, and can user use all assets
-    /// @param _assets bytes array containing all informations about assets
-    /// @return if all requirements were satisfied
-    function decodeImageMetadata(bytes32[] _assets) returns (bool) {
+    /// @notice Function that generates random seed based on input of user and timestamp
+    /// @dev requiring that length of randomHashIds is 10
+    /// @param _randomHashIds is array of id's of random hashes generated during initialization of contract
+    /// @param _timestamp is time when user asked for seed
+    function calculateSeed(uint[] _randomHashIds, uint _timestamp) public returns (uint){
+        require(_randomHashIds.length == 10);
+        bytes32 randomSeed = keccak256(randomHashes[_randomHashIds[0]],
+            randomHashes[_randomHashIds[1]],randomHashes[_randomHashIds[2]],
+            randomHashes[_randomHashIds[3]], randomHashes[_randomHashIds[4]],
+            randomHashes[_randomHashIds[5]], randomHashes[_randomHashIds[6]],
+            randomHashes[_randomHashIds[7]], randomHashes[_randomHashIds[8]],
+            randomHashes[_randomHashIds[9]], _timestamp);
 
+        return uint(randomSeed);
     }
 
-    /// @notice Function to validate randomness of an image
-    /// @dev function to validate was user able to get assets and their positions
-    /// @dev random seed is generated keccak256(_tx_hash,_timestamp)
-    /// @dev every iteration does sha(last_random_seed)
-    /// @param _tx_hash is hash of last block generated when user asked for randomSeed
-    /// @param _timestamp is time when user asked for randomSeed
-    /// @param _iterations is number of times user asked for new image
-    /// @param _assets is data about assets (Image) user got
-    function validateImage(bytes32 _tx_hash, uint _timestamp, uint _iterations, bytes32[] _assets) private view {
-
-    }
-
-
-    /// @notice Function to generate first seed given to user
-    /// @dev
-    /// @param _tx_hash is hash of last block generated when user asked for randomSeed
-    /// @param _timestamp is time when user asked for randomSeed
-    /// @return randomSeed in format of bytes32
-    function generateFirstSeed(bytes32 _tx_hash, uint _timestamp) private returns (bytes32){
-
-    }
 
 
 
