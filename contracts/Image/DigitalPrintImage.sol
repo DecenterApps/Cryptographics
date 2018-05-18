@@ -43,7 +43,7 @@ contract DigitalPrintImage is ImageToken {
     /// @dev during testing can be changed, after deployment to main network can be set only once
     /// @param _assetManager is address of assetManager contract
     function addAssetManager(address _assetManager) public onlyOwner {
-
+        assetManager = AssetManager(_assetManager);
     }
 
 
