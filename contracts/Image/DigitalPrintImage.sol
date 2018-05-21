@@ -8,6 +8,8 @@ contract DigitalPrintImage is ImageToken {
 
     struct ImageMetadata {
         uint random_seed;
+        uint interations;
+        bytes32 potentialAssets;
         uint timestamp;
         string author;
         address owner;
@@ -26,15 +28,14 @@ contract DigitalPrintImage is ImageToken {
     AssetManager assetManager;
 
     /// @notice Function will create new image
-    /// @dev owner of image will be msg.sender, and timestamp will be automatically generated
+    /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
     /// @dev _txHash and _timestamp together with keccak256 will give us randomSeed for user
     /// @param _random_seed is random seed
-    /// @param _timestamp is time when user asked for random_seed
     /// @param _iterations is number of how many times he generated random asset positions until he liked what he got
     /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
     /// @return returns id of created image
-    function createImage(uint _random_seed, uint _timestamp, uint _iterations, bytes32 _potentialAssets, string _author) public returns (uint) {
+    function createImage(uint _random_seed, uint _iterations, bytes32 _potentialAssets, string _author) public returns (uint) {
         require(seedExists[_random_seed] == false);
 
     }
@@ -59,7 +60,6 @@ contract DigitalPrintImage is ImageToken {
             randomHashes[_randomHashIds[5]], randomHashes[_randomHashIds[6]],
             randomHashes[_randomHashIds[7]], randomHashes[_randomHashIds[8]],
             randomHashes[_randomHashIds[9]], _timestamp);
-
         return uint(randomSeed);
     }
 
