@@ -21,7 +21,6 @@ contract AssetManager is Ownable {
         numberOfAssets = 0;
     }
 
-    /// Array of bought assets for every user will be sorted, so we will always add new asset using binary search
     mapping (address => mapping(uint => bool)) hasPermission;
 
     /// @notice Function which creates an asset
