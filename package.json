@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "config": "^1.30.0",
+    "hex-string": "^1.0.1",
+    "big-integer": "^1.6.27",
     "solc": "^0.4.23",
     "truffle-hdwallet-provider-privkey": "^0.2.0"
   },

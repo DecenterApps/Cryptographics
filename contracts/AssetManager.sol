@@ -21,7 +21,7 @@ contract AssetManager is Ownable {
         numberOfAssets = 0;
     }
 
-    mapping (address => mapping(uint => bool)) hasPermission;
+    mapping(address => mapping(uint => bool)) hasPermission;
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
@@ -50,4 +50,12 @@ contract AssetManager is Ownable {
         assets[_assetId].creator.transfer(msg.value);
     }
 
+
+    function getNumberOfAssets() public view returns (uint) {
+        return numberOfAssets;
+    }
+
+    function checkHasPermission(address _address, uint _assetId) public view returns (bool){
+        return hasPermission[_address][_assetId];
+    }
 }
