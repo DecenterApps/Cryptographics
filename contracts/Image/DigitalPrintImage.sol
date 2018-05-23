@@ -33,7 +33,7 @@ contract DigitalPrintImage is ImageToken {
     /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
     /// @return returns id of created image
-    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public returns (uint) {
+    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public payable returns (uint) {
 
     }
 

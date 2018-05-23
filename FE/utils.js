@@ -41,12 +41,10 @@ function encode(arr) {
             strings[i] = "0" + strings[i];
         }
         strings[i] = "0x" + strings[i];
-        console.log(strings[i]);
     }
     return strings;
 }
 
-encode(arr);
 
 module.exports = {
     encode

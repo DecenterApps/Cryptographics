@@ -37,9 +37,11 @@ contract TestFunctions {
 
     function testLen() public {
         Functions f = Functions(DeployedAddresses.Functions());
-        f.fillRadnomHashes();
-
+        if (f.getLen() == 0){
+            f.fillRadnomHashes();
+        }
         uint len = f.getLen();
+
         Assert.equal(100, len, "not good");
     }
 }
