@@ -34,4 +34,12 @@ contract TestFunctions {
         uint lastSeed = 108448719569378403714201222217635585640535878825922941969469411530245378238908;
         Assert.equal(p,lastSeed,"Good calculation of final seed");
     }
+
+    function testLen() public {
+        Functions f = Functions(DeployedAddresses.Functions());
+        f.fillRadnomHashes();
+
+        uint len = f.getLen();
+        Assert.equal(100, len, "not good");
+    }
 }

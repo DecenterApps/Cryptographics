@@ -8,6 +8,13 @@ contract Functions {
             randomHashes.push(blockhash(i));
         }
     }
+    /// @notice Function for test purposes because in local rpc can't get last 100 blocks
+    function fillRadnomHashes() public {
+        bytes32 initialHash = "0x1234567891011111112131311";
+        for(uint i=0; i<100; i++){
+            randomHashes.push(keccak256(initialHash,i));
+        }
+    }
 
     /// @notice Function which decodes bytes32 to array of integers
     /// @param _potentialAssets are potential assets user would like to have
@@ -30,7 +37,7 @@ contract Functions {
                 }
             }
         }
-        uint [] memory ass = new uint[](numberOfAssets);
+        uint[] memory ass = new uint[](numberOfAssets);
         for(uint z=0; z< numberOfAssets; z++){
             ass[z] = assets[z];
         }
@@ -71,5 +78,9 @@ contract Functions {
 
     function getRandomHash(uint _index) public view returns(bytes32){
         return randomHashes[_index];
+    }
+
+    function getLen() public view returns(uint) {
+        return randomHashes.length;
     }
 }

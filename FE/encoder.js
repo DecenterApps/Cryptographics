@@ -23,8 +23,9 @@ const transactionObject = {
 };
 
 
-const testContractAddress = conf.testcontract.networks["42"].address;
-const testContract = web3.eth.contract(conf.testcontract.abi).at(testContractAddress);
+const functionsContractAddress = conf.functions.networks["42"].address;
+const functionsContract = web3.eth.contract(conf.functions.abi).at(functionsContractAddress);
 
-// testContract.parseBytes([1,2,3,4,5]);
-console.log(testContract.procitaj(0));
+var randomSeed = functionsContract.calculateSeed([1,2,3,4,5,6,7,8,9,10],5);
+console.log(randomSeed);
+console.log(functionsContract.decodeAssets(["0x0000000000000000000001000002000003000004000005000006000007000008"]));
