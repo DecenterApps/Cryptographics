@@ -4,7 +4,7 @@ contract Functions {
     bytes32[] randomHashes;
 
     constructor() public {
-        for(uint i = block.number - 101; i < block.number; i++){
+        for(uint i = block.number - 100; i < block.number; i++){
             randomHashes.push(blockhash(i));
         }
     }
@@ -42,7 +42,7 @@ contract Functions {
     /// @return uint[] array of randomly picked assets
     function pickRandomAssets(uint _random_seed, bytes32[] _potentialAssets) public view returns(uint[]) {
         uint[] memory assetIds = decodeAssets(_potentialAssets);
-        uint[] pickedIds;
+        uint[] memory pickedIds;
     }
 
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
