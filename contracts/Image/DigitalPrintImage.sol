@@ -47,12 +47,4 @@ contract DigitalPrintImage is ImageToken {
     function addFunctionsContract(address _functionsContract) public onlyOwner {
         functionsContract = Functions(_functionsContract);
     }
-
-
-
-
-
-
-
-
 }

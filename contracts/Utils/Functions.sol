@@ -50,7 +50,36 @@ contract Functions {
     /// @return uint[] array of randomly picked assets
     function pickRandomAssets(uint _random_seed, bytes32[] _potentialAssets) public view returns(uint[]) {
         uint[] memory assetIds = decodeAssets(_potentialAssets);
-        uint[] memory pickedIds;
+        uint[] memory pickedIds = new uint[](assetIds.length);
+        uint index = 0;
+        for(uint i=0; i<assetIds.length; i++){
+            if(_random_seed % 2 == 0){
+                pickedIds[index] = assetIds[i];
+                index++;
+            }
+            _random_seed = uint(keccak256(_random_seed, i));
+        }
+        uint[] memory finalPicked = new uint[](index);
+        for(uint z=0; z<index; z++){
+            finalPicked[z] = pickedIds[z];
+        }
+        return finalPicked;
+    }
+    function pickRandomAssetPosition(uint assetId, uint random_seed) returns (uint,uint,uint,uint){
+        uint x;
+        uint y;
+        uint zoom;
+        uint rotation;
+
+        x = random_seed%2500;
+        random_seed = uint(keccak256(random_seed, x));
+        y = random_seed%3500;
+        random_seed = uint(keccak256(random_seed, y));
+        zoom = random_seed%200 + 800;
+        random_seed = uint(keccak256(random_seed, zoom));
+        rotation = random_seed%360;
+
+        return (x,y,zoom,rotation);
     }
 
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
@@ -69,43 +98,13 @@ contract Functions {
     /// @param _random_seed is initially given random seed
     /// @param _iterations is number of iterations
     /// @return final seed for user as uint
-    function getFinalSeed(uint _random_seed, uint _iterations) public view returns (uint){
+    function getFinalSeed(uint _random_seed, uint _iterations) public view returns (bytes32){
         bytes32 finalSeed = bytes32(_random_seed);
         for(uint i=0; i<_iterations; i++){
             finalSeed = keccak256(finalSeed,_iterations);
         }
-        return uint(finalSeed);
+        return finalSeed;
     }
-
-    /// @notice Function to return image metainfo
-    /// @dev we assume random seed is here already generated
-//    function getImage(bytes32[] _potentialAssets, uint _randomSeed, uint _iteration) public {
-//        uint[] memory assetIds = decodeAssets(_potentialAssets);
-//        for(uint i=0; i<_iteration;i++){
-//            _randomSeed = uint(keccak256(_randomSeed, _iteration));
-//        }
-//
-//        for(uint j=0; j<assetIds.length; j++){
-//            if(_randomSeed%2==0){
-//                uint _id = assetIds[j];
-//                uint _x = _randomSeed%2450;
-//                uint _y = _randomSeed%3250;
-//                uint _zoom = _randomSeed%200 + 800;
-//                uint _rotation = _randomSeed%360;
-//                pickedImages.push(ImageMeta({
-//                    id : _id,
-//                    x : _x,
-//                    y : _y,
-//                    zoom : _zoom,
-//                    rotation: _rotation
-//                    }));
-//                idToInfo[images] = pickedImages[images];
-//                images++;
-//            }
-//            _randomSeed = uint(keccak256(_randomSeed,5));
-//        }
-//
-//    }
 
     function getRandomHash(uint _index) public view returns(bytes32){
         return randomHashes[_index];

@@ -57,11 +57,12 @@ function decode(arr) {
         }
         var numbers = chunkString(x, 24);
         for (let i = 0; i < numbers.length; i++) {
-            console.log(numbers[i] + "   " + bin2dec(numbers[i]));
+            // console.log(numbers[i] + "   " + bin2dec(numbers[i]));
             decoded.push(bin2dec(numbers[i]));
         }
     }
     console.log(decoded);
+    return decoded;
 }
 //
 // decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
