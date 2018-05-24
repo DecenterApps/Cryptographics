@@ -28,4 +28,5 @@ const functionsContract = web3.eth.contract(conf.functions.abi).at(functionsCont
 
 var randomSeed = functionsContract.calculateSeed([1,2,3,4,5,6,7,8,9,10],5);
 console.log(randomSeed);
-console.log(functionsContract.decodeAssets(["0x0000000000000000000001000002000003000004000005000006000007000008"]));
+// console.log(functionsContract.decodeAssets(["0x0000000000000000000001000002000003000004000005000006000007000008"]));
+

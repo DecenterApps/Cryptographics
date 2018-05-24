@@ -16,8 +16,6 @@ contract DigitalPrintImage is ImageToken {
         address owner;
     }
 
-
-
     mapping(uint => bool) seedExists;
     mapping(uint => ImageMetadata) public imageIdToInfo;
 
@@ -49,9 +47,6 @@ contract DigitalPrintImage is ImageToken {
     function addFunctionsContract(address _functionsContract) public onlyOwner {
         functionsContract = Functions(_functionsContract);
     }
-
-
-
 
 
 

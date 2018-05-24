@@ -1,6 +1,7 @@
 pragma solidity ^0.4.23;
 
 contract Functions {
+
     bytes32[] randomHashes;
 
     constructor() public {
@@ -76,6 +77,36 @@ contract Functions {
         return uint(finalSeed);
     }
 
+    /// @notice Function to return image metainfo
+    /// @dev we assume random seed is here already generated
+//    function getImage(bytes32[] _potentialAssets, uint _randomSeed, uint _iteration) public {
+//        uint[] memory assetIds = decodeAssets(_potentialAssets);
+//        for(uint i=0; i<_iteration;i++){
+//            _randomSeed = uint(keccak256(_randomSeed, _iteration));
+//        }
+//
+//        for(uint j=0; j<assetIds.length; j++){
+//            if(_randomSeed%2==0){
+//                uint _id = assetIds[j];
+//                uint _x = _randomSeed%2450;
+//                uint _y = _randomSeed%3250;
+//                uint _zoom = _randomSeed%200 + 800;
+//                uint _rotation = _randomSeed%360;
+//                pickedImages.push(ImageMeta({
+//                    id : _id,
+//                    x : _x,
+//                    y : _y,
+//                    zoom : _zoom,
+//                    rotation: _rotation
+//                    }));
+//                idToInfo[images] = pickedImages[images];
+//                images++;
+//            }
+//            _randomSeed = uint(keccak256(_randomSeed,5));
+//        }
+//
+//    }
+
     function getRandomHash(uint _index) public view returns(bytes32){
         return randomHashes[_index];
     }
@@ -83,4 +114,6 @@ contract Functions {
     function getLen() public view returns(uint) {
         return randomHashes.length;
     }
+
+
 }

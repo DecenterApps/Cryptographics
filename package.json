@@ -8,9 +8,10 @@
     "test": "test"
   },
   "dependencies": {
+    "big-integer": "^1.6.27",
     "config": "^1.30.0",
     "hex-string": "^1.0.1",
-    "big-integer": "^1.6.27",
+    "js-sha3": "^0.7.0",
     "solc": "^0.4.23",
     "truffle-hdwallet-provider-privkey": "^0.2.0"
   },
