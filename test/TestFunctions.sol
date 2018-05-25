@@ -30,8 +30,8 @@ contract TestFunctions {
         Functions f = Functions(DeployedAddresses.Functions());
         uint seed = 12345678910;
         uint iterations = 5;
-        uint p = f.getFinalSeed(seed, iterations);
-        uint lastSeed = 108448719569378403714201222217635585640535878825922941969469411530245378238908;
+        uint p = uint(f.getFinalSeed(seed, iterations));
+        uint lastSeed = 4773053497971290520688832548689611456032191880236429716174794716194325807027;
         Assert.equal(p,lastSeed,"Good calculation of final seed");
     }
 

@@ -48,7 +48,8 @@ contract Functions {
     /// @param _random_seed is random seed at that moment
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @return uint[] array of randomly picked assets
-    function pickRandomAssets(uint _random_seed, bytes32[] _potentialAssets) public view returns(uint[]) {
+    function pickRandomAssets(uint _random_seed, uint _iterations, bytes32[] _potentialAssets) public view returns(uint[]) {
+        _random_seed = uint(getFinalSeed(_random_seed,_iterations));
         uint[] memory assetIds = decodeAssets(_potentialAssets);
         uint[] memory pickedIds = new uint[](assetIds.length);
         uint index = 0;
@@ -71,14 +72,11 @@ contract Functions {
         uint zoom;
         uint rotation;
 
-        x = random_seed%2500;
-        random_seed = uint(keccak256(random_seed, x));
+        random_seed = uint(keccak256(random_seed,assetId));
+        x = random_seed%2450;
         y = random_seed%3500;
-        random_seed = uint(keccak256(random_seed, y));
         zoom = random_seed%200 + 800;
-        random_seed = uint(keccak256(random_seed, zoom));
         rotation = random_seed%360;
-
         return (x,y,zoom,rotation);
     }
 
@@ -100,8 +98,9 @@ contract Functions {
     /// @return final seed for user as uint
     function getFinalSeed(uint _random_seed, uint _iterations) public view returns (bytes32){
         bytes32 finalSeed = bytes32(_random_seed);
+        finalSeed = keccak256(_random_seed,_iterations);
         for(uint i=0; i<_iterations; i++){
-            finalSeed = keccak256(finalSeed,_iterations);
+            finalSeed = keccak256(finalSeed,i);
         }
         return finalSeed;
     }

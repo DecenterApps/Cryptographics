@@ -1,6 +1,6 @@
 const utils = require('../FE/utils');
 const BigInt = require('big-integer');
-
+const imgFunctions = require('../FE/imgFunctions');
 const Functions = artifacts.require("../contracts/Functions.sol");
 
 contract('Functions', async(accounts) => {
@@ -34,6 +34,19 @@ contract('Functions', async(accounts) => {
 		seed = seed.c.join("");
 		
 		assert.equal(expectedSeed, seed, "Expected and generated seed must be equal");
+	});
+
+	it("... picked different assets" , async() => {
+		let potential = ["0x0000000000000000000001000002000003000004000005000006000007000008"];
+		let randomSeed = 13123;
+		let iterations = 5;
+		let potentialFromContract = await functionsContract.pickRandomAssets(randomSeed, iterations, potential);
+		let arrFromContract = [];
+		for(let i=0; i<potentialFromContract.length;i++){
+			arrFromContract.push(potentialFromContract[i].c[0]);
+		}
+		let potentialFromJS = imgFunctions.getImage(randomSeed,iterations,potential);
+		assert.equal(arrFromContract.toString(),potentialFromJS.toString(),"Return values must be equal");
 	});
 
 	

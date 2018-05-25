@@ -6,6 +6,11 @@ const bin2Hex = (bin, l) => (new BigInt(bin, 2)).toString(16).padStart(l, 0);
 const hex2Bin = (bin, l) => (new BigInt(bin, 16)).toString(2).padStart(l, 0);
 const bin2dec = bin => parseInt(bin, 2);
 
+function hex2dec(seed){
+    let s= seed.toString().substr(2);
+    let x = new BigInt(s,16).toString();
+    return x;
+}
 
 function toSize(number,size) {
     var s = String(number);
@@ -61,13 +66,14 @@ function decode(arr) {
             decoded.push(bin2dec(numbers[i]));
         }
     }
-    console.log(decoded);
     return decoded;
 }
+
+
 //
 // decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
 // "0x0000000000000000000001000002000003000004000005000006000007000008"]);
 
 module.exports = {
-    encode, decode
+    encode, decode, hex2dec
 }
