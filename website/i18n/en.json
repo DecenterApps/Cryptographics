@@ -10,6 +10,7 @@
     "Image_ImageToken": "ImageToken",
     "Marketplace": "Marketplace",
     "Migrations": "Migrations",
+    "Utils_Functions": "Functions",
     "Utils_Ownable": "Ownable",
     "Docs": "Docs",
     "Docusaurus": "Docusaurus",

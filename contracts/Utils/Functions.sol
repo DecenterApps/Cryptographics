@@ -72,13 +72,14 @@ contract Functions {
         uint zoom;
         uint rotation;
 
-        random_seed = uint(keccak256(random_seed,assetId));
         x = random_seed%2450;
         y = random_seed%3500;
         zoom = random_seed%200 + 800;
         rotation = random_seed%360;
         return (x,y,zoom,rotation);
     }
+
+
 
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
         require(_randomHashIds.length == 10);

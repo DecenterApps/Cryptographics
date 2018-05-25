@@ -23,6 +23,7 @@
       "Image_ImageToken"
     ],
     "UTILS": [
+      "Utils_Functions",
       "Utils_Ownable"
     ],
     "UNCATEGORIZED": [
