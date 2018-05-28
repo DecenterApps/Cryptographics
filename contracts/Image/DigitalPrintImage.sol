@@ -19,6 +19,7 @@ contract DigitalPrintImage is ImageToken {
     mapping(uint => bool) seedExists;
     mapping(uint => ImageMetadata) public imageIdToInfo;
 
+
     AssetManager assetManager;
     Functions functionsContract;
 

@@ -87,7 +87,7 @@ contract Functions {
     /// @param _random_seed is random seed for that image
     /// @return tuple of uints representing x,y,zoom,and rotation
     function pickRandomAssetPosition(uint _assetId, uint _random_seed) public view returns (uint,uint,uint,uint) {
-        uint rs = uint(_random_seed);
+        uint rs = _random_seed;
 
         rs = rs % 10000;
 

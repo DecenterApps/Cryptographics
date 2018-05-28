@@ -29,13 +29,6 @@ const functionsContract = web3.eth.contract(conf.functionsContract.abi).at(funct
 
 
 
-function getImages(randomHashes, iterations, potential_assets, timestamp) {
-    var randomSeed = functionsContract.calculateSeed(randomHashes,timestamp);
-    randomSeed = randomSeed.c.join("");
-    console.log(randomSeed);
-}
-
-
 
 
 
