@@ -66,21 +66,33 @@ contract Functions {
         }
         return finalPicked;
     }
-    function pickRandomAssetPosition(uint assetId, uint random_seed) returns (uint,uint,uint,uint){
+    /// @notice Function to pick random position for an asset
+    /// @dev based on id and random_seed
+    /// @param _assetId is id of asset
+    /// @param _random_seed is random seed for that image
+    /// @return tuple of uints representing x,y,zoom,and rotation
+    function pickRandomAssetPosition(uint _assetId, uint _random_seed) public view returns (uint,uint,uint,uint,uint){
+        uint rs = uint(_random_seed);
+        rs = uint(keccak256(rs,_assetId));
+        rs = rs % 10000;
+
         uint x;
         uint y;
         uint zoom;
         uint rotation;
 
-        x = random_seed%2450;
-        y = random_seed%3500;
-        zoom = random_seed%200 + 800;
-        rotation = random_seed%360;
-        return (x,y,zoom,rotation);
+        x = rs%2450;
+        y = rs%3500;
+        zoom = rs%200 + 800;
+        rotation = rs%360;
+        return (rs,x,y,zoom,rotation);
     }
 
 
-
+    /// @notice Function to calculate initial random seed based on our hashes
+    /// @param _randomHashIds are ids in our array of hashes
+    /// @param _timestamp is timestamp for that hash
+    /// @return uint representation of random seed
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
         require(_randomHashIds.length == 10);
         bytes32 randomSeed = keccak256(randomHashes[_randomHashIds[0]],
@@ -112,6 +124,10 @@ contract Functions {
 
     function getLen() public view returns(uint) {
         return randomHashes.length;
+    }
+
+    function getSeed(uint assetId, uint random_seed) public view returns(uint) {
+        return uint(keccak256(random_seed,assetId));
     }
 
 

@@ -28,11 +28,17 @@ function calculateFinalSeed(random_seed, iterations){
     return seed;
 }
 
+//Function to get metadata for asset based on random seed and imageId
 function getAssetMetadata(seed, imageId){
+    seed = calculateSeed(seed,imageId);
+    console.log(seed);
+    seed = utils.hex2dec(seed);
+    console.log(seed);
     let number = parseInt(seed.substr(seed.length-4),10);
     if(number%2==0) {
         let id = imageId;
         let x_coordinate = number % 2450;
+        console.log(number);
         let y_coordinate = number % 3500;
         let zoom = number % 200 + 800;
         let rotation = number % 360;
@@ -66,7 +72,8 @@ function getImage(random_seed, iterations, potentialAssets){
         seed = web3.sha3(seed + q, {encoding:"hex"});
     }
     // console.log("Potential assets: " + pot_assets);
-    // console.log("Picked assets from potential: " + pickedAssets);
+    console.log("Picked assets from potential: ");
+    printImageData(pickedAssets);
     return pickedIds;
 }
 
@@ -74,8 +81,15 @@ function getImage(random_seed, iterations, potentialAssets){
 
 
 
-assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
 
+
+
+test();
+function test() {
+    // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
+    // printImageData(assets);
+    console.log(getAssetMetadata("0x7d6bdacacd7382d0c82ca4f7a7888f261f9a788deb8fa5ca165547191323ef02",5));
+}
 
 
 function printImageData(assets) {
@@ -84,7 +98,6 @@ function printImageData(assets) {
         console.log(obj)
     }
 }
-
 module.exports = {
     getImage
 }
