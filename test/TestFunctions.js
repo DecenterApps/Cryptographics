@@ -49,6 +49,7 @@ contract('Functions', async(accounts) => {
 		assert.equal(arrFromContract.toString(),potentialFromJS.toString(),"Return values must be equal");
 	});
 
+
 	
 
 });

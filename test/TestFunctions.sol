@@ -53,10 +53,8 @@ contract TestFunctions {
         uint[] memory assets = f.pickRandomAssets(13123,5, arr);
 
         Assert.equal(assets[0],7,"");
-        Assert.equal(assets[1],6,"");
-        Assert.equal(assets[2],5,"");
-        Assert.equal(assets[3],4,"");
-        Assert.equal(assets[4],2,"");
-        Assert.equal(assets[5],1,"");
+        Assert.equal(assets[1],5,"");
+        Assert.equal(assets[2],2,"");
+        Assert.equal(assets[3],1,"");
     }
 }
