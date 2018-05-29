@@ -89,13 +89,12 @@ function getImage(random_seed, iterations, potentialAssets){
 
 
 
-
 test();
 
 
 function test() {
      assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
-    // printImageData(assets);
+     printImageData(assets);
     // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
 }
 

@@ -15,6 +15,7 @@ contract AssetManager is Ownable {
     }
 
     uint numberOfAssets;
+    mapping(uint => Asset) idToAssetInfo;
     Asset [] assets;
 
     constructor() public {
@@ -39,7 +40,7 @@ contract AssetManager is Ownable {
             price : _price,
             layer : _layer
         }));
-
+        idToAssetInfo[numberOfAssets] = assets[numberOfAssets];
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
     }
@@ -65,5 +66,13 @@ contract AssetManager is Ownable {
 
     function checkHashExists(bytes32 _ipfsHash) public view returns (bool){
         return hashExists[_ipfsHash];
+    }
+
+    function getAssetInfo(uint id) public view returns (uint, address, bytes32, uint, uint){
+        require(id >= 0);
+        require(id < numberOfAssets);
+        Asset storage asset = idToAssetInfo[id];
+
+        return (asset.id, asset.creator, asset.ipfsHash, asset.price, asset.layer);
     }
 }
