@@ -57,29 +57,35 @@ contract Functions {
     /// @param _random_seed is random seed at that moment
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @return uint[] array of randomly picked assets
-    function pickRandomAssets(uint _random_seed, uint _iterations, bytes32[] _potentialAssets) public view returns(uint[]) {
+    function pickRandomAssets(uint _random_seed, uint _iterations, bytes32[] _potentialAssets) public view returns(uint[],uint[],uint[]) {
         _random_seed = uint(getFinalSeed(_random_seed,_iterations));
 
         uint[] memory assetIds = decodeAssets(_potentialAssets);
         uint[] memory pickedIds = new uint[](assetIds.length);
+        uint[] memory x = new uint[](assetIds.length);
+        uint[] memory y = new uint[](assetIds.length);
+
+
+
         uint index = 0;
 
         for(uint i=0; i<assetIds.length; i++){
             _random_seed = uint(keccak256(_random_seed, assetIds[i]));
             if(_random_seed % 2 == 0){
+                //randoms[index] = _random_seed;
                 pickedIds[index] = assetIds[i];
+                (x[index],y[index],,) = pickRandomAssetPosition(assetIds[i], _random_seed);
                 index++;
             }
 
         }
 
         uint[] memory finalPicked = new uint[](index);
-
         for(uint z=0; z<index; z++){
             finalPicked[z] = pickedIds[z];
         }
 
-        return finalPicked;
+        return (finalPicked,x,y);
     }
     /// @notice Function to pick random position for an asset
     /// @dev based on id and random_seed
@@ -106,38 +112,6 @@ contract Functions {
         return (x,y,zoom,rotation);
     }
 
-//     function getImage(bytes32 random_seed, uint iterations, bytes32[] potentialAssets) public view returns(uint[],uint[],uint[],uint[]){
-//         bytes32 finalSeed = getFinalSeed(uint(random_seed), iterations);
-//         uint[] memory assetIds = decodeAssets(potentialAssets);
-//         uint len = assetIds.length;
-//         uint index = 0;
-//
-//         uint[] memory x = new uint[](len);
-//         uint[] memory y = new uint[](len);
-//         uint[] memory zoom = new uint[](len);
-//         uint[] memory rotation = new uint[](len);
-//
-//         uint x_c;
-//         uint y_c;
-//         uint zoom_c;
-//         uint rotation_c;
-//
-//
-//         for(uint i=0; i<len; i++){
-//
-//             (x[index],y[index],zoom[index],rotation[index]) = pickRandomAssetPosition(assetIds[i], uint(finalSeed));
-//             if(!(x_c==0 && y_c==0 && zoom_c==0 && rotation_c ==0)){
-//                 x[index] = x_c;
-//                 y[index] = y_c;
-//                 zoom[index] = zoom_c;
-//                 rotation[index] = rotation_c;
-//                 index++;
-//             }
-//         }
-//
-//         return (x,y,zoom,rotation);
-//
-//     }
 
     /// @notice Function to calculate initial random seed based on our hashes
     /// @param _randomHashIds are ids in our array of hashes

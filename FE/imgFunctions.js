@@ -14,7 +14,6 @@ function calculateSeed(random_seed,x){
     var hash = web3.sha3(leftPad((random_seed).toString(16), 64, 0) +
         leftPad((x).toString(16), 64, 0),
         {encoding : "hex"});
-
     return hash;
 }
 
@@ -34,9 +33,9 @@ function calculateFinalSeed(random_seed, iterations){
 //seed - bytes32 ; assetId - integer
 function getAssetMetadata(seed, assetId){
 
-    seed = utils.hex2dec(seed);
     let number = parseInt(seed.substr(seed.length-4),10);
     if(number%2==0) {
+        console.log(seed);
         let id = assetId;
         let x_coordinate = number % 2450;
         let y_coordinate = number % 3500;
@@ -61,6 +60,7 @@ function getAssetMetadata(seed, assetId){
 function getImage(random_seed, iterations, potentialAssets){
 
     var seed = calculateFinalSeed(random_seed,iterations);
+    // console.log(seed);
     var pot_assets = utils.decode(potentialAssets).reverse();
     var pickedAssets = [];
     var pickedIds = [];
@@ -72,9 +72,10 @@ function getImage(random_seed, iterations, potentialAssets){
 
 
         let x = utils.hex2dec(seed); //BIGINT representation of seed
-
+        // console.log("SEED " + x);
         let metadata  = getAssetMetadata(x, pot_assets[i]);
         if(metadata!=null) {
+            // console.log("SEED IZABRAN" + x);
             pickedAssets.push(metadata); // just to save for later purposes
             pickedIds.push(metadata.id);
         }
@@ -93,9 +94,9 @@ test();
 
 
 function test() {
-     // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
+     assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
     // printImageData(assets);
-    console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+    // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
 }
 
 
