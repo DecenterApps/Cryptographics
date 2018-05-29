@@ -1,6 +1,6 @@
-const utils = require('../FE/utils');
+const utils = require('../scripts/utils');
 const BigInt = require('big-integer');
-const imgFunctions = require('../FE/imgFunctions');
+const imgFunctions = require('../scripts/imgFunctions');
 const Functions = artifacts.require("../contracts/Functions.sol");
 
 contract('Functions', async(accounts) => {
@@ -36,6 +36,8 @@ contract('Functions', async(accounts) => {
 		assert.equal(expectedSeed, seed, "Expected and generated seed must be equal");
 	});
 
+
+
 	it("... picked different assets" , async() => {
 		let potential = ["0x0000000000000000000001000002000003000004000005000006000007000008"];
 		let randomSeed = 13123;
@@ -43,7 +45,10 @@ contract('Functions', async(accounts) => {
 		let positionsX = [];
 		let potentialFromContract = [];
 		let positionsY = [];
+
+
 		let x = await functionsContract.pickRandomAssets(randomSeed, iterations, potential);
+
 		for(let index=0; index<x[0].length; index++){
 
 			potentialFromContract.push(x[0][index].c[0]);
@@ -55,13 +60,14 @@ contract('Functions', async(accounts) => {
 		// console.log(positionsY);
 
 		let potentialFromJS = imgFunctions.getImage(randomSeed,iterations,potential);
-		// console.log(potentialFromJS[0].id);
+
 		for(let index=0; index < potentialFromContract.length; index++){
 			assert.equal(potentialFromContract[index], potentialFromJS[index].id, "Ids must be equal");
 			assert.equal(positionsX[index], potentialFromJS[index].x_coordinate, "X coordinates must be equal");
 			assert.equal(positionsY[index], potentialFromJS[index].y_coordinate, "Y coordinates must be equal");
 		}
 	 });
+
 
 
 

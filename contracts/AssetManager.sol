@@ -22,6 +22,7 @@ contract AssetManager is Ownable {
     }
 
     mapping(address => mapping(uint => bool)) hasPermission;
+    mapping(bytes32 => bool) hashExists;
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
@@ -29,6 +30,8 @@ contract AssetManager is Ownable {
     /// @param _price is price of asset
     /// @param _layer is level of priority in image representation of that asset
     function createAsset(bytes32 _ipfsHash, uint _price, uint _layer) public {
+        require(hashExists[_ipfsHash] == false);
+
         assets.push(Asset({
             id : numberOfAssets,
             creator : msg.sender,
@@ -37,6 +40,7 @@ contract AssetManager is Ownable {
             layer : _layer
         }));
 
+        hashExists[_ipfsHash] = true;
         numberOfAssets++;
     }
 
@@ -57,5 +61,9 @@ contract AssetManager is Ownable {
 
     function checkHasPermission(address _address, uint _assetId) public view returns (bool){
         return hasPermission[_address][_assetId];
+    }
+
+    function checkHashExists(bytes32 _ipfsHash) public view returns (bool){
+        return hashExists[_ipfsHash];
     }
 }
