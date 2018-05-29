@@ -50,7 +50,8 @@ contract TestFunctions {
         bytes32 potential = 0x0000000000000000000001000002000003000004000005000006000007000008;
         bytes32[] memory arr = new bytes32[](1);
         arr[0] = potential;
-        uint[] memory assets = f.pickRandomAssets(13123,5, arr);
+        uint[] memory assets = new uint[](4);
+        (assets,,) = f.pickRandomAssets(13123,5, arr);
 
         Assert.equal(assets[0],7,"");
         Assert.equal(assets[1],5,"");

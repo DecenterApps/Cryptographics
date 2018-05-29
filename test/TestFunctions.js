@@ -40,14 +40,29 @@ contract('Functions', async(accounts) => {
 		let potential = ["0x0000000000000000000001000002000003000004000005000006000007000008"];
 		let randomSeed = 13123;
 		let iterations = 5;
-		let potentialFromContract = await functionsContract.pickRandomAssets(randomSeed, iterations, potential);
-		let arrFromContract = [];
-		for(let i=0; i<potentialFromContract.length;i++){
-			arrFromContract.push(potentialFromContract[i].c[0]);
+		let positionsX = [];
+		let potentialFromContract = [];
+		let positionsY = [];
+		let x = await functionsContract.pickRandomAssets(randomSeed, iterations, potential);
+		for(let index=0; index<x[0].length; index++){
+
+			potentialFromContract.push(x[0][index].c[0]);
+			positionsX.push(x[1][index].c[0]);
+			positionsY.push(x[2][index].c[0]);
 		}
+		// console.log(potentialFromContract);
+		// console.log(positionsX);
+		// console.log(positionsY);
+
 		let potentialFromJS = imgFunctions.getImage(randomSeed,iterations,potential);
-		assert.equal(arrFromContract.toString(),potentialFromJS.toString(),"Return values must be equal");
-	});
+		// console.log(potentialFromJS[0].id);
+		for(let index=0; index < potentialFromContract.length; index++){
+			assert.equal(potentialFromContract[index], potentialFromJS[index].id, "Ids must be equal");
+			assert.equal(positionsX[index], potentialFromJS[index].x_coordinate, "X coordinates must be equal");
+			assert.equal(positionsY[index], potentialFromJS[index].y_coordinate, "Y coordinates must be equal");
+		}
+	 });
+
 
 
 	

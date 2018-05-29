@@ -35,7 +35,7 @@ function getAssetMetadata(seed, assetId){
 
     let number = parseInt(seed.substr(seed.length-4),10);
     if(number%2==0) {
-        console.log(seed);
+        // console.log(seed);
         let id = assetId;
         let x_coordinate = number % 2450;
         let y_coordinate = number % 3500;
@@ -81,9 +81,9 @@ function getImage(random_seed, iterations, potentialAssets){
         }
 
     }
-    console.log("Picked assets from potential: ");
-    printImageData(pickedAssets);
-    return pickedIds;
+    // console.log("Picked assets from potential: ");
+    // printImageData(pickedAssets);
+    return pickedAssets;
 }
 
 
