@@ -97,11 +97,13 @@ async function ipfs() {
 }
 
 async function test() {
+    printAddresses();
     let ipfsHashes = await ipfs();
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
         await addAssetToContract(ipfsHash, 150, 500);
     }
+
 }
 
 function printAddresses() {
@@ -112,4 +114,9 @@ function printAddresses() {
 
 
 test();
-// printAddresses();
+
+
+
+module.exports ={
+    addAssetToContract
+}

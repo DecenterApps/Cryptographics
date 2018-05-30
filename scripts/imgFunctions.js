@@ -2,9 +2,15 @@ const utils = require('./utils');
 const Web3 = require('web3');
 const util = require('ethereumjs-util');
 const leftPad = require('left-pad')
+const conf = require('./config.json');
+
 
 
 const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+
+
+const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
+const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
 
 
 // Function to calculate keccak256 when input is (int and int)
@@ -32,7 +38,7 @@ function calculateFinalSeed(random_seed, iterations){
 //Function to get metadata for asset based on random seed and assetId
 //seed - bytes32 ; assetId - integer
 function getAssetMetadata(seed, assetId){
-
+    seed = seed.toString();
     let number = parseInt(seed.substr(seed.length-4),10);
     if(number%2==0) {
         // console.log(seed);
@@ -58,7 +64,6 @@ function getAssetMetadata(seed, assetId){
 //INTEGRATED WITH CONTRACT
 //(bytes32, uint, bytes32)
 function getImage(random_seed, iterations, potentialAssets){
-
     var seed = calculateFinalSeed(random_seed,iterations);
     // console.log(seed);
     var pot_assets = utils.decode(potentialAssets).reverse();
@@ -86,19 +91,25 @@ function getImage(random_seed, iterations, potentialAssets){
     return pickedAssets;
 }
 
-
-
-
-test();
-
-
-function test() {
-     assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
-     printImageData(assets);
-    // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+async function getAssetStats(id) {
+    let numberOfAssets = await assetManagerContract.getNumberOfAssets();
+    numberOfAssets = parseInt(numberOfAssets.c[0],10);
+    console.log(numberOfAssets)
+    if(id >= numberOfAssets) {
+        return "This asset don't exist";
+    }else {
+        let info = await assetManagerContract.getAssetInfo(id);
+        return info;
+    }
 }
 
-
+async function test() {
+     // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
+     // printImageData(assets);
+     let resp = await getAssetStats(9);
+     console.log(resp);
+    // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+}
 
 function printImageData(assets) {
     for(let i=0; i<assets.length; i++){
@@ -106,6 +117,10 @@ function printImageData(assets) {
         console.log(obj)
     }
 }
+
+
+test();
+
 module.exports = {
     getImage, getAssetMetadata
 }
