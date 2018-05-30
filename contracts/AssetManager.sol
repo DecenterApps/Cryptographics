@@ -75,4 +75,13 @@ contract AssetManager is Ownable {
 
         return (asset.id, asset.creator, asset.ipfsHash, asset.price, asset.layer);
     }
+
+    function getAssetPrice(uint id) public view returns (uint){
+        require(id >= 0);
+        require(id < numberOfAssets);
+
+        Asset storage asset = idToAssetInfo[id];
+
+        return asset.price;
+    }
 }

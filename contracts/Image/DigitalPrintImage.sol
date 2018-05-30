@@ -8,8 +8,8 @@ import "../Utils/Functions.sol";
 contract DigitalPrintImage is ImageToken {
 
     struct ImageMetadata {
-        uint random_seed;
-        uint interations;
+        uint randomSeed;
+        uint iterations;
         bytes32[] potentialAssets;
         uint timestamp;
         string author;
@@ -17,7 +17,7 @@ contract DigitalPrintImage is ImageToken {
     }
 
     mapping(uint => bool) seedExists;
-    mapping(uint => ImageMetadata) public imageIdToInfo;
+    mapping(uint => ImageMetadata) public imageMetadata;
 
 
     AssetManager assetManager;
@@ -33,7 +33,34 @@ contract DigitalPrintImage is ImageToken {
     /// @param _author is nickname of image owner
     /// @return returns id of created image
     function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public payable returns (uint) {
-        return 1;
+        uint randomSeed = functionsContract.calculateSeed(_randomHashIds, _timestamp);
+        uint finalSeed = uint(functionsContract.getFinalSeed(randomSeed, _iterations));
+
+        require(seedExists[finalSeed] == false);
+
+        uint[] memory potentialAssets = functionsContract.decodeAssets(_potentialAssets);
+        uint finalPrice = 0;
+        address _owner = msg.sender;
+        for(uint i=0; i<potentialAssets.length; i++){
+            if(assetManager.checkHasPermission(owner, potentialAssets[i]) == false){
+                finalPrice += assetManager.getAssetPrice(potentialAssets[i]);
+            }
+        }
+        require(msg.value >= finalPrice);
+
+        uint id = createImage(_owner);
+
+        imageMetadata[id] = ImageMetadata({
+            randomSeed: randomSeed,
+            iterations: _iterations,
+            potentialAssets: _potentialAssets,
+            timestamp: _timestamp,
+            author: _author,
+            owner: _owner
+            });
+
+
+        return id;
     }
 
     /// @notice Function to add assetManager
