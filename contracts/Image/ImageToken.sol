@@ -140,4 +140,7 @@ contract ImageToken is Ownable,ERC721 {
         return tokensForApproved[_imageId];
     }
 
+    function implementsERC721() public pure returns (bool) {
+        return true;
+    }
 }

@@ -1,7 +1,6 @@
 const utils = require('../scripts/utils');
-const BigInt = require('big-integer');
 const imgFunctions = require('../scripts/imgFunctions');
-const Functions = artifacts.require("../contracts/Functions.sol");
+const Functions = artifacts.require("../contracts/Utils/Functions.sol");
 
 contract('Functions', async(accounts) => {
 	let functionsContract = await Functions.deployed();

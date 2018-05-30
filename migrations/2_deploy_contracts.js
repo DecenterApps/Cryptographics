@@ -5,5 +5,5 @@ const Functions = artifacts.require("./Utils/Functions.sol");
 module.exports = function (deployer) {
     deployer.deploy(Functions);
     deployer.deploy(AssetManager);
-
+    deployer.deploy(DigitalPrintImage);
 }
