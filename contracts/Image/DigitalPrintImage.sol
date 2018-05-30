@@ -39,13 +39,11 @@ contract DigitalPrintImage is ImageToken {
         require(seedExists[finalSeed] == false);
 
         uint[] memory potentialAssets = functionsContract.decodeAssets(_potentialAssets);
-        uint finalPrice = 0;
+
         address _owner = msg.sender;
-        for(uint i=0; i<potentialAssets.length; i++){
-            if(assetManager.checkHasPermission(owner, potentialAssets[i]) == false){
-                finalPrice += assetManager.getAssetPrice(potentialAssets[i]);
-            }
-        }
+
+        uint finalPrice = calculatePrice(potentialAssets, _owner);
+
         require(msg.value >= finalPrice);
 
         uint id = createImage(_owner);
@@ -61,6 +59,16 @@ contract DigitalPrintImage is ImageToken {
 
 
         return id;
+    }
+
+    function calculatePrice(uint [] potentialAssets, address owner) public view returns (uint) {
+        uint finalPrice = 0;
+        for(uint i=0; i<potentialAssets.length; i++){
+            if(assetManager.checkHasPermission(owner, potentialAssets[i]) == false){
+                finalPrice += assetManager.getAssetPrice(potentialAssets[i]);
+            }
+        }
+        return finalPrice;
     }
 
     /// @notice Function to add assetManager
