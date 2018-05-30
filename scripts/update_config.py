@@ -40,14 +40,14 @@ with open("config.json","r+") as jsonFile:
 
 
     data["functionsContract"]["abi"] = abi["Functions.json"]
-    data["functionsContract"]["address"] = dict["Functions.json"]
+    data["functionsContract"]["networks"]["42"]["address"] = dict["Functions.json"]
 
 
     data["assetManagerContract"]["abi"] = abi["AssetManager.json"]
-    data["assetManagerContract"]["address"] = dict["AssetManager.json"]
+    data["assetManagerContract"]["networks"]["42"]["address"] = dict["AssetManager.json"]
 
     data["digitalPrintImageContract"]["abi"] = abi["DigitalPrintImage.json"]
-    data["digitalPrintImageContract"]["address"] = dict["DigitalPrintImage.json"]
+    data["digitalPrintImageContract"]["networks"]["42"]["address"] = dict["DigitalPrintImage.json"]
 
 
 
