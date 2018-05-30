@@ -86,7 +86,6 @@ const addAssetToContract = async (ipfs, price, layer) => {
     }
 };
 
-
 async function ipfs() {
     const assets = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
     let ipfsHashes = [];
@@ -101,7 +100,7 @@ async function test() {
     let ipfsHashes = await ipfs();
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
-        await addAssetToContract(ipfsHash, 150, 3);
+        await addAssetToContract(ipfsHash, 150, 500);
     }
 }
 
@@ -112,5 +111,5 @@ function printAddresses() {
 }
 
 
-// test();
-printAddresses();
+test();
+// printAddresses();

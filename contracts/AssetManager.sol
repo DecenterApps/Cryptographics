@@ -9,7 +9,7 @@ contract AssetManager is Ownable {
     struct Asset {
         uint id;
         address creator;
-        bytes32 ipfsHash;
+        string ipfsHash;
         uint price;
         uint layer;
     }
@@ -23,14 +23,14 @@ contract AssetManager is Ownable {
     }
 
     mapping(address => mapping(uint => bool)) hasPermission;
-    mapping(bytes32 => bool) hashExists;
+    mapping(string => bool) hashExists;
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
     /// @param _ipfsHash is ipfsHash to image of asset
     /// @param _price is price of asset
     /// @param _layer is level of priority in image representation of that asset
-    function createAsset(bytes32 _ipfsHash, uint _price, uint _layer) public {
+    function createAsset(string _ipfsHash, uint _price, uint _layer) public {
         require(hashExists[_ipfsHash] == false);
 
         assets.push(Asset({
@@ -64,11 +64,11 @@ contract AssetManager is Ownable {
         return hasPermission[_address][_assetId];
     }
 
-    function checkHashExists(bytes32 _ipfsHash) public view returns (bool){
+    function checkHashExists(string _ipfsHash) public view returns (bool){
         return hashExists[_ipfsHash];
     }
 
-    function getAssetInfo(uint id) public view returns (uint, address, bytes32, uint, uint){
+    function getAssetInfo(uint id) public view returns (uint, address, string, uint, uint){
         require(id >= 0);
         require(id < numberOfAssets);
         Asset storage asset = idToAssetInfo[id];
