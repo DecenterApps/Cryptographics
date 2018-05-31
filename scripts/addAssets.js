@@ -87,7 +87,16 @@ const addAssetToContract = async (ipfs, price, layer) => {
 };
 
 async function ipfs() {
-    const assets = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg'];
+    let assets = [];
+    for(let i=1; i<=20; i++){
+        if(i<10){
+            let str = "0"+i.toString()+".png";
+            assets.push(str);
+        } else {
+            let str = i.toString()+".png";
+            assets.push(str);
+        }
+    }
     let ipfsHashes = [];
     for(let asset of assets) {
         const { stdout, stderr } = await exec('ipfs add -q ./assets/' + asset);

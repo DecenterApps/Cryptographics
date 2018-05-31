@@ -15,7 +15,6 @@ async function getData(randomSeed, iterations, potentialAssets) {
         console.log(assets[i]);
         console.log(assetStats[i]);
     }
-
 }
 
 getData(randomSeed,iterations,potentialAssets);
