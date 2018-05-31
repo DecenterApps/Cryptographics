@@ -69,11 +69,20 @@ function decode(arr) {
     return decoded;
 }
 
+//Function to pick 10 random numbers between 0,100
+function pickRandomHashes() {
+    let arr = [];
+    for(let i=0; i<10; i++){
+        arr.push(Math.floor(Math.random() * 100));
+    }
+    return arr;
+}
+
 
 //
 // decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
 // "0x0000000000000000000001000002000003000004000005000006000007000008"]);
 
 module.exports = {
-    encode, decode, hex2dec
+    encode, decode, hex2dec, pickRandomHashes
 }

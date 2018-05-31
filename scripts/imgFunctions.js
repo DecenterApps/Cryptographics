@@ -8,15 +8,16 @@ const conf = require('./config.json');
 
 const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
 
-
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
+
+
+
 
 
 // Function to calculate keccak256 when input is (int and int)
 // INTEGRATED WITH CONTRACT
 function calculateSeed(random_seed,x){
-
     var hash = web3.sha3(leftPad((random_seed).toString(16), 64, 0) +
         leftPad((x).toString(16), 64, 0),
         {encoding : "hex"});
@@ -61,7 +62,7 @@ function getAssetMetadata(seed, assetId){
     return null;
 }
 
-//INTEGRATED WITH CONTRACT
+//INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
 function getImage(random_seed, iterations, potentialAssets){
     var seed = calculateFinalSeed(random_seed,iterations);
@@ -91,22 +92,29 @@ function getImage(random_seed, iterations, potentialAssets){
     return pickedAssets;
 }
 
+//Function to get for every asset
 async function getAssetStats(id) {
     let numberOfAssets = await assetManagerContract.getNumberOfAssets();
     numberOfAssets = parseInt(numberOfAssets.c[0],10);
-    console.log(numberOfAssets)
     if(id >= numberOfAssets) {
         return "This asset don't exist";
     }else {
         let info = await assetManagerContract.getAssetInfo(id);
-        return info;
+        let Info = {
+            id : info[0].c[0],
+            creator  : info[1],
+            ipfsHash : info[2],
+            price : info[3].c[0],
+            layer : info[4].c[0]
+        }
+        return Info;
     }
 }
 
 async function test() {
      // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
      // printImageData(assets);
-     let resp = await getAssetStats(9);
+     let resp = await getAssetStats(8);
      console.log(resp);
     // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
 }
@@ -119,8 +127,7 @@ function printImageData(assets) {
 }
 
 
-test();
 
 module.exports = {
-    getImage, getAssetMetadata
+    getImage, getAssetMetadata, getAssetStats
 }
