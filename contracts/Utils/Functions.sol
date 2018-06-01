@@ -27,6 +27,7 @@ contract Functions {
     /// @param _potentialAssets are potential assets user would like to have
     /// @return array of assetIds
     function decodeAssets(bytes32[] _potentialAssets) public view returns (uint[]) {
+        require(_potentialAssets.length > 0);
         uint[] memory assets = new uint[](_potentialAssets.length*10);
         uint numberOfAssets = 0;
 
@@ -64,6 +65,9 @@ contract Functions {
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @return uint[] array of randomly picked assets
     function pickRandomAssets(uint _random_seed, uint _iterations, bytes32[] _potentialAssets) public view returns(uint[],uint[],uint[]) {
+        require(_iterations!=0);
+        require(_random_seed!=0);
+        require(_potentialAssets.length > 0);
         _random_seed = uint(getFinalSeed(_random_seed,_iterations));
 
         uint[] memory assetIds = decodeAssets(_potentialAssets);
@@ -101,6 +105,7 @@ contract Functions {
     /// @param _random_seed is random seed for that image
     /// @return tuple of uints representing x,y,zoom,and rotation
     function pickRandomAssetPosition(uint _assetId, uint _random_seed) public view returns (uint,uint,uint,uint) {
+        require(_random_seed!=0);
         uint rs = _random_seed;
 
         rs = rs % 10000;
@@ -126,6 +131,7 @@ contract Functions {
     /// @param _timestamp is timestamp for that hash
     /// @return uint representation of random seed
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
+        require(_timestamp!=0);
         require(_randomHashIds.length == 10);
 
         bytes32 randomSeed = keccak256(randomHashes[_randomHashIds[0]],
@@ -144,6 +150,8 @@ contract Functions {
     /// @param _iterations is number of iterations
     /// @return final seed for user as uint
     function getFinalSeed(uint _random_seed, uint _iterations) public view returns (bytes32){
+        require(_random_seed!=0);
+        require(_iterations!=0);
         bytes32 finalSeed = bytes32(_random_seed);
 
         finalSeed = keccak256(_random_seed,_iterations);

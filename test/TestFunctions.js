@@ -25,6 +25,44 @@ contract('Functions', async(accounts) => {
 
 	});
 
+	it("... should fail if empty array sent",async () => {
+		let arr = [];
+		let encoded = utils.encode(arr);
+
+		let decoded = await functionsContract.decodeAssets(encoded);
+
+		assert.equal(arr[0],decoded[7],"decoded must be equal to input")
+
+	});
+
+	it("... should fail if more than 50 assets",async () => {
+		let arr = [];
+		for(let i=0; i<55; i++){
+			arr.push(i);
+		}
+		let encoded = utils.encode(arr);
+		let decoded = await functionsContract.decodeAssets(encoded);
+		if(decoded.length < 50){
+            assert.equal(arr[0],decoded[7],"decoded must be equal to input")
+        }
+
+	});
+
+	it("... should fail if empty bytes with all 0 sent",async () => {
+		let decoded = await functionsContract.decodeAssets(["0x0000000000000000000000000000000000000000000000000000000000000000"]);
+		
+		assert.equal(decoded.length, 0, "Length should be zero");
+
+	});
+
+	it("... should fail if there is two times same asset",async () => {
+		let arr = [1, 1, 1];
+		let encoded = utils.encode(arr);
+
+		let decoded = await functionsContract.decodeAssets(encoded);
+		
+	});
+
 	it("... calculated seed is not valid" ,async () => {
 		let arr = [1,2,3,4,5,6,7,8,9,10];
 		let timestamp = 5;
