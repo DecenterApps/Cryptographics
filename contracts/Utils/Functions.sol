@@ -4,12 +4,15 @@ contract Functions {
 
     bytes32[] randomHashes;
 
+
     constructor() public {
 
         for(uint i = block.number - 100; i < block.number; i++){
             randomHashes.push(blockhash(i));
         }
     }
+
+
     /// @notice Function for test purposes because in local rpc can't get last 100 blocks
     function fillRadnomHashes() public {
         bytes32 initialHash = "0x1234567891011111112131311";
@@ -18,6 +21,7 @@ contract Functions {
             randomHashes.push(keccak256(initialHash,i));
         }
     }
+
 
     /// @notice Function which decodes bytes32 to array of integers
     /// @param _potentialAssets are potential assets user would like to have
@@ -53,6 +57,8 @@ contract Functions {
 
         return ass;
     }
+
+
     /// @notice Function to pick random assets from potentialAssets array
     /// @param _random_seed is random seed at that moment
     /// @param _potentialAssets is bytes32[] array of potential assets
@@ -87,6 +93,8 @@ contract Functions {
 
         return (finalPicked,x,y);
     }
+
+
     /// @notice Function to pick random position for an asset
     /// @dev based on id and random_seed
     /// @param _assetId is id of asset
@@ -155,7 +163,7 @@ contract Functions {
         return randomHashes.length;
     }
 
-    function getSeed(uint assetId, uint random_seed) public view returns(uint) {
+    function getSeed(uint assetId, uint random_seed) public pure returns(uint) {
         return uint(keccak256(random_seed,assetId));
     }
 

@@ -28,4 +28,10 @@ async function getData(randomSeed, iterations, potentialAssets) {
 }
 
 
+
+
 getData(randomSeed,iterations,potentialAssets);
+
+module.exports ={
+    getData
+}

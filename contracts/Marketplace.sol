@@ -26,7 +26,7 @@ contract Marketplace is Ownable {
     /// @dev only image owner can add image to marketplace
     /// @param _imageId is id of image
     /// @param _price is price for which we are going to sell image
-    function sell(uint _imageId, uint _price) public {
+    function sell(uint _imageId, uint _price) public pure {
 
     }
 
@@ -34,7 +34,7 @@ contract Marketplace is Ownable {
     /// @dev only image owner can edit Ad
     /// @param _imageId is id of image you've put on Marketplace
     /// @param _price is going to be new(updated) price
-    function edit(uint _imageId, uint _price) public {
+    function edit(uint _imageId, uint _price) public pure {
 
     }
 
@@ -47,14 +47,14 @@ contract Marketplace is Ownable {
     /// @notice Function to remove image from Marketplace
     /// @dev image can be withdrawed only by its owner
     /// param _imageId is id of image we would like to get back
-    function cancel(uint _imageId) public {
+    function cancel(uint _imageId) public pure {
 
     }
 
     /// @notice Function to assign digitalPrintImage contract
     /// @param _digitalPrintImageContract is address of that contract
-    function addDigitalPrintImageContract(address _digitalPrintImageContract) {
-
+    function addDigitalPrintImageContract(address _digitalPrintImageContract) public {
+            digitalPrintImageContract = DigitalPrintImage(_digitalPrintImageContract);
     }
 
 }

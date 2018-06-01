@@ -16,12 +16,14 @@ contract DigitalPrintImage is ImageToken {
         address owner;
     }
 
+
     mapping(uint => bool) seedExists;
     mapping(uint => ImageMetadata) public imageMetadata;
 
 
     AssetManager assetManager;
     Functions functionsContract;
+
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
@@ -38,12 +40,12 @@ contract DigitalPrintImage is ImageToken {
 
         require(seedExists[finalSeed] == false);
 
-        uint[] memory potentialAssets = functionsContract.decodeAssets(_potentialAssets);
+        uint[] memory pickedAssets;
 
+        (pickedAssets,,) = functionsContract.pickRandomAssets(randomSeed,_iterations, _potentialAssets);
         address _owner = msg.sender;
 
-        uint finalPrice = calculatePrice(potentialAssets, _owner);
-
+        uint finalPrice = calculatePrice(pickedAssets, _owner);
         require(msg.value >= finalPrice);
 
         uint id = createImage(_owner);
@@ -61,15 +63,20 @@ contract DigitalPrintImage is ImageToken {
         return id;
     }
 
-    function calculatePrice(uint [] potentialAssets, address owner) public view returns (uint) {
+    /// @notice Function to calculate final price for an image based on selected assets
+    /// @param _pickedAssets is array of picked assets
+    /// @param _owner is address of image owner
+    /// @return finalPrice for the image
+    function calculatePrice(uint [] _pickedAssets, address _owner) public view returns (uint) {
         uint finalPrice = 0;
-        for(uint i=0; i<potentialAssets.length; i++){
-            if(assetManager.checkHasPermission(owner, potentialAssets[i]) == false){
-                finalPrice += assetManager.getAssetPrice(potentialAssets[i]);
+        for(uint i=0; i<_pickedAssets.length; i++){
+            if(assetManager.checkHasPermission(_owner, _pickedAssets[i]) == false){
+                finalPrice += assetManager.getAssetPrice(_pickedAssets[i]);
             }
         }
         return finalPrice;
     }
+
 
     /// @notice Function to add assetManager
     /// @dev during testing can be changed, after deployment to main network can be set only once
@@ -77,6 +84,8 @@ contract DigitalPrintImage is ImageToken {
     function addAssetManager(address _assetManager) public onlyOwner {
         assetManager = AssetManager(_assetManager);
     }
+
+
     /// @notice Function to add functions contract
     /// @dev during testing can be changed, after deployment to main network can be set only once
     /// @param _functionsContract is address of Functions contract

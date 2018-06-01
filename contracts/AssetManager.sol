@@ -5,7 +5,6 @@ import "./Utils/Ownable.sol";
 
 contract AssetManager is Ownable {
 
-
     struct Asset {
         uint id;
         address creator;
@@ -14,16 +13,20 @@ contract AssetManager is Ownable {
         uint layer;
     }
 
+
     uint numberOfAssets;
     mapping(uint => Asset) idToAssetInfo;
     Asset [] assets;
+
 
     constructor() public {
         numberOfAssets = 0;
     }
 
+
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(string => bool) hashExists;
+
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
@@ -45,6 +48,7 @@ contract AssetManager is Ownable {
         numberOfAssets++;
     }
 
+
     /// @notice Function where user can buy himself a permision to use an asset
     /// @dev msg.value will be sent to asset creator
     /// @param _assetId is id of asset user wants to buy
@@ -55,19 +59,26 @@ contract AssetManager is Ownable {
         assets[_assetId].creator.transfer(msg.value);
     }
 
-
     function getNumberOfAssets() public view returns (uint) {
         return numberOfAssets;
     }
 
+    /// @notice Function to check have user bought permission for an asset
+    /// @param _address is address of user
+    /// @param _assetId is id of asset
     function checkHasPermission(address _address, uint _assetId) public view returns (bool){
         return hasPermission[_address][_assetId];
     }
 
+    /// @notice Function to check does hash exist in mapping
+    /// @param _ipfsHash is string representation of hash
     function checkHashExists(string _ipfsHash) public view returns (bool){
         return hashExists[_ipfsHash];
     }
 
+    /// @notice Method to get all info for an asset
+    /// @param id is id of asset
+    /// @return All data for an asset
     function getAssetInfo(uint id) public view returns (uint, address, string, uint, uint){
         require(id >= 0);
         require(id < numberOfAssets);
@@ -76,6 +87,10 @@ contract AssetManager is Ownable {
         return (asset.id, asset.creator, asset.ipfsHash, asset.price, asset.layer);
     }
 
+
+    /// @notice Method to get price of asset
+    /// @param id is id of asset
+    /// @return price of asset
     function getAssetPrice(uint id) public view returns (uint){
         require(id >= 0);
         require(id < numberOfAssets);
