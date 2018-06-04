@@ -5,33 +5,34 @@ const Functions = artifacts.require("../contracts/Utils/Functions.sol");
 contract('Functions', async(accounts) => {
 	let functionsContract = await Functions.deployed();
 
-	it("... there is needed to be 100 random hashes", async () => {
+	it("... should fail if there is no 100 random hashes", async () => {
 		let len = await functionsContract.getLen();
 		if(len == 0) {
 					await functionsContract.fillRadnomHashes();
 		}
 		len = await functionsContract.getLen();
 
-		assert.equal(len,100,"Length of array should be 100");
+		assert.equal(len,100, "Length of array should be 100");
 	});
 
-	it("... encoded bytes are not same ",async () => {
+	it("... should encode bytes to be same",async () => {
 		let arr = [1,2,3,4,5,6,7,8];
 		let encoded = utils.encode(arr);
 
 		let decoded = await functionsContract.decodeAssets(encoded);
 
-		assert.equal(arr[0],decoded[7],"decoded must be equal to input")
+		assert.equal(arr[0],decoded[7],"Decoded must be equal to input")
 
 	});
 
 	it("... should fail if empty array sent",async () => {
 		let arr = [];
 		let encoded = utils.encode(arr);
+        let decoded = await functionsContract.decodeAssets(encoded).catch(error => {
+            console.log("Error we have caught: "  + error);
+        });
 
-		let decoded = await functionsContract.decodeAssets(encoded);
-
-		assert.equal(arr[0],decoded[7],"decoded must be equal to input")
+        assert.equal(decoded, null," Decoded must be equal to input")
 
 	});
 
@@ -63,7 +64,7 @@ contract('Functions', async(accounts) => {
 		
 	});
 
-	it("... calculated seed is not valid" ,async () => {
+	it("... should fail if calculated seed is not equal to expected" ,async () => {
 		let arr = [1,2,3,4,5,6,7,8,9,10];
 		let timestamp = 5;
 		let expectedSeed = "3038043115447625647821825492869921010382952898879644361139031013371457459551";
@@ -75,7 +76,7 @@ contract('Functions', async(accounts) => {
 
 
 
-	it("... picked different assets" , async() => {
+	it("... should fail if potential assets and positions picked are not equal" , async() => {
 		let potential = ["0x0000000000000000000001000002000003000004000005000006000007000008"];
 		let randomSeed = 13123;
 		let iterations = 5;
@@ -99,9 +100,9 @@ contract('Functions', async(accounts) => {
 		let potentialFromJS = imgFunctions.getImage(randomSeed,iterations,potential);
 
 		for(let index=0; index < potentialFromContract.length; index++){
-			assert.equal(potentialFromContract[index], potentialFromJS[index].id, "Ids must be equal");
-			assert.equal(positionsX[index], potentialFromJS[index].x_coordinate, "X coordinates must be equal");
-			assert.equal(positionsY[index], potentialFromJS[index].y_coordinate, "Y coordinates must be equal");
+			assert.equal(potentialFromContract[index], potentialFromJS[index].id, "Expected Ids must be equal");
+			assert.equal(positionsX[index], potentialFromJS[index].x_coordinate, "Expected X coordinates must be equal");
+			assert.equal(positionsY[index], potentialFromJS[index].y_coordinate, "Expected Y coordinates must be equal");
 		}
 	 });
 

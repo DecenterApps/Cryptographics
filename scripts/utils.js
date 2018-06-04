@@ -42,6 +42,9 @@ arr = [1,2,3,4,5,6,7,8];
 function encode(arr) {
     let bits = convertInputToBin(arr);
     let strings = chunkString(bits,240);
+    if(strings == null) {
+        return arr;
+    }
     for(let i=0; i<strings.length; i++){
         strings[i] = bin2Hex(strings[i]);
         while(strings[i].length < 64){

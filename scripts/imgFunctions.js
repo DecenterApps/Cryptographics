@@ -13,8 +13,6 @@ const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at
 
 
 
-
-
 // Function to calculate keccak256 when input is (int and int)
 // INTEGRATED WITH CONTRACT
 function calculateSeed(random_seed,x){

@@ -13,7 +13,7 @@ contract TestAssetManager {
 
         string memory ipfsHash = "0x1234567";
 
-        assetManager.createAsset(ipfsHash, price, layer);
+        assetManager.createAsset(ipfsHash, price);
         uint numberOfAssets = assetManager.getNumberOfAssets();
 
         Assert.equal(numberOfAssets, 1,"Asset added successfully");

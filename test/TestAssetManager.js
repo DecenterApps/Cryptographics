@@ -9,29 +9,27 @@ contract('AssetManager', async(accounts) => {
     });
 
 
-    it("... asset can'be created", async () => {
+    it("... should create an asset", async () => {
         let ipfsHash = "0x1234567";
         let price = 500;
-        let layer = 5; //[0,10]
 
-        await assetManagerContract.createAsset(ipfsHash, price, layer, {from: accounts[0]});
+        await assetManagerContract.createAsset(ipfsHash, price,  {from: accounts[0]});
 
         let numberOfAssets = await assetManagerContract.getNumberOfAssets();
 
         assert.equal(numberOfAssets, 1, "There'd be only 1 asset");
     });
 
-    it("User didn't buy permission for the asset", async() => {
+    it("... user should have bought permission for asset", async() => {
         let ipfsHash = "0x12345678";
         let price = 500000000000000;
-        let layer = 5; //[0,10]
 
 
-        await assetManagerContract.createAsset(ipfsHash, price, layer, {from: accounts[0]});
+        await assetManagerContract.createAsset(ipfsHash, price, {from: accounts[0]});
         await assetManagerContract.buyAssetPermision(0,{from: accounts[0], value: web3.toWei(0.0005, 'ether')});
 
 
         let permission = await assetManagerContract.checkHasPermission(accounts[0], 0);
-        assert.equal(permission, true, "No permission")
+        assert.equal(permission, true, "User had to have permission for this asset")
     });
 });
