@@ -5,7 +5,7 @@ import "../AssetManager.sol";
 import "../Utils/Functions.sol";
 
 
-contract DigitalPrintImage is ImageToken {
+contract DigitalPrintImage is ImageToken,Functions {
 
     struct ImageMetadata {
         uint randomSeed;
@@ -22,7 +22,6 @@ contract DigitalPrintImage is ImageToken {
 
 
     AssetManager assetManager;
-    Functions functionsContract;
 
 
     /// @notice Function will create new image
@@ -35,19 +34,20 @@ contract DigitalPrintImage is ImageToken {
     /// @param _author is nickname of image owner
     /// @return returns id of created image
     function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public payable returns (uint) {
-        uint randomSeed = functionsContract.calculateSeed(_randomHashIds, _timestamp);
-        uint finalSeed = uint(functionsContract.getFinalSeed(randomSeed, _iterations));
-
+        uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
+        uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
+        require(_potentialAssets.length <= 5);
         require(seedExists[finalSeed] == false);
 
         uint[] memory pickedAssets;
 
-        (pickedAssets,,) = functionsContract.pickRandomAssets(randomSeed,_iterations, _potentialAssets);
+        (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
         address _owner = msg.sender;
 
         uint finalPrice = calculatePrice(pickedAssets, _owner);
         require(msg.value >= finalPrice);
 
+        assetManager.givePermission(msg.sender, pickedAssets);
         uint id = createImage(_owner);
 
         imageMetadata[id] = ImageMetadata({
@@ -85,11 +85,4 @@ contract DigitalPrintImage is ImageToken {
         assetManager = AssetManager(_assetManager);
     }
 
-
-    /// @notice Function to add functions contract
-    /// @dev during testing can be changed, after deployment to main network can be set only once
-    /// @param _functionsContract is address of Functions contract
-    function addFunctionsContract(address _functionsContract) public onlyOwner {
-        functionsContract = Functions(_functionsContract);
-    }
 }
