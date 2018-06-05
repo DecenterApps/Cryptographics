@@ -99,7 +99,7 @@ async function ipfs() {
     }
     let ipfsHashes = [];
     for(let asset of assets) {
-        const { stdout, stderr } = await exec('ipfs add -q ./assets/' + asset);
+        const { stdout, stderr } = await exec('ipfs add -q ../dist/assets/' + asset);
         ipfsHashes.push(stdout.split('\n')[0]);
     }
     return ipfsHashes;
