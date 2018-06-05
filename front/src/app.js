@@ -1,8 +1,9 @@
 import Vue from 'vue';
-import Canvas from './components/Canvas.vue';
+import Parent from './components/Parent.vue';
 
 const app = new Vue({
-  ...Canvas,
+    ...Parent,
 });
+
 
 export { app };

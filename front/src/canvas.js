@@ -27,15 +27,7 @@ async function getData(randomSeed, iterations, potentialAssets) {
     }
 }
 
-//
-// function makeImage(){
-//     image = new Image();
-//     image.src = '../scripts/assets/01.png';
-//     image.onload = function() {
-//         context.drawImage(image,50,50);
-//     }
-//     console.log('done');
-// }
+
 
 
 async function test() {

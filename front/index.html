@@ -4,47 +4,13 @@
 	<title>  Cryptographics  </title>
 </head>
 <body>
-	<div id="app"></div>
     <div>
         <p> Cryptographics</p>
     </div>
-    <div>
-        <div style="width:300px; float:left;">
-            <canvas id="cryptographics" width="1000" height="1000">  </canvas>
-        </div>
-
-        <div style="width:600px; float:right;">
-            <button style="width: 200px; height: 100px"> Get random seed</button>
-            <button style="width: 200px; height: 100px"> Generate image</button>
-        </div>
-
-
-    </div>
+	<div id="app"></div>
 
 
 
+    <script src="dist/assets/js/app.js"></script>
 
-    <script>
-        let c = document.getElementById('cryptographics');
-        context = c.getContext('2d');
-        context.strokeRect(0, 0, c.width, c.height);
-        function makeImage() {
-            let images = [];
-            for (let i = 1; i < 21; i++) {
-                image = new Image();
-                let val = i < 10  ? "0"+i.toString():i.toString();
-                image.src = './scripts/assets/' + val + '.png';
-                images.push(image);
-            }
-            for (let i = 0; i < images.length; i++) {
-                console.log(images);
-                images[i].onload = function () {
-                    let x = Math.floor(Math.random() * 1000);
-                    let y = Math.floor(Math.random() * 1000);
-                    context.drawImage(images[i], x, y, 250, 250);
-
-                }
-            }
-        }
-        makeImage();
-    </script></body>
+</body>
