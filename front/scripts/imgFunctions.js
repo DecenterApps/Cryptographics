@@ -5,12 +5,10 @@ const leftPad = require('left-pad')
 const conf = require('./config.json');
 
 
-
 const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
-
 
 
 // Function to calculate keccak256 when input is (int and int)
