@@ -2,7 +2,6 @@
 FE/.env
 FE/__pycache__
 node_modules
-build
 .DS_STORE
 .idea
 scripts/doxity/node_modules
