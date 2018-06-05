@@ -1,11 +1,42 @@
 <html>
     <head>
-
+    <title> Cryptographics </title>
     </head>
 
 
-<body>
-<canvas>
-    </canvas>
-</body>
+    <body>
+        <div>
+            <p> Cryptographics</p>
+        </div>
+        <div>
+            <div style="width:300px; float:left;">
+                <canvas id="cryptographics" width =1000 height=1000>  </canvas>
+            </div>
+
+            <div style="width:600px; float:right;">
+                <button style="width: 200px; height: 100px"> Get random seed</button>
+                <button style="width: 200px; height: 100px"> Generate image</button>
+            </div>
+
+
+        </div>
+
+    </body>
 </html>
+
+<script>
+    let c = document.getElementById('cryptographics');
+    context = c.getContext('2d');
+    context.strokeRect(0, 0, c.width, c.height);
+    function makeImage(){
+        for(let i=11; i<20; i++){
+        image = new Image();
+        image.src = '../scripts/assets/'+i.toString()+'.png';
+
+        image.onload = function() {
+            context.drawImage(image,200,100, 200,200);
+        }
+        }
+    }
+    makeImage();
+</script>

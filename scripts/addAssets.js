@@ -76,9 +76,9 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
     });
 
 
-const addAssetToContract = async (ipfs, price, layer) => {
+const addAssetToContract = async (ipfs, price) => {
     try {
-        await sendTransaction(web3, assetManagerContract.createAsset, ourAddress, [ipfs,price,layer],
+        await sendTransaction(web3, assetManagerContract.createAsset, ourAddress, [ipfs,price],
             gasPrice, web3.toHex(nonce));
         nonce++;
     } catch (err) {

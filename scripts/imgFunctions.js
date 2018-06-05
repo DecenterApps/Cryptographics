@@ -94,6 +94,7 @@ function getImage(random_seed, iterations, potentialAssets){
 async function getAssetStats(id) {
     let numberOfAssets = await assetManagerContract.getNumberOfAssets();
     numberOfAssets = parseInt(numberOfAssets.c[0],10);
+    let layer = Math.floor(Math.random() * 10);
     if(id >= numberOfAssets) {
         return "This asset don't exist";
     }else {
@@ -103,7 +104,7 @@ async function getAssetStats(id) {
             creator  : info[1],
             ipfsHash : info[2],
             price : info[3].c[0],
-            layer : info[4].c[0]
+            layer : layer
         }
         return Info;
     }
@@ -124,7 +125,7 @@ function printImageData(assets) {
     }
 }
 
-
+test();
 
 module.exports = {
     getImage, getAssetMetadata, getAssetStats
