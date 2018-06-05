@@ -1,8 +1,8 @@
 pragma solidity ^0.4.23;
 
 import "./ImageToken.sol";
-import "../AssetManager.sol";
 import "../Utils/Functions.sol";
+import "../AssetManager.sol";
 
 
 contract DigitalPrintImage is ImageToken,Functions {
@@ -34,10 +34,11 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _author is nickname of image owner
     /// @return returns id of created image
     function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public payable returns (uint) {
-        uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
-        uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
         require(_potentialAssets.length <= 5);
         require(seedExists[finalSeed] == false);
+
+        uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
+        uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
 
         uint[] memory pickedAssets;
 

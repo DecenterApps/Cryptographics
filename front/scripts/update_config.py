@@ -13,7 +13,7 @@ To run: $ python update_config.py
 ==============
 
 """
-directory = "../build/contracts"
+directory = "../../build/contracts"
 dict = {}
 abi = {}
 for contract in os.listdir(directory):
@@ -34,13 +34,13 @@ for key in dict:
 with open("config.json","r+") as jsonFile:
     data = json.load(jsonFile)
 
-    functions = data["functionsContract"]
+#    functions = data["functionsContract"]
     assetManager = data["assetManagerContract"]
     digitalPrintImage = data["digitalPrintImageContract"]
 
 
-    data["functionsContract"]["abi"] = abi["Functions.json"]
-    data["functionsContract"]["networks"]["42"]["address"] = dict["Functions.json"]
+ #   data["functionsContract"]["abi"] = abi["Functions.json"]
+  #  data["functionsContract"]["networks"]["42"]["address"] = dict["Functions.json"]
 
 
     data["assetManagerContract"]["abi"] = abi["AssetManager.json"]
