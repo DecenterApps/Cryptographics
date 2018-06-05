@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 
 const indexHTML = fs.readFileSync(path.resolve(__dirname, './front/index.html'), 'utf-8');
 
-require('./front')(app);
+require('./front/build/dev-server')(app);
 
 app.use('/dist', express.static(path.resolve(__dirname, './front/dist')));
 
