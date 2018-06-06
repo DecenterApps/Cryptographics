@@ -37,7 +37,7 @@ function chunkString(str, length) {
     return str.match(new RegExp('.{1,' + length + '}', 'g'));
 }
 
-arr = [1,2,3,4,5,6,7,8];
+// arr = [1,2,3,4,5,6,7,8];
 
 function encode(arr) {
     let bits = convertInputToBin(arr);
@@ -86,6 +86,9 @@ function pickRandomHashes() {
 // decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
 // "0x0000000000000000000001000002000003000004000005000006000007000008"]);
 
+
+
+// console.log(encode([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]))
 module.exports = {
     encode, decode, hex2dec, pickRandomHashes
 }

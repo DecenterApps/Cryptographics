@@ -23,24 +23,33 @@ async function getData(randomSeed, iterations, potentialAssets) {
         let stats = await functions.getAssetStats(assets[i].id);
         let final = merge_objects(assets[i], stats);
         allDataAboutAsset.push(final);
-        console.log(final);
     }
+    return allDataAboutAsset;
+}
+
+function drawImageRot(context, img,x,y,width,height,deg) {
+    //Convert degrees to radian
+    var rad = deg * Math.PI / 180;
+
+
+    //Set the origin to the center of the image
+    context.translate(x, y);
+
+    //Rotate the canvas around the origin
+    context.rotate(rad);
+
+    //draw the image
+    context.drawImage(img, width / 2 * (-1), height / 2 * (-1), width, height);
+
+    //reset the canvas
+    context.rotate(rad * ( -1 ) );
+
+    //
+    context.translate((x) * (-1), (y) * (-1));
 }
 
 
-
-
-async function test() {
-    for(let i=0; i<5;i++){
-        console.log(i+ ". pick : -------------------------------------------")
-        await getData(randomSeed,i,potentialAssets);
-        console.log("-------------------------------------------------------");
-    }
-}
-
-
-test();
 
 module.exports ={
-    getData
+    getData, drawImageRot
 }

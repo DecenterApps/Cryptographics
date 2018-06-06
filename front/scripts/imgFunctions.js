@@ -83,8 +83,6 @@ function getImage(random_seed, iterations, potentialAssets){
         }
 
     }
-    // console.log("Picked assets from potential: ");
-    // printImageData(pickedAssets);
     return pickedAssets;
 }
 
@@ -94,6 +92,7 @@ async function getAssetStats(id) {
     numberOfAssets = parseInt(numberOfAssets.c[0],10);
     let layer = Math.floor(Math.random() * 10);
     if(id >= numberOfAssets) {
+        console.log("ID " + id)
         return "This asset don't exist";
     }else {
         let info = await assetManagerContract.getAssetInfo(id);
