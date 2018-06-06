@@ -1,9 +1,9 @@
-const utils = require('../scripts/utils');
-const imgFunctions = require('../scripts/imgFunctions');
-const Functions = artifacts.require("../contracts/Utils/Functions.sol");
+const utils = require('../front/scripts/utils');
+const imgFunctions = require('../front/scripts/imgFunctions');
+const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 
-contract('Functions', async(accounts) => {
-	let functionsContract = await Functions.deployed();
+contract('DigitalPrintImage', async(accounts) => {
+	let functionsContract = await DigitalPrintImage.deployed();
 
 	it("... should fail if there is no 100 random hashes", async () => {
 		let len = await functionsContract.getLen();

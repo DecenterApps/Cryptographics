@@ -2,13 +2,13 @@ pragma solidity ^0.4.23;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/Utils/Functions.sol";
+import "../contracts/Image/DigitalPrintImage.sol";
 
 
-contract TestFunctions {
+contract TestDigitalPrintImage {
 
    function testDecodeAssets() public {
-        Functions f = Functions(DeployedAddresses.Functions());
+       DigitalPrintImage f = DigitalPrintImage(DeployedAddresses.DigitalPrintImage());
         bytes32 a = 0x0000000000000000000000000000000000000000000001000002000003000004;
         bytes32 b = 0x0000000000000000000001000002000003000004000005000006000007000008;
         bytes32[] memory encoded = new bytes32[](2);
@@ -27,7 +27,7 @@ contract TestFunctions {
 
    }
     function testGetFinalSeed() public {
-        Functions f = Functions(DeployedAddresses.Functions());
+        DigitalPrintImage f = DigitalPrintImage(DeployedAddresses.DigitalPrintImage());
         uint seed = 12345678910;
         uint iterations = 5;
         uint p = uint(f.getFinalSeed(seed, iterations));
@@ -36,7 +36,7 @@ contract TestFunctions {
     }
 
     function testLen() public {
-        Functions f = Functions(DeployedAddresses.Functions());
+        DigitalPrintImage f = DigitalPrintImage(DeployedAddresses.DigitalPrintImage());
         if (f.getLen() == 0){
             f.fillRadnomHashes();
         }
@@ -46,7 +46,7 @@ contract TestFunctions {
     }
 
     function testPickRandomAssets() public {
-        Functions f = Functions(DeployedAddresses.Functions());
+        DigitalPrintImage f = DigitalPrintImage(DeployedAddresses.DigitalPrintImage());
         bytes32 potential = 0x0000000000000000000001000002000003000004000005000006000007000008;
         bytes32[] memory arr = new bytes32[](1);
         arr[0] = potential;

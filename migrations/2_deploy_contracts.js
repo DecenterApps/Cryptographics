@@ -7,4 +7,4 @@ module.exports = function (deployer) {
         .then((digitalPrintImage) => digitalPrintImage.addAssetManager(AssetManager.address))
         .then(() => true);
 
-}nanonano
+}
