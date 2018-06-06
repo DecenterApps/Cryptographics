@@ -11,6 +11,25 @@ const assetManagerContractAddress = conf.assetManagerContract.networks["42"].add
 const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
 
 
+const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
+const digitalPrintImageContract = web3.eth.contract(conf.digitalPrintImageContract.abi).at(digitalPrintImageContractAddress);
+
+function pickTenRandoms(){
+    let randoms = [];
+    for(let i=0; i<10; i++){
+        randoms.push(Math.floor(Math.random()*100));
+    }
+    return randoms;
+}
+
+async function calculateFirstSeed() {
+    let rands = pickTenRandoms();
+    let timestamp = new Date().getTime();
+    let randomSeed = await digitalPrintImageContract.calculateSeed(rands,timestamp);
+    return randomSeed;
+
+}
+
 // Function to calculate keccak256 when input is (int and int)
 // INTEGRATED WITH CONTRACT
 function calculateSeed(random_seed,x){
@@ -92,8 +111,7 @@ async function getAssetStats(id) {
     numberOfAssets = parseInt(numberOfAssets.c[0],10);
     let layer = Math.floor(Math.random() * 10);
     if(id >= numberOfAssets) {
-        console.log("ID " + id)
-        return "This asset don't exist";
+        return null;
     }else {
         let info = await assetManagerContract.getAssetInfo(id);
         let Info = {
@@ -125,5 +143,5 @@ function printImageData(assets) {
 test();
 
 module.exports = {
-    getImage, getAssetMetadata, getAssetStats
+    getImage, getAssetMetadata, getAssetStats, calculateFirstSeed
 }

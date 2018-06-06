@@ -3,7 +3,7 @@ const conf = require('./config.json');
 const EthereumTx = require('ethereumjs-tx');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
+const fs = require('fs');
 require('dotenv').load();
 
 
@@ -27,6 +27,7 @@ const digitalPrintImageContract = web3.eth.contract(conf.digitalPrintImageContra
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
+
 
 const getEncodedParams = (contractMethod, params = null) => {
     let encodedTransaction = null;
@@ -87,8 +88,13 @@ const addAssetToContract = async (ipfs, price) => {
 };
 
 async function ipfs() {
+
+    let assetDir = '../dist/assets/';
+    var files = fs.readdirSync(assetDir);
+
+    let len = files.length;
     let assets = [];
-    for(let i=1; i<=20; i++){
+    for(let i=1; i<=len; i++){
         if(i<10){
             let str = "0"+i.toString()+".png";
             assets.push(str);
