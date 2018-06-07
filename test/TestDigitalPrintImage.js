@@ -1,5 +1,5 @@
 const utils = require('../front/scripts/utils');
-const imgFunctions = require('../front/scripts/imgFunctions');
+const imgFunctions = require('../front/scripts/functions');
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 
 contract('DigitalPrintImage', async(accounts) => {

@@ -1,4 +1,4 @@
-const functions = require('../scripts/imgFunctions');
+const functions = require('../scripts/functions');
 const utils = require('../scripts/utils');
 
 let randomSeed = 123123;
@@ -14,17 +14,32 @@ function merge_objects(obj1,obj2){
     for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
     return obj3;
 }
+async function getNumberOfAss() {
+    let assets = await functions.getNumberOfAssets();
+    return assets;
+}
+async function loadDataForAssets(){
+    let assets = await getNumberOfAss();
+    let allDataAboutAsset = [];
+    for(let i=0; i<assets.c[0]; i++){
+        let stats = await functions.getAssetStats(i);
+        let final = merge_objects(stats);
+        allDataAboutAsset.push(final);
+    }
+    return allDataAboutAsset;
+}
 
 
-async function getData(randomSeed, iterations, potentialAssets) {
-    var assets = functions.getImage(randomSeed, iterations, potentialAssets);
+async function getData(randomSeed, iterations, potentialAssets, allAssets) {
+    let assets = functions.getImage(randomSeed, iterations, potentialAssets);
     var allDataAboutAsset = [];
     for(let i=0; i<assets.length; i++){
-        let stats = await functions.getAssetStats(assets[i].id);
+        let stats = allAssets[assets[i]];
         let final = merge_objects(assets[i], stats);
         allDataAboutAsset.push(final);
     }
     return allDataAboutAsset;
+
 }
 
 function drawImageRot(context, img,x,y,width,height,deg) {
@@ -48,8 +63,13 @@ function drawImageRot(context, img,x,y,width,height,deg) {
     context.translate((x) * (-1), (y) * (-1));
 }
 
+async function test() {
+    let x = await loadDataForAssets();
+    console.log(x);
+}
 
+test();
 
 module.exports ={
-    getData, drawImageRot
+    getData, drawImageRot, loadDataForAssets
 }

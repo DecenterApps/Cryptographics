@@ -18,11 +18,6 @@ web3.eth.defaultAccount = ourAddress;
 let nonce = web3.eth.getTransactionCount(ourAddress);
 const gasPrice = 1502509001;
 
-const functionsContractAddress = conf.functionsContract.networks["42"].address;
-const functionsContract = web3.eth.contract(conf.functionsContract.abi).at(functionsContractAddress);
-
-const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
-const digitalPrintImageContract = web3.eth.contract(conf.digitalPrintImageContract.abi).at(digitalPrintImageContractAddress);
 
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;

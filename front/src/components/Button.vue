@@ -9,9 +9,7 @@
     import Vue from 'vue'
     import Component from 'vue-class-component'
 
-    const imgFunctions = require('../../scripts/imgFunctions.js');
-    const methods = require('../methods.js');
-
+    const methods = require("../methods.js");
 
     function makeImage(objs) {
         let c = document.getElementById("test");
@@ -47,11 +45,15 @@
         random_seed = Math.floor(Math.random() * 10000);
         potential_assets = [ '0x000000000100000200000300000400000500000600000700000800000900000a',
             '0x000000000b00000c00000d00000e00000f000010000011000012000013000014' ];
+        allAssets = [];
         async onClick(){
-            // if(this.iteration == 0) {
-            //     this.random_seed = await imgFunctions.calculateFirstSeed();
-            // }
-            let objs = await methods.getData(this.random_seed, this.iteration, this.potential_assets);
+            var allAssets = [];
+            if(this.iteration == 0) {
+                // this.random_seed = await imgFunctions.calculateFirstSeed();
+                allAssets = await methods.loadDataForAssets();
+                console.log(allAssets);
+            }
+            let objs = await methods.getData(this.random_seed, this.iteration, this.potential_assets, this.allAssets);
             this.iteration++;
             makeImage(objs);
         }

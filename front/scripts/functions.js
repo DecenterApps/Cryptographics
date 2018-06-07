@@ -10,10 +10,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.co
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
 
-
 const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
 const digitalPrintImageContract = web3.eth.contract(conf.digitalPrintImageContract.abi).at(digitalPrintImageContractAddress);
 
+// Function to pick ten random integers [0,99]
+// Will be executed during generating initial random seed
 function pickTenRandoms(){
     let randoms = [];
     for(let i=0; i<10; i++){
@@ -21,6 +22,16 @@ function pickTenRandoms(){
     }
     return randoms;
 }
+
+
+// Function to get total number of assets existing on contract
+async function getNumberOfAssets(){
+    let number = await assetManagerContract.getNumberOfAssets();
+    return number;
+}
+
+
+// Function to calculate first random seed, it will be executed from contract
 
 async function calculateFirstSeed() {
     let rands = pickTenRandoms();
@@ -51,13 +62,15 @@ function calculateFinalSeed(random_seed, iterations){
     return seed;
 }
 
+
 //Function to get metadata for asset based on random seed and assetId
 //seed - bytes32 ; assetId - integer
 function getAssetMetadata(seed, assetId){
     seed = seed.toString();
     let number = parseInt(seed.substr(seed.length-4),10);
+    // If number can be divided by 2 means that asset will be included into image
     if(number%2==0) {
-        // console.log(seed);
+
         let id = assetId;
         let x_coordinate = number % 2450;
         let y_coordinate = number % 3500;
@@ -73,39 +86,36 @@ function getAssetMetadata(seed, assetId){
 
         return Asset;
     }
-
     return null;
 }
+
+
 
 //INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
 function getImage(random_seed, iterations, potentialAssets){
     var seed = calculateFinalSeed(random_seed,iterations);
-    // console.log(seed);
     var pot_assets = utils.decode(potentialAssets).reverse();
     var pickedAssets = [];
-    var pickedIds = [];
-    for(let i=0; i<pot_assets.length; i++){
 
+    for(let i=0; i<pot_assets.length; i++){
         seed = seed.substr(2);
         let q = leftPad((pot_assets[i]).toString(16),64,0);
         seed = web3.sha3(seed + q, {encoding:"hex"});
 
-
         let x = utils.hex2dec(seed); //BIGINT representation of seed
-        // console.log("SEED " + x);
+
         let metadata  = getAssetMetadata(x, pot_assets[i]);
+
         if(metadata!=null) {
-            // console.log("SEED IZABRAN" + x);
-            pickedAssets.push(metadata); // just to save for later purposes
-            pickedIds.push(metadata.id);
+            pickedAssets.push(metadata);
         }
 
     }
     return pickedAssets;
 }
 
-//Function to get for every asset
+//Function to get data from contract for every asset (id,creator, ipfsHash, and price) - based on asset id
 async function getAssetStats(id) {
     let numberOfAssets = await assetManagerContract.getNumberOfAssets();
     numberOfAssets = parseInt(numberOfAssets.c[0],10);
@@ -126,11 +136,9 @@ async function getAssetStats(id) {
 }
 
 async function test() {
-     // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
-     // printImageData(assets);
-     let resp = await getAssetStats(8);
-     console.log(resp);
-    // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+     assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
+     printImageData(assets);
+     console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
 }
 
 function printImageData(assets) {
@@ -140,8 +148,8 @@ function printImageData(assets) {
     }
 }
 
-test();
+// test();
 
 module.exports = {
-    getImage, getAssetMetadata, getAssetStats, calculateFirstSeed
+    getImage, getAssetStats, getNumberOfAssets
 }
