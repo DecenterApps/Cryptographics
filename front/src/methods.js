@@ -42,6 +42,33 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
 
 }
 
+function makeImage(objs, c) {
+    let context = c.getContext('2d');
+    context.clearRect(0, 0, 1000, 1000);
+    context.strokeRect(0, 0, 1000, 1000);
+    let images = [];
+    for(let i=0; i<objs.length; i++) {
+        let image = new Image();
+        let val = objs[i].id;
+        if(val < 10) {
+            val = "0" + val;
+        }
+        image.src = '../dist/assets/' + val + '.png';
+
+        images.push(image);
+    }
+
+    for(let j=0; j<objs.length; j++) {
+        images[j].onload = function () {
+            let x = objs[j].x_coordinate %1000;
+            let y = objs[j].y_coordinate %1000;
+            let rotation = objs[j].rotation;
+
+            drawImageRot(context,images[j],x,y,250,250,rotation);
+        }
+    }
+
+}
 function drawImageRot(context, img,x,y,width,height,deg) {
     //Convert degrees to radian
     var rad = deg * Math.PI / 180;
@@ -71,5 +98,5 @@ async function test() {
 test();
 
 module.exports ={
-    getData, drawImageRot, loadDataForAssets
+    getData, drawImageRot, loadDataForAssets, makeImage
 }

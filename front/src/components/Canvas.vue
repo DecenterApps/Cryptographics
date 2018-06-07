@@ -5,22 +5,25 @@
 </template>
 
 <script>
-
+    import methods from '../methods'
 
     export default {
-        mounted : function(){
-            // makeImage();
-        },
-
-	}	
+        props: ["objs"],
+        watch: {
+            'objs': (newObjs) => {
+                let c = document.getElementById("test");
+                methods.makeImage(newObjs, c);
+            }
+        }
+    }
 </script>
 
 
 <style lang="scss">
-	canvas {
-		margin: 10px;
+    canvas {
+        margin: 10px;
         width: 1000px;
         height: 1000px;
 
-	}
+    }
 </style>
