@@ -50,7 +50,7 @@
             var allAssets = [];
             if(this.iteration == 0) {
                 // this.random_seed = await imgFunctions.calculateFirstSeed();
-                allAssets = await methods.loadDataForAssets();
+                this.allAssets = await methods.loadDataForAssets();
                 console.log(allAssets);
             }
             let objs = await methods.getData(this.random_seed, this.iteration, this.potential_assets, this.allAssets);

@@ -18,6 +18,7 @@ PRIV_KEY="YOUR_PRIV_KEY"
 ADDRESS="YOUR_ETH_ADDRESS"
 ```
 
+### To run application
 
 To deploy contracts and add automatically 20 assets: 
 - Setup .env files
@@ -28,4 +29,8 @@ $ python update_config.py
 $ node addAssets.js
 ```
 
+After that, to run client side :
 
+- `$ yarn`
+- `$ yarn start`
+- `open localhost:3000`
