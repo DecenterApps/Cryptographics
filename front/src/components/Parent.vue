@@ -25,7 +25,7 @@
             allAssets :  [],
             iterations : 0,
             random_seed: 0,
-            potential_assets: '1, 2, 3, 4, 5',
+            potential_assets: "",
         }),
         components: {
             'canvas-image': Canvas,
@@ -55,7 +55,7 @@
 
         watch: {
             potential_assets: function(){
-                this.iterations = 0;
+               this.iterations = 0;
             }
         }
 

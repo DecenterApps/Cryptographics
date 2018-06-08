@@ -16,7 +16,7 @@ const ourPrivateKey = process.env.PRIV_KEY;
 web3.eth.defaultAccount = ourAddress;
 
 let nonce = web3.eth.getTransactionCount(ourAddress);
-const gasPrice = 1502509001;
+const gasPrice = 1902509001;
 
 
 
@@ -89,7 +89,7 @@ async function ipfs() {
 
     let len = files.length;
     let assets = [];
-    for(let i=1; i<=len; i++){
+    for(let i=1; i<len; i++){
         if(i<10){
             let str = "0"+i.toString()+".png";
             assets.push(str);
