@@ -24,6 +24,18 @@ function pickTenRandoms(){
 }
 
 
+async function calculatePrice(pickedAssets, owner) {
+    if(pickedAssets.length == 0){
+        return null;
+    }
+
+    if(owner.toString().length!=42){
+        return null;
+    }
+    let price = await digitalPrintImageContract.calculatePrice(pickedAssets,owner);
+    return price;
+}
+
 // Function to get total number of assets existing on contract
 async function getNumberOfAssets(){
     let number = await assetManagerContract.getNumberOfAssets();
@@ -151,5 +163,5 @@ function printImageData(assets) {
 // test();
 
 module.exports = {
-    getImage, getAssetStats, getNumberOfAssets
+    getImage, getAssetStats, getNumberOfAssets, calculatePrice
 }

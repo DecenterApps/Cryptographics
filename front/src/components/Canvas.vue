@@ -8,6 +8,8 @@
     import methods from '../methods'
 
     export default {
+        data:  () => ({
+        }),
         props: ["objs"],
         watch: {
             'objs': (newObjs) => {
