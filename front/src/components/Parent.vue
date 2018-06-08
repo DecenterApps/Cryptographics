@@ -1,11 +1,16 @@
-<template>
-    <div>
+<template xmlns:display="http://www.w3.org/1999/xhtml">
+    <div display:inline-block>
         <label> Metamask account: {{ metamask_account }}</label>
-        <canvas-image :objs="objs" ></canvas-image>
-        <button @click="renderCanvas"> Iteration: {{ iterations }}</button>
-        <button> Buy this assets and save image on chain for {{ image_price }}</button>
-        <input v-model = "potential_assets"/>
-        <label> Price : {{ image_price }}</label>
+        <div>
+            <canvas-image :objs="objs" ></canvas-image>
+        </div>
+        <div>
+                <button @click="renderCanvas"> Iteration: {{ iterations }}</button>
+                <button> Buy this assets and save image on chain for {{ image_price }}</button>
+                <input placeholder="Type potential assets you'd like splited with comma" v-model = "potential_assets"/>
+                <label> Price : {{ image_price }}</label>
+
+        </div>
     </div>
 
 </template>
@@ -65,6 +70,28 @@
 
 
 <style>
+    button {
+        margin-left: 30px;
+        margin-right: 30px;
+        width: 500px;
+        height: 30px;
+    }
+    input {
+        width: 500px;
+        height: 30px;
+    }
+
+    canvas {
+        display:inline-block;
+        position: relative;
+        left: 200px;
+        background-color: #d6bf63;
+    }
+
+    div {
+
+    }
+
 
 
 </style>
