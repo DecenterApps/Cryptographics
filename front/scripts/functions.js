@@ -26,7 +26,7 @@ function pickTenRandoms(){
 
 async function calculatePrice(pickedAssets, owner) {
     if(pickedAssets.length == 0){
-        return null;
+        return 0;
     }
 
     if(owner.toString().length!=42){
@@ -42,6 +42,11 @@ async function getNumberOfAssets(){
     return number;
 }
 
+
+async function getNumberOfImages() {
+    let number = await digitalPrintImageContract.numOfImages;
+    return number;
+}
 
 // Function to calculate first random seed, it will be executed from contract
 
@@ -163,5 +168,5 @@ function printImageData(assets) {
 // test();
 
 module.exports = {
-    getImage, getAssetStats, getNumberOfAssets, calculatePrice
+    getImage, getAssetStats, getNumberOfAssets, calculatePrice, getNumberOfImages
 }

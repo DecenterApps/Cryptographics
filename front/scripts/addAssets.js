@@ -111,21 +111,19 @@ async function test() {
     let ipfsHashes = await ipfs();
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
-        await addAssetToContract(ipfsHash, 150, 500);
+        let price = Math.floor(Math.random()*1000);
+        await addAssetToContract(ipfsHash, price);
     }
 
 }
 
 function printAddresses() {
-    console.log("DigitalPrintImage contract : " + digitalPrintImageContractAddress);
     console.log("AssetManager contract : " + assetManagerContractAddress);
-    console.log("Functions contract : " + functionsContractAddress);
 }
 
 
+
 test();
-
-
 
 module.exports ={
     addAssetToContract
