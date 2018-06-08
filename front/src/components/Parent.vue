@@ -6,7 +6,6 @@
         <button> Buy this assets and save image on chain for {{ image_price }}</button>
         <input v-model = "potential_assets"/>
         <label> Price : {{ image_price }}</label>
-
     </div>
 
 </template>
@@ -53,6 +52,12 @@
             this.random_seed = Math.floor(Math.random()*10000);
             this.renderCanvas();
         },
+
+        watch: {
+            potential_assets: function(){
+                this.iterations = 0;
+            }
+        }
 
 
     }
