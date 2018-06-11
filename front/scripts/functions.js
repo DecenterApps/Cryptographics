@@ -24,6 +24,20 @@ function pickTenRandoms(){
 }
 
 
+async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account) {
+    try{
+        potentialAssets = utils.encode(potentialAssets);
+        console.log(potentialAssets);
+        return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author).send({
+            value: web3.utils.toWei('0.1','ether'), from: account, to: digitalPrintImageContractAddress
+        });
+    } catch(e) {
+        log(e);
+        throw new Error("Cannot create image");
+    }
+}
+
+
 async function calculatePrice(pickedAssets, owner) {
     if(pickedAssets.length == 0){
         return 0;
@@ -50,9 +64,9 @@ async function getNumberOfImages() {
 
 // Function to calculate first random seed, it will be executed from contract
 
-async function calculateFirstSeed() {
-    let rands = pickTenRandoms();
-    let timestamp = new Date().getTime();
+async function calculateFirstSeed(timestamp, rands) {
+    console.log("Timestamp: " + timestamp);
+    console.log("Rands: " + rands);
     let randomSeed = await digitalPrintImageContract.calculateSeed(rands,timestamp);
     return randomSeed;
 
@@ -87,7 +101,6 @@ function getAssetMetadata(seed, assetId){
     let number = parseInt(seed.substr(seed.length-4),10);
     // If number can be divided by 2 means that asset will be included into image
     if(number%2==0) {
-
         let id = assetId;
         let x_coordinate = number % 2450;
         let y_coordinate = number % 3500;
@@ -100,7 +113,6 @@ function getAssetMetadata(seed, assetId){
             zoom: zoom,
             rotation: rotation
         };
-
         return Asset;
     }
     return null;
@@ -168,5 +180,12 @@ function printImageData(assets) {
 // test();
 
 module.exports = {
-    getImage, getAssetStats, getNumberOfAssets, calculatePrice, getNumberOfImages
+    getImage,
+    getAssetStats,
+    getNumberOfAssets,
+    calculatePrice,
+    getNumberOfImages,
+    calculateFirstSeed,
+    createImage,
+    pickTenRandoms
 }

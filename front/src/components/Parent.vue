@@ -2,20 +2,32 @@
     <div display:inline-block>
         <label> Metamask account: {{ metamask_account }}</label>
         <div>
+            <label> Random seed : {{ random_seed }}</label>
+        </div>
+        <div>
+            <label> Timestamp : {{ timestamp }}</label>
+        </div>
+        <div>
             <canvas-image :objs="objs" ></canvas-image>
         </div>
         <div>
                 <button @click="renderCanvas"> Iteration: {{ iterations }}</button>
-                <button> Buy this assets and save image on chain for {{ image_price }}</button>
+                <button @click="buyImage"> Buy this assets and save image on chain for {{ image_price }}</button>
                 <input placeholder="Type potential assets you'd like splited with comma" v-model = "potential_assets"/>
                 <label> Price : {{ image_price }}</label>
-
         </div>
+
+        <div>
+            <packs v-if="allAssets" :allAssets="allAssets"></packs>
+        </div>
+
+
     </div>
 
 </template>
 
 <script>
+    import Packs from './Packs.vue';
     import Canvas from './Canvas.vue';
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
@@ -27,13 +39,16 @@
             image_price: 0,
             metamask_account: 0,
             objs : [],
+            timestamp: new Date().getTime(),
             allAssets :  [],
             iterations : 0,
             random_seed: 0,
             potential_assets: "",
+            random_hash_ids : functions.pickTenRandoms(),
         }),
         components: {
             'canvas-image': Canvas,
+            'packs' : Packs,
         },
         methods: {
             async renderCanvas() {
@@ -48,19 +63,31 @@
                 this.image_price = parseInt(price,10);
             },
 
+            async buyImage() {
+                console.log("RANDOM HASHES: " + this.random_hash_ids);
+                console.log("TIMESTAMP: " + this.timestamp);
+                console.log("ITERATIONS: " + this.iterations);
+                console.log("POTENTIAL ASSETS: " + this.potential_assets);
+                console.log("MM ACCOUNT: " + this.metamask_account);
+                functions.createImage(this.random_hash_ids,this.timestamp,this.iterations,this.potential_assets, "Madjar", this.metamask_account);
+            }
         },
         async beforeCreate() {
+            this.random_hash_ids = functions.pickTenRandoms();
+            console.log(this.random_hash_ids)
+            this.timestamp = new Date().getTime();
             window.onload = () => {
                 this.metamask_account = web3.eth.accounts[0];
             };
             this.allAssets = await methods.loadDataForAssets();
-            this.random_seed = Math.floor(Math.random()*10000);
+            this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
         },
 
         watch: {
-            potential_assets: function(){
+            potential_assets: async function(){
                this.iterations = 0;
+               this.timestamp = new Date().getTime();
             }
         }
 
