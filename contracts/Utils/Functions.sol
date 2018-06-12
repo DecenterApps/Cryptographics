@@ -84,7 +84,7 @@ contract Functions {
             if(_random_seed % 2 == 0){
                 //randoms[index] = _random_seed;
                 pickedIds[index] = assetIds[i];
-                (x[index],y[index],,) = pickRandomAssetPosition(assetIds[i], _random_seed);
+                (x[index],y[index],,) = pickRandomAssetPosition(_random_seed);
                 index++;
             }
 
@@ -101,10 +101,9 @@ contract Functions {
 
     /// @notice Function to pick random position for an asset
     /// @dev based on id and random_seed
-    /// @param _assetId is id of asset
     /// @param _random_seed is random seed for that image
     /// @return tuple of uints representing x,y,zoom,and rotation
-    function pickRandomAssetPosition(uint _assetId, uint _random_seed) public view returns (uint,uint,uint,uint) {
+    function pickRandomAssetPosition(uint _random_seed) public view returns (uint,uint,uint,uint) {
         require(_random_seed!=0);
         uint rs = _random_seed;
 

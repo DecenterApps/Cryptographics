@@ -18,10 +18,13 @@ async function getNumberOfAss() {
     let assets = await functions.getNumberOfAssets();
     return assets;
 }
+
 async function loadDataForAssets(){
-    let assets = await getNumberOfAss();
+    let assets = parseInt(await getNumberOfAss(), 10);
+    console.log(assets);
     let allDataAboutAsset = [];
-    for(let i=0; i<assets.c[0]; i++){
+    for(let i=0; i<assets; i++){
+        console.log("loading")
         let stats = await functions.getAssetStats(i);
         let final = merge_objects(stats);
         allDataAboutAsset.push(final);

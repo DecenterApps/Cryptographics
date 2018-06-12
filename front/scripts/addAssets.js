@@ -21,7 +21,7 @@ const gasPrice = 1902509001;
 
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
-const assetManagerContract = web3.eth.contract(conf.assetManagerContract.abi).at(assetManagerContractAddress);
+const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
 
 const getEncodedParams = (contractMethod, params = null) => {
@@ -81,6 +81,8 @@ const addAssetToContract = async (ipfs, price) => {
         console.log(err);
     }
 };
+
+
 
 async function ipfs() {
 

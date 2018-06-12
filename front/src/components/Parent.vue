@@ -72,24 +72,28 @@
                 console.log("ITERATIONS: " + this.iterations);
                 console.log("POTENTIAL ASSETS: " + pot);
                 console.log("MM ACCOUNT: " + this.metamask_account);
-                pot = utils.encode(pot)
-                functions.createImage(this.random_hash_ids,this.timestamp,this.iterations,pot, "Madjar", this.metamask_account);
+                //.map(a => a.toString())
+                let img = await functions.createImage(this.random_hash_ids, `${this.timestamp}`, `${this.iterations}`, pot, "Madjar", this.metamask_account, this.image_price);
+                console.log(img)
             }
         },
         async beforeCreate() {
             this.random_hash_ids = functions.pickTenRandoms();
             this.timestamp = new Date().getTime();
             window.onload = () => {
-                this.metamask_account = web3.eth.accounts[0];
+                web3.eth.getAccounts((err, acc) => {
+                    if (err) return console.error(err);
+                    this.metamask_account = acc[0];
+                })
             };
             this.allAssets = await methods.loadDataForAssets();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
-            let rs = this.random_seed.toString()
-            rs = rs.substr(0,rs.length - 4);
-            rs = rs.substr(0,1) + rs.substr(2,rs.length);
-            console.log(rs)
-            this.random_seed = await functions.convertSeed(rs)
+            // let rs = this.random_seed.toString()
+            // rs = rs.substr(0,rs.length - 4);
+            // rs = rs.substr(0,1) + rs.substr(2,rs.length);
+            // console.log(rs)
+            // this.random_seed = await functions.convertSeed(rs)
             },
 
         watch: {
@@ -97,11 +101,11 @@
                this.iterations = 0;
                this.timestamp = new Date().getTime();
                this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-               let rs = this.random_seed.toString()
-               rs = rs.substr(0,rs.length - 4);
-               rs = rs.substr(0,1) + rs.substr(2,rs.length);
-               console.log(rs)
-               this.random_seed = await functions.convertSeed(rs)
+               // let rs = this.random_seed.toString()
+               // rs = rs.substr(0,rs.length - 4);
+               // rs = rs.substr(0,1) + rs.substr(2,rs.length);
+               // console.log(rs)
+               this.random_seed = await functions.convertSeed(this.random_seed)
 
             }
         }
