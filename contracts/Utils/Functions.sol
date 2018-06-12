@@ -175,5 +175,8 @@ contract Functions {
         return uint(keccak256(random_seed,assetId));
     }
 
+    function toHex(uint random_seed) public view returns (bytes32) {
+        return bytes32(random_seed);
+    }
 
 }

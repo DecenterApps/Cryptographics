@@ -57,6 +57,11 @@ async function getNumberOfAssets(){
 }
 
 
+async function convertSeed(randomSeed) {
+    let seed = await digitalPrintImageContract.toHex(randomSeed)
+    return seed;
+}
+
 async function getNumberOfImages() {
     let number = await digitalPrintImageContract.numOfImages;
     return number;
@@ -123,6 +128,7 @@ function getAssetMetadata(seed, assetId){
 //INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
 function getImage(random_seed, iterations, potentialAssets){
+    random_seed = random_seed.toString(16);
     var seed = calculateFinalSeed(random_seed,iterations);
     var pot_assets = utils.decode(potentialAssets).reverse();
     var pickedAssets = [];
@@ -187,5 +193,6 @@ module.exports = {
     getNumberOfImages,
     calculateFirstSeed,
     createImage,
-    pickTenRandoms
+    pickTenRandoms,
+    convertSeed
 }

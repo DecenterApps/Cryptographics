@@ -58,23 +58,26 @@
                 let picked = [];
                 for(let i=0; i < this.objs.length; i++){
                     picked.push(this.objs[i].id);
+                    console.log(this.objs[i])
+
                 }
                 let price = await functions.calculatePrice(picked,this.metamask_account);
                 this.image_price = parseInt(price,10);
             },
 
             async buyImage() {
+                let pot = this.potential_assets.split(',').map(a => parseInt(a,10));
                 console.log("RANDOM HASHES: " + this.random_hash_ids);
                 console.log("TIMESTAMP: " + this.timestamp);
                 console.log("ITERATIONS: " + this.iterations);
-                console.log("POTENTIAL ASSETS: " + this.potential_assets);
+                console.log("POTENTIAL ASSETS: " + pot);
                 console.log("MM ACCOUNT: " + this.metamask_account);
-                functions.createImage(this.random_hash_ids,this.timestamp,this.iterations,this.potential_assets, "Madjar", this.metamask_account);
+                pot = utils.encode(pot)
+                functions.createImage(this.random_hash_ids,this.timestamp,this.iterations,pot, "Madjar", this.metamask_account);
             }
         },
         async beforeCreate() {
             this.random_hash_ids = functions.pickTenRandoms();
-            console.log(this.random_hash_ids)
             this.timestamp = new Date().getTime();
             window.onload = () => {
                 this.metamask_account = web3.eth.accounts[0];
@@ -82,10 +85,15 @@
             this.allAssets = await methods.loadDataForAssets();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
-        },
+            let rs = this.random_seed.toString()
+            rs = rs.substr(0,rs.length - 4);
+            rs = rs.substr(0,1) + rs.substr(2,rs.length);
+            console.log(rs)
+            this.random_seed = await functions.convertSeed(rs)
+            },
 
         watch: {
-            potential_assets: async function(){
+            potential_assets: async function() {
                this.iterations = 0;
                this.timestamp = new Date().getTime();
             }

@@ -89,6 +89,17 @@ contract AssetManager is Ownable {
         return (asset.id, asset.creator, asset.ipfsHash, asset.price);
     }
 
+//    function getAssets() public view returns(uint[], address[], string[] ,uint[]){
+//        uint[] memory ids = new uint[](numberOfAssets);
+//        address[] memory artists = new address[](numberOfAssets);
+//        string[] memory ipfsHashes = new string[](numberOfAssets);
+//        uint[] memory prices = new uint[](numberOfAssets);
+//
+//        for(uint i=0; i<numberOfAssets; i++){
+//        }
+//
+//        return (ids, artists, ipfsHashes, prices);
+//    }
 
     /// @notice Method to get price of asset
     /// @param id is id of asset

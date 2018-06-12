@@ -31,6 +31,7 @@ async function loadDataForAssets(){
 
 
 async function getData(randomSeed, iterations, potentialAssets, allAssets) {
+    console.log(randomSeed)
     let assets = functions.getImage(randomSeed, iterations, potentialAssets);
     var allDataAboutAsset = [];
     for(let i=0; i<assets.length; i++){
