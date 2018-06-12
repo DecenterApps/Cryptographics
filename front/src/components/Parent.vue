@@ -41,7 +41,7 @@
             objs : [],
             timestamp: new Date().getTime(),
             allAssets :  [],
-            iterations : 0,
+            iterations : -1,
             random_seed: 0,
             potential_assets: "",
             random_hash_ids : functions.pickTenRandoms(),
@@ -96,6 +96,13 @@
             potential_assets: async function() {
                this.iterations = 0;
                this.timestamp = new Date().getTime();
+               this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+               let rs = this.random_seed.toString()
+               rs = rs.substr(0,rs.length - 4);
+               rs = rs.substr(0,1) + rs.substr(2,rs.length);
+               console.log(rs)
+               this.random_seed = await functions.convertSeed(rs)
+
             }
         }
 
