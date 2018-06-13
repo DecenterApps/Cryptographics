@@ -25,9 +25,10 @@
             View my images
         </button>
         <label> My images : {{ this.my_images }}</label>
-        <button>
+        <button @click="getBoughtAssets">
             View my assets
         </button>
+        <label> Assets I've bought permission for : {{ this.bought_assets }}</label>
     </div>
 
 </template>
@@ -42,6 +43,7 @@
 
     export default {
         data:  () => ({
+            bought_assets: [],
             my_images: [],
             image_price: 0,
             metamask_account: 0,
@@ -89,6 +91,9 @@
             },
             async getImages() {
                 this.my_images = await functions.getUserImages(this.metamask_account);
+            },
+            async getBoughtAssets() {
+                this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
             }
         },
         async beforeCreate() {

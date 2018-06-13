@@ -24,6 +24,12 @@ function pickTenRandoms(){
 }
 
 
+async function getBoughtAssets(address) {
+    let assetIds = await assetManagerContract.methods.getAssetsForUser(address).call();
+    console.log("ASSET IDS :" +assetIds);
+    return assetIds;
+}
+
 async function calculatePrice(pickedAssets, owner) {
     console.log(pickedAssets);
     if(pickedAssets.length == 0){
@@ -200,5 +206,6 @@ module.exports = {
     calculateFirstSeed,
     pickTenRandoms,
     getUserImages,
-    convertSeed
+    convertSeed,
+    getBoughtAssets
 }

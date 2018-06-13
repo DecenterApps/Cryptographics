@@ -17,10 +17,10 @@ contract AssetManager is Ownable {
     Asset [] assets;
     mapping(address => uint) artistBalance;
 
-
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(string => bool) hashExists;
 
+    mapping(address => uint[]) boughtAssets;
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
@@ -45,7 +45,7 @@ contract AssetManager is Ownable {
     /// @param _assetId is id of asset user wants to buy
     function buyAssetPermision(uint _assetId) public payable {
         require(msg.value >= assets[_assetId].price);
-
+        boughtAssets[msg.sender].push(_assetId);
         hasPermission[msg.sender][_assetId] = true;
         assets[_assetId].creator.transfer(msg.value);
     }
@@ -73,6 +73,7 @@ contract AssetManager is Ownable {
     function givePermission(address _address, uint[] _pickedAssets) public {
         for(uint i=0; i<_pickedAssets.length; i++){
             if(hasPermission[_address][_pickedAssets[i]] == false){
+                boughtAssets[_address].push(_pickedAssets[i]);
                 hasPermission[_address][_pickedAssets[i]] = true;
                 artistBalance[assets[_pickedAssets[i]].creator] += assets[_pickedAssets[i]].price;
             }
@@ -111,6 +112,10 @@ contract AssetManager is Ownable {
         Asset memory asset = assets[id];
 
         return asset.price;
+    }
+
+    function getAssetsForUser(address _address) public view returns (uint[]) {
+        return boughtAssets[_address];
     }
 
     function withdraw() public {
