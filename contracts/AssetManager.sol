@@ -50,6 +50,8 @@ contract AssetManager is Ownable {
         assets[_assetId].creator.transfer(msg.value);
     }
 
+    /// @notice Function to fetch total number of assets
+    /// @return numberOfAssets
     function getNumberOfAssets() public view returns (uint) {
         return numberOfAssets;
     }
@@ -90,17 +92,6 @@ contract AssetManager is Ownable {
         return (asset.id, asset.creator, asset.ipfsHash, asset.price);
     }
 
-//    function getAssets() public view returns(uint[], address[], string[] ,uint[]){
-//        uint[] memory ids = new uint[](numberOfAssets);
-//        address[] memory artists = new address[](numberOfAssets);
-//        string[] memory ipfsHashes = new string[](numberOfAssets);
-//        uint[] memory prices = new uint[](numberOfAssets);
-//
-//        for(uint i=0; i<numberOfAssets; i++){
-//        }
-//
-//        return (ids, artists, ipfsHashes, prices);
-//    }
 
     /// @notice Method to get price of asset
     /// @param id is id of asset
@@ -113,11 +104,15 @@ contract AssetManager is Ownable {
 
         return asset.price;
     }
-
+    /// @notice Function to get assetIds for user
+    /// @param _address is address of user
+    /// @return array of assetIds user has bought permission to use
     function getAssetsForUser(address _address) public view returns (uint[]) {
         return boughtAssets[_address];
     }
 
+
+    ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
         require(msg.sender != address(0));
         uint amount = artistBalance[msg.sender];
