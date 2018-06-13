@@ -5,8 +5,8 @@ const leftPad = require('left-pad')
 const conf = require('./config.json');
 
 
-// const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
-const web3 = new Web3(window.web3.currentProvider);
+const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
@@ -24,25 +24,8 @@ function pickTenRandoms(){
 }
 
 
-async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price) {
-    potentialAssets = utils.encode(potentialAssets);
-    console.log(potentialAssets);
-    let nonce = await web3.eth.getTransactionCount(account);
-    try{
-        console.log(randomHashIds, timestamp, iterations, potentialAssets, author)
-        return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author).send({
-            value: web3.utils.toWei(price.toString(), 'wei'), from: account, to: digitalPrintImageContractAddress, nonce: nonce
-        }, (a, b) => {
-            console.log(a, b);
-        });
-    } catch(e) {
-        console.log(e)
-        throw new Error("Cannot create image");
-    }
-}
-
-
 async function calculatePrice(pickedAssets, owner) {
+    console.log(pickedAssets);
     if(pickedAssets.length == 0){
         return 0;
     }
@@ -50,6 +33,7 @@ async function calculatePrice(pickedAssets, owner) {
     if(owner.toString().length!=42){
         return null;
     }
+
     let price = await digitalPrintImageContract.methods.calculatePrice(pickedAssets,owner).call();
     return price;
 }
@@ -62,7 +46,21 @@ async function getNumberOfAssets(){
     return number;
 }
 
+async function getUserImages(address) {
+    if (address.length != 42) {
+        return -1;
+    }
+    let imageIds = await digitalPrintImageContract.methods.getUserImages(address).call();
+    return imageIds;
+}
 
+// async function getUserImageMetadata(address, image_id) {
+//     let images = await getUserImages(address);
+//     for(let i=0; i<images.length; i++) {
+//         let imageId = parseInt(images[i],10);
+//
+//     }
+// }
 async function convertSeed(randomSeed) {
     let seed = await digitalPrintImageContract.methods.toHex(randomSeed).call();
     return seed;
@@ -176,9 +174,12 @@ async function getAssetStats(id) {
 }
 
 async function test() {
-     assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
-     printImageData(assets);
-     console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+     // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
+     // printImageData(assets);
+     // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+
+    let images = await getUserImages("0xf67cDA56135d5777241DF325c94F1012c72617eA");
+    console.log(images);
 }
 
 function printImageData(assets) {
@@ -188,7 +189,7 @@ function printImageData(assets) {
     }
 }
 
-// test();
+test();
 
 module.exports = {
     getImage,
@@ -197,7 +198,7 @@ module.exports = {
     calculatePrice,
     // getNumberOfImages,
     calculateFirstSeed,
-    createImage,
     pickTenRandoms,
+    getUserImages,
     convertSeed
 }

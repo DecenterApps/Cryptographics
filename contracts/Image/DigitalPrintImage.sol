@@ -69,6 +69,9 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _owner is address of image owner
     /// @return finalPrice for the image
     function calculatePrice(uint [] _pickedAssets, address _owner) public view returns (uint) {
+        if(_pickedAssets.length == 0) {
+            return 0;
+        }
         uint finalPrice = 0;
         for(uint i=0; i<_pickedAssets.length; i++){
             if(assetManager.checkHasPermission(_owner, _pickedAssets[i]) == false){
@@ -84,6 +87,15 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _assetManager is address of assetManager contract
     function addAssetManager(address _assetManager) public onlyOwner {
         assetManager = AssetManager(_assetManager);
+    }
+
+    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address) {
+        require(_imageId < numOfImages);
+
+        ImageMetadata memory metadata = imageMetadata[_imageId];
+
+        return(metadata.randomSeed, metadata.iterations, metadata.potentialAssets, metadata.timestamp, metadata.author, metadata.owner);
+
     }
 
 }

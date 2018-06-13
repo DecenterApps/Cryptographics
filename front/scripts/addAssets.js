@@ -12,38 +12,42 @@ const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.co
 const ourAddress = process.env.ADDRESS;
 const ourPrivateKey = process.env.PRIV_KEY;
 
-
 web3.eth.defaultAccount = ourAddress;
 
-let nonce = web3.eth.getTransactionCount(ourAddress);
+let nonce = 0;
 const gasPrice = 1902509001;
-
-
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
+async function getNonce() {
+    nonce = await web3.eth.getTransactionCount(ourAddress);
+    console.log(nonce);
+}
+
+getNonce();
 
 const getEncodedParams = (contractMethod, params = null) => {
     let encodedTransaction = null;
     if (!params) {
-        encodedTransaction = contractMethod.request.apply(contractMethod); // eslint-disable-line
+        encodedTransaction = contractMethod(params[0],params[1]).encodeABI(); // eslint-disable-line
     } else {
-        encodedTransaction = contractMethod.request.apply(contractMethod, params); // eslint-disable-line
+        encodedTransaction = contractMethod(params[0], params[1]).encodeABI() // eslint-disable-line
     }
-    return encodedTransaction.params[0];
+    return encodedTransaction;
 };
 
-const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce) =>
+const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce, to) =>
     new Promise(async (resolve, reject) => {
         try {
             const privateKey = new Buffer(ourPrivateKey, 'hex');
 
-            const { to, data } = getEncodedParams(contractMethod, params);
+            const data = contractMethod(...params).encodeABI();
 
-            const gasPrice = web3.toHex(_gasPrice);
+            const gasPrice = await web3.utils.numberToHex(_gasPrice);
 
-            const gas = web3.toHex(1190000);
+            // const gas = await web3.utils.numberToHex(2500000);
+            const gas = await contractMethod(...params).estimateGas();
 
             let transactionParams = { from, to, data, gas, gasPrice, nonce };
 
@@ -63,7 +67,7 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
 
         const serializedTx = `0x${tx.serialize().toString('hex')}`;
 
-        web3.eth.sendRawTransaction(serializedTx, (error, transactionHash) => {
+        web3.eth.sendSignedTransaction(serializedTx, (error, transactionHash) => {
             console.log("Err: ", error);
             if (error) reject(error);
 
@@ -74,8 +78,9 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
 
 const addAssetToContract = async (ipfs, price) => {
     try {
-        await sendTransaction(web3, assetManagerContract.createAsset, ourAddress, [ipfs,price],
-            gasPrice, web3.toHex(nonce));
+        let n = await web3.utils.numberToHex(nonce);
+        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price],
+            gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
         console.log(err);

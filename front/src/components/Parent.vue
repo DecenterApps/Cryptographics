@@ -21,7 +21,13 @@
             <packs v-if="allAssets" :allAssets="allAssets"></packs>
         </div>
 
-
+        <button @click="getImages">
+            View my images
+        </button>
+        <label> My images : {{ this.my_images }}</label>
+        <button>
+            View my assets
+        </button>
     </div>
 
 </template>
@@ -36,6 +42,7 @@
 
     export default {
         data:  () => ({
+            my_images: [],
             image_price: 0,
             metamask_account: 0,
             objs : [],
@@ -53,6 +60,7 @@
         methods: {
             async renderCanvas() {
                 let pot = this.potential_assets.split(',').map(a => parseInt(a,10));
+
                 this.objs = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
                 this.iterations++;
                 let picked = [];
@@ -62,6 +70,9 @@
 
                 }
                 let price = await functions.calculatePrice(picked,this.metamask_account);
+                if (pot.length == 0) {
+                    this.image_price = 0;
+                }
                 this.image_price = parseInt(price,10);
             },
 
@@ -73,8 +84,11 @@
                 console.log("POTENTIAL ASSETS: " + pot);
                 console.log("MM ACCOUNT: " + this.metamask_account);
                 //.map(a => a.toString())
-                let img = await functions.createImage(this.random_hash_ids, `${this.timestamp}`, `${this.iterations}`, pot, "Madjar", this.metamask_account, this.image_price);
+                let img = await methods.createImage(this.random_hash_ids, `${this.timestamp}`, `${this.iterations}`, pot, "Madjar", this.metamask_account, this.image_price);
                 console.log(img)
+            },
+            async getImages() {
+                this.my_images = await functions.getUserImages(this.metamask_account);
             }
         },
         async beforeCreate() {

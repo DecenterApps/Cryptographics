@@ -1,12 +1,35 @@
 const functions = require('../scripts/functions');
 const utils = require('../scripts/utils');
-
-let randomSeed = 123123;
-let iterations = 5;
-let potentialAssets = [1,2,3,4,5,6,7,8,9,10,11];
-potentialAssets = utils.encode(potentialAssets);
+const conf = require('../scripts/config.json');
+const Web3 = require('web3');
 
 
+// const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+
+const web3 = new Web3(window.web3.currentProvider);
+
+const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
+const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+
+console.log(digitalPrintImageContractAddress);
+console.log(digitalPrintImageContract);
+
+async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price) {
+    potentialAssets = utils.encode(potentialAssets);
+    console.log(potentialAssets);
+    let nonce = await web3.eth.getTransactionCount(account);
+    try{
+        console.log(randomHashIds, timestamp, iterations, potentialAssets, author)
+        return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author).send({
+            value: web3.utils.toWei(price.toString(), 'wei'), from: account, to: digitalPrintImageContractAddress, nonce: nonce
+        }, (a, b) => {
+            console.log(a, b);
+        });
+    } catch(e) {
+        console.log(e);
+        throw new Error("Cannot create image");
+    }
+}
 
 function merge_objects(obj1,obj2){
     var obj3 = {};
@@ -94,6 +117,13 @@ function drawImageRot(context, img,x,y,width,height,deg) {
     context.translate((x) * (-1), (y) * (-1));
 }
 
+
+// let randomSeed = 123123;
+// let iterations = 5;
+// let potentialAssets = [1,2,3,4,5,6,7,8,9,10,11];
+// potentialAssets = utils.encode(potentialAssets);
+
+
 async function test() {
     let x = await loadDataForAssets();
     console.log(x);
@@ -102,5 +132,8 @@ async function test() {
 test();
 
 module.exports ={
-    getData, drawImageRot, loadDataForAssets, makeImage
+    getData,
+    loadDataForAssets,
+    makeImage,
+    createImage
 }
