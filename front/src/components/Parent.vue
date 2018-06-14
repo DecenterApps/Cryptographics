@@ -37,9 +37,11 @@
 
         <div>
             <button @click="renderMyImagesCanvas">
-                Show images I have
+                Show my image with id :
             </button>
+            <input placeholder="Type id of your image: " v-model="id_to_show"/>
         </div>
+
         <div>
             <button @click="getBoughtAssets">
                 View my assets
@@ -54,7 +56,9 @@
             <label for="checkbox"> Pick only assets I've already bought permission for</label>
         </div>
 
-        <canvas-my-images :myobjects="myobjects" ></canvas-my-images>
+        <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
+
+        <button v-if="id_to_show != -1" @click="hide"> Hide </button>
     </div>
 
 </template>
@@ -69,6 +73,7 @@
     const functions = require("../../scripts/functions.js");
     export default {
         data: () => ({
+            id_to_show : -1,
             checked: false,
             bought_assets: [],
             my_images: [],
@@ -114,9 +119,20 @@
             },
 
             async renderMyImagesCanvas() {
-                console.log('HERE');
-                let data = await functions.getImageMetadataFromContract(2);
+                this.id_to_show = parseInt(this.id_to_show,10);
+
+                if(this.id_to_show === -1) {
+                    return;
+                }
+
+                let data = await functions.getImageMetadataFromContract(this.id_to_show);
                 this.myobjects = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
+
+
+            },
+
+            async hide() {
+                this.id_to_show = -1;
             },
 
             async buyImage() {
