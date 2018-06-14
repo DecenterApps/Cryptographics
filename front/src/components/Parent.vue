@@ -1,5 +1,5 @@
 <template xmlns:display="http://www.w3.org/1999/xhtml">
-    <div display:inline-block>
+    <div>
         <label> Metamask account: {{ metamask_account }}</label>
         <div>
             <label> Random seed : {{ random_seed }}</label>
@@ -29,6 +29,9 @@
             View my assets
         </button>
         <label> Assets I've bought permission for : {{ this.bought_assets }}</label>
+        <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox"> Pick only assets I've already bought permission for</label>
+
     </div>
 
 </template>
@@ -43,6 +46,7 @@
 
     export default {
         data:  () => ({
+            checked : false,
             bought_assets: [],
             my_images: [],
             image_price: 0,
@@ -61,8 +65,15 @@
         },
         methods: {
             async renderCanvas() {
-                let pot = this.potential_assets.split(',').map(a => parseInt(a,10));
-
+                let pot;
+                if(this.checked == true) {
+                    this.potential_assets = this.bought_assets;
+                    console.log(this.potential_assets);
+                    console.log(this.bought_assets);
+                    pot = this.potential_assets;
+                } else {
+                    pot = this.potential_assets.split(',').map(a => parseInt(a,10));
+                }
                 this.objs = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
                 this.iterations++;
                 let picked = [];
