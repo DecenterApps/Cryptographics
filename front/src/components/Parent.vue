@@ -158,6 +158,7 @@
             },
             async getBoughtAssets() {
                 this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
+                this.bought_assets = this.bought_assets.sort(function(a, b){return a - b})
             }
         },
         async beforeCreate() {
