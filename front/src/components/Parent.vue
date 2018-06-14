@@ -51,11 +51,15 @@
         <div>
             <label> Assets I've bought permission for : {{ this.bought_assets }}</label>
         </div>
+
+        <div>
+            <button @click="showAssets"> Show me my assets </button>
+        </div>
         <div>
             <input type="checkbox" id="checkbox" v-model="checked">
             <label for="checkbox"> Pick only assets I've already bought permission for</label>
         </div>
-
+        <my-assets :bought_assets="bought_assets"></my-assets>
         <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
 
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
@@ -67,12 +71,14 @@
     import Packs from './Packs.vue';
     import Canvas from './Canvas.vue';
     import MyImages from './MyImages.vue';
+    import MyAssets from './MyAssets.vue';
 
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
     const functions = require("../../scripts/functions.js");
     export default {
         data: () => ({
+            show_bought_assets: false,
             id_to_show : -1,
             checked: false,
             bought_assets: [],
@@ -89,10 +95,13 @@
             random_hash_ids: functions.pickTenRandoms(),
         }),
         components: {
+            MyAssets,
             'canvas-image': Canvas,
             'canvas-my-images': MyImages,
             'packs': Packs,
+            'my-assets' : MyAssets,
         },
+
         methods: {
             async renderCanvas() {
                 let pot;
@@ -128,6 +137,10 @@
                 let data = await functions.getImageMetadataFromContract(this.id_to_show);
                 this.myobjects = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
 
+
+            },
+
+            async showAssets() {
 
             },
 
