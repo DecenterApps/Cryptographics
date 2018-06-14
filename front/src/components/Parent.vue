@@ -8,7 +8,7 @@
             <label> Timestamp : {{ timestamp }}</label>
         </div>
         <div>
-            <canvas-image :objs="objs"></canvas-image>
+            <canvas-image v-if="id_to_show==-1" :objs="objs"></canvas-image>
         </div>
         <div>
             <button @click="renderCanvas"> Iteration: {{ iterations }}</button>
@@ -85,7 +85,7 @@
             allAssets: [],
             iterations: 0,
             random_seed: 0,
-            potential_assets: "",
+            potential_assets: [],
             random_hash_ids: functions.pickTenRandoms(),
         }),
         components: {
