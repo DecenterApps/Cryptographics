@@ -180,12 +180,9 @@ async function getAssetStats(id) {
 }
 
 async function test() {
-     // assets = getImage(13123,5, ["0x0000000000000000000001000002000003000004000005000006000007000008"]);
-     // printImageData(assets);
+     assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
+     printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
-
-    let images = await getUserImages("0xf67cDA56135d5777241DF325c94F1012c72617eA");
-    console.log(images);
 }
 
 function printImageData(assets) {

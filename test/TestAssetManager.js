@@ -32,4 +32,7 @@ contract('AssetManager', async(accounts) => {
         let permission = await assetManagerContract.checkHasPermission(accounts[0], 0);
         assert.equal(permission, true, "User had to have permission for this asset")
     });
+
+
+
 });

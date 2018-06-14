@@ -16,7 +16,7 @@ console.log(digitalPrintImageContract);
 
 async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price) {
     potentialAssets = utils.encode(potentialAssets);
-    console.log(potentialAssets);
+    console.log("ENCODED POTENTIAL ASSETS: " + potentialAssets);
     let nonce = await web3.eth.getTransactionCount(account);
     try{
         console.log(randomHashIds, timestamp, iterations, potentialAssets, author)
