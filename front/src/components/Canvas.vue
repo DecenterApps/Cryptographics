@@ -13,6 +13,7 @@
         props: ["objs"],
         watch: {
             'objs': (newObjs) => {
+                console.log(newObjs);
                 let c = document.getElementById("test");
                 methods.makeImage(newObjs, c);
             }

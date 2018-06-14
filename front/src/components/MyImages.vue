@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas id="mojeslike" width="1000" height="1000"></canvas>
+        <canvas id="myImagesCanvas" width="1000" height="1000"></canvas>
     </div>
 </template>
 
@@ -10,10 +10,11 @@
     export default {
         data:  () => ({
         }),
-        props: ["myObjs"],
+        props: ["myobjects"],
         watch: {
-            'myObjs': (newObjs) => {
-                let c = document.getElementById("mojeslike");
+            "myobjects": (newObjs) => {
+                console.log("WELL PASSED PROPS");
+                let c = document.getElementById("myImagesCanvas");
                 methods.makeImage(newObjs, c);
             }
         }
