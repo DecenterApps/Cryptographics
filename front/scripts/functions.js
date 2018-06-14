@@ -60,22 +60,21 @@ async function getUserImages(address) {
     return imageIds;
 }
 
-// async function getUserImageMetadata(address, image_id) {
-//     let images = await getUserImages(address);
-//     for(let i=0; i<images.length; i++) {
-//         let imageId = parseInt(images[i],10);
-//
-//     }
-// }
+async function getImageMetadataFromContract(image_id) {
+    if(image_id < 0) {
+        return null;
+    }
+    let imageMetadata = await digitalPrintImageContract.methods.getImageMetadata(image_id).call();
+    imageMetadata[0] = await convertSeed(imageMetadata[0]);
+    console.log(imageMetadata);
+    return imageMetadata;
+}
+
 async function convertSeed(randomSeed) {
     let seed = await digitalPrintImageContract.methods.toHex(randomSeed).call();
     return seed;
 }
-//
-// async function getNumberOfImages() {
-//     // let number = await digitalPrintImageContract.methods.numOfImages
-//     return number;
-// }
+
 
 // Function to calculate first random seed, it will be executed from contract
 
@@ -180,9 +179,10 @@ async function getAssetStats(id) {
 }
 
 async function test() {
-     assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
-     printImageData(assets);
+     // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
+     // printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
+    getImageMetadataFromContract(0);
 }
 
 function printImageData(assets) {
@@ -200,6 +200,7 @@ module.exports = {
     getNumberOfAssets,
     calculatePrice,
     // getNumberOfImages,
+    getImageMetadataFromContract,
     calculateFirstSeed,
     pickTenRandoms,
     getUserImages,

@@ -22,9 +22,13 @@
         </div>
 
         <button @click="getImages">
-            View my images
+            View my image ids
+        </button>
+        <button @click="renderMyImagesCanvas">
+            Show images I have
         </button>
         <label> My images : {{ this.my_images }}</label>
+
         <button @click="getBoughtAssets">
             View my assets
         </button>
@@ -32,6 +36,7 @@
 
         <input type="checkbox" id="checkbox" v-model="checked">
         <label for="checkbox"> Pick only assets I've already bought permission for</label>
+        <canvas-my-images :myObjs="myObjs"></canvas-my-images>
     </div>
 
 </template>
@@ -50,6 +55,7 @@
             image_price: 0,
             metamask_account: 0,
             objs : [],
+            myObjs: [],
             timestamp: new Date().getTime(),
             allAssets :  [],
             iterations : 0,
@@ -59,6 +65,7 @@
         }),
         components: {
             'canvas-image': Canvas,
+            'canvas-myImages' : Canvas,
             'packs' : Packs,
         },
         methods: {
@@ -85,9 +92,23 @@
                 }
                 this.image_price = parseInt(price,10);
             },
+
+            async renderMyImagesCanvas(){
+                let data = await functions.getImageMetadataFromContract(2);
+
+                this.objs = await methods.getData(data[0], parseInt(data[1],10), data[2], this.allAssets);
+            },
+
             async buyImage() {
-                let pot = this.potential_assets.split(',').map(a => parseInt(a,10));
-                console.log("RANDOM HASHES: " + this.random_hash_ids);
+                let pot;
+                if(this.checked == true) {
+                    this.potential_assets = this.bought_assets;
+                    console.log(this.potential_assets);
+                    console.log(this.bought_assets);
+                    pot = this.potential_assets;
+                } else {
+                    pot = this.potential_assets.split(',').map(a => parseInt(a,10));
+                }                console.log("RANDOM HASHES: " + this.random_hash_ids);
                 console.log("TIMESTAMP: " + this.timestamp);
                 console.log("ITERATIONS: " + this.iterations);
                 console.log("POTENTIAL ASSETS: " + pot);
@@ -112,6 +133,8 @@
                 })
             };
             this.allAssets = await methods.loadDataForAssets();
+            this.bought_assets = await this.getBoughtAssets();
+            this.my_images = await this.getImages()
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
             // let rs = this.random_seed.toString()
