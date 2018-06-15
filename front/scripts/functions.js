@@ -52,6 +52,11 @@ async function getNumberOfAssets(){
     return number;
 }
 
+async function getAssetsUserCreated(address){
+    let assets = await assetManagerContract.methods.getAssetsUserCreated(address).call();
+    return assets;
+}
+
 async function getUserImages(address) {
     if (address.length != 42) {
         return -1;
@@ -200,6 +205,7 @@ module.exports = {
     getNumberOfAssets,
     calculatePrice,
     // getNumberOfImages,
+    getAssetsUserCreated,
     getImageMetadataFromContract,
     calculateFirstSeed,
     pickTenRandoms,

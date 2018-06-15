@@ -21,6 +21,7 @@ contract AssetManager is Ownable {
     mapping(string => bool) hashExists;
 
     mapping(address => uint[]) boughtAssets;
+    mapping(address => uint[]) createdAssets;
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
@@ -35,10 +36,14 @@ contract AssetManager is Ownable {
             ipfsHash : _ipfsHash,
             price : _price
         }));
+        createdAssets[msg.sender].push(numberOfAssets);
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
     }
 
+    function getAssetsUserCreated(address _address) public view returns (uint[]){
+        return createdAssets[_address];
+    }
 
     /// @notice Function where user can buy himself a permision to use an asset
     /// @dev msg.value will be sent to asset creator
@@ -60,7 +65,12 @@ contract AssetManager is Ownable {
     /// @param _address is address of user
     /// @param _assetId is id of asset
     function checkHasPermission(address _address, uint _assetId) public view returns (bool){
-        return hasPermission[_address][_assetId];
+        Asset memory asset = assets[_assetId];
+        if(asset.creator == _address){
+            return true;
+        } else {
+            return hasPermission[_address][_assetId];
+        }
     }
 
     /// @notice Function to check does hash exist in mapping

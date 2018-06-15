@@ -78,6 +78,7 @@
     const functions = require("../../scripts/functions.js");
     export default {
         data: () => ({
+            created_assets: [],
             show_bought_assets: false,
             id_to_show : -1,
             checked: false,
