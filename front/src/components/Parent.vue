@@ -44,14 +44,21 @@
 
         <div>
             <button @click="getBoughtAssets">
-                View my assets
+                View assets I've bought
             </button>
         </div>
 
         <div>
             <label> Assets I've bought permission for : {{ this.bought_assets }}</label>
         </div>
-
+        <div>
+            <button @click="getCreatedAssets">
+                View assets I've created
+            </button>
+        </div>
+        <div>
+            <label> Assets I'm creator of : {{ this.created_assets }}</label>
+        </div>
         <div>
             <button @click="showAssets"> Show me my assets </button>
         </div>
@@ -63,6 +70,7 @@
         <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
 
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
+
     </div>
 
 </template>
@@ -144,7 +152,9 @@
             async showAssets() {
 
             },
-
+            async getCreatedAssets() {
+                this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
+            },
             async hide() {
                 this.id_to_show = -1;
             },
@@ -229,7 +239,7 @@
         display: inline-block;
         position: relative;
         left: 200px;
-        background-color: #d6bf63;
+        background-color: #ffffff;
     }
 
     label {

@@ -88,7 +88,6 @@ const addAssetToContract = async (ipfs, price) => {
 };
 
 
-
 async function ipfs() {
 
     let assetDir = '../dist/assets/';

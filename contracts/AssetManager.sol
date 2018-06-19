@@ -41,10 +41,6 @@ contract AssetManager is Ownable {
         numberOfAssets++;
     }
 
-    function getAssetsUserCreated(address _address) public view returns (uint[]){
-        return createdAssets[_address];
-    }
-
     /// @notice Function where user can buy himself a permision to use an asset
     /// @dev msg.value will be sent to asset creator
     /// @param _assetId is id of asset user wants to buy
@@ -121,6 +117,9 @@ contract AssetManager is Ownable {
         return boughtAssets[_address];
     }
 
+    function getAssetsUserCreated(address _address) public view returns(uint[]){
+        return createdAssets[_address];
+    }
 
     ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
