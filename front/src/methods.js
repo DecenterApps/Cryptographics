@@ -11,8 +11,11 @@ const web3 = new Web3(window.web3.currentProvider);
 const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
 const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-console.log(digitalPrintImageContractAddress);
-console.log(digitalPrintImageContract);
+const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
+const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
+
+
+
 
 async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price) {
     potentialAssets = utils.encode(potentialAssets);
@@ -28,6 +31,24 @@ async function createImage(randomHashIds, timestamp, iterations, potentialAssets
     } catch(e) {
         console.log(e);
         throw new Error("Cannot create image");
+    }
+}
+
+async function createAsset(price, ipfsHash, account) {
+    console.log("Price: " + price);
+    console.log("Ipfs hash: " + ipfsHash);
+    console.log("Account: " + account);
+
+    let nonce = await web3.eth.getTransactionCount(account);
+    try{
+        return await assetManagerContract.methods.createAsset(ipfsHash,price).send({
+            from: account, to:assetManagerContract, nonce
+        }, (a, b) => {
+            console.log(a,b);
+        });
+    } catch(e) {
+        console.log(e);
+        throw new Error("Cannot create asset");
     }
 }
 
@@ -135,5 +156,6 @@ module.exports ={
     getData,
     loadDataForAssets,
     makeImage,
-    createImage
+    createImage,
+    createAsset
 }

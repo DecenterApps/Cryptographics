@@ -68,9 +68,8 @@
         </div>
         <my-assets :bought_assets="bought_assets"></my-assets>
         <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
-
+        <create-asset :metamask_account="metamask_account"></create-asset>
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
-
     </div>
 
 </template>
@@ -80,10 +79,12 @@
     import Canvas from './Canvas.vue';
     import MyImages from './MyImages.vue';
     import MyAssets from './MyAssets.vue';
+    import CreateAsset from './CreateAsset.vue';
 
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
     const functions = require("../../scripts/functions.js");
+
     export default {
         data: () => ({
             created_assets: [],
@@ -104,11 +105,12 @@
             random_hash_ids: functions.pickTenRandoms(),
         }),
         components: {
-            MyAssets,
+            CreateAsset,
             'canvas-image': Canvas,
             'canvas-my-images': MyImages,
             'packs': Packs,
             'my-assets' : MyAssets,
+            'create-asset' : CreateAsset,
         },
 
         methods: {

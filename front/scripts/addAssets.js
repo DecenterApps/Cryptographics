@@ -76,10 +76,10 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
     });
 
 
-const addAssetToContract = async (ipfs, price) => {
+const addAssetToContract = async (ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price],
+        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price,address],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -118,7 +118,7 @@ async function test() {
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
         let price = Math.floor(Math.random()*1000);
-        await addAssetToContract(ipfsHash, price);
+        await addAssetToContract(ipfsHash, price, ourAddress);
     }
 
 }
