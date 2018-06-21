@@ -15,13 +15,17 @@ contract AssetManager is Ownable {
 
     uint numberOfAssets;
     Asset [] assets;
+
+
     mapping(address => uint) artistBalance;
 
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(string => bool) hashExists;
 
+
     mapping(address => uint[]) boughtAssets;
     mapping(address => uint[]) createdAssets;
+
 
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender

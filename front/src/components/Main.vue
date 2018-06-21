@@ -50,4 +50,10 @@
         margin: 0;
         padding: 0;
     }
+
+    h2 {
+        font-size: 35px;
+        position: center;
+        margin-left: 500px;
+    }
 </style>
