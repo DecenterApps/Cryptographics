@@ -57,7 +57,7 @@
     import Packs from './Packs.vue';
     import Canvas from './Canvas.vue';
     import MyImages from './MyImages.vue';
-    import MyAssets from './MyAssets.vue';
+    import MyAssets from './AllAssets.vue';
     import CreateAsset from './CreateAsset.vue';
 
     const methods = require("../methods.js");

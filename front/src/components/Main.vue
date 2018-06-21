@@ -5,6 +5,7 @@
         <about v-if="currentRoute=='/about'"></about>
         <parent v-if="currentRoute=='/home'"></parent>
         <my-profile v-if="currentRoute=='/profile'"></my-profile>
+        <all-assets v-if="currentRoute=='/assetPacks'"></all-assets>
         <my-footer></my-footer>
     </div>
 </template>
@@ -15,6 +16,7 @@
     import Parent from './Parent.vue';
     import About from './About.vue';
     import MyProfile from './MyProfile.vue';
+    import AllAssets from './AllAssets.vue';
 
     const routes = {
         '/home' : Parent,
@@ -22,7 +24,7 @@
         '/profile' : MyProfile,
         '/create' : 'CreateImage',
         '/gallery' : 'Gallery',
-        '/assetPacks' : 'AssetPacks',
+        '/assetPacks' : AllAssets,
     };
 
     export default {
@@ -31,11 +33,13 @@
         },
 
         components: {
+            AllAssets,
             'my-header' : Header,
             'my-footer' : Footer,
             'parent' : Parent,
             'about' : About,
             'my-profile' : MyProfile,
+            'all-assets' : AllAssets,
         },
 
         async beforeCreate() {
