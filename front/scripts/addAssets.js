@@ -14,6 +14,9 @@ const ourPrivateKey = process.env.PRIV_KEY;
 
 web3.eth.defaultAccount = ourAddress;
 
+console.log(ourAddress);
+
+
 let nonce = 0;
 const gasPrice = 1902509001;
 
@@ -26,16 +29,16 @@ async function getNonce() {
 }
 
 getNonce();
-
-const getEncodedParams = (contractMethod, params = null) => {
-    let encodedTransaction = null;
-    if (!params) {
-        encodedTransaction = contractMethod(params[0],params[1]).encodeABI(); // eslint-disable-line
-    } else {
-        encodedTransaction = contractMethod(params[0], params[1]).encodeABI() // eslint-disable-line
-    }
-    return encodedTransaction;
-};
+//
+// const getEncodedParams = (contractMethod, params = null) => {
+//     let encodedTransaction = null;
+//     if (!params) {
+//         encodedTransaction = contractMethod(params[0],params[1]).encodeABI(); // eslint-disable-line
+//     } else {
+//         encodedTransaction = contractMethod(params[0], params[1]).encodeABI() // eslint-disable-line
+//     }
+//     return encodedTransaction;
+// };
 
 const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce, to) =>
     new Promise(async (resolve, reject) => {
@@ -79,7 +82,7 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
 const addAssetToContract = async (ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price,address],
+        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -118,7 +121,7 @@ async function test() {
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
         let price = Math.floor(Math.random()*1000);
-        await addAssetToContract(ipfsHash, price, ourAddress);
+        await addAssetToContract(ipfsHash, price);
     }
 
 }

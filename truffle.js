@@ -11,7 +11,7 @@ module.exports = {
                 return new HDWalletProvider(mnemonic, `https://kovan.decenter.com/`);
             },
             network_id: '42',
-            gasPrice: 2000000000, // 2 GWei
+            gasPrice: 5000000000, // 2 GWei
         }
     }
 }

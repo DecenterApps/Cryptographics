@@ -1,5 +1,6 @@
 <template xmlns:display="http://www.w3.org/1999/xhtml">
     <div display:inline-block>
+        <my-header></my-header>
         <label> Metamask account: {{ metamask_account }}</label>
         <div>
             <label> Random seed : {{ random_seed }}</label>
@@ -32,7 +33,7 @@
             </button>
         </div>
         <div>
-             <label> My images : {{ this.my_images }}</label>
+             <label> My images : {{ this.my_images }} </label>
         </div>
 
         <div>
@@ -70,6 +71,7 @@
         <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
         <create-asset :metamask_account="metamask_account"></create-asset>
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
+        <my-footer></my-footer>
     </div>
 
 </template>
@@ -80,6 +82,8 @@
     import MyImages from './MyImages.vue';
     import MyAssets from './MyAssets.vue';
     import CreateAsset from './CreateAsset.vue';
+    import Header from './Header.vue';
+    import Footer from './Footer.vue';
 
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
@@ -105,12 +109,13 @@
             random_hash_ids: functions.pickTenRandoms(),
         }),
         components: {
-            CreateAsset,
             'canvas-image': Canvas,
             'canvas-my-images': MyImages,
             'packs': Packs,
             'my-assets' : MyAssets,
             'create-asset' : CreateAsset,
+            'my-header' : Header,
+            'my-footer' : Footer,
         },
 
         methods: {
