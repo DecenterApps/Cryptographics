@@ -4,6 +4,7 @@
             <a href="/galery"> Gallery</a>
             <a href="/assetPacks"> Asset packs</a>
             <a href="/about"> About </a>
+            <a href="/profile"> Profile </a>
         </div>
     </header>
 </template>
