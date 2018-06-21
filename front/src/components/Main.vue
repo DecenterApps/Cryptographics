@@ -3,7 +3,7 @@
         <my-header></my-header>
         <h2> Cryptographics </h2>
         <about v-if="currentRoute=='/about'"></about>
-        <parent v-if="currentRoute=='/galery'"></parent>
+        <parent v-if="currentRoute=='/home'"></parent>
         <my-profile v-if="currentRoute=='/profile'"></my-profile>
         <my-footer></my-footer>
     </div>
@@ -17,7 +17,7 @@
     import MyProfile from './MyProfile.vue';
 
     const routes = {
-        '/' : 'Home',
+        '/home' : Parent,
         '/about' : About,
         '/profile' : MyProfile,
         '/create' : 'CreateImage',

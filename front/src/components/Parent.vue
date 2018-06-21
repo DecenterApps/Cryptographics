@@ -24,51 +24,30 @@
         </div>
 
         <div>
-            <packs v-if="allAssets" :allAssets="allAssets"></packs>
-        </div>
-        <div>
             <button @click="getImages">
                 View my image ids
             </button>
-        </div>
-        <div>
-             <label> My images : {{ this.my_images }} </label>
-        </div>
+            <label> My images : {{ this.my_images }} </label>
 
-        <div>
-            <button @click="renderMyImagesCanvas">
-                Show my image with id :
-            </button>
-            <input placeholder="Type id of your image: " v-model="id_to_show"/>
         </div>
 
         <div>
             <button @click="getBoughtAssets">
                 View assets I've bought
             </button>
-        </div>
-
-        <div>
-            <label> Assets I've bought permission for : {{ this.bought_assets }}</label>
+            <label> {{ this.bought_assets }}</label>
         </div>
         <div>
             <button @click="getCreatedAssets">
                 View assets I've created
             </button>
+            <label> {{this.created_assets}}</label>
         </div>
-        <div>
-            <label> Assets I'm creator of : {{ this.created_assets }}</label>
-        </div>
-        <div>
-            <button @click="showAssets"> Show me my assets </button>
-        </div>
+
         <div>
             <input type="checkbox" id="checkbox" v-model="checked">
             <label for="checkbox"> Pick only assets I've already bought permission for</label>
         </div>
-        <my-assets :bought_assets="bought_assets"></my-assets>
-        <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
-        <create-asset :metamask_account="metamask_account"></create-asset>
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
     </div>
 
@@ -111,7 +90,23 @@
             'my-assets' : MyAssets,
             'create-asset' : CreateAsset,
         },
-
+        computed: {
+            async load(){
+                this.random_hash_ids = functions.pickTenRandoms();
+                this.timestamp = new Date().getTime();
+                window.onload = () => {
+                    web3.eth.getAccounts((err, acc) => {
+                        if (err) return console.error(err);
+                        this.metamask_account = acc[0];
+                    })
+                };
+                this.allAssets = await methods.loadDataForAssets();
+                this.bought_assets = await this.getBoughtAssets();
+                this.my_images = await this.getImages()
+                this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+                this.renderCanvas();
+            }
+        },
         methods: {
             async renderCanvas() {
                 let pot;
@@ -137,28 +132,10 @@
                 this.image_price = parseInt(price, 10);
             },
 
-            async renderMyImagesCanvas() {
-                this.id_to_show = parseInt(this.id_to_show,10);
-
-                if(this.id_to_show === -1) {
-                    return;
-                }
-
-                let data = await functions.getImageMetadataFromContract(this.id_to_show);
-                this.myobjects = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
-
-
-            },
-
-            async showAssets() {
-
-            },
             async getCreatedAssets() {
                 this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
             },
-            async hide() {
-                this.id_to_show = -1;
-            },
+
 
             async buyImage() {
                 let pot;
@@ -197,7 +174,7 @@
             };
             this.allAssets = await methods.loadDataForAssets();
             this.bought_assets = await this.getBoughtAssets();
-            this.my_images = await this.getImages();
+            this.my_images = await this.getImages()
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
             // let rs = this.random_seed.toString()

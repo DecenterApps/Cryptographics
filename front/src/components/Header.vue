@@ -1,6 +1,7 @@
 <template>
     <header>
         <div>
+            <a href="/home"> Home</a>
             <a href="/galery"> Gallery</a>
             <a href="/assetPacks"> Asset packs</a>
             <a href="/about"> About </a>
