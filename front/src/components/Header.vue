@@ -16,10 +16,11 @@
 
 <style scoped>
 
+
+
     header {
         background-color: black;
         height: 100px;
-        margin-top: 50px;
         margin-bottom: 50px;
     }
 

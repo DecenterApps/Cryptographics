@@ -1,6 +1,5 @@
 <template xmlns:display="http://www.w3.org/1999/xhtml">
     <div display:inline-block>
-        <my-header></my-header>
         <label> Metamask account: {{ metamask_account }}</label>
         <div>
             <label> Random seed : {{ random_seed }}</label>
@@ -71,7 +70,6 @@
         <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects" ></canvas-my-images>
         <create-asset :metamask_account="metamask_account"></create-asset>
         <button v-if="id_to_show != -1" @click="hide"> Hide </button>
-        <my-footer></my-footer>
     </div>
 
 </template>
@@ -82,8 +80,6 @@
     import MyImages from './MyImages.vue';
     import MyAssets from './MyAssets.vue';
     import CreateAsset from './CreateAsset.vue';
-    import Header from './Header.vue';
-    import Footer from './Footer.vue';
 
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
@@ -114,8 +110,6 @@
             'packs': Packs,
             'my-assets' : MyAssets,
             'create-asset' : CreateAsset,
-            'my-header' : Header,
-            'my-footer' : Footer,
         },
 
         methods: {
@@ -203,7 +197,7 @@
             };
             this.allAssets = await methods.loadDataForAssets();
             this.bought_assets = await this.getBoughtAssets();
-            this.my_images = await this.getImages()
+            this.my_images = await this.getImages();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
             // let rs = this.random_seed.toString()

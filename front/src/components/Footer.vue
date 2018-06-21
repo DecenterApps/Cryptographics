@@ -17,10 +17,10 @@
 <style scoped>
 
     footer {
+        width: 100%;
+        bottom: 0;
         background-color: black;
         height: 100px;
-        margin-top: 50px;
-        margin-bottom: 50px;
     }
 
     div {
