@@ -17,13 +17,13 @@ const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi
 
 
 
-async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) {
+async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price) {
     potentialAssets = utils.encode(potentialAssets);
     console.log("ENCODED POTENTIAL ASSETS: " + potentialAssets);
     let nonce = await web3.eth.getTransactionCount(account);
     try{
-        console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash);
-        return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
+        console.log(randomHashIds, timestamp, iterations, potentialAssets, author);
+        return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author).send({
             value: web3.utils.toWei(price.toString(), 'wei'), from: account, to: digitalPrintImageContractAddress, nonce: nonce
         }, (a, b) => {
             console.log(a, b);
