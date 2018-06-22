@@ -3,6 +3,7 @@ pragma solidity ^0.4.23;
 import "./ImageToken.sol";
 import "../Utils/Functions.sol";
 import "../AssetManager.sol";
+import "../Marketplace.sol";
 
 
 contract DigitalPrintImage is ImageToken,Functions {
@@ -21,9 +22,14 @@ contract DigitalPrintImage is ImageToken,Functions {
     mapping(uint => bool) seedExists;
     mapping(uint => ImageMetadata) public imageMetadata;
 
-
+    Marketplace marketplaceContract;
     AssetManager assetManager;
 
+
+    modifier onlyMarketplaceContract() {
+        require(msg.sender == address(marketplaceContract));
+        _;
+    }
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
@@ -107,6 +113,26 @@ contract DigitalPrintImage is ImageToken,Functions {
         ImageMetadata memory metadata = imageMetadata[_imageId];
 
         return (metadata.ipfsHash);
+    }
+
+    /// @notice adds marketplace address to contract only if it doesn't already exist
+    /// @param _marketplaceContract address of marketplace contract
+    function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
+        // not required while on testnet
+        // require(address(marketplaceContract) == 0x0);
+        marketplaceContract = Marketplace(_marketplaceContract);
+    }
+
+
+    /// @notice approving image to be taken from specific address
+    /// @param _to address that we give permission to take image
+    /// @param _imageId we are willing to give
+    function _approveByMarketplace(address _to, uint256 _imageId) public onlyMarketplaceContract {
+        require(tokensForOwner[_imageId] != 0x0);
+        if (_getApproved(_imageId) != 0x0 || _to != 0x0) {
+            tokensForApproved[_imageId] = _to;
+            emit Approval(msg.sender, _to, _imageId);
+        }
     }
 
 }
