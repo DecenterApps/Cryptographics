@@ -24,6 +24,12 @@
                 <button @click="renderMyImagesCanvas"> View image </button>
                 <input placeholder="Type id of your image: " v-model="id_to_show"/>
             </div>
+            <!--<div >-->
+                <!--<div class="asets" v-for="(asset,key) in allAssetPaths">-->
+                    <!--<label> {{key}}</label>-->
+                    <!--<img :src=asset>-->
+                <!--</div>-->
+            <!--</div>-->
             <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
         </div>
     </div>
@@ -41,6 +47,7 @@
     export default {
         name: "my-profile",
         data: () => ({
+            allAssetPaths: [],
             id_to_show: -1,
             metamask_account: 0,
             allAssets: [],
@@ -118,7 +125,13 @@
 </script>
 
 <style scoped>
-    
+    img{
+        margin-right: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 100px;
+        height: 100px;
+    }
     label {
         position: relative;
         padding-left: 500px;
@@ -132,11 +145,15 @@
         font-size: 35px;
 
     }
+    div.asets{
+        display: inline-block;
+    }
 
     button {
         margin-top: 20px;
         width: 350px;
         margin-left: 500px;
     }
+
 
 </style>

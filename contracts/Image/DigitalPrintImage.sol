@@ -15,7 +15,6 @@ contract DigitalPrintImage is ImageToken,Functions {
         uint timestamp;
         string author;
         address owner;
-        bytes32 ipfsHash;
     }
 
 
@@ -39,9 +38,8 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _iterations is number of how many times he generated random asset positions until he liked what he got
     /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
-    /// @param _ipfsHash is ipfshash of the image
     /// @return returns id of created image
-    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author, bytes32 _ipfsHash) public payable returns (uint) {
+    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author) public payable returns (uint) {
         require(_potentialAssets.length <= 5);
         require(seedExists[finalSeed] == false);
 
@@ -65,8 +63,7 @@ contract DigitalPrintImage is ImageToken,Functions {
             potentialAssets: _potentialAssets,
             timestamp: _timestamp,
             author: _author,
-            owner: _owner,
-            ipfsHash: _ipfsHash
+            owner: _owner
             });
 
 
@@ -98,22 +95,16 @@ contract DigitalPrintImage is ImageToken,Functions {
         assetManager = AssetManager(_assetManager);
     }
 
-    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address, bytes32) {
+    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address) {
         require(_imageId < numOfImages);
 
         ImageMetadata memory metadata = imageMetadata[_imageId];
 
-        return(metadata.randomSeed, metadata.iterations, metadata.potentialAssets, metadata.timestamp, metadata.author, metadata.owner, metadata.ipfsHash);
+        return(metadata.randomSeed, metadata.iterations, metadata.potentialAssets, metadata.timestamp, metadata.author, metadata.owner);
 
     }
 
-    function getIpfsHash(uint _imageId) public view returns (bytes32) {
-        require(_imageId < numOfImages);
 
-        ImageMetadata memory metadata = imageMetadata[_imageId];
-
-        return (metadata.ipfsHash);
-    }
 
     /// @notice adds marketplace address to contract only if it doesn't already exist
     /// @param _marketplaceContract address of marketplace contract

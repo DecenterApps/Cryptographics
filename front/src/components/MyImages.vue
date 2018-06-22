@@ -38,6 +38,7 @@
         margin: 10px;
         width: 1000px;
         height: 1000px;
+        margin-left: 300px;
 
     }
 </style>
