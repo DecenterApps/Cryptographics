@@ -28,7 +28,6 @@
                 }
             }
             this.allAssetPaths = images;
-
         },
         computed: {
 
