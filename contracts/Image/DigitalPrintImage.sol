@@ -15,7 +15,7 @@ contract DigitalPrintImage is ImageToken,Functions {
         uint timestamp;
         string author;
         address owner;
-        bytes32 ipfsHash;
+        string ipfsHash;
     }
 
 
@@ -43,7 +43,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _author is nickname of image owner
     /// @param _ipfsHash is ipfsHash of the image .png
     /// @return returns id of created image
-    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author, bytes32 _ipfsHash) public payable returns (uint) {
+    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author, string _ipfsHash) public payable returns (uint) {
         require(_potentialAssets.length <= 5);
         require(seedExists[finalSeed] == false);
 
@@ -78,9 +78,10 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @notice Function where an artist / user can set it's nickname for the address
     /// @param _nickname as a string
     function setNickname(string _nickname) public {
-        require(_nickname != "");
         nickname[msg.sender] = _nickname;
     }
+
+
     /// @notice Function to calculate final price for an image based on selected assets
     /// @param _pickedAssets is array of picked assets
     /// @param _owner is address of image owner
@@ -106,7 +107,7 @@ contract DigitalPrintImage is ImageToken,Functions {
         assetManager = AssetManager(_assetManager);
     }
 
-    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address, bytes32) {
+    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address, string) {
         require(_imageId < numOfImages);
 
         ImageMetadata memory metadata = imageMetadata[_imageId];
