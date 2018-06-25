@@ -63,6 +63,9 @@
     const methods = require("../methods.js");
     const utils = require("../../scripts/utils.js");
     const functions = require("../../scripts/functions.js");
+    const ipfsService = require("../../scripts/ipfsService.js");
+
+
 
     export default {
         data: () => ({
@@ -100,6 +103,18 @@
                         this.metamask_account = acc[0];
                     })
                 };
+
+                window.node = new IPFS({
+                    repo: 'cryptographics',
+                    config: {
+                        Bootstrap: ipfsService.bootstrapNodes,
+                        Addresses: {
+                            Swarm: [],
+                        },
+                    }
+                });
+
+
                 this.allAssets = await methods.loadDataForAssets();
                 this.bought_assets = await this.getBoughtAssets();
                 this.my_images = await this.getImages()
@@ -108,6 +123,7 @@
             }
         },
         methods: {
+
             async renderCanvas() {
                 let pot;
                 if (this.checked == true) {
@@ -138,6 +154,13 @@
 
 
             async buyImage() {
+                // var canvas = document.getElementById("mycanvas");
+                // var image    = canvas.toDataURL("image/png");
+                //
+                // let hash = await ipfsService.uploadFile(image);
+
+                console.log(Canvas.data());
+                // console.log(hash);
                 let pot;
                 if (this.checked == true) {
                     this.potential_assets = this.bought_assets;
