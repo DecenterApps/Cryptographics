@@ -7,9 +7,10 @@ export const bootstrapNodes = [
 ];
 
 
-export const uploadFile = data =>
+export const uploadFile = async(data) =>
     new Promise((resolve, reject) => {
-        window.node.files.add([Buffer.from(JSON.stringify(data))], (err, uploadedFile) => {
+        window.node.files.add([Buffer.from(data,'base64')], (err, uploadedFile) => {
+        // window.node.files.add([Buffer.from(data)], (err, uploadedFile) => {
             if (err) {
                 return reject(err);
             }
@@ -21,7 +22,7 @@ export const uploadFile = data =>
 
 
 
-export const replicate = (hash, type) => {
+export const replicate = async(hash, type) => {
     let successful = 0;
     const replicationPromises = replicationNodes.map(node =>
         new Promise((resolve) => {
