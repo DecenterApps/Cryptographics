@@ -64,7 +64,7 @@
     const utils = require("../../scripts/utils.js");
     const functions = require("../../scripts/functions.js");
     const ipfsService = require("../../scripts/ipfsService.js");
-
+    import IPFS from 'ipfs';
 
 
     export default {
@@ -94,47 +94,52 @@
             'create-asset' : CreateAsset,
         },
         computed: {
-            async load(){
-                this.random_hash_ids = functions.pickTenRandoms();
-                this.timestamp = new Date().getTime();
-                window.onload = () => {
-                    web3.eth.getAccounts((err, acc) => {
-                        if (err) return console.error(err);
-                        this.metamask_account = acc[0];
-                    })
-                };
 
-                window.node = new IPFS({
-                    repo: 'cryptographics',
-                    config: {
-                        Bootstrap: ipfsService.bootstrapNodes,
-                        Addresses: {
-                            Swarm: [],
-                        },
-                    }
-                });
-
-
-                this.allAssets = await methods.loadDataForAssets();
-                this.bought_assets = await this.getBoughtAssets();
-                this.my_images = await this.getImages()
-                this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-                this.renderCanvas();
-            }
         },
+
+        // async beforeMount() {
+        //         this.random_hash_ids = functions.pickTenRandoms();
+        //         this.timestamp = new Date().getTime();
+        //         window.onload = () => {
+        //             web3.eth.getAccounts((err, acc) => {
+        //                 if (err) return console.error(err);
+        //                 this.metamask_account = acc[0];
+        //             })
+        //         };
+        //         window.node = new IPFS({
+        //             repo: 'cryptographics',
+        //             config: {
+        //                 Bootstrap: ipfsService.bootstrapNodes,
+        //                 Addresses: {
+        //                     Swarm: [],
+        //                 },
+        //             }
+        //         });
+        //
+        //         this.iterations = 0;
+        //         this.allAssets = await methods.loadDataForAssets();
+        //         this.bought_assets = await this.getBoughtAssets();
+        //         this.my_images = await this.getImages();
+        //         this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+        // },
         methods: {
 
             async renderCanvas() {
                 let pot;
+
                 if (this.checked == true) {
                     this.potential_assets = this.bought_assets;
                     console.log(this.potential_assets);
                     console.log(this.bought_assets);
                     pot = this.potential_assets;
                 } else {
+                    if(this.potential_assets.length == 0) {
+                        pot = [];
+                        return;
+                    } else {
                     pot = this.potential_assets.split(',').map(a => parseInt(a, 10));
+                    }
                 }
-                console.log(pot);
                 this.objs = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
                 this.iterations++;
                 let picked = [];
@@ -154,18 +159,16 @@
 
 
             async buyImage() {
-                // var canvas = document.getElementById("mycanvas");
-                // var image    = canvas.toDataURL("image/png");
-                //
-                // let hash = await ipfsService.uploadFile(image);
+                var canvas = Canvas.methods.getCanvasElement();
+                var image    = canvas.toDataURL("image/png");
 
-                console.log(Canvas.data());
-                // console.log(hash);
+                let hash = await ipfsService.uploadFile(image);
+
+                console.log(hash);
                 let pot;
                 if (this.checked == true) {
                     this.potential_assets = this.bought_assets;
                     console.log(this.potential_assets);
-                    console.log(this.bought_assets);
                     pot = this.potential_assets;
                 } else {
                     pot = this.potential_assets.split(',').map(a => parseInt(a, 10));
@@ -195,9 +198,20 @@
                     this.metamask_account = acc[0];
                 })
             };
+            window.node = new IPFS({
+                repo: 'cryptographics',
+                config: {
+                    Bootstrap: ipfsService.bootstrapNodes,
+                    Addresses: {
+                        Swarm: [],
+                    },
+                }
+            });
+
+            this.iterations = 0;
             this.allAssets = await methods.loadDataForAssets();
             this.bought_assets = await this.getBoughtAssets();
-            this.my_images = await this.getImages()
+            this.my_images = await this.getImages();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
             this.renderCanvas();
             // let rs = this.random_seed.toString()

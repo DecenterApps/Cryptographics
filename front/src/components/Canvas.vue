@@ -17,6 +17,11 @@
                 let c = document.getElementById("test");
                 methods.makeImage(newObjs, c);
             }
+        },
+        methods: {
+          getCanvasElement() {
+              return document.getElementById("test");
+          }
         }
     }
 </script>
