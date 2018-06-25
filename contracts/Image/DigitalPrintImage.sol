@@ -99,7 +99,6 @@ contract DigitalPrintImage is ImageToken,Functions {
         return finalPrice;
     }
 
-
     /// @notice Function to add assetManager
     /// @dev during testing can be changed, after deployment to main network can be set only once
     /// @param _assetManager is address of assetManager contract
