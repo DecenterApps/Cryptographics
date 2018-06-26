@@ -1,10 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
-require('babel-polyfill')
+require('babel-polyfill');
 
 const config = {
   entry: {
     app: path.resolve(__dirname, '../src/client-entry.js'),
+  },
+  resolve: {
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
   },
   module: {
     rules: [

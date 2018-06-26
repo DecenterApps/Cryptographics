@@ -203,7 +203,7 @@ function printImageData(assets) {
     }
 }
 
-test();
+// test();
 
 module.exports = {
     getImage,

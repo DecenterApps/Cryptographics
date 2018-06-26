@@ -150,7 +150,7 @@ async function test() {
     console.log(x);
 }
 
-test();
+// test();
 
 module.exports ={
     getData,

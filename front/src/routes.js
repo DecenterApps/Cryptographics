@@ -1,9 +1,10 @@
-export default {
+import About from './components/About.vue';
+import Home from './components/Home/Home.vue';
 
-    '/' : 'Home',
-    '/about' : 'About',
-    '/create' : 'CreateImage',
-    '/gallery' : 'Gallery',
-    '/assetPacks' : 'AssetPacks',
-
-}
+export default [
+  { path: '/', component: Home },
+  { path: '/about', component: About },
+  { path: '/create', component: About },
+  { path: '/gallery', component: About },
+  { path: '/asset_packs', component: About },
+];

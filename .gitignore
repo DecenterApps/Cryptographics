@@ -8,7 +8,6 @@ scripts/doxity/node_modules
 dev-scripts
 contracts/.env
 yarn.lock
-build
 lib/core/metadata.js
 lib/core/MetadataBlog.js
 website/translated_docs

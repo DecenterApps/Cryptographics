@@ -1,10 +1,19 @@
 import Vue from 'vue';
-import Parent from './components/Parent.vue';
-import Main from './components/Main.vue';
+import VueRouter from 'vue-router';
+import routes from './routes';
 
-const app = new Vue({
-    ... Main,
+import App from './components/App.vue';
+
+const router = new VueRouter({
+  mode: 'history',
+  routes,
 });
 
+Vue.use(VueRouter);
+
+const app = new Vue({
+  ...App,
+  router,
+});
 
 export { app };

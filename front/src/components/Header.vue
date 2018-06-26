@@ -1,31 +1,32 @@
 <template>
     <header>
         <div>
-            <img src="http://localhost:3000/dist/logo.png"/>
+            <img src="http://localhost:3000/dist/logo.png" />
             <label> Cryptographics </label>
-            <a href="/home"> Home</a>
-            <a href="/galery"> Gallery</a>
-            <a href="/assetPacks"> Asset packs</a>
-            <a href="/about"> About </a>
-            <a href="/profile"> Profile </a>
+            <router-link to="/"> Home</router-link>
+            <router-link to="/galery"> Gallery</router-link>
+            <router-link to="/assetPacks"> Asset packs</router-link>
+            <router-link to="/about"> About </router-link>
+            <router-link to="/profile"> Profile </router-link>
         </div>
     </header>
 </template>
 
 <script>
-    export default {
-        name: "header"
-    }
+  export default {
+    name: 'header'
+  };
 </script>
 
 <style scoped>
 
 
-    label{
+    label {
         font-size: 30px;
         color: white;
         height: 20.99px;
     }
+
     header {
         background-color: black;
         height: 100px;
