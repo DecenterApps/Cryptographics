@@ -23,6 +23,11 @@ function pickTenRandoms(){
     return randoms;
 }
 
+async function getImageIpfs(imageId) {
+    let ipfsHash = await digitalPrintImageContract.methods.idToIpfsHash(imageId).call();
+    console.log("Image ipfs hash = " + ipfsHash);
+    return ipfsHash;
+}
 
 async function getBoughtAssets(address) {
     let assetIds = await assetManagerContract.methods.getAssetsForUser(address).call();
@@ -187,7 +192,8 @@ async function test() {
      // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
      // printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
-    getImageMetadataFromContract(0);
+    // getImageMetadataFromContract(0);
+    getImageIpfs(0);
 }
 
 function printImageData(assets) {
@@ -204,7 +210,7 @@ module.exports = {
     getAssetStats,
     getNumberOfAssets,
     calculatePrice,
-    // getNumberOfImages,
+    getImageIpfs,
     getAssetsUserCreated,
     getImageMetadataFromContract,
     calculateFirstSeed,

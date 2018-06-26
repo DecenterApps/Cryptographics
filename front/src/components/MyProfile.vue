@@ -24,6 +24,8 @@
                 <button @click="renderMyImagesCanvas"> View image </button>
                 <input placeholder="Type id of your image: " v-model="id_to_show"/>
             </div>
+            
+            <img src="https://ipfs.decenter.com/ipfs/QmepmrTgemsCGuQmjrV1CKp3YnwmyrY1FpWzQnJkcuZznu"/>
             <!--<div >-->
                 <!--<div class="asets" v-for="(asset,key) in allAssetPaths">-->
                     <!--<label> {{key}}</label>-->
@@ -153,6 +155,11 @@
         margin-top: 20px;
         width: 350px;
         margin-left: 500px;
+    }
+
+    img {
+        width: 550px;
+        height: 550px;
     }
 
 
