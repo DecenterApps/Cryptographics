@@ -22,10 +22,9 @@
                 <input placeholder="Type id of your image: " v-model="id_to_show" />
             </div>
 
-            <img src="https://ipfs.decenter.com/ipfs/QmepmrTgemsCGuQmjrV1CKp3YnwmyrY1FpWzQnJkcuZznu" />
 
             <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
-            <my-images-ipfs :metamask-account="metamask_account"></my-images-ipfs>
+            <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
         </div>
     </div>
 </template>
@@ -55,15 +54,16 @@
       'canvas-my-images': MyImages,
       'my-images-ipfs': MyImageees,
     },
-    computed: {
+    // computed: {
+    // },
+    methods: {
       async generateData() {
         await this.getImages();
         await this.getCreatedAssets();
         await this.getBoughtAssets();
         await this.getAllAssets();
       },
-    },
-    methods: {
+
       async getImages() {
         this.my_images_on_chain = await functions.getUserImages(this.metamask_account);
       },
@@ -102,12 +102,12 @@
       },
     },
 
-    async beforeCreate() {
-      web3.eth.getAccounts((err, acc) => {
-        if (err) return console.error(err);
-        this.metamask_account = acc[0];
-      });
-
+    beforeMount() {
+        web3.eth.getAccounts((err, acc) => {
+            if (err) return console.error(err);
+            this.metamask_account = acc[0];
+            this.generateData();
+        });
     }
 
   };

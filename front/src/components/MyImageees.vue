@@ -1,6 +1,8 @@
 <template>
     <div>
-        <label> Cao </label>
+        <div v-for="image in images">
+            <img :src="image"/>
+        </div>
     </div>
 </template>
 
@@ -10,21 +12,22 @@
 
     export default {
         data:  () => ({
+            images: [],
         }),
         props : ["metamask_account"],
-        watch: {
-            'metamask_account': async (metamaskAccount) => {
-                console.log(metamaskAccount);
-                let my_images_on_chain = await functions.getUserImages(metamaskAccount);
-                let prefix = "https://ipfs.decenter.com/ipfs/";
-                let images = [];
-                for(let i=0 ; i<my_images_on_chain.length; i++) {
-                    let hash = await functions.getImageIpfs(my_images_on_chain[i]);
-                    images.push(prefix+hash);
-                }
-                console.log(images);
+
+        async created() {
+            console.log("mmaccount" + this.metamask_account);
+            let my_images_on_chain = await functions.getUserImages(this.metamask_account);
+            let prefix = "https://ipfs.decenter.com/ipfs/";
+            let images = [];
+            for (let i = 0; i < my_images_on_chain.length; i++) {
+                let hash = await functions.getImageIpfs(my_images_on_chain[i]);
+                images.push(prefix + hash);
             }
-        },
+            console.log(images);
+            this.images = images;
+        }
 
     }
 </script>
