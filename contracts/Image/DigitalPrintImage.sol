@@ -21,8 +21,7 @@ contract DigitalPrintImage is ImageToken,Functions {
 
     mapping(uint => bool) seedExists;
     mapping(uint => ImageMetadata) public imageMetadata;
-    mapping(address => string) nickname;
-
+    mapping(uint => string) public idToIpfsHash;
 
     Marketplace marketplaceContract;
     AssetManager assetManager;
@@ -71,14 +70,9 @@ contract DigitalPrintImage is ImageToken,Functions {
             ipfsHash: _ipfsHash
             });
 
+        idToIpfsHash[id] = _ipfsHash;
 
         return id;
-    }
-
-    /// @notice Function where an artist / user can set it's nickname for the address
-    /// @param _nickname as a string
-    function setNickname(string _nickname) public {
-        nickname[msg.sender] = _nickname;
     }
 
 
