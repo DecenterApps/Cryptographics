@@ -231,7 +231,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     button {
         margin-left: 30px;
         margin-right: 30px;
