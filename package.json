@@ -34,6 +34,7 @@
     "vue-class": "^2.0.1",
     "vue-class-component": "^6.2.0",
     "vue-loader": "^13.5.0",
+    "vue-masonry": "^0.11.4",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.8",
     "web3": "^1.0.0-beta.34",
