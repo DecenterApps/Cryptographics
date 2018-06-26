@@ -5,7 +5,6 @@
   export default {
     name: 'about',
     components: {
-      Header,
     }
   };
 </script>
