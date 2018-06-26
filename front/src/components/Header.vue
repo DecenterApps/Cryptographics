@@ -41,9 +41,9 @@
         }
 
         .header-container {
-            width: 1115px;
+            width: 1120px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 15px 0;
             display: flex;
             justify-content: space-between;
         }

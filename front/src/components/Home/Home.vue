@@ -1,27 +1,23 @@
 <template>
+    <div>
+        <slider-gallery></slider-gallery>
+        <Footer></Footer>
+    </div>
 </template>
 
 <script>
+  import SliderGallery from '../SliderGallery/SliderGallery.vue';
+  import Footer from '../Footer/Footer.vue';
+
   export default {
     name: 'about',
     components: {
+      SliderGallery,
+      Footer,
     }
   };
 </script>
 
 <style scoped>
-    p {
-        font-size: 20px;
-    }
-
-    div {
-        padding-top: 30px;
-        height: 100vh;
-    }
-
-    h3 {
-        font-size: 35px;
-        padding-top: 30px;
-    }
 
 </style>
