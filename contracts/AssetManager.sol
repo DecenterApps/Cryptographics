@@ -125,7 +125,7 @@ contract AssetManager is Ownable {
     }
 
     function getAssetIpfs(uint id) public view returns (string) {
-        require(id > numberOfAssets);
+        require(id < numberOfAssets);
         Asset memory asset = assets[id];
         return asset.ipfsHash;
     }
