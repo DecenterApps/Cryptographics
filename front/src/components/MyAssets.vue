@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div v-for="image , key in asset_pack_image">
-            <label> Asset pack number : {{ key }}</label>
-            <img :src="image" @click="showAssetsInPack"/>
+        <div v-for="asset in assets">
+            <img :src="asset" @click="showAssetsInPack"/>
         </div>
     </div>
 </template>
@@ -14,9 +13,8 @@
     export default {
         name: "my-assets",
         data:  () => ({
-            asset_packs: [],
             created_assets: [],
-            asset_pack_image: [],
+            assets: [],
         }),
 
         props: ["metamask_account"],
@@ -32,16 +30,11 @@
             },
 
             async generateAssetPacks() {
-                let arr = [];
-                for(let i=1; i<this.created_assets.length; i+=10){
-                    if(i<10) {
-                        this.asset_pack_image.push("http://localhost:3000/dist/assets/" + "0"+i.toString()+".png");
-                    } else {
-                        this.asset_pack_image.push("http://localhost:3000/dist/assets/" + i.toString()+".png");
-                    }
-                    arr.push(this.created_assets.slice(i,i+10));
+                console.log(this.created_assets.length);
+                for(let i=0; i<this.created_assets.length; i+=10){
+                    let assetPackIpfs = await functions.getAssetIpfs(this.created_assets[i]);
+                    this.assets.push("https://ipfs.decenter.com/ipfs/" + assetPackIpfs);
                 }
-                this.asset_packs = arr;
             }
         }
 
