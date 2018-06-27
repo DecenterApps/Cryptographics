@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div v-for="asset in assets">
-            <img :src="asset" @click="showAssetsInPack"/>
+        <div v-for="asset,key in assets">
+            <img :src="asset"/>
         </div>
     </div>
 </template>
@@ -47,4 +47,5 @@
         width: 250px;
         height: 250px;
     }
+
 </style>
