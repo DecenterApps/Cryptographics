@@ -1,0 +1,35 @@
+.default-button {
+  background-color: #fff;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+  height: 33px;
+  width: 74px;
+  cursor: pointer;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.no-background {
+    background: 0;
+    border: 1px solid #000;
+    width: auto;
+    padding: 0 15px;
+  }
+}
+
+.asset-pack-circle {
+  display: inline-flex;
+  height: 42px;
+  width: 42px;
+  background-color: #D4D4D4;
+  box-sizing: border-box;
+  border-radius: 100%;
+  align-items: center;
+  justify-content: center;
+
+  &.selected {
+    border: 1.2px solid #000000;
+  }
+}

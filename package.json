@@ -30,6 +30,7 @@
     "shelljs": "^0.8.2",
     "solc": "^0.4.23",
     "truffle-hdwallet-provider-privkey": "^0.2.0",
+    "url-loader": "^1.0.1",
     "vue": "^2.5.8",
     "vue-class": "^2.0.1",
     "vue-class-component": "^6.2.0",

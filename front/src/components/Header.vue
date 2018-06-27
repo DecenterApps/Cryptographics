@@ -14,7 +14,7 @@
                 <div class="profile">
                     <router-link to="/profile">My Profile</router-link>
                     <span class="profile-img"></span>
-                    <router-link class="create-button" to="/create">
+                    <router-link class="default-button" to="/create">
                         Create
                     </router-link>
                 </div>
@@ -76,18 +76,8 @@
                 margin: 0 20px 0 10px;
             }
 
-            .create-button {
-                background-color: #fff;
-                border-radius: 5px;
-                outline: 0;
-                border: 0;
-                height: 33px;
-                width: 74px;
-                cursor: pointer;
+            .default-button {
                 color: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
         }
     }
