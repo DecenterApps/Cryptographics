@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="image in images">
+        <div class="images" v-for="image in images">
             <img :src="image"/>
         </div>
     </div>
@@ -33,5 +33,14 @@
 </script>
 
 <style scoped>
-
+    div.images {
+        display: inline-block;
+    }
+    img {
+        width: 450px;
+        height: 450px;
+        margin-left: 20px;
+        margin-top: 20px;
+        margin-right: 20px;
+    }
 </style>

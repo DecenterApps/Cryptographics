@@ -12,6 +12,7 @@
 
         data: () => ({
             allAssetPaths: [],
+
         }),
 
         async created(){

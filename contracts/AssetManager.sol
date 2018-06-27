@@ -125,6 +125,12 @@ contract AssetManager is Ownable {
         return createdAssets[_address];
     }
 
+    function getAssetIpfs(uint id) public view returns (string) {
+        require(id > numberOfAssets);
+        Asset memory asset = assets[id];
+        return asset.ipfsHash;
+    }
+
     ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
         require(msg.sender != address(0));
