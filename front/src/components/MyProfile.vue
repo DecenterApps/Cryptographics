@@ -23,7 +23,7 @@
             </div>
 
 
-            <!--<canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>-->
+            <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
             <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
             <my-assets v-if="metamask_account" :metamask_account="metamask_account"></my-assets>
         </div>

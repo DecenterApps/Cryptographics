@@ -135,7 +135,7 @@
         let image = canvas.toDataURL('image/png');
         console.log(image);
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
-        let pot;
+        let pot = [];
         if (this.checked == true) {
           this.potential_assets = this.bought_assets;
           console.log(this.potential_assets);
