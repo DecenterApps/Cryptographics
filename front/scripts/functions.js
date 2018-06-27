@@ -23,6 +23,12 @@ function pickTenRandoms(){
     return randoms;
 }
 
+async function getAssetIpfs(assetId) {
+    let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
+    console.log("Asset ipfs hash = " + ipfsHash);
+    return ipfsHash;
+}
+
 async function getImageIpfs(imageId) {
     let ipfsHash = await digitalPrintImageContract.methods.idToIpfsHash(imageId).call();
     console.log("Image ipfs hash = " + ipfsHash);
@@ -52,7 +58,7 @@ async function calculatePrice(pickedAssets, owner) {
 // Function to get total number of assets existing on contract
 async function getNumberOfAssets(){
     let number = await assetManagerContract.methods.getNumberOfAssets().call();
-    console.log(assetManagerContract.methods.getNumberOfAssets())
+    console.log(assetManagerContract.methods.getNumberOfAssets());
     console.log(await assetManagerContract.methods.getNumberOfAssets().call())
     return number;
 }
@@ -193,7 +199,7 @@ async function test() {
      // printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
     // getImageMetadataFromContract(0);
-    getImageIpfs(0);
+     getAssetIpfs(5);
 }
 
 function printImageData(assets) {
@@ -203,7 +209,7 @@ function printImageData(assets) {
     }
 }
 
-// test();
+test();
 
 module.exports = {
     getImage,
@@ -217,5 +223,6 @@ module.exports = {
     pickTenRandoms,
     getUserImages,
     convertSeed,
-    getBoughtAssets
+    getBoughtAssets,
+    getAssetIpfs,
 }

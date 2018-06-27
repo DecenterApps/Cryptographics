@@ -15,7 +15,7 @@ export const uploadFile = async(data) =>
                 return reject(err);
             }
             const { hash } = uploadedFile[0];
-            replicate(hash, 'json');
+            replicate(hash, 'file');
             resolve(hash);
         });
     });

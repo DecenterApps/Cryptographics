@@ -23,8 +23,9 @@
             </div>
 
 
-            <!--<canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>-->
+            <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
             <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
+            <label> Created assets stored on ipfs</label>
             <my-assets v-if="metamask_account" :metamask_account="metamask_account"></my-assets>
         </div>
     </div>
@@ -143,20 +144,11 @@
 
     }
 
-    div.asets {
-        display: inline-block;
-    }
 
     button {
         margin-top: 20px;
         width: 350px;
         margin-left: 500px;
     }
-
-    img {
-        width: 550px;
-        height: 550px;
-    }
-
 
 </style>

@@ -18,13 +18,12 @@ contract AssetManager is Ownable {
 
 
     mapping(address => uint) artistBalance;
-
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(string => bool) hashExists;
 
 
     mapping(address => uint[]) boughtAssets;
-    mapping(address => uint[]) createdAssets;
+    mapping(address => uint[]) public createdAssets;
 
 
     /// @notice Function which creates an asset
@@ -126,7 +125,7 @@ contract AssetManager is Ownable {
     }
 
     function getAssetIpfs(uint id) public view returns (string) {
-        require(id > numberOfAssets);
+        require(id < numberOfAssets);
         Asset memory asset = assets[id];
         return asset.ipfsHash;
     }
@@ -138,6 +137,8 @@ contract AssetManager is Ownable {
 
         msg.sender.transfer(amount);
     }
+
+
 
 
 }
