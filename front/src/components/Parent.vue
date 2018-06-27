@@ -49,6 +49,7 @@
             <label for="checkbox"> Pick only assets I've already bought permission for</label>
         </div>
         <button v-if="id_to_show != -1" @click="hide"> Hide</button>
+        <create-asset :metamask_account="metamask_account"></create-asset>
     </div>
 
 </template>
@@ -86,7 +87,7 @@
       random_hash_ids: functions.pickTenRandoms(),
     }),
     components: {
-      'canvas-image': Canvas,
+        'canvas-image': Canvas,
       'canvas-my-images': MyImages,
       'packs': Packs,
       'my-assets': MyAssets,
@@ -94,31 +95,6 @@
     },
     computed: {},
 
-    // async beforeMount() {
-    //         this.random_hash_ids = functions.pickTenRandoms();
-    //         this.timestamp = new Date().getTime();
-    //         window.onload = () => {
-    //             web3.eth.getAccounts((err, acc) => {
-    //                 if (err) return console.error(err);
-    //                 this.metamask_account = acc[0];
-    //             })
-    //         };
-    //         window.node = new IPFS({
-    //             repo: 'cryptographics',
-    //             config: {
-    //                 Bootstrap: ipfsService.bootstrapNodes,
-    //                 Addresses: {
-    //                     Swarm: [],
-    //                 },
-    //             }
-    //         });
-    //
-    //         this.iterations = 0;
-    //         this.allAssets = await methods.loadDataForAssets();
-    //         this.bought_assets = await this.getBoughtAssets();
-    //         this.my_images = await this.getImages();
-    //         this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-    // },
     methods: {
 
       async renderCanvas() {
@@ -157,6 +133,7 @@
       async buyImage() {
         let canvas = Canvas.methods.getCanvasElement();
         let image = canvas.toDataURL('image/png');
+        console.log(image);
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         let pot;
         if (this.checked == true) {

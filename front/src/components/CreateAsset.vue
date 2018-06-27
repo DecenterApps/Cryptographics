@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input placeholder="Path to your asset jpeg/png" v-model="path_to_image"/>
+        <input type="file" id="asset"/>
         <input placeholder="Asset price: " v-model="price"/>
         <button @click="createAsset">
             Create asset
@@ -13,25 +13,35 @@
     // const util = require('util');
     // const exec = util.promisify(require('child_process').exec);
     const methods = require("../methods.js");
+    const ipfsService = require('../../scripts/ipfsService.js');
 
     export default {
         data:  () => ({
             mm :"",
-            path_to_image: "",
             price: 0,
         }),
         props: ["metamask_account"],
 
         methods: {
             async createAsset() {
-                // const { stdout, stderr } = await exec('ipfs add -q ' + this.path_to_image);
-                // let assetIpfs = stdout.split('\n')[0];
-                // console.log(assetIpfs);
-                let asset = await methods.createAsset(parseInt(this.price,10), this.path_to_image, this.metamask_account);
-                console.log(asset);
-            }
-        },
+                var file = document.getElementById("asset").files[0];
+                var reader = new FileReader();
+                let image = "";
+                reader.onloadend = async () => {
+                    console.log(reader.result);
+                    image = reader.result.substr(22);
+                    let ipfsHash = await ipfsService.uploadFile(image);
+                    console.log(ipfsHash);
+                    let asset = await methods.createAsset(parseInt(this.price,10), ipfsHash, this.metamask_account);
+                    console.log(asset);
+                };
+                if(file){
+                    reader.readAsDataURL(file);
+                }
 
+            },
+
+            },
     }
 </script>
 
