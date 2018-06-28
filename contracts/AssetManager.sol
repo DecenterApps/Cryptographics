@@ -1,5 +1,4 @@
 pragma solidity ^0.4.23;
-
 import "./Utils/Ownable.sol";
 
 
@@ -22,7 +21,6 @@ contract AssetManager is Ownable {
     uint numberOfAssets;
     uint numberOfAssetPacks;
 
-    uint ASSET_PACK_SIZE = 10;
 
     Asset [] assets;
     AssetPack [] assetPacks;
@@ -32,9 +30,14 @@ contract AssetManager is Ownable {
     mapping(bytes32 => bool) hashExists;
 
     mapping(address => uint[]) boughtAssets;
-    mapping(address => uint[]) public createdAssets;
+    mapping(address => uint[]) createdAssets;
+    mapping(address => uint[]) createdAssetPacks;
 
 
+
+    /// @notice Function to create assetpack
+    /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
+    /// @param _packPrice is price for total assetPack (every asset will have average price)
     function createAssetPack(bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         uint assetPrice = _packPrice / _ipfsHashes.length;
@@ -49,7 +52,9 @@ contract AssetManager is Ownable {
             assetIds: ids,
             creator: msg.sender,
             price: _packPrice
-        }));
+            }));
+
+        createdAssetPacks[msg.sender].push(numberOfAssetPacks);
         numberOfAssetPacks++;
     }
 
@@ -65,7 +70,7 @@ contract AssetManager is Ownable {
             creator : msg.sender,
             ipfsHash : _ipfsHash,
             price : _price
-        }));
+            }));
         createdAssets[msg.sender].push(numberOfAssets);
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
@@ -89,6 +94,11 @@ contract AssetManager is Ownable {
         return numberOfAssets;
     }
 
+    /// @notice Function to fetch total number of assetpacks
+    /// @return uint numberOfAssetPacks
+    function getNumberOfAssetPacks() public view returns(uint) {
+        return numberOfAssetPacks;
+    }
     /// @notice Function to check have user bought permission for an asset
     /// @param _address is address of user
     /// @param _assetId is id of asset
@@ -156,6 +166,10 @@ contract AssetManager is Ownable {
         return createdAssets[_address];
     }
 
+    function getAssetPacksUserCreated(address _address) public view returns(uint[]){
+        return createdAssetPacks[_address];
+    }
+
     /// @notice Function to get ipfsHash for selected asset
     /// @param _id is id of asset we'd like to get ipfs hash
     /// @return string representation of ipfs hash of that asset
@@ -173,6 +187,10 @@ contract AssetManager is Ownable {
         msg.sender.transfer(amount);
     }
 
+
+    /// @notice Function to get ipfs hash and id for all assets in one asset pack
+    /// @param _assetPackId is id of asset pack
+    /// @return two arrays with data
     function getAssetPackData(uint _assetPackId) public view returns(uint[], bytes32[]){
         require(_assetPackId < numberOfAssetPacks);
 
