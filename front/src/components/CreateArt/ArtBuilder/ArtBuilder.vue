@@ -1,7 +1,7 @@
 <template>
     <div class="art-builder-wrapper">
         <div class="left-group">
-            <img src="./assets/artbuilder-sample.png" alt="">
+            <canvas :objs="objs"></canvas>
         </div>
         <div class="right-group">
             <div class="recreate">
@@ -9,6 +9,11 @@
             </div>
             <div class="controls">
                 <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs</button>
+                <div>
+                    <div class="asset-pack-circle small selected" v-for="asset in selectedAssetPacks">
+                        {{asset.id}}
+                    </div>
+                </div>
                 <div class="formats">
                     <div class="first-format">
                         <div class="box"></div>
@@ -29,13 +34,19 @@
 </template>
 
 <script>
+  import Canvas from '../../Canvas.vue';
   export default {
     name: 'art-builder',
+    components: { Canvas },
+    data: () => ({
+      objs: []
+    }),
     methods: {
       changeTab() {
         this.$emit('tabChange', 'picker');
       }
-    }
+    },
+    props: ['selectedAssetPacks']
   };
 </script>
 
@@ -59,6 +70,12 @@
 
             .recreate {
                 margin-right: 260px;
+            }
+        }
+
+        .controls {
+            .asset-pack-circle {
+                margin: 20px 12px 20px 0;
             }
         }
 

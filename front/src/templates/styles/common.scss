@@ -32,6 +32,11 @@
   &.selected {
     border: 1.2px solid #000000;
   }
+
+  &.small {
+    height: 33px;
+    width: 33px;
+  }
 }
 
 .container {

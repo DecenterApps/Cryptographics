@@ -3,8 +3,17 @@
         <div class="black-bg"></div>
         <div class="create-art-wrapper" v-bind:class="[activeTab === 'create' ? 'create' : '']">
             <div class="container create-container">
-                <art-builder v-if="activeTab === 'create'" v-on:tabChange="changeTab"></art-builder>
-                <asset-picker v-if="activeTab === 'picker'" v-on:tabChange="changeTab"></asset-picker>
+                <art-builder
+                        v-if="activeTab === 'create'"
+                        v-on:tabChange="changeTab"
+                        :selectedAssetPacks="selectedAssetPacks"
+                ></art-builder>
+                <asset-picker
+                        v-if="activeTab === 'picker'"
+                        v-on:tabChange="changeTab"
+                        v-on:pickAsset="toggleAsset"
+                        :selectedAssetPacks="selectedAssetPacks"
+                ></asset-picker>
             </div>
         </div>
     </div>
@@ -19,11 +28,21 @@
     components: { ArtBuilder, AssetPicker },
     data: () => ({
       activeTab: 'create',
-      assets: [],
+      selectedAssetPacks: [],
     }),
     methods: {
       changeTab(tab) {
         this.activeTab = tab;
+      },
+      toggleAsset(asset) {
+        const index = this.selectedAssetPacks.findIndex(item => item.id === asset.id);
+        if (index >= 0) {
+          return this.selectedAssetPacks = [
+            ...this.selectedAssetPacks.slice(0, index),
+            ...this.selectedAssetPacks.slice(index + 1),
+          ];
+        }
+        this.selectedAssetPacks.push(asset);
       }
     }
   };
@@ -44,6 +63,7 @@
             overflow: hidden;
         }
     }
+
     .create-art-wrapper {
         background-color: #D9D9D9;
         min-height: calc(100vh - 70px);
