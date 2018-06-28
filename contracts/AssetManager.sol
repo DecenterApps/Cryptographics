@@ -8,29 +8,56 @@ contract AssetManager is Ownable {
     struct Asset {
         uint id;
         address creator;
-        string ipfsHash;
+        bytes32 ipfsHash;
+        uint price;
+    }
+
+    struct AssetPack {
+        uint [] assetIds;
+        address creator;
         uint price;
     }
 
 
     uint numberOfAssets;
-    Asset [] assets;
+    uint numberOfAssetPacks;
 
+    uint ASSET_PACK_SIZE = 10;
+
+    Asset [] assets;
+    AssetPack [] assetPacks;
 
     mapping(address => uint) artistBalance;
     mapping(address => mapping(uint => bool)) hasPermission;
-    mapping(string => bool) hashExists;
-
+    mapping(bytes32 => bool) hashExists;
 
     mapping(address => uint[]) boughtAssets;
     mapping(address => uint[]) public createdAssets;
 
 
+    function createAssetPack(bytes32[] _ipfsHashes, uint _packPrice) public {
+        require(_ipfsHashes.length > 0);
+        uint assetPrice = _packPrice / _ipfsHashes.length;
+        uint[] memory ids = new uint[](_ipfsHashes.length);
+
+        for(uint i=0; i< _ipfsHashes.length; i++){
+            ids[i] = numberOfAssets;
+            createAsset(_ipfsHashes[i], assetPrice);
+        }
+
+        assetPacks.push(AssetPack({
+            assetIds: ids,
+            creator: msg.sender,
+            price: _packPrice
+        }));
+        numberOfAssetPacks++;
+    }
+
     /// @notice Function which creates an asset
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
     /// @param _ipfsHash is ipfsHash to image of asset
     /// @param _price is price of asset
-    function createAsset(string _ipfsHash, uint _price) public {
+    function createAsset(bytes32 _ipfsHash, uint _price) public {
         require(hashExists[_ipfsHash] == false);
 
         assets.push(Asset({
@@ -43,6 +70,8 @@ contract AssetManager is Ownable {
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
     }
+
+
 
     /// @notice Function where user can buy himself a permision to use an asset
     /// @dev msg.value will be sent to asset creator
@@ -73,8 +102,8 @@ contract AssetManager is Ownable {
     }
 
     /// @notice Function to check does hash exist in mapping
-    /// @param _ipfsHash is string representation of hash
-    function checkHashExists(string _ipfsHash) public view returns (bool){
+    /// @param _ipfsHash is bytes32 representation of hash
+    function checkHashExists(bytes32 _ipfsHash) public view returns (bool){
         return hashExists[_ipfsHash];
     }
 
@@ -93,7 +122,7 @@ contract AssetManager is Ownable {
     /// @notice Method to get all info for an asset
     /// @param id is id of asset
     /// @return All data for an asset
-    function getAssetInfo(uint id) public view returns (uint, address, string, uint){
+    function getAssetInfo(uint id) public view returns (uint, address, bytes32, uint){
         require(id >= 0);
         require(id < numberOfAssets);
         Asset memory asset = assets[id];
@@ -113,20 +142,26 @@ contract AssetManager is Ownable {
 
         return asset.price;
     }
-    /// @notice Function to get assetIds for user
+    /// @notice Function to get assetIds(bought) for user
     /// @param _address is address of user
     /// @return array of assetIds user has bought permission to use
     function getAssetsForUser(address _address) public view returns (uint[]) {
         return boughtAssets[_address];
     }
 
+    /// @notice Function to get assetIds user have created
+    /// @param _address is address of user (creator)
+    /// @return array of assetIds user has created
     function getAssetsUserCreated(address _address) public view returns(uint[]){
         return createdAssets[_address];
     }
 
-    function getAssetIpfs(uint id) public view returns (string) {
-        require(id < numberOfAssets);
-        Asset memory asset = assets[id];
+    /// @notice Function to get ipfsHash for selected asset
+    /// @param _id is id of asset we'd like to get ipfs hash
+    /// @return string representation of ipfs hash of that asset
+    function getAssetIpfs(uint _id) public view returns (bytes32) {
+        require(_id < numberOfAssets);
+        Asset memory asset = assets[_id];
         return asset.ipfsHash;
     }
 
@@ -138,7 +173,18 @@ contract AssetManager is Ownable {
         msg.sender.transfer(amount);
     }
 
+    function getAssetPackData(uint _assetPackId) public view returns(uint[], bytes32[]){
+        require(_assetPackId < numberOfAssetPacks);
 
+        AssetPack memory assetPack = assetPacks[_assetPackId];
+        bytes32[] memory hashes = new bytes32[](assetPack.assetIds.length);
+
+        for(uint i=0; i<assetPack.assetIds.length; i++){
+            hashes[i] = getAssetIpfs(assetPack.assetIds[i]);
+        }
+
+        return(assetPack.assetIds, hashes);
+    }
 
 
 }
