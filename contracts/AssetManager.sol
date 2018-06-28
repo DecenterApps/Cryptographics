@@ -72,6 +72,7 @@ contract AssetManager is Ownable {
             price : _price
             }));
         createdAssets[msg.sender].push(numberOfAssets);
+        hasPermission[msg.sender][numberOfAssets] = true;
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
     }
