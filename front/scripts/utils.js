@@ -1,5 +1,6 @@
 const BITS_PER_ID = 24;
 
+const bs58 = require('bs58');
 const BigInt = require('big-integer');
 
 const bin2Hex = (bin, l) => (new BigInt(bin, 2)).toString(16).padStart(l, 0);
@@ -81,7 +82,19 @@ function pickRandomHashes() {
     return arr;
 }
 
+function getIpfsHashFromBytes32(bytes32Hex) {
+    // Add our default ipfs values for first 2 bytes:
+    // function:0x12=sha2, size:0x20=256 bits
+    // and cut off leading "0x"
+    const hashHex = "1220" + bytes32Hex.slice(2);
+    const hashBytes = Buffer.from(hashHex, 'hex');
+    const hashStr = bs58.encode(hashBytes)
+    return hashStr
+}
 
+function getBytes32FromIpfsHash(ipfsHash) {
+    return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
+}
 //
 // decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
 // "0x0000000000000000000001000002000003000004000005000006000007000008"]);
@@ -91,5 +104,5 @@ console.log(encode([1,2,3,4,5,6,7,8,9,10]));
 
 // console.log(encode([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]));
 module.exports = {
-    encode, decode, hex2dec, pickRandomHashes
+    encode, decode, hex2dec, pickRandomHashes, getIpfsHashFromBytes32, getBytes32FromIpfsHash
 }

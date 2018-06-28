@@ -25,7 +25,7 @@ function pickTenRandoms(){
 
 async function getAssetIpfs(assetId) {
     let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
-    let ipfsDecoded = getIpfsHashFromBytes32(ipfsHash);
+    let ipfsDecoded = utils.getIpfsHashFromBytes32(ipfsHash);
     console.log("Asset ipfs hash = " + ipfsHash);
     return ipfsDecoded;
 }
@@ -42,6 +42,29 @@ async function getBoughtAssets(address) {
     return assetIds;
 }
 
+
+async function getCreatedAssetPacks(address) {
+    let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
+    console.log("ASSET PACK IDS : " + assetPacksIds);
+    return assetPacksIds;
+}
+
+
+async function getIpfsAndIdsForAssetPack(assetPackId) {
+    let response = await assetManagerContract.methods.getAssetPackData(assetPackId).call();
+    console.log("DATA : " + response);
+    let ids = response[0];
+    let data = [];
+    for(let i=0; i<ids.length; i++){
+        var Asset = {
+            id : response[0][i],
+            ipfsHash: utils.getIpfsHashFromBytes32(response[1][i]),
+        };
+        data.push(Asset);
+    }
+    return data;
+
+}
 async function calculatePrice(pickedAssets, owner) {
     console.log(pickedAssets);
     if(pickedAssets.length == 0){
@@ -194,22 +217,17 @@ async function getAssetStats(id) {
         return Info;
     }
 }
-function getIpfsHashFromBytes32(bytes32Hex) {
-    // Add our default ipfs values for first 2 bytes:
-    // function:0x12=sha2, size:0x20=256 bits
-    // and cut off leading "0x"
-    const hashHex = "1220" + bytes32Hex.slice(2);
-    const hashBytes = Buffer.from(hashHex, 'hex');
-    const hashStr = bs58.encode(hashBytes)
-    return hashStr
-}
+
 async function test() {
      // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
      // printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
     // getImageMetadataFromContract(0);
-    let ipfs = await getAssetIpfs(5);
-    console.log("DECODED : " + getIpfsHashFromBytes32(ipfs));
+    // let ipfs = await getAssetIpfs(5);
+    // console.log("DECODED : " + utils.getIpfsHashFromBytes32(ipfs));
+
+    console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    console.log(await getIpfsAndIdsForAssetPack(0));
 }
 
 function printImageData(assets) {
@@ -218,6 +236,7 @@ function printImageData(assets) {
         console.log(obj)
     }
 }
+
 test();
 
 module.exports = {
@@ -234,4 +253,6 @@ module.exports = {
     convertSeed,
     getBoughtAssets,
     getAssetIpfs,
+    getCreatedAssetPacks,
+    getIpfsAndIdsForAssetPack
 }

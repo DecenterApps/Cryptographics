@@ -5,7 +5,8 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 
-const bs58 = require('bs58');
+const utils = require('./utils');
+
 
 require('dotenv').load();
 
@@ -93,9 +94,19 @@ const addAssetToContract = async (ipfs, price, address) => {
     }
 };
 
-function getBytes32FromIpfsHash(ipfsHash) {
-    return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
+
+const addAssetPackToContract = async (ipfs, price, address) => {
+    try {
+        let n = await web3.utils.numberToHex(nonce);
+        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [ipfs,price],
+            gasPrice, n, assetManagerContractAddress);
+        nonce++;
+    } catch (err) {
+        console.log(err);
+    }
 }
+
+
 
 async function ipfs() {
 
@@ -121,16 +132,35 @@ async function ipfs() {
     return ipfsHashes;
 }
 
-async function test() {
+async function testAddAsset() {
     printAddresses();
     let ipfsHashes = await ipfs();
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
-        ipfsHash = getBytes32FromIpfsHash(ipfsHash);
+        ipfsHash = utils.getBytes32FromIpfsHash(ipfsHash);
         let price = Math.floor(Math.random()*1000);
         await addAssetToContract(ipfsHash, price);
     }
+}
 
+async function testAddAssetPacks() {
+    printAddresses();
+    let ipfsHashes = await ipfs();
+    console.log("IPFS HASHES ----- ", ipfsHashes);
+    let chunk = 10;
+    let converted = [];
+    for(let i=0; i< ipfsHashes.length; i+=chunk){
+        let temparray = ipfsHashes.slice(i,i+chunk);
+        for (let j=0; j<temparray.length; j++){
+            temparray[j] = utils.getBytes32FromIpfsHash(temparray[j]);
+        }
+        converted.push(temparray);
+        temparray = [];
+    }
+    console.log(converted);
+    for(data of converted){
+        await addAssetPackToContract(data,3245);
+    }
 }
 
 function printAddresses() {
@@ -138,8 +168,7 @@ function printAddresses() {
 }
 
 
-
-test();
+testAddAssetPacks();
 
 module.exports ={
     addAssetToContract
