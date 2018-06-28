@@ -23,12 +23,13 @@
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import ArtBuilder from './ArtBuilder/ArtBuilder.vue';
 
+
+
   export default {
     name: 'create-art',
     components: { ArtBuilder, AssetPicker },
     data: () => ({
       activeTab: 'create',
-      selectedAssetPacks: [],
     }),
     methods: {
       changeTab(tab) {
@@ -44,7 +45,7 @@
         }
         this.selectedAssetPacks.push(asset);
       }
-    }
+    },
   };
 </script>
 

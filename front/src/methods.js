@@ -4,9 +4,9 @@ const conf = require('../scripts/config.json');
 const Web3 = require('web3');
 
 
-// const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
 
-const web3 = new Web3(window.web3.currentProvider);
+// const web3 = new Web3(window.web3.currentProvider);
 
 const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks["42"].address;
 const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
@@ -83,7 +83,7 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
     var allDataAboutAsset = [];
     for(let i=0; i<assets.length; i++){
         let stats = allAssets[assets[i]];
-        let final = merge_objects(assets[i], stats);
+        let final = {...assets[i], ...stats};
         allDataAboutAsset.push(final);
     }
     return allDataAboutAsset;
@@ -150,7 +150,7 @@ async function test() {
     console.log(x);
 }
 
-// test();
+test();
 
 module.exports ={
     getData,

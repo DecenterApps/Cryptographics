@@ -38,7 +38,6 @@
 
 
 
-  const functions = require('../../scripts/functions.js');
   const methods = require('../methods.js');
 
   import MyImages from './MyImages.vue';

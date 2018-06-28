@@ -1,14 +1,15 @@
 <template>
     <div class="art-builder-wrapper">
         <div class="left-group">
-            <canvas :objs="objs"></canvas>
+            <Canvas :objs="objs"></Canvas>
         </div>
         <div class="right-group">
-            <div class="recreate">
+            <div class="recreate" @click="renderCanvas">
                 <button class="default-button no-background">Recreate</button>
             </div>
             <div class="controls">
-                <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs</button>
+                <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs
+                </button>
                 <div>
                     <div class="asset-pack-circle small selected" v-for="asset in selectedAssetPacks">
                         {{asset.id}}
@@ -25,7 +26,7 @@
                     </div>
                 </div>
                 <div class="frame">
-                    <label>Frame <input type="checkbox" /> </label>
+                    <label>Frame <input type="checkbox"/> </label>
                 </div>
                 <button class="default-button submit">Submit</button>
             </div>
@@ -34,20 +35,68 @@
 </template>
 
 <script>
-  import Canvas from '../../Canvas.vue';
-  export default {
-    name: 'art-builder',
-    components: { Canvas },
-    data: () => ({
-      objs: []
-    }),
-    methods: {
-      changeTab() {
-        this.$emit('tabChange', 'picker');
-      }
-    },
-    props: ['selectedAssetPacks']
-  };
+    import Canvas from '../../Canvas.vue';
+
+    import IPFS from 'ipfs';
+    import * as utils from "../../../../scripts/utils";
+    import * as functions from "../../../../scripts/functions";
+    import * as methods from "../../../methods";
+    import {getAccounts} from "../../../../scripts/helpers";
+    import * as ipfsService from "../../../../scripts/ipfsService";
+
+    export default {
+        name: 'art-builder',
+        components: {Canvas},
+        data: () => ({
+            metamask_account: 0,
+            objs: [],
+            random_seed: 0,
+            iterations: 0,
+            // selectedAssetPacks: [],
+            random_hash_ids: functions.pickTenRandoms(),
+            image_price: 0,
+            potential_assets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            all_assets: [],
+        }),
+        methods: {
+            async renderCanvas() {
+                let pot = this.potential_assets;
+                this.objs = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
+                this.iterations++;
+                let picked = [];
+                for (let i = 0; i < this.objs.length; i++) {
+                    picked.push(this.objs[i].id);
+                }
+                let price = await functions.calculatePrice(picked, this.metamask_account);
+                if (pot.length == 0) {
+                    this.image_price = 0;
+                }
+                this.image_price = parseInt(price, 10);
+            },
+            changeTab() {
+                this.$emit('tabChange', 'picker');
+            }
+        },
+        async beforeCreate() {
+            this.metamask_account = await getAccounts();
+            this.random_hash_ids = functions.pickTenRandoms();
+            this.timestamp = new Date().getTime();
+            window.node = new IPFS({
+                repo: 'cryptographics',
+                config: {
+                    Bootstrap: ipfsService.bootstrapNodes,
+                    Addresses: {
+                        Swarm: [],
+                    },
+                }
+            });
+            this.iterations = 0;
+            this.allAssets = await methods.loadDataForAssets();
+            this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+            this.renderCanvas();
+        },
+        props: ['selectedAssetPacks']
+    };
 </script>
 
 <style scoped lang="scss">
@@ -56,70 +105,85 @@
         height: 100%;
         position: relative;
 
-        .left-group {
-            img {
-                height: 100%;
-            }
-        }
+    .left-group {
 
-        .right-group {
-            box-sizing: border-box;
-            padding: 0 30px;
-            display: flex;
-            align-items: flex-end;
+    img {
+        height: 100%;
+    }
 
-            .recreate {
-                margin-right: 260px;
-            }
-        }
+    }
 
-        .controls {
-            .asset-pack-circle {
-                margin: 20px 12px 20px 0;
-            }
-        }
+    .right-group {
+        box-sizing: border-box;
+        padding: 0 30px;
+        display: flex;
+        align-items: flex-end;
 
-        .formats {
-            font-size: 10px;
-            color: #7c7c7c;
-            display: flex;
-            margin: 20px 0;
-            justify-content: flex-end;
+    .recreate {
+        margin-right: 260px;
+    }
 
-            .first-format, .second-format {
-                text-align: right;
-            }
+    }
 
-            .first-format {
-                .box {
-                    width: 38px;
-                    height: 38px;
-                    background-color: #fff;
-                    margin-bottom: 5px;
-                }
-                margin-right: 20px;
-            }
-            .second-format {
-                .box {
-                    width: 28px;
-                    height: 38px;
-                    background-color: #000;
-                    margin-bottom: 5px;
-                }
-            }
-        }
+    .controls {
 
-        .frame {
-            font-size: 10px;
-            color: #7c7c7c;
-            text-align: right;
-        }
+    .asset-pack-circle {
+        margin: 20px 12px 20px 0;
+    }
 
-        .default-button.submit {
-            background-color: #000;
-            color: #fff;
-            float: right;
-            margin-top: 20px;
-        }
+    }
+
+    .formats {
+        font-size: 10px;
+        color: #7c7c7c;
+        display: flex;
+        margin: 20px 0;
+        justify-content: flex-end;
+
+    .first-format, .second-format {
+        text-align: right;
+    }
+
+    .first-format {
+
+    .box {
+        width: 38px;
+        height: 38px;
+        background-color: #fff;
+        margin-bottom: 5px;
+    }
+
+    margin-right:
+
+    20
+    px
+
+    ;
+    }
+    .second-format {
+
+    .box {
+        width: 28px;
+        height: 38px;
+        background-color: #000;
+        margin-bottom: 5px;
+    }
+
+    }
+    }
+
+    .frame {
+        font-size: 10px;
+        color: #7c7c7c;
+        text-align: right;
+    }
+
+    .default-button.submit {
+        background-color: #000;
+        color: #fff;
+        float: right;
+        margin-top: 20px;
+    }
+
     }
 </style>
