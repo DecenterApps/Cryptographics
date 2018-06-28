@@ -10,7 +10,7 @@
             <div class="controls">
                 <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs
                 </button>
-                <div>
+                <div class="selected-asset-packs">
                     <div class="asset-pack-circle small selected" v-for="asset in selectedAssetPacks">
                         {{asset.id}}
                     </div>
@@ -56,15 +56,15 @@
       canvas_ratio: '1:1',
       random_seed: 0,
       iterations: 0,
-      // selectedAssetPacks: [],
       random_hash_ids: functions.pickTenRandoms(),
       image_price: 0,
-      potential_assets: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      potential_assets: [],
       all_assets: [],
     }),
+    props: ['selectedAssetPacks'],
     methods: {
       async renderCanvas() {
-        let pot = this.potential_assets;
+        let pot = this.selectedAssetPacks.map(item => parseInt(item.id, 10));
         this.canvasData.assets = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
         this.iterations++;
         let picked = [];
@@ -102,7 +102,6 @@
       this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
       this.renderCanvas();
     },
-    props: ['selectedAssetPacks']
   };
 </script>
 
@@ -131,10 +130,10 @@
 
         }
 
-        .controls {
-
+        .selected-asset-packs {
+            margin-bottom: 20px;
             .asset-pack-circle {
-                margin: 20px 12px 20px 0;
+                margin: 20px 12px 0;
             }
 
         }

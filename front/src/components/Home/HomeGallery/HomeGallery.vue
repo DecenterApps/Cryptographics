@@ -1,7 +1,7 @@
 <template>
     <div class="home-gallery">
         <div class="container">
-            <div class="filters">
+            <div v-if="displayFilters" class="filters">
                 <div class="filter-group">
                     <span class="active">High</span>
                     <span>Low</span>
@@ -33,6 +33,7 @@
 <script>
   export default {
     name: 'home-gallery',
+    props: ['displayFilters'],
     data: () => ({
       blocks: [
         {

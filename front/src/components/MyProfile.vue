@@ -9,7 +9,7 @@
                     <div class="thumbnail"></div>
                 </div>
                 <div class="description">
-                    Creator: Anon
+                    <span class="creator-label">Creator:</span> <span class="creator-name">Anon</span>
                 </div>
 
                 <p class="large-title">Asset Packs</p>
@@ -18,34 +18,32 @@
                 <p class="large-title">Gallery</p>
             </div>
 
-            <h3> My profile </h3>
-            <div>
-                <div>
-                    <label> Metamask account : {{this.metamask_account}}</label>
-                </div>
-                <div>
-                    <label> My bought assets : {{this.bought_assets}}</label>
-                </div>
-                <div>
-                    <label> Assets I've created: {{this.created_assets}}</label>
-                </div>
-                <div>
-                    <label> Asset Packs I've created : {{ this.asset_packs}}</label>
-                </div>
-                <div>
-                    <label> My images on chain: {{this.my_images_on_chain}}</label>
-                </div>
-                <div>
-                    <button @click="generateData"> Generate data</button>
-                </div>
-                <div>
-                    <button @click="renderMyImagesCanvas"> View image</button>
-                    <input placeholder="Type id of your image: " v-model="id_to_show" />
-                </div>
+            <!--<h3> My profile </h3>-->
+            <!--<div>-->
+                <!--<div>-->
+                    <!--<label> Metamask account : {{this.metamask_account}}</label>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<label> My bought assets : {{this.bought_assets}}</label>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<label> Assets I've created: {{this.created_assets}}</label>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<label> Asset Packs I've created : {{ this.asset_packs}}</label>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<label> My images on chain: {{this.my_images_on_chain}}</label>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<button @click="generateData"> Generate data</button>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<button @click="renderMyImagesCanvas"> View image</button>-->
+                    <!--<input placeholder="Type id of your image: " v-model="id_to_show" />-->
+                <!--</div>-->
 
-
-                <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
-                <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
+                <home-gallery></home-gallery>
             </div>
         </div>
     </div>
@@ -59,6 +57,7 @@
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
   import MyAssets from './MyAssets.vue';
+  import HomeGallery from './Home/HomeGallery/HomeGallery.vue';
 
   export default {
     name: 'my-profile',
@@ -74,6 +73,7 @@
       myobjects: [],
     }),
     components: {
+      HomeGallery,
       SliderGallery,
       'canvas-my-images': MyImages,
       'my-images-ipfs': MyImageees,
@@ -145,15 +145,38 @@
 
 <style scoped lang="scss">
     .profile-page {
-        position: relative;
+        background-color: #F9F9F9;
+
         .profile {
+            position: relative;
             .thumbnail {
                 position: absolute;
-
+                top: -96px;
                 width: 138px;
                 height: 138px;
                 background-color: #D4D4D4;
             }
+
+            .description {
+                display: flex;
+                padding: 10px 0 32px 0;
+                justify-content: flex-end;
+                font-family: 'YoungSerif-Regular', sans-serif;
+                font-size: 15px;
+                align-items: flex-end;
+                line-height: 15px;
+
+                .creator-name {
+                    font-size: 32px;
+                    line-height: 32px;
+                    margin-left: 15px;
+                }
+            }
+        }
+
+        .home-gallery {
+            background-color: none;
+            margin: 40px 0;
         }
     }
 </style>

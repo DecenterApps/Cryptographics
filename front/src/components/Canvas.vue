@@ -1,5 +1,6 @@
 <template>
     <div class="canvas-wrapper">
+        {{ canvasData.assets.length === 0 ? 'Loading...' : '' }}
         <canvas id="canvas"></canvas>
     </div>
 </template>

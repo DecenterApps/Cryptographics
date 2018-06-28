@@ -1,7 +1,7 @@
 <template>
     <div>
         <slider-gallery></slider-gallery>
-        <home-gallery></home-gallery>
+        <home-gallery :displayFilters="true"></home-gallery>
         <Footer></Footer>
     </div>
 </template>
