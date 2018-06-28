@@ -98,13 +98,8 @@
     .home-gallery {
         background-color: #F9F9F9;
 
-        .container {
-            width: 1120px;
+        .masonry-wrapper {
             margin: 0 auto;
-
-            .masonry-wrapper {
-                margin: 0 auto;
-            }
         }
         .gutter-sizer {
             width: 70px;
@@ -123,7 +118,7 @@
                     text-decoration: underline;
                 }
 
-                &:last-child{
+                &:last-child {
                     margin-right: 0;
                 }
             }

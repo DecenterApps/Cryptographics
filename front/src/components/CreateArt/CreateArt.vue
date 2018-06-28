@@ -1,6 +1,6 @@
 <template>
     <div class="create-art-wrapper" v-bind:class="[activeTab === 'create' ? 'create' : '']">
-        <div class="create-container">
+        <div class="container create-container">
             <art-builder v-if="activeTab === 'create'" v-on:tabChange="changeTab"></art-builder>
             <asset-picker v-if="activeTab === 'picker'" v-on:tabChange="changeTab"></asset-picker>
         </div>
@@ -33,12 +33,9 @@
 
         &.create {
             display: flex;
-            align-items: flex-end;
         }
 
         .create-container {
-            width: 1120px;
-            margin: 0 auto;
             padding: 40px 0;
             box-sizing: border-box;
         }

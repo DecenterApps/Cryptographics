@@ -42,22 +42,22 @@
 <style scoped lang="scss">
     .art-builder-wrapper {
         display: flex;
+        height: 100%;
 
         .left-group {
-            flex: 1;
-            flex-basis: 30%;
+            img {
+                height: 100%;
+            }
         }
 
         .right-group {
-            flex: 1;
-            flex-basis: 70%;
             box-sizing: border-box;
             padding: 0 30px;
             display: flex;
             align-items: flex-end;
 
             .recreate {
-                margin-right: 115px;
+                margin-right: 260px;
             }
         }
 
