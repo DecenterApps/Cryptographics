@@ -19,8 +19,8 @@ ADDRESS="YOUR_ETH_ADDRESS"
 ```
 
 ### To run application
-
-To deploy contracts and add automatically 20 assets: 
+- Make sure you have solc compiler version >=0.4.23
+- To deploy contracts and add automatically 20 assets: 
 - Setup .env files
 ```
 $ truffle migrate --network=kovan
