@@ -33,7 +33,6 @@
 
         &.create {
             display: flex;
-            align-items: flex-end;
         }
 
         .create-container {
