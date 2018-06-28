@@ -10,7 +10,7 @@ export default [
   { path: '/legacy', component: Parent },
   { path: '/about', component: About },
   { path: '/create', component: CreateArt },
-  { path: '/gallery', component: About },
+  // { path: '/gallery', component: About },
   { path: '/asset_packs', component: AllAssets },
   { path: '/profile', component: Profile },
 ];

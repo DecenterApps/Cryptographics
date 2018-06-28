@@ -6,7 +6,7 @@
             </div>
             <div class="links-section">
                 <div class="links">
-                    <router-link class-active="active" to="/gallery"> Gallery</router-link>
+                    <!--<router-link class-active="active" to="/gallery"> Gallery</router-link>-->
                     <router-link class-active="active" to="/asset_packs">Asset Packs</router-link>
                     <router-link class-active="active" to="/about">About</router-link>
                     <span>|</span>
