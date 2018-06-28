@@ -25,8 +25,9 @@ function pickTenRandoms(){
 
 async function getAssetIpfs(assetId) {
     let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
+    let ipfsDecoded = getIpfsHashFromBytes32(ipfsHash);
     console.log("Asset ipfs hash = " + ipfsHash);
-    return ipfsHash;
+    return ipfsDecoded;
 }
 
 async function getImageIpfs(imageId) {
