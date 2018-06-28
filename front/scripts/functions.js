@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const util = require('ethereumjs-util');
 const leftPad = require('left-pad')
 const conf = require('./config.json');
-
+const bs58 = require('bs58');
 
 const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
 
@@ -193,13 +193,22 @@ async function getAssetStats(id) {
         return Info;
     }
 }
-
+function getIpfsHashFromBytes32(bytes32Hex) {
+    // Add our default ipfs values for first 2 bytes:
+    // function:0x12=sha2, size:0x20=256 bits
+    // and cut off leading "0x"
+    const hashHex = "1220" + bytes32Hex.slice(2);
+    const hashBytes = Buffer.from(hashHex, 'hex');
+    const hashStr = bs58.encode(hashBytes)
+    return hashStr
+}
 async function test() {
      // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
      // printImageData(assets);
      // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
     // getImageMetadataFromContract(0);
-     getAssetIpfs(5);
+    let ipfs = await getAssetIpfs(5);
+    console.log("DECODED : " + getIpfsHashFromBytes32(ipfs));
 }
 
 function printImageData(assets) {
@@ -208,7 +217,6 @@ function printImageData(assets) {
         console.log(obj)
     }
 }
-
 test();
 
 module.exports = {

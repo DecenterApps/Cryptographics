@@ -4,6 +4,9 @@ const EthereumTx = require('ethereumjs-tx');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
+
+const bs58 = require('bs58');
+
 require('dotenv').load();
 
 
@@ -90,6 +93,9 @@ const addAssetToContract = async (ipfs, price, address) => {
     }
 };
 
+function getBytes32FromIpfsHash(ipfsHash) {
+    return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
+}
 
 async function ipfs() {
 
@@ -120,6 +126,7 @@ async function test() {
     let ipfsHashes = await ipfs();
     console.log(ipfsHashes);
     for(let ipfsHash of ipfsHashes) {
+        ipfsHash = getBytes32FromIpfsHash(ipfsHash);
         let price = Math.floor(Math.random()*1000);
         await addAssetToContract(ipfsHash, price);
     }
