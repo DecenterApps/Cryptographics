@@ -57,7 +57,7 @@
             align-items: flex-end;
 
             .recreate {
-                margin-right: 115px;
+                margin-right: 260px;
             }
         }
 

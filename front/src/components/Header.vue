@@ -1,6 +1,6 @@
 <template>
     <header class="page-header">
-        <div class="header-container">
+        <div class="header-container container">
             <div class="logo-section">
                 <router-link to="/"><img src="../assets/logo.png" /></router-link>
             </div>
@@ -41,8 +41,6 @@
         }
 
         .header-container {
-            width: 1120px;
-            margin: 0 auto;
             padding: 15px 0;
             display: flex;
             justify-content: space-between;

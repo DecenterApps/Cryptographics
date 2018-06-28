@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-        <div class="footer-container">
+        <div class="container footer-container">
             <div class="logo">
                 <img src="../../assets/logo.png" alt=""> Cryptographics
             </div>
@@ -40,8 +40,6 @@
 
 
         .footer-container {
-            width: 1120px;
-            margin: 0 auto;
             padding: 15px 0;
             display: flex;
             justify-content: space-between;
