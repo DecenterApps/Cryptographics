@@ -19,17 +19,12 @@
 </template>
 
 <script>
-  export default {
+    const functions = require('../../../../scripts/functions.js')
+
+    export default {
     name: 'asset-picker',
     data: () => ({
-      assets: [
-        { id: 0, name: 'sk' },
-        { id: 1, name: 'sk' },
-        { id: 3, name: 'sk' },
-        { id: 4, name: 'sk' },
-        { id: 5, name: 'sk' },
-        { id: 6, name: 'sk' },
-      ],
+      assets: [],
       selectedAssets: []
     }),
     methods: {
@@ -49,6 +44,19 @@
         }
         this.selectedAssets.push(asset);
       }
+    },
+
+    async beforeCreate() {
+        let assetPacksLength = await functions.getNumberOfAssetPacks();
+        for(let i=0; i<assetPacksLength; i++){
+            let data = await functions.getIpfsAndIdsForAssetPack(i);
+            let obj = {
+                id : i,
+                data : data,
+            };
+            this.assets.push(obj);
+        }
+        console.log(this.assets);
     }
   };
 </script>

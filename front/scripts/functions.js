@@ -49,10 +49,13 @@ async function getCreatedAssetPacks(address) {
     return assetPacksIds;
 }
 
-
+async function getNumberOfAssetPacks() {
+    let numberOfPacks = await assetManagerContract.methods.getNumberOfAssetPacks().call();
+    console.log(numberOfPacks);
+    return numberOfPacks;
+}
 async function getIpfsAndIdsForAssetPack(assetPackId) {
     let response = await assetManagerContract.methods.getAssetPackData(assetPackId).call();
-    console.log("DATA : " + response);
     let ids = response[0];
     let data = [];
     for(let i=0; i<ids.length; i++){
@@ -226,8 +229,9 @@ async function test() {
     // let ipfs = await getAssetIpfs(5);
     // console.log("DECODED : " + utils.getIpfsHashFromBytes32(ipfs));
 
-    console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
-    console.log(await getIpfsAndIdsForAssetPack(0));
+    // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    // console.log(await getIpfsAndIdsForAssetPack(0));
+    console.log(await getNumberOfAssetPacks());
 }
 
 function printImageData(assets) {
@@ -254,5 +258,6 @@ module.exports = {
     getBoughtAssets,
     getAssetIpfs,
     getCreatedAssetPacks,
-    getIpfsAndIdsForAssetPack
+    getIpfsAndIdsForAssetPack,
+    getNumberOfAssetPacks,
 }

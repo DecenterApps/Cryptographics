@@ -12,6 +12,9 @@
                 <label> Assets I've created: {{this.created_assets}}</label>
             </div>
             <div>
+                <label> Asset Packs I've created : {{ this.asset_packs}}</label>
+            </div>
+            <div>
                 <label> My images on chain: {{this.my_images_on_chain}}</label>
             </div>
             <div>
@@ -45,6 +48,7 @@
   export default {
     name: 'my-profile',
     data: () => ({
+      asset_packs: [],
       allAssetPaths: [],
       id_to_show: -1,
       metamask_account: 0,
@@ -67,6 +71,7 @@
         await this.getCreatedAssets();
         await this.getBoughtAssets();
         await this.getAllAssets();
+        await this.getAssetPacks();
       },
 
       async getImages() {
@@ -84,8 +89,12 @@
 
       async getAllAssets() {
         this.allAssets = await methods.loadDataForAssets();
-
       },
+
+      async getAssetPacks() {
+          this.asset_packs = await functions.getCreatedAssetPacks(this.metamask_account);
+      },
+
 
       async renderMyImagesCanvas() {
         if (this.id_to_show == -1) {
