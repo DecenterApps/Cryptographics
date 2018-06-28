@@ -43,6 +43,7 @@
     .art-builder-wrapper {
         display: flex;
         height: 100%;
+        position: relative;
 
         .left-group {
             img {
