@@ -20,32 +20,33 @@
 
             <!--<h3> My profile </h3>-->
             <!--<div>-->
-                <!--<div>-->
-                    <!--<label> Metamask account : {{this.metamask_account}}</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<label> My bought assets : {{this.bought_assets}}</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<label> Assets I've created: {{this.created_assets}}</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<label> Asset Packs I've created : {{ this.asset_packs}}</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<label> My images on chain: {{this.my_images_on_chain}}</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<button @click="generateData"> Generate data</button>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<button @click="renderMyImagesCanvas"> View image</button>-->
-                    <!--<input placeholder="Type id of your image: " v-model="id_to_show" />-->
-                <!--</div>-->
+            <!--<div>-->
+            <!--<label> Metamask account : {{this.metamask_account}}</label>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<label> My bought assets : {{this.bought_assets}}</label>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<label> Assets I've created: {{this.created_assets}}</label>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<label> Asset Packs I've created : {{ this.asset_packs}}</label>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<label> My images on chain: {{this.my_images_on_chain}}</label>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<button @click="generateData"> Generate data</button>-->
+            <!--</div>-->
+            <!--<div>-->
+            <!--<button @click="renderMyImagesCanvas"> View image</button>-->
+            <!--<input placeholder="Type id of your image: " v-model="id_to_show" />-->
+            <!--</div>-->
 
-                <home-gallery></home-gallery>
-            </div>
+            <home-gallery></home-gallery>
         </div>
+
+        <PageFooter></PageFooter>
     </div>
 </template>
 
@@ -58,6 +59,7 @@
   import MyImageees from './MyImageees.vue';
   import MyAssets from './MyAssets.vue';
   import HomeGallery from './Home/HomeGallery/HomeGallery.vue';
+  import PageFooter from './Footer/Footer.vue';
 
   export default {
     name: 'my-profile',
@@ -73,6 +75,7 @@
       myobjects: [],
     }),
     components: {
+      PageFooter,
       HomeGallery,
       SliderGallery,
       'canvas-my-images': MyImages,
