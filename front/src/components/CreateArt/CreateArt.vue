@@ -30,6 +30,7 @@
     components: { ArtBuilder, AssetPicker },
     data: () => ({
       activeTab: 'create',
+      selectedAssetPacks: [],
     }),
     methods: {
       changeTab(tab) {

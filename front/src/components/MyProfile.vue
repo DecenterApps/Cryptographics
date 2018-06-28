@@ -1,44 +1,60 @@
 <template>
-    <div class="glavni">
-        <h3> My profile </h3>
-        <div>
-            <div>
-                <label> Metamask account : {{this.metamask_account}}</label>
-            </div>
-            <div>
-                <label> My bought assets : {{this.bought_assets}}</label>
-            </div>
-            <div>
-                <label> Assets I've created: {{this.created_assets}}</label>
-            </div>
-            <div>
-                <label> Asset Packs I've created : {{ this.asset_packs}}</label>
-            </div>
-            <div>
-                <label> My images on chain: {{this.my_images_on_chain}}</label>
-            </div>
-            <div>
-                <button @click="generateData"> Generate data</button>
-            </div>
-            <div>
-                <button @click="renderMyImagesCanvas"> View image</button>
-                <input placeholder="Type id of your image: " v-model="id_to_show" />
-            </div>
+    <div class="profile-page">
+        <slider-gallery></slider-gallery>
 
 
-            <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
-            <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
-            <label> Created assets stored on ipfs</label>
-            <my-assets v-if="metamask_account" :metamask_account="metamask_account"></my-assets>
+        <div class="container">
+            <div class="profile">
+                <div class="profile-image">
+                    <div class="thumbnail"></div>
+                </div>
+                <div class="description">
+                    Creator: Anon
+                </div>
+
+                <p class="large-title">Asset Packs</p>
+                <my-assets v-if="metamask_account" :metamask_account="metamask_account"></my-assets>
+
+                <p class="large-title">Gallery</p>
+            </div>
+
+            <h3> My profile </h3>
+            <div>
+                <div>
+                    <label> Metamask account : {{this.metamask_account}}</label>
+                </div>
+                <div>
+                    <label> My bought assets : {{this.bought_assets}}</label>
+                </div>
+                <div>
+                    <label> Assets I've created: {{this.created_assets}}</label>
+                </div>
+                <div>
+                    <label> Asset Packs I've created : {{ this.asset_packs}}</label>
+                </div>
+                <div>
+                    <label> My images on chain: {{this.my_images_on_chain}}</label>
+                </div>
+                <div>
+                    <button @click="generateData"> Generate data</button>
+                </div>
+                <div>
+                    <button @click="renderMyImagesCanvas"> View image</button>
+                    <input placeholder="Type id of your image: " v-model="id_to_show" />
+                </div>
+
+
+                <canvas-my-images v-if="id_to_show!=-1" :myobjects="myobjects"></canvas-my-images>
+                <my-images-ipfs v-if="metamask_account" :metamask_account="metamask_account"></my-images-ipfs>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-
-
-
-  const methods = require('../methods.js');
+  import SliderGallery from './SliderGallery/SliderGallery.vue';
+  import functions from '../../scripts/functions';
+  import methods from '../methods';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
@@ -58,9 +74,10 @@
       myobjects: [],
     }),
     components: {
+      SliderGallery,
       'canvas-my-images': MyImages,
       'my-images-ipfs': MyImageees,
-      'my-assets' : MyAssets,
+      'my-assets': MyAssets,
     },
     // computed: {
     // },
@@ -91,9 +108,8 @@
       },
 
       async getAssetPacks() {
-          this.asset_packs = await functions.getCreatedAssetPacks(this.metamask_account);
+        this.asset_packs = await functions.getCreatedAssetPacks(this.metamask_account);
       },
-
 
       async renderMyImagesCanvas() {
         if (this.id_to_show == -1) {
@@ -116,47 +132,28 @@
     },
 
     async beforeMount() {
-        web3.eth.getAccounts((err, acc) => {
-            if (err) return console.error(err);
-            this.metamask_account = acc[0];
-            this.generateData();
-        });
+      web3.eth.getAccounts((err, acc) => {
+        if (err) return console.error(err);
+        this.metamask_account = acc[0];
+        this.generateData();
+      });
     }
 
   };
 
 </script>
 
-<style scoped>
-    img {
-        margin-right: 10px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        width: 100px;
-        height: 100px;
-    }
-
-    label {
+<style scoped lang="scss">
+    .profile-page {
         position: relative;
-        padding-left: 500px;
-        font-size: 28px;
+        .profile {
+            .thumbnail {
+                position: absolute;
+
+                width: 138px;
+                height: 138px;
+                background-color: #D4D4D4;
+            }
+        }
     }
-
-    div.glavni {
-        height: 100vh;
-    }
-
-    h3 {
-        padding-left: 500px;
-        font-size: 35px;
-
-    }
-
-
-    button {
-        margin-top: 20px;
-        width: 350px;
-        margin-left: 500px;
-    }
-
 </style>
