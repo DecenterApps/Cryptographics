@@ -77,7 +77,7 @@ contract('DigitalPrintImage', async(accounts) => {
 
 
 	it("... should fail if potential assets and positions picked are not equal" , async() => {
-		let potential = ["0x0000000000000000000001000002000003000004000005000006000007000008"];
+		let potential = ["0x0000000000000001000002000003000004000005000006000007000008000009", "0x000000000a00000b00000c00000d00000e00000f000010000011000012000013"];
 		let randomSeed = "0x7cd645a192b2f11717d87f06e2e2e9839c435754beb8a345f4fefda7128d4444";
 		let iterations = 4;
 		let positionsX = [];

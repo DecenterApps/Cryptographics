@@ -182,7 +182,16 @@ function getAssetMetadata(seed, assetId) {
 function getImage(random_seed, iterations, potentialAssets) {
     random_seed = random_seed.toString(16);
     var seed = calculateFinalSeed(random_seed, iterations);
-    var pot_assets = utils.decode(potentialAssets).reverse();
+    let pot_assets = [];
+    console.log(potentialAssets.length);
+    for(let j=0; j<potentialAssets.length; j++) {
+        let arr =[];
+        arr.push(potentialAssets[j]);
+        // pot_assets.push(utils.decode(arr).reverse());
+        pot_assets = [...pot_assets, ...utils.decode(arr).reverse()]
+    }
+    // var pot_assets = utils.decode(potentialAssets).reverse();
+    console.log(pot_assets);
     var pickedAssets = [];
 
     for (let i = 0; i < pot_assets.length; i++) {

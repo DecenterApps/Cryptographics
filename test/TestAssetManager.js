@@ -33,6 +33,9 @@ contract('AssetManager', async(accounts) => {
         assert.equal(permission, true, "User had to have permission for this asset")
     });
 
+    it("... assets should be the same", async() => {
+
+    });
 
 
 });
