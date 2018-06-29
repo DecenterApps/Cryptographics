@@ -11,7 +11,7 @@ contract TestAssetManager {
         uint price = 500;
         uint layer = 5;
 
-        string memory ipfsHash = "0x1234567";
+        bytes32 ipfsHash = "0x1234567";
 
         assetManager.createAsset(ipfsHash, price);
         uint numberOfAssets = assetManager.getNumberOfAssets();
