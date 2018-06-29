@@ -57,7 +57,7 @@
             canvas_ratio: '1:1',
             random_seed: 0,
             iterations: 0,
-            timestamp: 0,
+            timestamp: new Date().getTime(),
             random_hash_ids: functions.pickTenRandoms(),
             image_price: 0,
             potential_assets: [],
@@ -81,11 +81,11 @@
                 console.log('ITERATIONS: ' + this.iterations);
                 console.log('POTENTIAL ASSETS: ' + pot);
                 console.log('MM ACCOUNT: ' + this.metamask_account);
-                let img = await methods.createImage(this.random_hash_ids, `${this.timestamp}`, `${this.iterations -1}`, pot, 'Madjar', this.metamask_account, this.image_price, ipfsHash);
+                let img = await methods.createImage(this.random_hash_ids, this.timestamp, this.iterations -1, pot, 'Madjar', this.metamask_account, this.image_price, ipfsHash);
                 console.log(img);
-                this.timestamp = new Date().getTime();
-                this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-                this.iterations = 0;
+                // this.timestamp = new Date().getTime();
+                // this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+                // this.iterations = 0;
 
             },
             async renderCanvas() {
@@ -93,8 +93,9 @@
                     assetPack.data.map(asset => parseInt(asset.id)))
                     .reduce((a, b) => a.concat(b), []);
                 console.log(pot);
-                this.canvasData.assets = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
+                this.canvasData.assets = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.all_assets);
                 this.iterations++;
+                console.log("iteration: " +this.iterations);
                 let picked = [];
                 for (let i = 0; i < this.canvasData.assets.length; i++) {
                     picked.push(this.canvasData.assets[i].id);
@@ -114,9 +115,9 @@
         },
 
         async beforeCreate() {
-            this.metamask_account = await getAccounts();
             this.random_hash_ids = functions.pickTenRandoms();
             this.timestamp = new Date().getTime();
+            this.metamask_account = await getAccounts();
             window.node = new IPFS({
                 repo: 'cryptographics',
                 config: {
@@ -126,11 +127,20 @@
                     },
                 }
             });
+
             this.iterations = 0;
-            this.allAssets = await methods.loadDataForAssets();
+            this.all_assets = await methods.loadDataForAssets();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-            this.renderCanvas();
         },
+
+        watch: {
+            selectedAssetPacks: async function() {
+                this.iterations = 0;
+                this.timestamp = new Date().getTime();
+                this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+                this.random_seed = await functions.convertSeed(this.random_seed);
+            }
+        }
     };
 </script>
 

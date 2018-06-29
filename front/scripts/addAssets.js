@@ -32,17 +32,6 @@ async function getNonce() {
     console.log(nonce);
 }
 
-getNonce();
-//
-// const getEncodedParams = (contractMethod, params = null) => {
-//     let encodedTransaction = null;
-//     if (!params) {
-//         encodedTransaction = contractMethod(params[0],params[1]).encodeABI(); // eslint-disable-line
-//     } else {
-//         encodedTransaction = contractMethod(params[0], params[1]).encodeABI() // eslint-disable-line
-//     }
-//     return encodedTransaction;
-// };
 
 const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce, to) =>
     new Promise(async (resolve, reject) => {

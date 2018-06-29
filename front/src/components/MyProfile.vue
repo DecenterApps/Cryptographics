@@ -18,34 +18,34 @@
                 <p class="large-title">Gallery</p>
             </div>
 
-            <!--<h3> My profile </h3>-->
-            <!--<div>-->
-            <!--<div>-->
-            <!--<label> Metamask account : {{this.metamask_account}}</label>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<label> My bought assets : {{this.bought_assets}}</label>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<label> Assets I've created: {{this.created_assets}}</label>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<label> Asset Packs I've created : {{ this.asset_packs}}</label>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<label> My images on chain: {{this.my_images_on_chain}}</label>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<button @click="generateData"> Generate data</button>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<button @click="renderMyImagesCanvas"> View image</button>-->
-            <!--<input placeholder="Type id of your image: " v-model="id_to_show" />-->
-            <!--</div>-->
+            <h3> My profile </h3>
+            <div>
+            <div>
+            <label> Metamask account : {{this.metamask_account}}</label>
+            </div>
+            <div>
+            <label> My bought assets : {{this.bought_assets}}</label>
+            </div>
+            <div>
+            <label> Assets I've created: {{this.created_assets}}</label>
+            </div>
+            <div>
+            <label> Asset Packs I've created : {{ this.asset_packs}}</label>
+            </div>
+            <div>
+            <label> My images on chain: {{this.my_images_on_chain}}</label>
+            </div>
+            <div>
+            <button @click="generateData"> Generate data</button>
+            </div>
+            <div>
+            <button @click="renderMyImagesCanvas"> View image</button>
+            <input placeholder="Type id of your image: " v-model="id_to_show" />
+            </div>
 
             <home-gallery :images="images"></home-gallery>
         </div>
-
+        </div>
         <PageFooter></PageFooter>
     </div>
 </template>
