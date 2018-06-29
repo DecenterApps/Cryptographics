@@ -80,7 +80,7 @@
                 background-color: #fff;
 
                 img {
-                    max-width: 279px;
+                    max-width: 100%;
                 }
 
                 .artwork-description {

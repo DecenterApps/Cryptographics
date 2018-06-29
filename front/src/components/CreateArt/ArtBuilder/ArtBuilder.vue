@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="frame">
-                    <label>Frame <input type="checkbox"/> </label>
+                    <label>Frame <input v-model="canvasData.frame" type="checkbox"/> </label>
                 </div>
                 <button class="default-button submit" @click="buyImage">Submit</button>
             </div>
@@ -52,6 +52,7 @@
             canvasData: {
                 assets: [],
                 ratio: '1:1',
+                frame: false,
             },
             canvas_ratio: '1:1',
             random_seed: 0,

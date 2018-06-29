@@ -95,7 +95,7 @@ function getSize(width, height, ratio) {
   if (ratio === '2:3') {
     if (height > MAX_HEIGHT) height = 550;
 
-    width = (height * 2) / 3;
+    width = (height * 10) / 14;
 
     return { width: width, height };
   }
@@ -114,10 +114,15 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
 
 }
 
-function makeImage(objs, c, width, height) {
+function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
+  const { left, right, bottom, top } = frame;
+  const canvasHeight = height;
+  const canvasWidth = width;
+  width = width - left - right;
+  height = height - top - bottom;
   context.clearRect(0, 0, width, height);
-  context.strokeRect(0, 0, width, height);
+
   let images = [];
   for (let i = 0; i < objs.length; i++) {
     let image = new Image();
@@ -130,16 +135,44 @@ function makeImage(objs, c, width, height) {
     images.push(image);
   }
 
+  let imagesLoaded = 0;
+
   for (let j = 0; j < objs.length; j++) {
     images[j].onload = function () {
-      let x = objs[j].x_coordinate % width;
-      let y = objs[j].y_coordinate % height;
+      imagesLoaded++;
+      let x = objs[j].x_coordinate % width + left;
+      let y = objs[j].y_coordinate % height + top;
       let rotation = objs[j].rotation;
-
       drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
+      if (imagesLoaded === objs.length && frame.left > 0) {
+        // WRITE FRAME
+        context.strokeStyle = '#FFF';
+        context.beginPath();
+        context.moveTo(left / 2, 0);
+        context.lineWidth = left;
+        context.lineTo(left / 2, canvasHeight);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(0, canvasHeight - bottom / 2);
+        context.lineWidth = bottom;
+        context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(canvasWidth - right / 2, canvasHeight);
+        context.lineWidth = right;
+        context.lineTo(canvasWidth - right / 2, 0);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(canvasWidth, top / 2);
+        context.lineWidth = top;
+        context.lineTo(0, top / 2);
+        context.stroke();
+      }
     };
   }
-
 }
 
 function drawImageRot(context, img, x, y, width, height, deg) {

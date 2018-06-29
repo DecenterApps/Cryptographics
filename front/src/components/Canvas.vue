@@ -1,6 +1,5 @@
 <template>
     <div class="canvas-wrapper">
-        {{ canvasData.assets.length === 0 ? 'Loading...' : '' }}
         <canvas id="canvas"></canvas>
     </div>
 </template>
@@ -10,16 +9,23 @@
 
   export default {
     data: () => ({}),
-    props: ['canvasData'],
+    props: ['canvasData', 'frame'],
     watch: {
       canvasData: {
-        handler:function (newData) {
+        handler: function (newData) {
           let canvas = document.getElementById('canvas');
           const rect = canvas.parentNode.getBoundingClientRect();
           const size = methods.getSize(rect.width, rect.height, this.canvasData.ratio);
+          const frame = this.canvasData.frame || false;
           canvas.width = size.width;
           canvas.height = size.height;
-          methods.makeImage(newData.assets, canvas, canvas.width, canvas.height);
+          const FRAME_BOUNDARIES = frame ? {
+            left: size.width / 20,
+            bottom: size.height / 6.3,
+            right: size.width / 20,
+            top: size.width / 20,
+          } : undefined;
+          methods.makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
         },
         deep: true,
       }
