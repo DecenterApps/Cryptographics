@@ -127,7 +127,7 @@ async function calculateFirstSeed(timestamp, rands) {
     console.log("Rands: " + rands);
     let randomSeed = await digitalPrintImageContract.methods.calculateSeed(rands, timestamp).call();
     console.log("RANDOM SEED: " + randomSeed)
-    return await convertSeed(randomSeed);
+    return randomSeed;
 }
 
 // Function to calculate keccak256 when input is (int and int)
