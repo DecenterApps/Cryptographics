@@ -13,14 +13,14 @@ contract Functions {
     }
 
 
-//    /// @notice Function for test purposes because in local rpc can't get last 100 blocks
-//    function fillRadnomHashes() public {
-//        bytes32 initialHash = "0x1234567891011111112131311";
-//
-//        for(uint i=0; i<100; i++){
-//            randomHashes.push(keccak256(initialHash,i));
-//        }
-//    }
+    //    /// @notice Function for test purposes because in local rpc can't get last 100 blocks
+    //    function fillRadnomHashes() public {
+    //        bytes32 initialHash = "0x1234567891011111112131311";
+    //
+    //        for(uint i=0; i<100; i++){
+    //            randomHashes.push(keccak256(initialHash,i));
+    //        }
+    //    }
 
 
     /// @notice Function which decodes bytes32 to array of integers
