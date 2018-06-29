@@ -64,16 +64,26 @@ async function getNumberOfAss() {
 }
 
 async function loadDataForAssets() {
-  let assets = parseInt(await getNumberOfAss(), 10);
-  console.log(assets);
-  let allDataAboutAsset = [];
-  for (let i = 0; i < assets; i++) {
-    console.log('loading');
-    let stats = await functions.getAssetStats(i);
-    let final = merge_objects(stats);
-    allDataAboutAsset.push(final);
-  }
-  return allDataAboutAsset;
+  return new Promise(async (resolve, reject) => {
+    let assets = parseInt(await getNumberOfAss(), 10);
+    console.log(assets);
+    const promises = [];
+    for (let i = 0; i < assets; i++) {
+      console.log('loading');
+      let promise = functions.getAssetStats(i);
+      promises.push(promise);
+    }
+
+    Promise.all(promises)
+      .then((data) => {
+        resolve(data);
+        console.log('all data ');
+        console.log(data);
+      })
+      .catch((err) => {
+        reject(new Error('Couldn\'t load all data.'));
+      });
+  });
 }
 
 function getSize(width, height, ratio) {
