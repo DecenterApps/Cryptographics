@@ -65,7 +65,6 @@
   const utils = require('../../scripts/utils.js');
   const functions = require('../../scripts/functions.js');
   const ipfsService = require('../../scripts/ipfsService.js');
-  import IPFS from 'ipfs';
 
   export default {
     data: () => ({
@@ -166,15 +165,6 @@
         if (err) return console.error(err);
         console.log('account' + acc);
         this.metamask_account = acc[0];
-      });
-      window.node = new IPFS({
-        repo: 'cryptographics',
-        config: {
-          Bootstrap: ipfsService.bootstrapNodes,
-          Addresses: {
-            Swarm: [],
-          },
-        }
       });
 
       this.iterations = 0;

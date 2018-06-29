@@ -12,12 +12,16 @@
                     <span>Select Asset Pack</span>
                 </div>
             </div>
-            <div class="masonry-wrapper" v-masonry transition-duration="0.3s" item-selector=".item"
-                 gutter=".gutter-sizer" fit-width="true">
+            <div class="masonry-wrapper"
+                 v-masonry transition-duration="0.3s"
+                 item-selector=".item"
+                 gutter=".gutter-sizer"
+                 fit-width="true"
+            >
                 <div class="grid">
                     <div class="gutter-sizer"></div>
                 </div>
-                <div v-masonry-tile class="item" v-for="(item, index) in blocks">
+                <div v-masonry-tile class="item" v-for="(item, index) in images">
                     <div class="artwork">
                         <img v-bind:class="item.className" v-bind:src="item.src" alt="">
                         <div>
@@ -33,65 +37,7 @@
 <script>
   export default {
     name: 'home-gallery',
-    props: ['displayFilters'],
-    data: () => ({
-      blocks: [
-        {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
-          name: 'The point of',
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-      ],
-    }),
+    props: ['displayFilters', 'images'],
   };
 </script>
 
@@ -132,6 +78,10 @@
             .artwork {
                 padding: 14px 14px 40px 14px;
                 background-color: #fff;
+
+                img {
+                    max-width: 279px;
+                }
 
                 .artwork-description {
                     font-size: 5px;

@@ -43,7 +43,7 @@
             <!--<input placeholder="Type id of your image: " v-model="id_to_show" />-->
             <!--</div>-->
 
-            <home-gallery></home-gallery>
+            <home-gallery :images="images"></home-gallery>
         </div>
 
         <PageFooter></PageFooter>
@@ -69,6 +69,7 @@
       id_to_show: -1,
       metamask_account: 0,
       allAssets: [],
+      images: [],
       my_images_on_chain: [],
       bought_assets: [],
       created_assets: [],
@@ -132,6 +133,22 @@
         let data = await functions.getImageMetadataFromContract(this.id_to_show);
         this.myobjects = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
       },
+
+      async getImages() {
+        let images = await functions.getUserImages(this.metamask_account);
+        let prefix = "https://ipfs.decenter.com/ipfs/";
+        let hashes = [];
+        for (let i = 0; i < images.length; i++) {
+          let hash = await functions.getImageIpfs(images[i]);
+          hashes.push({
+            address: this.metamask_account,
+            src: prefix + hash,
+            name: 'The point of',
+            price: 0.45,
+          });
+        }
+        this.images = hashes;
+      }
     },
 
     async beforeMount() {
@@ -140,6 +157,8 @@
         this.metamask_account = acc[0];
         this.generateData();
       });
+
+      await this.getImages();
     }
 
   };

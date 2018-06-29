@@ -136,7 +136,7 @@ function makeImage(objs, c, width, height) {
       let y = objs[j].y_coordinate % height;
       let rotation = objs[j].rotation;
 
-      drawImageRot(context, images[j], x, y, 250, 250, rotation);
+      drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
     };
   }
 
