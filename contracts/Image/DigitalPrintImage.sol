@@ -44,10 +44,11 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @return returns id of created image
     function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author, string _ipfsHash) public payable returns (uint) {
         require(_potentialAssets.length <= 5);
-        require(seedExists[finalSeed] == false);
 
         uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
         uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
+
+        require(seedExists[finalSeed] == false);
 
         uint[] memory pickedAssets;
 
@@ -71,7 +72,7 @@ contract DigitalPrintImage is ImageToken,Functions {
             });
 
         idToIpfsHash[id] = _ipfsHash;
-
+        seedExists[finalSeed] = true;
         return id;
     }
 

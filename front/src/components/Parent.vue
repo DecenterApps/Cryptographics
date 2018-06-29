@@ -130,10 +130,11 @@
       },
 
       async buyImage() {
-        let canvas = Canvas.methods.getCanvasElement();
-        let image = canvas.toDataURL('image/png');
-        console.log(image);
-        let ipfsHash = await ipfsService.uploadFile(image.substr(22));
+        // let canvas = Canvas.methods.getCanvasElement();
+        // let image = canvas.toDataURL('image/png');
+        // console.log(image);
+        // let ipfsHash = await ipfsService.uploadFile(image.substr(22));
+          let ipfsHash = "0x123123123121321334fnadjgadhbhfadng";
         let pot = [];
         if (this.checked == true) {
           this.potential_assets = this.bought_assets;
@@ -147,7 +148,7 @@
         console.log('ITERATIONS: ' + this.iterations);
         console.log('POTENTIAL ASSETS: ' + pot);
         console.log('MM ACCOUNT: ' + this.metamask_account);
-        let img = await methods.createImage(this.random_hash_ids, `${this.timestamp}`, `${this.iterations - 1}`, pot, 'Madjar', this.metamask_account, this.image_price, ipfsHash);
+        let img = await methods.createImage(this.random_hash_ids, this.timestamp, this.iterations -1, pot, 'Madjar', this.metamask_account, this.image_price, ipfsHash);
         console.log(img);
       },
       async getImages() {
@@ -155,7 +156,7 @@
       },
       async getBoughtAssets() {
         this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
-        this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
+        // this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
       }
     },
     async beforeCreate() {
