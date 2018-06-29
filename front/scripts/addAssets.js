@@ -32,6 +32,7 @@ async function getNonce() {
     console.log(nonce);
 }
 
+getNonce();
 
 const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce, to) =>
     new Promise(async (resolve, reject) => {
@@ -148,7 +149,7 @@ async function testAddAssetPacks() {
     }
     console.log(converted);
     for(data of converted){
-        await addAssetPackToContract(data,3245);
+        await addAssetPackToContract(data,2000);
     }
 }
 

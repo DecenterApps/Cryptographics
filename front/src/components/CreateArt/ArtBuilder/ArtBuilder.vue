@@ -131,7 +131,8 @@
             this.iterations = 0;
             this.all_assets = await methods.loadDataForAssets();
             this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-        },
+            this.random_seed = await functions.convertSeed(this.random_seed);
+            },
 
         watch: {
             selectedAssetPacks: async function() {

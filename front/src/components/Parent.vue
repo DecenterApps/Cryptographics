@@ -173,6 +173,7 @@
       this.bought_assets = await this.getBoughtAssets();
       this.my_images = await this.getImages();
       this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+      this.random_seed = await functions.convertSeed(this.random_seed);
       this.renderCanvas();
       // let rs = this.random_seed.toString()
       // rs = rs.substr(0,rs.length - 4);
