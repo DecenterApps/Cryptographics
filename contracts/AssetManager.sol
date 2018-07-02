@@ -79,14 +79,14 @@ contract AssetManager is Ownable {
 
 
 
-    /// @notice Function where user can buy himself a permision to use an asset
+    /// @notice Function where user can buy himself a permission to use an asset
     /// @dev msg.value will be sent to asset creator
     /// @param _assetId is id of asset user wants to buy
     function buyAssetPermision(uint _assetId) public payable {
         require(msg.value >= assets[_assetId].price);
         boughtAssets[msg.sender].push(_assetId);
         hasPermission[msg.sender][_assetId] = true;
-        assets[_assetId].creator.transfer(msg.value);
+        artistBalance[assets[_assetId].creator] += msg.value;
     }
 
     /// @notice Function to fetch total number of assets
@@ -123,7 +123,7 @@ contract AssetManager is Ownable {
     /// @param _pickedAssets is array of picked assets
     function givePermission(address _address, uint[] _pickedAssets) public {
         for(uint i=0; i<_pickedAssets.length; i++){
-            if(hasPermission[_address][_pickedAssets[i]] == false){
+            if(hasPermission[_address][_pickedAssets[i]] == false ){
                 boughtAssets[_address].push(_pickedAssets[i]);
                 hasPermission[_address][_pickedAssets[i]] = true;
                 artistBalance[assets[_pickedAssets[i]].creator] += assets[_pickedAssets[i]].price;
