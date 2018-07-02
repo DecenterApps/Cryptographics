@@ -51,11 +51,18 @@ async function createAsset(price, ipfsHash, account) {
   }
 }
 
-function merge_objects(obj1, obj2) {
-  var obj3 = {};
-  for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-  for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
-  return obj3;
+async function createAssetPack(ipfsHashes, price, account) {
+  try {
+      let nonce = await web3.eth.getTransactionCount(account);
+      return await assetManagerContract.methods.createAssetPack(ipfsHashes,price).send({
+        from: account, to: assetManagerContract, nonce
+    }, (a,b) => {
+      console.log(a,b);
+    });
+  } catch (e) {
+    console.log(e);
+    throw new Error('Cannot create asset pack');
+  }
 }
 
 async function getNumberOfAss() {
@@ -201,8 +208,19 @@ function drawImageRot(context, img, x, y, width, height, deg) {
 // potentialAssets = utils.encode(potentialAssets);
 
 async function test() {
-  let x = await loadDataForAssets();
-  console.log(x);
+  // let x = await loadDataForAssets();
+  // console.log(x);
+    ipfsHashes = [ 'QmUJeMmc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
+        'QmQKJdkbGEsiav3vdzK8pTH5WoNXCoXN8VbZLrFoWjmPwR',
+        'Qmd9VNGsVST4y4ZLz5rQtLMxDb2HhJwutAfQ5Et5MoAA7z',
+        'QmaL8YXHZA2aayApzaAeeV7RDJXAf5ZvqCbPraQkgdkTSh',
+        'QmPNSue3FwTVeYsYrDtMBPWWofFQCtP72C3m8vtYS3xEAu'];
+
+    for (let i=0; i<ipfsHashes.length; i++){
+      ipfsHashes[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
+    }
+    console.log(ipfsHashes);
+    await createAssetPack(ipfsHashes, 2000, '0xf67cDA56135d5777241DF325c94F1012c72617eA');
 }
 
 test();
