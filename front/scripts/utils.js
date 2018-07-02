@@ -91,6 +91,12 @@ function getIpfsHashFromBytes32(bytes32Hex) {
     const hashStr = bs58.encode(hashBytes)
     return hashStr
 }
+function merge_objects(obj1, obj2) {
+    var obj3 = {};
+    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
+}
 
 function getBytes32FromIpfsHash(ipfsHash) {
     return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
@@ -104,5 +110,11 @@ console.log(encode([1,2,3,4,5,6,7,8,9,10]));
 
 // console.log(encode([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]));
 module.exports = {
-    encode, decode, hex2dec, pickRandomHashes, getIpfsHashFromBytes32, getBytes32FromIpfsHash
+    encode,
+    decode,
+    hex2dec,
+    pickRandomHashes,
+    getIpfsHashFromBytes32,
+    getBytes32FromIpfsHash,
+    merge_objects,
 }
