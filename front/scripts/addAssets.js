@@ -94,7 +94,20 @@ const addAssetPackToContract = async (ipfs, price, address) => {
     } catch (err) {
         console.log(err);
     }
-}
+};
+
+const addAssetPackToContract1 = async(ipfsHashes, price, address) => {
+    try {
+        return await assetManagerContract.methods.createAssetPack(ipfsHashes,price).send({
+            from: ourAddress, to: assetManagerContract
+        }, (a,b) => {
+            console.log(a,b);
+        });
+    } catch (e) {
+        console.log(e);
+        throw new Error('Cannot create asset pack');
+    }
+};
 
 
 
