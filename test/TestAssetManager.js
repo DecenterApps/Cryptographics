@@ -70,7 +70,7 @@ contract('AssetManager', async(accounts) => {
 
 
     it("... user should be owner of asset pack", async() => {
-          let ipfsHashes = [ 'QmUJeMmc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
+          let ipfsHashes = [ 'QmUJeMDc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
                 'QmQKJdkbGEsiav3vdzK8pTH5WoNXCoXN8VbZLrFoWjmPwR',
                 'Qmd9VNGsVST4y4ZLz5rQtLMxDb2HhJwutAfQ5Et5MoAA7z',
                 'QmaL8YXHZA2aayApzaAeeV7RDJXAf5ZvqCbPraQkgdkTSh',
@@ -87,20 +87,26 @@ contract('AssetManager', async(accounts) => {
           assert.equal(userPacks, 0, "Should be owner of 0th asset pack");
     });
 
-    it("... user should be owner of all assets inside pack", async() => {
-        let ipfsHashes = [ 'QmUJeMMc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
-            'QmQKJdkbGEsiav3vdzK8PTH5WoNXCoXN8VbZLrFoWjmPwR',
-            'Qmd9VNGsVST4y4ZLz5rQLLMxDb2HhJwutAfQ5Et5MoAA7z',
-            'QmaL8YXHZA2aayApzaAeVV7RDJXAf5ZvqCbPraQkgdkTSh',
-            'QmPNSue3FwTVeYsYrDtBBPWWofFQCtP72C3m8vtYS3xEAu'];
+    it("... should fail if asset ids and hashes are not equal", async() => {
+        let ipfsHashes = [ 'QmUJeMDc3jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
+            'QmQKJdkbGEsiav3vdzK8pTH4WoNXCoXN8VbZLrFoWjmPwR',
+            'Qmd9VNGsVST4y4ZLz5rQtLmxDb2HhJwutAfQ5Et5MoAA7z',
+            'QmaL8YXHZA2aayApzaAeeV2RDJXAf5ZvqCbPraQkgdkTSh',
+            'QmPNSue3FwTVeYsYrDtMBPWwofFQCtP72C3m8vtYS3xEAu'];
 
+        let ipfsHashes1 = [];
         for (let i=0; i<ipfsHashes.length; i++){
-            ipfsHashes[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
+            ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
         }
 
-        await assetManagerContract.createAssetPack(ipfsHashes,500000);
+        await assetManagerContract.createAssetPack(ipfsHashes1,500000);
 
         let packData = await assetManagerContract.getAssetPackData(0);
+        let id = 4;
+        for(let i=0; i<packData[0].length; i++){
+            assert.equal(id, packData[0][i].c[0], "Assets id should be same");
+            id++;
+        }
         console.log(packData);
     });
 
