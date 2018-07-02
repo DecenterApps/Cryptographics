@@ -13,8 +13,8 @@ contract('AssetManager', async(accounts) => {
 
 
     it("... should create an asset", async () => {
-        let ipfsHash = "0x1234567";
-        let price = 500;
+        let ipfsHash = "0x123456789";
+        let price = 500000000000000;
 
         await assetManagerContract.createAsset(ipfsHash, price,  {from: accounts[0]});
 
@@ -24,8 +24,26 @@ contract('AssetManager', async(accounts) => {
     });
 
 
+    it("... should fail if there is same hash twice", async() => {
+        let ipfsHash = "0x1234567";
+        let price = 500000000000000;
 
-    it("... user should have  permission for asset", async() => {
+        await assetManagerContract.createAsset(ipfsHash, price, {from:accounts[0]}).catch(error => {
+            console.log("Error we have caught: "  + error);
+        });
+
+        await assetManagerContract.createAsset(ipfsHash, price, {from:accounts[0]}).catch(error => {
+            console.log("Error we have caught: "  + error);
+        });
+
+        let numberOfAssets = await assetManagerContract.getNumberOfAssets();
+        numberOfAssets= parseInt(numberOfAssets,10);
+        assert.equal(numberOfAssets,2,"There'd be only 2 assets ( 1 created in previous test and 1 in this test");
+    });
+
+
+
+    it("... user should have  permission for asset he created", async() => {
         let ipfsHash = "0x12345678";
         let price = 500000000000000;
 
@@ -35,6 +53,21 @@ contract('AssetManager', async(accounts) => {
         let permission = await assetManagerContract.checkHasPermission(accounts[0], 0);
         assert.equal(permission, true, "User had to have permission for this asset")
     });
+
+
+    it("... user should have  permission for asset he bought", async() => {
+        let ipfsHash = "0x12345678abc";
+        let price = 500000000000000;
+
+        await assetManagerContract.createAsset(ipfsHash, price, {from: accounts[0]});
+
+        await assetManagerContract.buyAssetPermision(0, {from: accounts[1], value: 500000000000000});
+
+
+        let permission = await assetManagerContract.checkHasPermission(accounts[1], 0);
+        assert.equal(permission, true, "User had to have permission for this asset ha has bought")
+    });
+
 
     it("... user should be owner of asset pack", async() => {
           let ipfsHashes = [ 'QmUJeMmc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
