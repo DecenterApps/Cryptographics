@@ -223,7 +223,7 @@ async function test() {
     await createAssetPack(ipfsHashes, 2000, '0xf67cDA56135d5777241DF325c94F1012c72617eA');
 }
 
-test();
+// test();
 
 module.exports = {
   getData,
