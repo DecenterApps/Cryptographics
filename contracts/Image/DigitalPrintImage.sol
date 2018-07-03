@@ -3,7 +3,6 @@ pragma solidity ^0.4.23;
 import "./ImageToken.sol";
 import "../Utils/Functions.sol";
 import "../AssetManager.sol";
-import "../Marketplace.sol";
 
 
 contract DigitalPrintImage is ImageToken,Functions {
@@ -23,7 +22,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     mapping(uint => ImageMetadata) public imageMetadata;
     mapping(uint => string) public idToIpfsHash;
 
-    Marketplace marketplaceContract;
+    address marketplaceContract;
     AssetManager assetManager;
 
 
@@ -117,7 +116,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
         // not required while on testnet
         // require(address(marketplaceContract) == 0x0);
-        marketplaceContract = Marketplace(_marketplaceContract);
+        marketplaceContract = _marketplaceContract;
     }
 
 
