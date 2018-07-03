@@ -12,7 +12,7 @@ contract('AssetManager', async(accounts) => {
     });
 
 
-    it("... should create an asset", async () => {
+    it("... should fail if there is not created an asset", async () => {
         let ipfsHash = "0x123456789";
         let price = 500000000000000;
 
@@ -68,7 +68,6 @@ contract('AssetManager', async(accounts) => {
         assert.equal(permission, true, "User had to have permission for this asset ha has bought")
     });
 
-
     it("... user should be owner of asset pack", async() => {
           let ipfsHashes = [ 'QmUJeMDc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
                 'QmQKJdkbGEsiav3vdzK8pTH5WoNXCoXN8VbZLrFoWjmPwR',
@@ -87,7 +86,7 @@ contract('AssetManager', async(accounts) => {
           assert.equal(userPacks, 0, "Should be owner of 0th asset pack");
     });
 
-    it("... should fail if asset ids and hashes are not equal", async() => {
+    it("... should fail if asset ids are not equal", async() => {
         let ipfsHashes = [ 'QmUJeMDc3jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
             'QmQKJdkbGEsiav3vdzK8pTH4WoNXCoXN8VbZLrFoWjmPwR',
             'Qmd9VNGsVST4y4ZLz5rQtLmxDb2HhJwutAfQ5Et5MoAA7z',
@@ -109,6 +108,42 @@ contract('AssetManager', async(accounts) => {
         }
         console.log(packData);
     });
+
+    it("... should fail if asset hashes decoding and encoding doesn't work well", async() => {
+        let ipfsHashes = ['QmcbMvJfgr6hZtAntXQnJrR4fLpkSDrbViqHzvakQHimWv',
+            'QmaeDvJH2JX8dv5CMwcGzQvVzBvBQ1Xky5ctJktG455jUF',
+            'QmQrP65e5JzcvKMSPjHpAXWU2i5FJrRUvjVV2vcC2xcPB7',
+            'QmS8sTxL4EvUjAEtYnwDjqYGttM871v2hmE477jNn744bF',
+            'QmbiiniuiY3hhdCdoTUrYN3yLLxwwEFLB6uCXzgUhCsegj',
+            'QmXBmAt1KMoDqAKcU9mwxQbEmBtRJczRP5vKvb1yHwSsCM',
+            'Qmdw2WRQDYFEbsdN3MCdtLe8mUyjr3uag7Za3UE7KckTBG',
+            'QmRvPXhCnNpYP2jsm6izNYyqZMVD9dtW4GqWx5Q3JbVcV9',
+            'QmbwU5SVSvwAQ6onRmzdGDq6f59zsvjxFEdWwX2FR7YQeX',
+            'QmYQZatMfitmBPyEN2it7FNaRAYtLpph6piJKPSfTVUMGF',
+            'QmQAkZzh8BX3epSnMeZKR9UyFzafsFeyrZ1MdfGWSvWMMt',
+            'QmSJwe6FDjxLVr2C6ax63JWaLUJYzwJ3Px948MgrT7eTVM'
+        ];
+
+        let ipfsHashes1 = [];
+        for (let i=0; i<ipfsHashes.length; i++){
+            ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
+        }
+
+        console.log(ipfsHashes1);
+        await assetManagerContract.createAssetPack(ipfsHashes1,500000);
+
+        let numberOfPacks = await assetManagerContract.getNumberOfAssetPacks();
+        console.log(numberOfPacks);
+
+        let packData = await assetManagerContract.getAssetPackData(2);
+
+        for(let i=0; i<packData[1].length; i++) {
+            let ipfs = utils.getIpfsHashFromBytes32(packData[1][i]);
+            assert.equal(ipfs, ipfsHashes[i], "Decoded and encoded ipfs hashes should be the same");
+        }
+    });
+
+
 
 
 });

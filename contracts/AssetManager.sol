@@ -40,6 +40,8 @@ contract AssetManager is Ownable {
     /// @param _packPrice is price for total assetPack (every asset will have average price)
     function createAssetPack(bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
+        require(_ipfsHashes.length < 50);
+
         uint assetPrice = _packPrice / _ipfsHashes.length;
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
@@ -59,11 +61,13 @@ contract AssetManager is Ownable {
     }
 
     /// @notice Function which creates an asset
+    /// @dev this method will be internal/private later in production
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
     /// @param _ipfsHash is ipfsHash to image of asset
     /// @param _price is price of asset
     function createAsset(bytes32 _ipfsHash, uint _price) public {
         require(hashExists[_ipfsHash] == false);
+        require(_price > 0);
 
         assets.push(Asset({
             id : numberOfAssets,
