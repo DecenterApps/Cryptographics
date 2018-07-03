@@ -137,7 +137,7 @@ function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 
     if (val < 10) {
       val = '0' + val;
     }
-    image.src = '../dist/assets/' + val + '.png';
+    image.src = require('../dist/assets/' + val + '.png');
 
     images.push(image);
   }
