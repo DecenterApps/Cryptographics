@@ -86,6 +86,16 @@ contract('AssetManager', async(accounts) => {
           assert.equal(userPacks, 0, "Should be owner of 0th asset pack");
     });
 
+    it("... should fail if there is no assets in pack", async() => {
+       let ipfsHashes = [];
+       await assetManagerContract.createAssetPack(ipfsHashes,500).catch(error => {
+           console.log("Error we have caught: "  + error);
+           assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
+       });
+
+    });
+
+
     it("... should fail if asset ids are not equal", async() => {
         let ipfsHashes = [ 'QmUJeMDc3jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
             'QmQKJdkbGEsiav3vdzK8pTH4WoNXCoXN8VbZLrFoWjmPwR',

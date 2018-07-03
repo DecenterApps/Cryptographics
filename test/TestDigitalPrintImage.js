@@ -38,16 +38,21 @@ contract('DigitalPrintImage', async(accounts) => {
 
 	it("... should fail if more than 50 assets",async () => {
 		let arr = [];
-		for(let i=0; i<55; i++){
+		for(let i=0; i<51; i++){
 			arr.push(i);
 		}
 		let encoded = utils.encode(arr);
-		let decoded = await functionsContract.decodeAssets(encoded);
-		if(decoded.length < 50){
-            assert.equal(arr[0],decoded[7],"decoded must be equal to input")
-        }
-
+		let randomHashIds = [1,2,3,4,5,6,7,8,9,10];
+		let timestamp = 123456789;
+		let iterations = 5;
+		let author = "Madjar";
+		let ipfsHash = "QmXBmAt1KMoDqAKcU9mwxQbEmBtRJczRP5vKvb1yHwSsCM";
+		await functionsContract.createImage(randomHashIds, timestamp, iterations, encoded, author, ipfsHash).catch(error => {
+            console.log("Error we have caught: "  + error);
+            assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
+        });
 	});
+
 
 	it("... should fail if empty bytes with all 0 sent",async () => {
 		let decoded = await functionsContract.decodeAssets(["0x0000000000000000000000000000000000000000000000000000000000000000"]);
@@ -61,6 +66,7 @@ contract('DigitalPrintImage', async(accounts) => {
 		let encoded = utils.encode(arr);
 
 		let decoded = await functionsContract.decodeAssets(encoded);
+		console.log("Decoded assets: " + decoded);
 		
 	});
 
@@ -73,7 +79,6 @@ contract('DigitalPrintImage', async(accounts) => {
 		
 		assert.equal(expectedSeed, seed, "Expected and generated seed must be equal");
 	});
-
 
 
 	it("... should fail if potential assets and positions picked are not equal" , async() => {
@@ -107,9 +112,6 @@ contract('DigitalPrintImage', async(accounts) => {
 	 });
 
 
-	it("... should fail if user doesn't have images", async ()  => {
-		let potentialAssets = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-	});
 
 
 	
