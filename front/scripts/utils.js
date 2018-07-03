@@ -20,7 +20,7 @@ function toSize(number,size) {
 }
 
 function dec2bin(dec){
-    bits = (dec >>> 0).toString(2);
+    let bits = (dec >>> 0).toString(2);
     return toSize(bits,BITS_PER_ID);
 }
 
