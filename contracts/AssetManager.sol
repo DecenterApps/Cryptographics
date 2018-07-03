@@ -81,7 +81,23 @@ contract AssetManager is Ownable {
         numberOfAssets++;
     }
 
-
+    /// @notice Function where user can buy himself a permission to use all assets in one assetPack
+    /// @dev msg.value will be
+    /// @param _assetPackId is id of asset pack we'd like to buy
+    function buyAssetPack(uint _assetPackId) public payable {
+        AssetPack memory assetPack = assetPacks[_assetPackId];
+        uint price = 0;
+        uint assetPrice = assetPack.price / assetPack.assetIds.length;
+        for(uint i=0; i<assetPack.assetIds.length; i++){
+            if(hasPermission[msg.sender][assetPack.assetIds[i]] == false) {
+                boughtAssets[msg.sender].push(assetPack.assetIds[i]);
+                hasPermission[msg.sender][assetPack.assetIds[i]] = true;
+                price += assetPrice;
+            }
+        }
+        require(msg.value >= price);
+        artistBalance[assetPack.creator] += price;
+    }
 
     /// @notice Function where user can buy himself a permission to use an asset
     /// @dev msg.value will be sent to asset creator
