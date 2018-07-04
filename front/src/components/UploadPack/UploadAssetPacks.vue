@@ -99,9 +99,11 @@
 
 <style scoped>
     div {
+        margin-left: 20px;
         margin-top: 30px;
     }
     img {
+        border-radius: 20px;
         width: 250px;
         height: 250px;
     }
