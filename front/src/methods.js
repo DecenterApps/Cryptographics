@@ -121,7 +121,7 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
 
 }
 
-function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
+async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
@@ -129,15 +129,25 @@ function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 
   width = width - left - right;
   height = height - top - bottom;
   context.clearRect(0, 0, width, height);
+  let ids = [];
+  for(let j=0; j<objs.length; j++) {
+    //ids -1 because on contract goes from 0
+      ids.push(objs[j].id -1);
+  }
+  let hashes = await functions.getAssetsIpfs(ids);
 
   let images = [];
   for (let i = 0; i < objs.length; i++) {
+    console.log(objs[i].id + " hash : " + hashes[i]);
     let image = new Image();
     let val = objs[i].id;
     if (val < 10) {
       val = '0' + val;
     }
-    image.src = require('../dist/assets/' + val + '.png');
+
+    // let src = await assetManagerContract.methods.getAssetIpfs(objs[i].id).call();
+    image.src = "http://ipfs.decenter.com/ipfs/" + hashes[i];
+    // image.src = require('../dist/assets/' + val + '.png');
 
     images.push(image);
   }

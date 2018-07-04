@@ -30,6 +30,15 @@ async function getAssetIpfs(assetId) {
     return ipfsDecoded;
 }
 
+async function getAssetsIpfs(assetIds) {
+    let ipfsHashes = await assetManagerContract.methods.getIpfsForAssets(assetIds).call();
+    for(let i=0; i<ipfsHashes.length; i++) {
+        ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
+    }
+    return ipfsHashes;
+
+}
+
 async function getImageIpfs(imageId) {
     let ipfsHash = await digitalPrintImageContract.methods.idToIpfsHash(imageId).call();
     console.log("Image ipfs hash = " + ipfsHash);
@@ -269,4 +278,5 @@ module.exports = {
     getCreatedAssetPacks,
     getIpfsAndIdsForAssetPack,
     getNumberOfAssetPacks,
+    getAssetsIpfs
 }
