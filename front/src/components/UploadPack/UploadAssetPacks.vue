@@ -1,24 +1,26 @@
 <template>
     <div>
-        <h1>Upload asset pack</h1>
-        <div>
-            <input name="pack_name" type="text" placeholder="Asset pack name"/>
-            <input name="price" type="text" placeholder="Value"/>
-            <input id="files" type="file" multiple size="50">
+        <div class="left-data">
+            <div class="heading">
+                <h1>Upload asset pack</h1>
+            </div>
+            <div class="input-data">
+                <input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>
+                <!--<button for="files" class="uploadFiles"> Browse </button>-->
+                <input class="uploadFiles" id="files" type="file" multiple size="50">
+            </div>
+            <input class="pack_price" name="price" type="text" placeholder="Value"/>
+            <div>
+                <button @click="uploadAssets"> Upload </button>
+            </div>
+            <div>
+                <button @click="uploadToIpfs"> Submit </button>
+            </div>
         </div>
-        <div>
-            <button> Browse </button>
-        </div>
-        <div>
-            <button @click="uploadAssets"> Upload </button>
-        </div>
-        <div>
-            <button @click="uploadToIpfs"> Submit </button>
-        </div>
-        <div v-for="file,key in uploaded_data.paths" style="display: inline-block">
-            <button @click="remove(key)"> Delete</button>
-            <img :src="file"/>
-        </div>
+        <!--<div class="right-data" v-for="file,key in uploaded_data.paths" style="display: inline-block">-->
+            <!--<button @click="remove(key)"> Delete</button>-->
+            <!--<img :src="file"/>-->
+        <!--</div>-->
     </div>
 </template>
 
@@ -98,17 +100,46 @@
 </script>
 
 <style scoped>
-    div {
+    div.heading {
+        font-family: 'YoungSerif-Regular', sans-serif;
+        font-size: 32px;
+        margin-left: 166px;
+        margin-top: 82px;
+    }
+
+    div.input-data {
+        margin-top: 26px;
+        margin-left: 166px;
+    }
+    input {
+        border-radius: 5px;
+    }
+    input.pack_name {
+        width: 209px;
+        height: 33px;
+    }
+
+    input.pack_price {
+        margin-top: 15px;
+        margin-left: 166px;
+        width: 92px;
+        height: 33px;
+
+    }
+
+    input.uploadFiles {
+    }
+
+    button.uploadFiles {
+        border-radius: 5px;
+        width: 89px;
+        height: 33px;
         margin-left: 20px;
-        margin-top: 30px;
     }
     img {
         border-radius: 20px;
         width: 250px;
         height: 250px;
     }
-    input {
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+
 </style>
