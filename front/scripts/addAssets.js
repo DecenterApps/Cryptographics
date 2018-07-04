@@ -85,10 +85,10 @@ const addAssetToContract = async (ipfs, price, address) => {
 };
 
 
-const addAssetPackToContract = async (ipfs, price, address) => {
+const addAssetPackToContract = async (name, ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [ipfs,price],
+        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [name,ipfs,price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -162,7 +162,7 @@ async function testAddAssetPacks() {
     }
     console.log(converted);
     for(data of converted){
-        await addAssetPackToContract(data,2000);
+        await addAssetPackToContract("AssetPack",data,2000);
     }
 }
 

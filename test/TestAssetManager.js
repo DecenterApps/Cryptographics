@@ -79,7 +79,7 @@ contract('AssetManager', async(accounts) => {
                ipfsHashes[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
           }
 
-          await assetManagerContract.createAssetPack(ipfsHashes,500000);
+          await assetManagerContract.createAssetPack("Pakovanje 1",ipfsHashes,500000);
 
           let userPacks = await assetManagerContract.getAssetPacksUserCreated(accounts[0]);
 
@@ -88,7 +88,7 @@ contract('AssetManager', async(accounts) => {
 
     it("... should fail if there is no assets in pack", async() => {
        let ipfsHashes = [];
-       await assetManagerContract.createAssetPack(ipfsHashes,500).catch(error => {
+       await assetManagerContract.createAssetPack("Pakovanje2", ipfsHashes,500).catch(error => {
            console.log("Error we have caught: "  + error);
            assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
        });
@@ -108,7 +108,7 @@ contract('AssetManager', async(accounts) => {
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
         }
 
-        await assetManagerContract.createAssetPack(ipfsHashes1,500000);
+        await assetManagerContract.createAssetPack("Pakovanje 3", ipfsHashes1,500000);
 
         let packData = await assetManagerContract.getAssetPackData(0);
         let id = 4;
@@ -140,7 +140,7 @@ contract('AssetManager', async(accounts) => {
         }
 
         console.log(ipfsHashes1);
-        await assetManagerContract.createAssetPack(ipfsHashes1,500000);
+        await assetManagerContract.createAssetPack("Pakovanje 4", ipfsHashes1,500000);
 
         let numberOfPacks = await assetManagerContract.getNumberOfAssetPacks();
         console.log(numberOfPacks);

@@ -51,10 +51,10 @@ async function createAsset(price, ipfsHash, account) {
   }
 }
 
-async function createAssetPack(ipfsHashes, price, account) {
+async function createAssetPack(name, ipfsHashes, price, account) {
   try {
       let nonce = await web3.eth.getTransactionCount(account);
-      return await assetManagerContract.methods.createAssetPack(ipfsHashes,price).send({
+      return await assetManagerContract.methods.createAssetPack(name, ipfsHashes,price).send({
         from: account, to: assetManagerContract, nonce
     }, (a,b) => {
       console.log(a,b);

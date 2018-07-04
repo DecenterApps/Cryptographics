@@ -2,7 +2,7 @@
     <div>
         <h1>Upload asset pack</h1>
         <div>
-            <input type="text" placeholder="Asset pack name"/>
+            <input name="pack_name" type="text" placeholder="Asset pack name"/>
             <input name="price" type="text" placeholder="Value"/>
             <input id="files" type="file" multiple size="50">
         </div>
@@ -56,6 +56,7 @@
                 let hashes =[];
                 let counter = this.uploaded_data.files.length;
                 const price = document.querySelector("input[name=price]").value;
+                const name = document.querySelector("input[name=pack_name").value;
                 const that = this;
                 for(let i=0; i<this.uploaded_data.files.length; i++) {
                     var reader = new FileReader();
@@ -66,7 +67,7 @@
                       if (counter === 0) {
                           console.log(hashes);
                           console.log(price);
-                          await createAssetPack(hashes, price, that.metamask_account);
+                          await createAssetPack(name, hashes, price, that.metamask_account);
                       }
                     };
                     reader.readAsDataURL(this.uploaded_data.files[i]);
