@@ -202,7 +202,19 @@ contract AssetManager is Ownable {
         Asset memory asset = assets[_id];
         return asset.ipfsHash;
     }
+    /// @notice Function to get array of ipfsHashes for specific assets
+    /// @dev need for data parsing on frontend efficiently
+    /// @param _ids is array of ids
+    /// @return bytes32 array of hashes
+    function getIpfsForAssets(uint [] _ids) public view returns (bytes32[]) {
+        bytes32[] memory hashes = new bytes32[](_ids.length);
+        for(uint i=0; i<_ids.length; i++) {
+            Asset memory asset = assets[_ids[i]];
+            hashes[i] = asset.ipfsHash;
+        }
 
+        return hashes;
+    }
     ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
         require(msg.sender != address(0));
