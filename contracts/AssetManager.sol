@@ -12,6 +12,7 @@ contract AssetManager is Ownable {
     }
 
     struct AssetPack {
+        string name;
         uint [] assetIds;
         address creator;
         uint price;
@@ -36,9 +37,10 @@ contract AssetManager is Ownable {
 
 
     /// @notice Function to create assetpack
+    /// @param _name is name of the asset pack
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
-    function createAssetPack(bytes32[] _ipfsHashes, uint _packPrice) public {
+    function createAssetPack(string _name,bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
 
@@ -51,6 +53,7 @@ contract AssetManager is Ownable {
         }
 
         assetPacks.push(AssetPack({
+            name: _name,
             assetIds: ids,
             creator: msg.sender,
             price: _packPrice
@@ -223,6 +226,16 @@ contract AssetManager is Ownable {
         }
 
         return(assetPack.assetIds, hashes);
+    }
+    /// @notice Function to get name for asset pack
+    /// @param _assetPackId is id of asset pack
+    /// @return string name of asset pack
+    function getAssetPackName(uint _assetPackId) public view returns (string) {
+        require(_assetPackId < numberOfAssetPacks);
+
+        AssetPack memory assetPack = assetPacks[_assetPackId];
+
+        return assetPack.name;
     }
 
 
