@@ -231,5 +231,6 @@ module.exports = {
   makeImage,
   createImage,
   createAsset,
+  createAssetPack,
   getSize,
 };
