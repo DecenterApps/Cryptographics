@@ -6,6 +6,11 @@ contract AssetManager is Ownable {
 
     struct Asset {
         uint id;
+        /// atributes field is going to be 3 digit uint where every digit can be "1" or "2"
+        /// 1st digit will tell us if asset is background 1 - true / 2 - false
+        /// 2nd digit will tell us if rotation is enabled 1 - true / 2 - false
+        /// 3rd digit will tell us if scaling  is enabled 1 - true / 2 - false
+        uint attributes;
         address creator;
         bytes32 ipfsHash;
         uint price;
@@ -39,16 +44,17 @@ contract AssetManager is Ownable {
     /// @param _name is name of the asset pack
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
-    function createAssetPack(string _name, bytes32[] _ipfsHashes, uint _packPrice) public {
+    function createAssetPack(string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
+        require(_attributes.length < 50);
 
         uint assetPrice = _packPrice / _ipfsHashes.length;
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
         for(uint i=0; i< _ipfsHashes.length; i++){
             ids[i] = numberOfAssets;
-            createAsset(_ipfsHashes[i], assetPrice);
+            createAsset(_attributes[i], _ipfsHashes[i], assetPrice);
         }
 
         assetPacks.push(AssetPack({
@@ -65,18 +71,21 @@ contract AssetManager is Ownable {
     /// @notice Function which creates an asset
     /// @dev this method will be internal/private later in production
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
+    /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
     /// @param _price is price of asset
-    function createAsset(bytes32 _ipfsHash, uint _price) public {
+    function createAsset(uint _attributes, bytes32 _ipfsHash, uint _price) public {
         require(hashExists[_ipfsHash] == false);
         require(_price > 0);
 
         assets.push(Asset({
             id : numberOfAssets,
+            attributes: _attributes,
             creator : msg.sender,
             ipfsHash : _ipfsHash,
             price : _price
             }));
+
         createdAssets[msg.sender].push(numberOfAssets);
         hasPermission[msg.sender][numberOfAssets] = true;
         hashExists[_ipfsHash] = true;
@@ -155,12 +164,12 @@ contract AssetManager is Ownable {
     /// @notice Method to get all info for an asset
     /// @param id is id of asset
     /// @return All data for an asset
-    function getAssetInfo(uint id) public view returns (uint, address, bytes32, uint){
+    function getAssetInfo(uint id) public view returns (uint, uint, address, bytes32, uint){
         require(id >= 0);
         require(id < numberOfAssets);
         Asset memory asset = assets[id];
 
-        return (asset.id, asset.creator, asset.ipfsHash, asset.price);
+        return (asset.id, asset.attributes, asset.creator, asset.ipfsHash, asset.price);
     }
 
 
@@ -202,6 +211,15 @@ contract AssetManager is Ownable {
         return asset.ipfsHash;
     }
 
+    /// @notice Function to get attributes for selected asset
+    /// @param _id is id of asset we'd like to get ipfs hash
+    /// @return uint representation of attributes of that asset
+    function getAssetAttributes(uint _id) public view returns (uint) {
+        require(_id < numberOfAssets);
+        Asset memory asset = assets[_id];
+        return asset.attributes;
+    }
+
     /// @notice Function to get array of ipfsHashes for specific assets
     /// @dev need for data parsing on frontend efficiently
     /// @param _ids is array of ids
@@ -214,6 +232,16 @@ contract AssetManager is Ownable {
         }
 
         return hashes;
+    }
+
+    function getAttributesForAssets(uint [] _ids) public view returns(uint[]) {
+        uint[] memory attributes = new uint[](_ids.length);
+        for(uint i=0; i< _ids.length; i++) {
+            Asset memory asset = assets[_ids[i]];
+            attributes[i] = asset.attributes;
+        }
+
+        return attributes;
     }
     ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
