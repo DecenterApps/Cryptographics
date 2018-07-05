@@ -45,8 +45,8 @@
             <div class="right-data">
                 <div class="image" v-for="file,key in uploaded_data.paths" style="display: inline-block">
                     <img :src="file"/>
+                    <button class="background" @click="setBackground(key)" > Set background </button>
                     <button class="delete" @click="remove(key)"> Delete</button>
-                    <button class="background" @click=""
                 </div>
             </div>
         </div>
@@ -112,6 +112,10 @@
             remove(key) {
               this.uploaded_data.paths.splice(key,1);
               this.uploaded_data.files.splice(key,1);
+            },
+
+            setBackground(key) {
+              this.attributes[key] = 100 + this.attributes[key] %100;
             }
         },
 
@@ -184,8 +188,14 @@
     div.image:hover img {
         opacity: 0.5;
     }
-    div.image:hover button.delete{
+    div.image:hover button.delete {
         display: block;
+    }
+    div.image:hover button.background {
+        display: block;
+    }
+    button.background {
+        display: none;
     }
     button.delete {
         display: none;

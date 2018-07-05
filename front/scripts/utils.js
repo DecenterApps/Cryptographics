@@ -98,6 +98,7 @@ function merge_objects(obj1, obj2) {
     return obj3;
 }
 
+
 function getBytes32FromIpfsHash(ipfsHash) {
     return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
 }
