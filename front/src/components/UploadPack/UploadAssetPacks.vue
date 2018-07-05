@@ -46,7 +46,7 @@
                 <div class="image" v-for="file,key in uploaded_data.paths" style="display: inline-block">
                     <img :src="file"/>
                     <button class="delete" @click="remove(key)"> Delete</button>
-
+                    <button class="background" @click=""
                 </div>
             </div>
         </div>

@@ -136,7 +136,6 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
       ids.push(objs[j].id -1);
   }
   let hashes = await functions.getAssetsIpfs(ids);
-
   let images = [];
   for (let i = 0; i < objs.length; i++) {
     console.log(objs[i].id + " hash : " + hashes[i]);
@@ -153,6 +152,7 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
 
       images.push(image);
   }
+
 
   let imagesLoaded = 0;
 
