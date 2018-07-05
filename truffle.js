@@ -8,10 +8,10 @@ module.exports = {
     networks: {
         kovan: {
             provider: function() {
-                return new HDWalletProvider(mnemonic, `https://kovan.decenter.com/`);
+                return new HDWalletProvider(mnemonic, `https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`);
             },
             network_id: '42',
-            gasPrice: 5000000000, // 2 GWei
+            gasPrice: 2000000000, // 2 GWei
         }
     }
 }

@@ -43,7 +43,7 @@
     async beforeCreate() {
       let assetPacksLength = await functions.getNumberOfAssetPacks();
       for (let i = 0; i < assetPacksLength; i++) {
-        let data = await functions.getIpfsAndIdsForAssetPack(i);
+        let data = await functions.getAssetPackData(i);
         let obj = {
           id: i,
           data: data,
