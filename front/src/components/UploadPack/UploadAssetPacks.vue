@@ -1,26 +1,55 @@
 <template>
-    <div>
-        <div class="left-data">
-            <div class="heading">
-                <h1>Upload asset pack</h1>
-            </div>
-            <div class="input-data">
-                <input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>
-                <!--<button for="files" class="uploadFiles"> Browse </button>-->
-                <input class="uploadFiles" id="files" type="file" multiple size="50">
-            </div>
-            <input class="pack_price" name="price" type="text" placeholder="Value"/>
-            <div>
-                <button @click="uploadAssets"> Upload </button>
-            </div>
-            <div>
-                <button @click="uploadToIpfs"> Submit </button>
-            </div>
-        </div>
+    <!--<div class="main">-->
+            <!--<div class="left-data">-->
+                <!--<div class="heading">-->
+                    <!--<h1>Upload asset pack</h1>-->
+                <!--</div>-->
+                <!--<div class="input-data">-->
+                    <!--<input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>-->
+                    <!--&lt;!&ndash;<button for="files" class="uploadFiles"> Browse </button>&ndash;&gt;-->
+                    <!--<input class="uploadFiles" id="files" type="file" multiple size="50">-->
+                <!--</div>-->
+                <!--<input class="pack_price" name="price" type="text" placeholder="Value"/>-->
+                <!--<div>-->
+                    <!--<button @click="uploadAssets"> Upload </button>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<button @click="uploadToIpfs"> Submit </button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <!--<div class="right-data" v-for="file,key in uploaded_data.paths" style="display: inline-block">-->
             <!--<button @click="remove(key)"> Delete</button>-->
             <!--<img :src="file"/>-->
         <!--</div>-->
+
+    <div>
+        <div class="main">
+            <div class="left-data">
+                <h1> Upload asset pack</h1>
+                <div class="input-data">
+                    <input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>
+                    <!--<button for="files" class="uploadFiles"> Browse </button>-->
+                    <input class="uploadFiles" id="files" type="file" multiple size="50">
+                </div>
+                <input class="pack_price" name="price" type="text" placeholder="Value"/>
+                <div class="number_of_assets">
+                    <label> Assets in pack 15-20 </label>
+                </div>
+
+                <div class="btns">
+                    <button class="submit" @click="uploadToIpfs"> Submit </button>
+                    <button class="try" @click="uploadAssets"> Try </button>
+                </div>
+            </div>
+
+            <div class="right-data">
+                <div class="image" v-for="file,key in uploaded_data.paths" style="display: inline-block">
+                    <button class="delete" @click="remove(key)"> Delete</button>
+                    <img :src="file"/>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -100,19 +129,23 @@
 </script>
 
 <style scoped>
-    div.heading {
-        font-family: 'YoungSerif-Regular', sans-serif;
-        font-size: 32px;
-        margin-left: 166px;
-        margin-top: 82px;
+    div.number_of_assets {
+        margin-top: 17px;
     }
 
+    label {
+        font-size: 12px;
+        font-family: 'Roboto', regular;
+
+    }
     div.input-data {
         margin-top: 26px;
-        margin-left: 166px;
+        display: flex;
     }
     input {
         border-radius: 5px;
+        background-color: #D9D9D9;
+
     }
     input.pack_name {
         width: 209px;
@@ -121,13 +154,13 @@
 
     input.pack_price {
         margin-top: 15px;
-        margin-left: 166px;
         width: 92px;
         height: 33px;
 
     }
 
     input.uploadFiles {
+        padding-left: 20px;
     }
 
     button.uploadFiles {
@@ -138,8 +171,53 @@
     }
     img {
         border-radius: 20px;
-        width: 250px;
-        height: 250px;
+        width: 206px;
+        height: 206px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
+    button.delete {
+        display: none;
+    }
+
+    h1 {
+        font-family: 'YoungSerif-Regular', sans-serif;
+        font-size: 32px;
+    }
+    div.left-data {
+        padding-left: 166px;
+        padding-top: 82px;
+        float: left;
+
+    }
+
+    div.right-data {
+        padding-left: 20px;
+        padding-top: 93px;
+        overflow-y: auto;
+        height: 500px;
+    }
+    div.main {
+        height: 100vh;
+        background-color: #D9D9D9;
+        display: flex;
+    }
+
+    div.btns {
+        padding-top: 124px;
+    }
+
+    button {
+        width: 89px;
+        height: 33px;
+        border-radius: 5px;
+    }
+    button.submit {
+        background-color: black;
+        color: white;
+    }
+    button.try {
+        margin-left: 5px;
     }
 
 </style>

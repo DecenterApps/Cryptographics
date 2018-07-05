@@ -35,12 +35,11 @@ contract AssetManager is Ownable {
     mapping(address => uint[]) createdAssetPacks;
 
 
-
     /// @notice Function to create assetpack
     /// @param _name is name of the asset pack
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
-    function createAssetPack(string _name,bytes32[] _ipfsHashes, uint _packPrice) public {
+    function createAssetPack(string _name, bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
 
@@ -202,6 +201,7 @@ contract AssetManager is Ownable {
         Asset memory asset = assets[_id];
         return asset.ipfsHash;
     }
+
     /// @notice Function to get array of ipfsHashes for specific assets
     /// @dev need for data parsing on frontend efficiently
     /// @param _ids is array of ids
@@ -239,6 +239,7 @@ contract AssetManager is Ownable {
 
         return(assetPack.assetIds, hashes);
     }
+
     /// @notice Function to get name for asset pack
     /// @param _assetPackId is id of asset pack
     /// @return string name of asset pack
