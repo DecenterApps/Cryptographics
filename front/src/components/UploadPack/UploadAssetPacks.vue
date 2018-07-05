@@ -29,7 +29,6 @@
                 <h1> Upload asset pack</h1>
                 <div class="input-data">
                     <input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>
-                    <!--<button for="files" class="uploadFiles"> Browse </button>-->
                     <input class="uploadFiles" id="files" type="file" multiple size="50">
                 </div>
                 <input class="pack_price" name="price" type="text" placeholder="Value"/>
@@ -45,8 +44,9 @@
 
             <div class="right-data">
                 <div class="image" v-for="file,key in uploaded_data.paths" style="display: inline-block">
-                    <button class="delete" @click="remove(key)"> Delete</button>
                     <img :src="file"/>
+                    <button class="delete" @click="remove(key)"> Delete</button>
+
                 </div>
             </div>
         </div>
@@ -175,6 +175,13 @@
         height: 206px;
         margin-right: 20px;
         margin-bottom: 20px;
+    }
+
+    div.image:hover img {
+        opacity: 0.5;
+    }
+    div.image:hover button.delete{
+        display: block;
     }
     button.delete {
         display: none;
