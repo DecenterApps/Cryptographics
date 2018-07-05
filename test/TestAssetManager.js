@@ -155,7 +155,7 @@ contract('AssetManager', async(accounts) => {
         let packData = await assetManagerContract.getAssetPackData(2);
         console.log(packData);
         for(let i=0; i<packData[1].length; i++) {
-            let ipfs = utils.getIpfsHashFromBytes32(packData[1][i]);
+            let ipfs = utils.getIpfsHashFromBytes32(packData[2][i]);
             assert.equal(ipfs, ipfsHashes[i], "Decoded and encoded ipfs hashes should be the same");
         }
     });

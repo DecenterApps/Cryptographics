@@ -41,7 +41,9 @@ contract AssetManager is Ownable {
 
 
     /// @notice Function to create assetpack
+    /// @dev ADD ATTRIBUTES VALIDATION
     /// @param _name is name of the asset pack
+    /// @param _attributes is array of attributes
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
     function createAssetPack(string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
@@ -71,6 +73,7 @@ contract AssetManager is Ownable {
     /// @notice Function which creates an asset
     /// @dev this method will be internal/private later in production
     /// @dev id is automatically generated, and it's it's position in array which holds all assets, also, creator of asset is msg.sender
+    /// @dev add attributes validation
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
     /// @param _price is price of asset
@@ -255,7 +258,7 @@ contract AssetManager is Ownable {
     /// @notice Function to get ipfs hash and id for all assets in one asset pack
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
-    function getAssetPackData(uint _assetPackId) public view returns(uint[], bytes32[]){
+    function getAssetPackData(uint _assetPackId) public view returns(uint[], uint[], bytes32[]){
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -264,8 +267,9 @@ contract AssetManager is Ownable {
         for(uint i=0; i<assetPack.assetIds.length; i++){
             hashes[i] = getAssetIpfs(assetPack.assetIds[i]);
         }
+        uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
-        return(assetPack.assetIds, hashes);
+        return(assetPack.assetIds, attributes, hashes);
     }
 
     /// @notice Function to get name for asset pack
