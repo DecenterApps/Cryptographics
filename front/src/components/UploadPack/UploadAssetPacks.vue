@@ -68,6 +68,7 @@
                 paths : [],
                 files : [],
             },
+            attributes: [],
         }),
 
         methods: {
@@ -81,6 +82,9 @@
               }
               this.uploaded_data.paths = [...this.uploaded_data.paths, ...urls];
               this.uploaded_data.files = [...this.uploaded_data.files, ... files];
+              for(let j=0; j< this.uploaded_data.files.length; j++) {
+                  this.attributes.push(222);
+              }
             },
 
             async uploadToIpfs() {
@@ -98,7 +102,7 @@
                       if (counter === 0) {
                           console.log(hashes);
                           console.log(price);
-                          await createAssetPack(name, hashes, price, that.metamask_account);
+                          await createAssetPack(name, that.attributes, hashes, price, that.metamask_account);
                       }
                     };
                     reader.readAsDataURL(this.uploaded_data.files[i]);

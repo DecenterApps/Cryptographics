@@ -11,7 +11,7 @@ const utils = require('./utils');
 require('dotenv').load();
 
 
-const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
 const ourAddress = process.env.ADDRESS;
 const ourPrivateKey = process.env.PRIV_KEY;
@@ -73,10 +73,10 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
     });
 
 
-const addAssetToContract = async (ipfs, price, address) => {
+const addAssetToContract = async (attributes, ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [ipfs,price],
+        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [attributes, ipfs, price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -85,10 +85,10 @@ const addAssetToContract = async (ipfs, price, address) => {
 };
 
 
-const addAssetPackToContract = async (name, ipfs, price, address) => {
+const addAssetPackToContract = async (name, attributes, ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [name,ipfs,price],
+        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [name, attributes, ipfs, price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -161,8 +161,9 @@ async function testAddAssetPacks() {
         temparray = [];
     }
     console.log(converted);
+    let attributes = 212;
     for(data of converted){
-        await addAssetPackToContract("AssetPack",data,2000);
+        await addAssetPackToContract("AssetPack",attributes, data,2000);
     }
 }
 

@@ -5,7 +5,7 @@ const leftPad = require('left-pad')
 const conf = require('./config.json');
 const bs58 = require('bs58');
 
-const web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.decenter.com"));
+const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
 const assetManagerContractAddress = conf.assetManagerContract.networks["42"].address;
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);

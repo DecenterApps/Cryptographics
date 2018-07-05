@@ -33,14 +33,15 @@ async function createImage(randomHashIds, timestamp, iterations, potentialAssets
   }
 }
 
-async function createAsset(price, ipfsHash, account) {
+async function createAsset(attributes,  ipfsHash, price, account) {
   console.log('Price: ' + price);
   console.log('Ipfs hash: ' + ipfsHash);
+  console.log('Attributes: ' + attributes);
   console.log('Account: ' + account);
 
   let nonce = await web3.eth.getTransactionCount(account);
   try {
-    return await assetManagerContract.methods.createAsset(ipfsHash, price).send({
+    return await assetManagerContract.methods.createAsset(attributes, ipfsHash, price).send({
       from: account, to: assetManagerContract, nonce
     }, (a, b) => {
       console.log(a, b);
@@ -51,10 +52,10 @@ async function createAsset(price, ipfsHash, account) {
   }
 }
 
-async function createAssetPack(name, ipfsHashes, price, account) {
+async function createAssetPack(name, attributes, ipfsHashes, price, account) {
   try {
       let nonce = await web3.eth.getTransactionCount(account);
-      return await assetManagerContract.methods.createAssetPack(name, ipfsHashes,price).send({
+      return await assetManagerContract.methods.createAssetPack(name, attributes, ipfsHashes, price).send({
         from: account, to: assetManagerContract, nonce
     }, (a,b) => {
       console.log(a,b);
