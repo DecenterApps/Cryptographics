@@ -52,10 +52,18 @@ async function getBoughtAssets(address) {
 }
 
 
-async function getCreatedAssetPacks(address) {
+async function getCreatedAssetPacks(pagination, count, address) {
     let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
     console.log("ASSET PACK IDS : " + assetPacksIds);
     return assetPacksIds;
+}
+
+async function getPaginatedAssetPacks(pagination, count, address) {
+    let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
+    let beginning = (pagination-1)*count;
+    let end = pagination+count -1;
+    console.log(beginning,end);
+    return assetPacksIds.slice(beginning, end);
 }
 
 async function getCoversForAssetPacks(assetPackIds) {
@@ -338,5 +346,6 @@ module.exports = {
     getCoversForAssetPacks,
     getAssetPacksNames,
     getOwnedAssetsFromPacks,
-    getPackInformation
+    getPackInformation,
+    getPaginatedAssetPacks
 }
