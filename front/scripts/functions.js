@@ -113,8 +113,9 @@ async function getNumberOfAssetPacks() {
 
 async function getAssetPackData(assetPackId) {
     let response = await assetManagerContract.methods.getAssetPackData(assetPackId).call();
-    let ids = response[0];
+    let ids = response[1];
     let data = [];
+    console.log(response);
     for (let i = 0; i < ids.length; i++) {
         var Asset = {
             pack_name: response[0],
@@ -298,8 +299,8 @@ async function test() {
 
     // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // console.log(await getAssetPackData(0));
-    // console.log(await getAssetPackData(0));
-    console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    console.log(await getAssetPackData(5));
+    // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
 }
 
 
