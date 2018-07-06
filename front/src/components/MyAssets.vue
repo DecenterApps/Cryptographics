@@ -8,7 +8,7 @@
                     <span class="asset-thumbnail"></span>
                     <span class="asset-name">{{ asset_packs_names[key] }}</span>
                 </div>
-                <span class="asset-owned">{{ stats_owned[key].owned }} / {{ stats_owned[key].total }} </span>
+                <span class="asset-owned" v-if="showAll">{{ stats_owned[key].owned }} / {{ stats_owned[key].total }} </span>
             </div>
         </div>
     </div>
