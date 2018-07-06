@@ -130,6 +130,8 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
   width = width - left - right;
   height = height - top - bottom;
   context.clearRect(0, 0, width, height);
+  context.fillStyle = "#fff";
+  context.fillRect(0, 0, canvasWidth, canvasHeight);
   let ids = [];
   for(let j=0; j<objs.length; j++) {
     //ids -1 because on contract goes from 0

@@ -11,7 +11,7 @@ export default [
   { path: '/about', component: About },
   { path: '/create', component: CreateArt },
   // { path: '/gallery', component: About },
-  { path: '/upload', component: UploadAssetPacks},
+  { path: '/create_asset_pack', component: UploadAssetPacks},
   { path: '/asset_packs', component: AllAssets },
   { path: '/profile', component: Profile },
 ];

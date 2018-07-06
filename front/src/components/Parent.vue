@@ -58,7 +58,7 @@
   import Packs from './Packs.vue';
   import Canvas from './Canvas.vue';
   import MyImages from './MyImages.vue';
-  import MyAssets from './AllAssets.vue';
+  import AssetPacks from './AssetPacks.vue';
   import CreateAsset from './CreateAsset.vue';
 
   const methods = require('../methods.js');
@@ -89,7 +89,7 @@
         'canvas-image': Canvas,
       'canvas-my-images': MyImages,
       'packs': Packs,
-      'my-assets': MyAssets,
+      'asset-packs': AssetPacks,
       'create-asset': CreateAsset,
     },
     computed: {},

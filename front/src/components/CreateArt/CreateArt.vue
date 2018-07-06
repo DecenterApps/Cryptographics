@@ -23,8 +23,6 @@
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import ArtBuilder from './ArtBuilder/ArtBuilder.vue';
 
-
-
   export default {
     name: 'create-art',
     components: { ArtBuilder, AssetPicker },
@@ -83,6 +81,14 @@
             box-sizing: border-box;
             margin-right: 0;
             overflow: hidden;
+        }
+
+        @media all and (max-width: 1280px) {
+            width: 100%;
+            left: 0;
+            .create-container {
+                margin-right: auto;
+            }
         }
     }
 </style>

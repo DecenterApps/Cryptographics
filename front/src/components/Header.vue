@@ -9,7 +9,6 @@
                     <!--<router-link class-active="active" to="/gallery"> Gallery</router-link>-->
                     <router-link class-active="active" to="/asset_packs">Asset Packs</router-link>
                     <router-link class-active="active" to="/about">About</router-link>
-                    <router-link class-active="active" to="/upload"> Upload new Asset Pack</router-link>
                     <span>|</span>
                 </div>
                 <div class="profile">

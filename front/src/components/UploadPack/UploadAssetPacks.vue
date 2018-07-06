@@ -2,7 +2,7 @@
     <div class="upload-assets-page">
         <div class="container main">
             <div class="left-data">
-                <h1 class="large-title"> Upload asset pack</h1>
+                <h1 class="large-title">Create asset pack</h1>
                 <div class="input-data">
                     <input class="pack-name" name="pack_name" type="text" placeholder="Asset Pack name" />
                     <label for="files" class="default-button no-background file-upload-button">
