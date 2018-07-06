@@ -813,473 +813,496 @@
     ],
     "networks": {
       "42": {
-        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
+        "address": "0x4045eede1375964102fd34d460a4f3f47ad929cb",
         "events": {},
         "links": {},
-        "address": "0xb2fd29aa5e9d58f68ef732fb87ba5a8d13a00f23"
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"
       }
     }
   },
   "assetManagerContract": {
-    "abi" : [
+    "abi": [
       {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_assetPackId",
-            "type": "uint256"
-          }
-        ],
-        "name": "buyAssetPack",
-        "outputs": [],
-        "payable": true,
-        "stateMutability": "payable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_assetId",
-            "type": "uint256"
-          }
-        ],
-        "name": "buyAssetPermision",
-        "outputs": [],
-        "payable": true,
-        "stateMutability": "payable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_attributes",
-            "type": "uint256"
-          },
-          {
-            "name": "_ipfsHash",
-            "type": "bytes32"
-          },
-          {
-            "name": "_price",
-            "type": "uint256"
-          }
-        ],
-        "name": "createAsset",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_name",
-            "type": "string"
-          },
-          {
-            "name": "_attributes",
-            "type": "uint256[]"
-          },
-          {
-            "name": "_ipfsHashes",
-            "type": "bytes32[]"
-          },
-          {
-            "name": "_packPrice",
-            "type": "uint256"
-          }
-        ],
-        "name": "createAssetPack",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "_address",
-            "type": "address"
-          },
-          {
-            "name": "_pickedAssets",
-            "type": "uint256[]"
-          }
-        ],
-        "name": "givePermission",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "name": "previousOwner",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "transferOwnership",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": false,
         "inputs": [],
-        "name": "withdraw",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "constant": true,
-        "inputs": [
-          {
-            "name": "_ipfsHash",
-            "type": "bytes32"
-          }
-        ],
-        "name": "checkHashExists",
-        "outputs": [
-          {
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_address",
-            "type": "address"
-          },
-          {
-            "name": "_assetId",
-            "type": "uint256"
-          }
-        ],
-        "name": "checkHasPermission",
-        "outputs": [
-          {
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_id",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetAttributes",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "id",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetInfo",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          },
-          {
-            "name": "",
-            "type": "uint256"
-          },
-          {
-            "name": "",
-            "type": "address"
-          },
-          {
-            "name": "",
-            "type": "bytes32"
-          },
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_id",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetIpfs",
-        "outputs": [
-          {
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_assetPackId",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetPackData",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "name": "",
-            "type": "bytes32[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_assetPackId",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetPackName",
-        "outputs": [
-          {
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_address",
-            "type": "address"
-          }
-        ],
-        "name": "getAssetPacksUserCreated",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "id",
-            "type": "uint256"
-          }
-        ],
-        "name": "getAssetPrice",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_address",
-            "type": "address"
-          }
-        ],
-        "name": "getAssetsForUser",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_address",
-            "type": "address"
-          }
-        ],
-        "name": "getAssetsUserCreated",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_ids",
-            "type": "uint256[]"
-          }
-        ],
-        "name": "getAttributesForAssets",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "_ids",
-            "type": "uint256[]"
-          }
-        ],
-        "name": "getIpfsForAssets",
-        "outputs": [
-          {
-            "name": "",
-            "type": "bytes32[]"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getNumberOfAssetPacks",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getNumberOfAssets",
-        "outputs": [
-          {
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
         "name": "owner",
         "outputs": [
           {
-            "name": "",
-            "type": "address"
+            "type": "address",
+            "name": ""
           }
         ],
-        "payable": false,
         "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "constant": false,
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "previousOwner"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "type": "event",
+        "name": "OwnershipTransferred",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "type": "string",
+            "name": "_name"
+          },
+          {
+            "type": "uint256[]",
+            "name": "_attributes"
+          },
+          {
+            "type": "bytes32[]",
+            "name": "_ipfsHashes"
+          },
+          {
+            "type": "uint256",
+            "name": "_packPrice"
+          }
+        ],
+        "constant": false,
+        "name": "createAssetPack",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_attributes"
+          },
+          {
+            "type": "bytes32",
+            "name": "_ipfsHash"
+          },
+          {
+            "type": "uint256",
+            "name": "_price"
+          }
+        ],
+        "constant": false,
+        "name": "createAsset",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": false,
+        "name": "buyAssetPack",
+        "outputs": [],
+        "stateMutability": "payable",
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetId"
+          }
+        ],
+        "constant": false,
+        "name": "buyAssetPermision",
+        "outputs": [],
+        "stateMutability": "payable",
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "getNumberOfAssets",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "getNumberOfAssetPacks",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          },
+          {
+            "type": "uint256",
+            "name": "_assetId"
+          }
+        ],
+        "constant": true,
+        "name": "checkHasPermission",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "bytes32",
+            "name": "_ipfsHash"
+          }
+        ],
+        "constant": true,
+        "name": "checkHashExists",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          },
+          {
+            "type": "uint256[]",
+            "name": "_pickedAssets"
+          }
+        ],
+        "constant": false,
+        "name": "givePermission",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetInfo",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "bytes32",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPrice",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetsForUser",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetsUserCreated",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPacksUserCreated",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetIpfs",
+        "outputs": [
+          {
+            "type": "bytes32",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetAttributes",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_ids"
+          }
+        ],
+        "constant": true,
+        "name": "getIpfsForAssets",
+        "outputs": [
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_ids"
+          }
+        ],
+        "constant": true,
+        "name": "getAttributesForAssets",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": false,
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPackData",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPackName",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_packIds"
+          }
+        ],
+        "constant": true,
+        "name": "getHoverImagesForAssetPacks",
+        "outputs": [
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
         "type": "function"
       }
     ],
     "networks": {
       "42": {
-        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
+        "address": "0x26d6cc19160bc0e5fb9ac00eacfc0111852e34c1",
         "events": {},
         "links": {},
-        "address": "0x7e02e3302e61963377a79e4ce80b97867a91bdee"
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"
       }
     }
   }
