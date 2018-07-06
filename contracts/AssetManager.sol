@@ -283,6 +283,7 @@ contract AssetManager is Ownable {
     }
 
 
+
     function getHoverImagesForAssetPacks(uint [] _packIds) public view returns (bytes32[]) {
         require(_packIds.length > 0);
         bytes32[] memory hashes = new bytes32[](_packIds.length);

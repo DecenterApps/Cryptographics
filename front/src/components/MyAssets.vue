@@ -6,7 +6,7 @@
             <div class="asset-meta">
                 <div class="asset-description">
                     <span class="asset-thumbnail"></span>
-                    <span class="asset-name">YoungSerif</span>
+                    <span class="asset-name">{{ asset_packs_names[key] }}</span>
                 </div>
                 <span class="asset-owned">owner</span>
             </div>
@@ -22,6 +22,7 @@
     name: 'my-assets',
     data: () => ({
       created_assets: [],
+      asset_packs_names: [],
       asset_packs_image : [],
       asset_packs_ids: [],
     }),
@@ -39,8 +40,9 @@
       },
 
       async generateAssetPacks() {
+          console.log(this.asset_packs_ids);
+          this.asset_packs_names = await functions.getAssetPacksNames(this.asset_packs_ids);
           let hovers = await functions.getHoversForAssetPacks(this.asset_packs_ids);
-          console.log(hovers);
           for (let i = 0; i < hovers.length; i++) {
             this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
         }

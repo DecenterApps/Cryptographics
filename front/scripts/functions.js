@@ -67,6 +67,16 @@ async function getHoversForAssetPacks(assetPackIds) {
     return hovers;
 }
 
+async function getAssetPacksNames(assetPacksIds) {
+    let names = [];
+    for(let i=0; i<assetPacksIds.length; i++) {
+        let name = await assetManagerContract.methods.getAssetPackName(assetPacksIds[i]).call();
+        names.push(name);
+    }
+
+    return names;
+}
+
 async function getNumberOfAssetPacks() {
     let numberOfPacks = await assetManagerContract.methods.getNumberOfAssetPacks().call();
     console.log(numberOfPacks);
@@ -261,8 +271,10 @@ async function test() {
 
     // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // console.log(await getAssetPackData(0));
-    console.log(await getAssetPackData(0));
+    // console.log(await getAssetPackData(0));
+    console.log(await getAssetPacksNames([1,2,3]));
 }
+
 
 function printImageData(assets) {
     for (let i = 0; i < assets.length; i++) {
@@ -291,5 +303,6 @@ module.exports = {
     getAssetPackData,
     getNumberOfAssetPacks,
     getAssetsIpfs,
-    getHoversForAssetPacks
+    getHoversForAssetPacks,
+    getAssetPacksNames
 }
