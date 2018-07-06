@@ -118,11 +118,10 @@ contract('AssetManager', async(accounts) => {
 
         let packData = await assetManagerContract.getAssetPackData(0);
         let id = 4;
-        for(let i=0; i<packData[0].length; i++){
-            assert.equal(id, packData[0][i].c[0], "Assets id should be same");
+        for(let i=0; i<packData[1].length; i++){
+            assert.equal(id, packData[1][i].c[0], "Assets id should be same");
             id++;
         }
-        console.log(packData);
     });
 
     it("... should fail if asset hashes decoding and encoding doesn't work well", async() => {
@@ -146,20 +145,43 @@ contract('AssetManager', async(accounts) => {
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
         }
 
-        console.log(ipfsHashes1);
         await assetManagerContract.createAssetPack("Pakovanje 4",attributes, ipfsHashes1,500000);
 
         let numberOfPacks = await assetManagerContract.getNumberOfAssetPacks();
-        console.log(numberOfPacks);
+
+        assert.equal(numberOfPacks, 3, "There should be 3 packs");
 
         let packData = await assetManagerContract.getAssetPackData(2);
-        console.log(packData);
-        for(let i=0; i<packData[1].length; i++) {
-            let ipfs = utils.getIpfsHashFromBytes32(packData[2][i]);
+        for(let i=0; i<packData[2].length; i++) {
+            let ipfs = utils.getIpfsHashFromBytes32(packData[3][i]);
             assert.equal(ipfs, ipfsHashes[i], "Decoded and encoded ipfs hashes should be the same");
         }
     });
 
+    it("... should fail if returned hash is not equal to hash[0] and if returned data is not same", async() => {
+       let ipfsHashes = ["QmQcYHQRy3eQTkzx85Uk6xVgoer3KCmpPQDNt1gUqWtBus",
+           "QmPvPH5jyocBeDSgesr63rA581AVuCmN4hq2TDscJq51SU",
+           "Qmaj86wPe5LMYyKNZNq6HKB5ma2qUstaVEfgCVsUEr3mi7",
+           "Qmf9kLBs5KYCLirrzoFzcAgKPkuZqLj5iD7xSRYzZMm8WQ",
+           "QmZFqCK1QRz8Esu7KyrVAqc2afBHVRcwiRCk2Hugr7zHa6",
+           "QmW9W3AHpp9HYJZqMWxvtZsGU8yyGqXYWxHNPzbsvZeQuj"
+       ];
+       let packName = "Pack for assets"
+       let ipfsHashes1 = [];
+       let attributes = [222,212,211,212,112,111];
+       for (let i=0; i<ipfsHashes.length; i++){
+            ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
+       }
+       await assetManagerContract.createAssetPack(packName, attributes, ipfsHashes1,500000);
+
+       let hover = await assetManagerContract.getHoverImagesForAssetPacks([3]);
+       assert.equal(utils.getIpfsHashFromBytes32(hover[0]), ipfsHashes[0], "First asset should be equal");
+
+
+       let packData = await assetManagerContract.getAssetPackData(3);
+       assert.equal(packData[0], packName);
+
+    });
 
 
 
