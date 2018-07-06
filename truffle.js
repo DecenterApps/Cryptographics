@@ -11,7 +11,7 @@ module.exports = {
                 return new HDWalletProvider(mnemonic, `https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`);
             },
             network_id: '42',
-            gasPrice: 2000000000, // 2 GWei
+            gasPrice: 4700000, // 2 GWei
         }
     }
 }
