@@ -52,7 +52,7 @@ async function getBoughtAssets(address) {
 }
 
 
-async function getCreatedAssetPacks(pagination, count, address) {
+async function getCreatedAssetPacks(address) {
     let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
     console.log("ASSET PACK IDS : " + assetPacksIds);
     return assetPacksIds;
