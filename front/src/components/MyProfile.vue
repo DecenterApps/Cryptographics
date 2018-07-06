@@ -13,7 +13,7 @@
                 </div>
 
                 <p class="large-title">Asset Packs</p>
-                <my-assets></my-assets>
+                <asset-packs></asset-packs>
 
                 <p class="large-title">Gallery</p>
             </div>
@@ -57,7 +57,7 @@
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
-  import MyAssets from './MyAssets.vue';
+  import AssetPacks from './AssetPacks.vue';
   import HomeGallery from './Home/HomeGallery/HomeGallery.vue';
   import PageFooter from './Footer/Footer.vue';
 
@@ -81,7 +81,7 @@
       SliderGallery,
       'canvas-my-images': MyImages,
       'my-images-ipfs': MyImageees,
-      'my-assets': MyAssets,
+      'asset-packs': AssetPacks,
     },
     // computed: {
     // },

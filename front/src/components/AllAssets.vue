@@ -1,33 +1,31 @@
 <template>
-    <div>
+    <div class="all-assets-page">
         <slider-gallery></slider-gallery>
         <div class="container">
-            <h1 class="large-title"> Asset Packs </h1>
-            <my-assets :showAll="true"></my-assets>
+            <div class="all-assets-header">
+                <h1 class="large-title"> Asset Packs </h1>
+                <router-link to="/create_asset_pack">
+                    <button class="default-button submit">Create Asset Pack</button>
+                </router-link>
+            </div>
+            <asset-packs :showAll="true" />
         </div>
 
 
-
+        <PageFooter />
     </div>
 </template>
 
 <script>
   import SliderGallery from './SliderGallery/SliderGallery.vue';
-  import MyAssets from './MyAssets.vue';
-  import {getAccounts} from '../../scripts/helpers.js';
+  import PageFooter from './Footer/Footer.vue';
+  import AssetPacks from './AssetPacks.vue';
 
   export default {
-    components: { MyAssets, SliderGallery },
-    data: () => ({
-      page: [],
-      metamask_account: 0,
-    }),
+    components: { PageFooter, AssetPacks, SliderGallery },
+    data: () => ({}),
 
     async created() {
-        this.page = 1;
-        },
-    async beforeCreate() {
-        this.metamask_account = await getAccounts();
     },
     computed: {},
     methods: {},
@@ -37,7 +35,7 @@
   };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     img {
         margin-right: 20px;
         margin-top: 20px;
@@ -45,12 +43,28 @@
         width: 150px;
         height: 150px;
     }
+
     .asset-packs-wrapper {
         display: flex;
         flex-wrap: wrap;
     }
 
-    .large-title{
+    .all-assets-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            width: 140px;
+        }
+
+    }
+
+    .large-title {
         margin-top: 29px;
         margin-bottom: 41px;
     }

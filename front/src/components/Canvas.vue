@@ -1,6 +1,6 @@
 <template>
     <div class="canvas-wrapper">
-        <canvas id="canvas"></canvas>
+        <canvas fill="#fff" id="canvas"></canvas>
     </div>
 </template>
 
@@ -29,6 +29,17 @@
         },
         deep: true,
       }
+    },
+    mounted: function () {
+      let canvas = document.getElementById('canvas');
+      const rect = canvas.parentNode.getBoundingClientRect();
+      const size = methods.getSize(rect.width, rect.height, this.canvasData.ratio);
+      const frame = this.canvasData.frame || false;
+      canvas.width = size.width;
+      canvas.height = size.height;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     },
     methods: {
       getCanvasElement() {
