@@ -58,22 +58,32 @@ async function getCreatedAssetPacks(address) {
     return assetPacksIds;
 }
 
+async function getHoversForAssetPacks(assetPackIds) {
+    let hovers = await assetManagerContract.methods.getHoverImagesForAssetPacks(assetPackIds).call();
+    for(let i=0; i<hovers.length; i++) {
+        hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
+    }
+    console.log(hovers);
+    return hovers;
+}
+
 async function getNumberOfAssetPacks() {
     let numberOfPacks = await assetManagerContract.methods.getNumberOfAssetPacks().call();
     console.log(numberOfPacks);
     return numberOfPacks;
 }
 
+
 async function getAssetPackData(assetPackId) {
     let response = await assetManagerContract.methods.getAssetPackData(assetPackId).call();
-    console.log(response);
     let ids = response[0];
     let data = [];
     for (let i = 0; i < ids.length; i++) {
         var Asset = {
-            id: response[0][i],
-            attribute: response[1][i],
-            ipfsHash: utils.getIpfsHashFromBytes32(response[2][i]),
+            pack_name: response[0],
+            id: response[1][i],
+            attribute: response[2][i],
+            ipfsHash: utils.getIpfsHashFromBytes32(response[3][i]),
         };
         data.push(Asset);
     }
@@ -280,5 +290,6 @@ module.exports = {
     getCreatedAssetPacks,
     getAssetPackData,
     getNumberOfAssetPacks,
-    getAssetsIpfs
+    getAssetsIpfs,
+    getHoversForAssetPacks
 }

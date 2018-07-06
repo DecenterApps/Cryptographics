@@ -125,7 +125,7 @@
         this.image_price = parseInt(price, 10);
       },
 
-      async getCreatedAssets() {
+      async getCreatedAssetPacks() {
         this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
       },
 

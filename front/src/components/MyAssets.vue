@@ -1,6 +1,6 @@
 <template>
     <div class="asset-packs-wrapper">
-        <div class="asset-pack" v-for="asset,key in assets">
+        <div class="asset-pack" v-for="asset,key in asset_packs_image">
             <img class="asset-pack-image" :src="asset" />
 
             <div class="asset-meta">
@@ -22,26 +22,27 @@
     name: 'my-assets',
     data: () => ({
       created_assets: [],
-      assets: [],
+      asset_packs_image : [],
+      asset_packs_ids: [],
     }),
 
     props: ['metamask_account'],
 
     async created() {
-      await this.getCreatedAssets();
+      await this.getCreatedAssetPacks();
       await this.generateAssetPacks();
     },
 
     methods: {
-      async getCreatedAssets() {
-        this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
+      async getCreatedAssetPacks() {
+        this.asset_packs_ids = await functions.getCreatedAssetPacks(this.metamask_account);
       },
 
       async generateAssetPacks() {
-        console.log(this.created_assets.length);
-        for (let i = 0; i < this.created_assets.length; i += 10) {
-          let assetPackIpfs = await functions.getAssetIpfs(this.created_assets[i]);
-          this.assets.push('https://ipfs.decenter.com/ipfs/' + assetPackIpfs);
+          let hovers = await functions.getHoversForAssetPacks(this.asset_packs_ids);
+          console.log(hovers);
+          for (let i = 0; i < hovers.length; i++) {
+            this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
         }
       }
     }

@@ -243,7 +243,6 @@ contract AssetManager is Ownable {
             Asset memory asset = assets[_ids[i]];
             attributes[i] = asset.attributes;
         }
-
         return attributes;
     }
     ///@notice Function where all artists can withdraw their funds
@@ -258,7 +257,7 @@ contract AssetManager is Ownable {
     /// @notice Function to get ipfs hash and id for all assets in one asset pack
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
-    function getAssetPackData(uint _assetPackId) public view returns(uint[], uint[], bytes32[]){
+    function getAssetPackData(uint _assetPackId) public view returns(string, uint[], uint[], bytes32[]){
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -269,7 +268,7 @@ contract AssetManager is Ownable {
         }
         uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
-        return(assetPack.assetIds, attributes, hashes);
+        return(assetPack.name, assetPack.assetIds, attributes, hashes);
     }
 
     /// @notice Function to get name for asset pack
@@ -281,6 +280,17 @@ contract AssetManager is Ownable {
         AssetPack memory assetPack = assetPacks[_assetPackId];
 
         return assetPack.name;
+    }
+
+
+    function getHoverImagesForAssetPacks(uint [] _packIds) public view returns (bytes32[]) {
+        require(_packIds.length > 0);
+        bytes32[] memory hashes = new bytes32[](_packIds.length);
+        for(uint i=0; i<_packIds.length; i++) {
+            AssetPack memory assetPack = assetPacks[_packIds[i]];
+            hashes[i] = getAssetIpfs(assetPack.assetIds[0]);
+        }
+        return hashes;
     }
 
 
