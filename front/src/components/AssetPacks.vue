@@ -16,7 +16,7 @@
         </div>
         <div class="asset-controls">
             <button v-if="pagination > 1" @click="prevPage" class="default-button submit">Prev</button>
-            <button @click="nextPage" class="default-button submit">Next</button>
+            <button v-if="assetPacks.length > 1" @click="nextPage" class="default-button submit">Next</button>
         </div>
     </div>
 </template>
@@ -43,15 +43,13 @@
       if (this.showAll) {
         this.getPacks(this.pagination, NUM_PER_PAGE);
       } else {
-        this.getMyAssetPacks();
+        this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
       }
-
     },
 
     methods: {
-      async getMyAssetPacks() {
-        const assetPacksIds = await functions.getCreatedAssetPacks(this.metamask_account);
-        console.log(assetPacksIds);
+      async getMyAssetPacks(page, count) {
+        const assetPacksIds = await functions.getPaginatedAssetPacks(page, count, this.metamask_account);
         this.assetPacks = await functions.getPackInformation(assetPacksIds, this.metamask_account);
       },
 
@@ -68,13 +66,23 @@
 
       nextPage() {
         this.assetPacks = [];
-        this.getPacks(++this.pagination, NUM_PER_PAGE);
+        this.pagination++;
+        if (this.showAll) {
+          this.getPacks(this.pagination, NUM_PER_PAGE);
+        } else {
+          this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
+        }
       },
 
       prevPage() {
         if (this.pagination === 1) return;
         this.assetPacks = [];
-        this.getPacks(--this.pagination, NUM_PER_PAGE);
+        this.pagination--;
+        if (this.showAll) {
+          this.getPacks(this.pagination, NUM_PER_PAGE);
+        } else {
+          this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
+        }
       }
     }
 
