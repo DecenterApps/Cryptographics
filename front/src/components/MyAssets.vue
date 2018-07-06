@@ -24,6 +24,7 @@
       asset_packs_names: [],
       asset_packs_image : [],
       asset_packs_ids: [],
+      stats_owned: [],
     }),
 
     props: ['metamask_account','page'],
@@ -65,6 +66,8 @@
           for (let i = 0; i < hovers.length; i++) {
               this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
           }
+
+          this.stats_owned = await functions.getOwnedAssetsFromPacks(ids);
       }
     }
 

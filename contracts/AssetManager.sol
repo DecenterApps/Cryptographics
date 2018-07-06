@@ -296,12 +296,12 @@ contract AssetManager is Ownable {
     }
 
 
-    function getAssetsUserHaveInPack(uint packId) public view returns (uint[]) {
+    function getAssetsUserHaveInPack(uint packId, address _userAddress) public view returns (uint[]) {
         AssetPack memory assetPack = assetPacks[packId];
         uint[] memory ownedAssets = new uint[](assetPack.assetIds.length);
         uint counter = 0;
         for(uint i=0; i<assetPack.assetIds.length; i++) {
-            if(hasPermission[msg.sender][assetPack.assetIds[i]] == true) {
+            if(hasPermission[_userAddress][assetPack.assetIds[i]] == true) {
                 ownedAssets[counter] = assetPack.assetIds[i];
             }
         }
@@ -309,15 +309,16 @@ contract AssetManager is Ownable {
     }
     /// @notice Function to get owned assets from one pack and pack size
     /// @param _assetPacksIds is array with ids of asset packs we need information for
+    /// @param _userAddress is address of user we are checking this
     /// @return two arrays one containing how many assets we have and second containing packs size
-    function getOwnedAssetsFromPacks(uint [] _assetPacksIds) public view returns (uint[],uint[]) {
+    function getOwnedAssetsFromPacks(uint [] _assetPacksIds, address _userAddress) public view returns (uint[],uint[]) {
         uint [] memory ownedAssets = new uint[](_assetPacksIds.length);
         uint [] memory totalInPack = new uint[](_assetPacksIds.length);
         uint counter = 0;
         for(uint i=0; i< _assetPacksIds.length; i++) {
             AssetPack memory assetPack = assetPacks[_assetPacksIds[i]];
             for(uint j=0; j<assetPack.assetIds.length; j++) {
-                if(hasPermission[msg.sender][assetPack.assetIds[j]] == true) {
+                if(hasPermission[_userAddress][assetPack.assetIds[j]] == true) {
                     counter++;
                 }
             }
