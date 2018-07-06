@@ -12,7 +12,7 @@ contract Functions {
         }
     }
 
-//
+
 //        /// @notice Function for test purposes because in local rpc can't get last 100 blocks
 //        function fillRadnomHashes() public {
 //            bytes32 initialHash = "0x1234567891011111112131311";
@@ -51,10 +51,10 @@ contract Functions {
         }
 
         uint[] memory ass = new uint[](numberOfAssets);
-
         for(uint z=0; z< numberOfAssets; z++){
             ass[z] = assets[z];
         }
+
 
         return ass;
     }

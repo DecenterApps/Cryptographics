@@ -67,6 +67,10 @@ async function getHoversForAssetPacks(assetPackIds) {
     return hovers;
 }
 
+async function getOwnedAssetsFromPacks(assetPackIds) {
+    let data = await assetManagerContract.methods.getOwnedAssetsFromPacks(assetPackIds).call();
+    console.log(data);
+}
 async function getAssetPacksNames(assetPacksIds) {
     let names = [];
     for(let i=0; i<assetPacksIds.length; i++) {
@@ -272,7 +276,7 @@ async function test() {
     // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // console.log(await getAssetPackData(0));
     // console.log(await getAssetPackData(0));
-    console.log(await getAssetPacksNames([1,2,3]));
+    await getOwnedAssetsFromPacks([1,2,3])
 }
 
 

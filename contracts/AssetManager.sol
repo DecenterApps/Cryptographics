@@ -282,8 +282,9 @@ contract AssetManager is Ownable {
         return assetPack.name;
     }
 
-
-
+    /// @notice Function to get first image of every pack which will represent it
+    /// @param _packIds is array of asset pack ids
+    /// @return bytes32[] array of hashes
     function getHoverImagesForAssetPacks(uint [] _packIds) public view returns (bytes32[]) {
         require(_packIds.length > 0);
         bytes32[] memory hashes = new bytes32[](_packIds.length);
@@ -295,4 +296,36 @@ contract AssetManager is Ownable {
     }
 
 
+    function getAssetsUserHaveInPack(uint packId) public view returns (uint[]) {
+        AssetPack memory assetPack = assetPacks[packId];
+        uint[] memory ownedAssets = new uint[](assetPack.assetIds.length);
+        uint counter = 0;
+        for(uint i=0; i<assetPack.assetIds.length; i++) {
+            if(hasPermission[msg.sender][assetPack.assetIds[i]] == true) {
+                ownedAssets[counter] = assetPack.assetIds[i];
+            }
+        }
+        return ownedAssets;
+    }
+    /// @notice Function to get owned assets from one pack and pack size
+    /// @param _assetPacksIds is array with ids of asset packs we need information for
+    /// @return two arrays one containing how many assets we have and second containing packs size
+    function getOwnedAssetsFromPacks(uint [] _assetPacksIds) public view returns (uint[],uint[]) {
+        uint [] memory ownedAssets = new uint[](_assetPacksIds.length);
+        uint [] memory totalInPack = new uint[](_assetPacksIds.length);
+        uint counter = 0;
+        for(uint i=0; i< _assetPacksIds.length; i++) {
+            AssetPack memory assetPack = assetPacks[_assetPacksIds[i]];
+            for(uint j=0; j<assetPack.assetIds.length; j++) {
+                if(hasPermission[msg.sender][assetPack.assetIds[j]] == true) {
+                    counter++;
+                }
+            }
+            ownedAssets[i] = counter;
+            totalInPack[i] = assetPack.assetIds.length;
+            counter = 0;
+        }
+
+        return (ownedAssets, totalInPack);
+    }
 }

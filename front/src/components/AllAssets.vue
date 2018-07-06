@@ -1,15 +1,13 @@
 <template>
     <div>
         <slider-gallery></slider-gallery>
-
         <div class="container">
-            <div class="asset-packs-wrapper">
-                <div v-for="(asset,key) in allAssetPaths">
-                    <label> {{key}}</label>
-                    <img :src=asset>
-                </div>
-            </div>
+            <h1 class="large-title"> Asset Packs </h1>
+            <my-assets :page="page"></my-assets>
         </div>
+
+
+
     </div>
 </template>
 
@@ -20,24 +18,12 @@
   export default {
     components: { MyAssets, SliderGallery },
     data: () => ({
-      allAssetPaths: [],
+      page: [],
     }),
 
     async created() {
-      let assetDir = 'http://localhost:3000/dist/assets/';
-      let len = 50;
-      let images = [];
-      for (let i = 1; i < len; i++) {
-        if (i < 10) {
-          let image = assetDir + '0' + i.toString() + '.png';
-          images.push(image);
-        } else {
-          let image = assetDir + i.toString() + '.png';
-          images.push(image);
-        }
-      }
-      this.allAssetPaths = images;
-    },
+        this.page = 1;
+        },
     computed: {},
     methods: {},
     render() {
@@ -57,5 +43,10 @@
     .asset-packs-wrapper {
         display: flex;
         flex-wrap: wrap;
+    }
+
+    .large-title{
+        margin-top: 29px;
+        margin-bottom: 41px;
     }
 </style>

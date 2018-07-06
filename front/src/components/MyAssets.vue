@@ -21,17 +21,20 @@
   export default {
     name: 'my-assets',
     data: () => ({
-      created_assets: [],
       asset_packs_names: [],
       asset_packs_image : [],
       asset_packs_ids: [],
     }),
 
-    props: ['metamask_account'],
+    props: ['metamask_account','page'],
 
     async created() {
-      await this.getCreatedAssetPacks();
-      await this.generateAssetPacks();
+        if(this.metamask_account){
+            await this.getCreatedAssetPacks();
+            await this.generateAssetPacks();
+        } else {
+            await this.getPacks(this.page);
+        }
     },
 
     methods: {
@@ -46,6 +49,22 @@
           for (let i = 0; i < hovers.length; i++) {
             this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
         }
+      },
+
+      async getPacks(page) {
+          let ids =[];
+          let numberOfPacks = await functions.getNumberOfAssetPacks();
+          for(let i=(page-1)*4; i<page*4; i++) {
+              if(i<numberOfPacks) {
+                ids.push(i);
+              }
+          }
+          console.log(ids);
+          this.asset_packs_names = await functions.getAssetPacksNames(ids);
+          let hovers = await functions.getHoversForAssetPacks(ids);
+          for (let i = 0; i < hovers.length; i++) {
+              this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
+          }
       }
     }
 
