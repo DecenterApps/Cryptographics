@@ -1,19 +1,18 @@
 {
   "presets": [
-    "es2015",
     [
       "env",
       {
         "modules": false
-      },
+      }
     ],
     "stage-2"
   ],
   "ignore": [
     "node_modules/*"
   ],
-  "plugins": ["transform-decorators-legacy"]
-
-
+  "plugins": [
+    "transform-decorators-legacy"
+  ]
 }
 

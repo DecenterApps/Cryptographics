@@ -17,6 +17,10 @@
     width: auto;
     padding: 0 15px;
   }
+  &.submit {
+    background-color: #000;
+    color: #fff;
+  }
 }
 
 .asset-pack-circle {
@@ -42,4 +46,8 @@
 .container {
   width: 1120px;
   margin: 0 auto;
+
+  @media all and (max-width: 1120px) {
+    width: 80%;
+  }
 }

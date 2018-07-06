@@ -159,8 +159,8 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
   for (let j = 0; j < objs.length; j++) {
     images[j].onload = function () {
       imagesLoaded++;
-      let x = objs[j].x_coordinate % width + left;
-      let y = objs[j].y_coordinate % height + top;
+      let x = objs[j].x_coordinate % canvasWidth;
+      let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
       drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {

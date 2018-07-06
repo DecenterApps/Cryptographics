@@ -1,52 +1,34 @@
 <template>
-    <!--<div class="main">-->
-            <!--<div class="left-data">-->
-                <!--<div class="heading">-->
-                    <!--<h1>Upload asset pack</h1>-->
-                <!--</div>-->
-                <!--<div class="input-data">-->
-                    <!--<input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>-->
-                    <!--&lt;!&ndash;<button for="files" class="uploadFiles"> Browse </button>&ndash;&gt;-->
-                    <!--<input class="uploadFiles" id="files" type="file" multiple size="50">-->
-                <!--</div>-->
-                <!--<input class="pack_price" name="price" type="text" placeholder="Value"/>-->
-                <!--<div>-->
-                    <!--<button @click="uploadAssets"> Upload </button>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--<button @click="uploadToIpfs"> Submit </button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="right-data" v-for="file,key in uploaded_data.paths" style="display: inline-block">-->
-            <!--<button @click="remove(key)"> Delete</button>-->
-            <!--<img :src="file"/>-->
-        <!--</div>-->
-
-    <div>
-        <div class="main">
+    <div class="upload-assets-page">
+        <div class="container main">
             <div class="left-data">
-                <h1> Upload asset pack</h1>
+                <h1 class="large-title"> Upload asset pack</h1>
                 <div class="input-data">
-                    <input class="pack_name" name="pack_name" type="text" placeholder="Asset Pack name"/>
-                    <input class="uploadFiles" id="files" type="file" multiple size="50">
+                    <input class="pack-name" name="pack_name" type="text" placeholder="Asset Pack name" />
+                    <label for="files" class="default-button no-background file-upload-button">
+                        <span>Browse</span>
+                        <input class="uploadFiles" id="files" type="file" multiple size="50" @change="uploadAssets">
+                    </label>
                 </div>
-                <input class="pack_price" name="price" type="text" placeholder="Value"/>
-                <div class="number_of_assets">
-                    <label> Assets in pack 15-20 </label>
+                <input class="pack-price" name="price" type="text" placeholder="Value" />
+                <div class="number-of-assets">
+                    <span> Assets in pack 15-20 </span>
                 </div>
 
-                <div class="btns">
-                    <button class="submit" @click="uploadToIpfs"> Submit </button>
-                    <button class="try" @click="uploadAssets"> Try </button>
+                <div class="buttons">
+                    <button class="default-button submit" @click="uploadToIpfs"> Submit</button>
+                    <button class="default-button no-background try" @click="uploadAssets"> Try</button>
                 </div>
             </div>
 
             <div class="right-data">
-                <div class="image" v-for="file,key in uploaded_data.paths" style="display: inline-block">
-                    <img :src="file"/>
-                    <button class="background" @click="setBackground(key)" > Set background </button>
-                    <button class="delete" @click="remove(key)"> Delete</button>
+                <div class="asset" v-for="asset, index in assets">
+                    <img :src="asset.path" />
+
+                    <div class="overlay" v-bind:class="asset.attribute === 122 ? 'bg-selected' : ''">
+                        <IconBackground @click.native="toggleBackground(index)"></IconBackground>
+                        <IconTrash @click.native="remove(index)"></IconTrash>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,117 +36,125 @@
 </template>
 
 <script>
-    import IPFS from 'ipfs';
-    import * as ipfsService from '../../../scripts/ipfsService.js';
-    import {getAccounts} from "../../../scripts/helpers";
-    import {createAssetPack} from "../../methods";
-    import * as utils from "../../../scripts/utils";
+  import * as ipfsService from '../../../scripts/ipfsService.js';
+  import { getAccounts } from '../../../scripts/helpers';
+  import { createAssetPack } from '../../methods';
+  import * as utils from '../../../scripts/utils';
+  import IconTrash from './template/IconTrash.vue';
+  import IconBackground from './template/IconBackground.vue';
 
-    export default {
-        name: "upload-asset-packs",
-        data: () => ({
-            metamask_account: 0,
-            uploaded_data: {
-                paths : [],
-                files : [],
-            },
-            attributes: [],
-        }),
+  export default {
+    name: 'upload-asset-packs',
+    components: { IconTrash, IconBackground },
+    data: () => ({
+      metamask_account: 0,
+      assets: [],
+    }),
 
-        methods: {
-            uploadAssets() {
-              let x = document.getElementById("files");
-              let urls =[];
-              let files = [];
-              for(let i=0; i<x.files.length; i++) {
-                  files.push(x.files[i]);
-                  urls.push(URL.createObjectURL(x.files[i]));
-              }
-              this.uploaded_data.paths = [...this.uploaded_data.paths, ...urls];
-              this.uploaded_data.files = [...this.uploaded_data.files, ... files];
-              for(let j=0; j< this.uploaded_data.files.length; j++) {
-                  this.attributes.push(222);
-              }
-            },
+    methods: {
+      uploadAssets() {
+        let x = document.getElementById('files');
+        for (let i = 0; i < x.files.length; i++) {
+          this.assets.push({
+            path: URL.createObjectURL(x.files[i]),
+            file: x.files[i],
+            attribute: 222,
+          });
+        }
+      },
 
-            async uploadToIpfs() {
-                let hashes =[];
-                let counter = this.uploaded_data.files.length;
-                const price = document.querySelector("input[name=price]").value;
-                const name = document.querySelector("input[name=pack_name").value;
-                const that = this;
-                for(let i=0; i<this.uploaded_data.files.length; i++) {
-                    var reader = new FileReader();
-                    reader.onload = async function(event) {
-                      let ipfsHash = await ipfsService.uploadFile(event.target.result.substr(22));
-                      hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
-                      counter--;
-                      if (counter === 0) {
-                          console.log(hashes);
-                          console.log(price);
-                          await createAssetPack(name, that.attributes, hashes, price, that.metamask_account);
-                      }
-                    };
-                    reader.readAsDataURL(this.uploaded_data.files[i]);
-                }
-            },
-
-            remove(key) {
-              this.uploaded_data.paths.splice(key,1);
-              this.uploaded_data.files.splice(key,1);
-            },
-
-            setBackground(key) {
-              this.attributes[key] = 100 + this.attributes[key] %100;
+      async uploadToIpfs() {
+        let hashes = [];
+        let counter = this.assets.length;
+        const price = document.querySelector('input[name=price]').value;
+        const name = document.querySelector('input[name=pack_name').value;
+        for (let i = 0; i < this.assets.length; i++) {
+          let reader = new FileReader();
+          reader.onload = async (event) => {
+            let ipfsHash = await ipfsService.uploadFile(event.target.result.substr(22));
+            hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
+            counter--;
+            if (counter === 0) {
+              console.log(hashes);
+              console.log(price);
+              const attributes = this.assets.map(item => item.attribute);
+              await createAssetPack(name, attributes, hashes, price, this.metamask_account);
             }
-        },
+          };
+          reader.readAsDataURL(this.assets[i].file);
+        }
+      },
 
-        async beforeCreate() {
-            this.metamask_account = await getAccounts();
-            console.log(this.metamask_account);
-            window.node = new IPFS({
-                repo: 'cryptographics',
-                config: {
-                    Bootstrap: ipfsService.bootstrapNodes,
-                    Addresses: {
-                        Swarm: [],
-                    },
-                }
-            });
-        },
+      remove(index) {
+        this.assets.splice(index, 1);
+      },
 
-    }
+      toggleBackground(index) {
+        if (this.assets[index].attribute === 122) {
+          return this.assets[index].attribute = 222;
+        }
+        this.assets[index].attribute = 100 + this.assets[index].attribute % 100;
+      }
+    },
+
+    async beforeCreate() {
+      this.metamask_account = await getAccounts();
+    },
+
+  };
 </script>
 
-<style scoped>
-    div.number_of_assets {
-        margin-top: 17px;
-    }
+<style scoped lang="scss">
 
-    label {
+    .upload-assets-page {
+        background: #D9D9D9;
+        min-height: calc(100vh - 70px);
         font-size: 12px;
-        font-family: 'Roboto', regular;
-
     }
-    div.input-data {
-        margin-top: 26px;
+
+    .number-of-assets {
+        margin-top: 17px;
+
+        span {
+            font-size: 12px;
+            font-family: 'Roboto', sans-serif;
+        }
+    }
+
+    .input-data {
         display: flex;
     }
-    input {
+
+    input:not([type=file]) {
         border-radius: 5px;
         background-color: #D9D9D9;
-
-    }
-    input.pack_name {
-        width: 209px;
+        border: 1px solid #000;
+        box-shadow: none;
+        padding: 9px 15px;
+        box-sizing: border-box;
+        font-size: 12px;
+        outline: none;
         height: 33px;
-    }
-
-    input.pack_price {
         margin-top: 15px;
-        width: 92px;
-        height: 33px;
+    }
 
+    input[type=file] {
+        display: none;
+    }
+
+    .file-upload-button {
+        margin-top: 15px;
+        width: 90px;
+        box-sizing: border-box;
+    }
+
+    .pack-name {
+        width: 210px;
+        margin-right: 20px;
+    }
+
+    .pack-price {
+        width: 92px;
     }
 
     input.uploadFiles {
@@ -177,55 +167,114 @@
         height: 33px;
         margin-left: 20px;
     }
-    img {
-        border-radius: 20px;
+
+    .asset {
+        position: relative;
+        background: #ECECEC;
+        margin-bottom: 20px;
         width: 206px;
         height: 206px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-    }
-
-    div.image:hover img {
-        opacity: 0.5;
-    }
-    div.image:hover button.delete {
-        display: block;
-    }
-    div.image:hover button.background {
-        display: block;
-    }
-    button.background {
-        display: none;
-    }
-    button.delete {
-        display: none;
-    }
-
-    h1 {
-        font-family: 'YoungSerif-Regular', sans-serif;
-        font-size: 32px;
-    }
-    div.left-data {
-        padding-left: 166px;
-        padding-top: 82px;
-        float: left;
-
-    }
-
-    div.right-data {
-        padding-left: 20px;
-        padding-top: 93px;
-        overflow-y: auto;
-        height: 500px;
-    }
-    div.main {
-        height: 100vh;
-        background-color: #D9D9D9;
         display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .overlay {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            width: 206px;
+            height: 206px;
+            background: rgba(0, 0, 0, 0.74);
+            transition: opacity 0.3s ease;
+
+            &.bg-selected {
+                .icon-background {
+                    fill: #fff;
+                    path {
+                        fill: #fff
+                    }
+                }
+            }
+        }
+
+        img {
+            width: 180px;
+            height: 180px;
+        }
+
+        &:nth-child(3n + 2) {
+            margin: 0 20px;
+        }
+
+        .icon-trash {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .icon-background {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+        }
+
+        svg {
+            cursor: pointer;
+            fill: #636363;
+            path {
+                fill: #636363
+            }
+        }
+
+        svg:hover {
+            fill: #fff;
+            path {
+                fill: #fff;
+            }
+        }
+
+        &:hover {
+            .overlay {
+                opacity: 1;
+            }
+
+            button.delete {
+                display: block;
+            }
+            button.background {
+                display: block;
+            }
+        }
+        button.background, button.delete {
+            display: none;
+        }
     }
 
-    div.btns {
-        padding-top: 124px;
+    .large-title {
+        margin-bottom: 11px;
+    }
+
+    .left-data {
+        margin-right: 20px;
+    }
+
+    .right-data {
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .main {
+        display: flex;
+        padding-top: 82px;
+    }
+
+    .buttons {
+        margin-top: 125px;
+        display: flex;
+        button {
+            margin-right: 10px;
+        }
     }
 
     button {
@@ -233,12 +282,14 @@
         height: 33px;
         border-radius: 5px;
     }
+
     button.submit {
         background-color: black;
         color: white;
     }
+
     button.try {
-        margin-left: 5px;
+        width: 89px;
     }
 
 </style>

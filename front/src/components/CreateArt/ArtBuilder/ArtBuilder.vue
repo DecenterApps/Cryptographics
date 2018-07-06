@@ -229,8 +229,6 @@
     }
 
     .default-button.submit {
-        background-color: #000;
-        color: #fff;
         float: right;
         margin-top: 20px;
     }

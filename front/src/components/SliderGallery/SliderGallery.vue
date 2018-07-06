@@ -21,6 +21,10 @@
             margin: 0 auto;
             position: relative;
             left: -80px;
+
+            @media all and (max-width: 1280px) {
+                width: 100%;
+            }
         }
 
         img {
