@@ -13,7 +13,7 @@
                 </div>
 
                 <p class="large-title">Asset Packs</p>
-                <my-assets v-if="metamask_account" :metamask_account="metamask_account"></my-assets>
+                <my-assets></my-assets>
 
                 <p class="large-title">Gallery</p>
             </div>

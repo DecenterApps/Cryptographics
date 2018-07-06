@@ -8,13 +8,15 @@
                     <span class="asset-thumbnail"></span>
                     <span class="asset-name">{{ asset_packs_names[key] }}</span>
                 </div>
-                <span class="asset-owned">owner</span>
+                <span class="asset-owned">{{ stats_owned[key].owned }} / {{ stats_owned[key].total }} </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
+  import {getAccounts} from "../../scripts/helpers";
 
   const functions = require('../../scripts/functions.js');
 
@@ -27,15 +29,17 @@
       stats_owned: [],
     }),
 
-    props: ['metamask_account','page'],
+    props: ['showAll'],
 
     async created() {
-        if(this.metamask_account){
+        this.metamask_account = await getAccounts();
+        if(this.showAll) {
+            await this.getPacks(1);
+        } else {
             await this.getCreatedAssetPacks();
             await this.generateAssetPacks();
-        } else {
-            await this.getPacks(this.page);
         }
+
     },
 
     methods: {
@@ -66,8 +70,7 @@
           for (let i = 0; i < hovers.length; i++) {
               this.asset_packs_image.push('https://ipfs.decenter.com/ipfs/' + hovers[i]);
           }
-
-          this.stats_owned = await functions.getOwnedAssetsFromPacks(ids);
+          this.stats_owned = await functions.getOwnedAssetsFromPacks(ids, this.metamask_account);
       }
     }
 

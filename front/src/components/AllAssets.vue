@@ -3,7 +3,7 @@
         <slider-gallery></slider-gallery>
         <div class="container">
             <h1 class="large-title"> Asset Packs </h1>
-            <my-assets :page="page"></my-assets>
+            <my-assets :showAll="true"></my-assets>
         </div>
 
 
@@ -14,16 +14,21 @@
 <script>
   import SliderGallery from './SliderGallery/SliderGallery.vue';
   import MyAssets from './MyAssets.vue';
+  import {getAccounts} from '../../scripts/helpers.js';
 
   export default {
     components: { MyAssets, SliderGallery },
     data: () => ({
       page: [],
+      metamask_account: 0,
     }),
 
     async created() {
         this.page = 1;
         },
+    async beforeCreate() {
+        this.metamask_account = await getAccounts();
+    },
     computed: {},
     methods: {},
     render() {
