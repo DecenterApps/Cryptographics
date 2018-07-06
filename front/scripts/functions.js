@@ -69,7 +69,16 @@ async function getHoversForAssetPacks(assetPackIds) {
 
 async function getOwnedAssetsFromPacks(assetPackIds) {
     let data = await assetManagerContract.methods.getOwnedAssetsFromPacks(assetPackIds).call();
-    console.log(data);
+    let stats = [];
+    for(let i=0; i<data[0].length; i++) {
+        var asset = {
+            pack_id: assetPackIds[i],
+            owned: parseInt(data[0][i],10),
+            total : parseInt(data[1][i],10)
+        }
+        stats.push(asset);
+    }
+    return stats;
 }
 async function getAssetPacksNames(assetPacksIds) {
     let names = [];
