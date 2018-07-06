@@ -88,7 +88,7 @@
     methods: {
       async generateData() {
         await this.getImages();
-        await this.getCreatedAssets();
+        await this.getCreatedAssetPacks();
         await this.getBoughtAssets();
         await this.getAllAssets();
         await this.getAssetPacks();
@@ -98,7 +98,7 @@
         this.my_images_on_chain = await functions.getUserImages(this.metamask_account);
       },
 
-      async getCreatedAssets() {
+      async getCreatedAssetPacks() {
         this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
       },
 

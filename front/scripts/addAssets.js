@@ -149,19 +149,19 @@ async function testAddAsset() {
 async function testAddAssetPacks() {
     printAddresses();
     let ipfsHashes = await ipfs();
-    console.log("IPFS HASHES ----- ", ipfsHashes);
     let chunk = 10;
     let converted = [];
+    let attributes = [];
     for(let i=0; i< ipfsHashes.length; i+=chunk){
         let temparray = ipfsHashes.slice(i,i+chunk);
         for (let j=0; j<temparray.length; j++){
             temparray[j] = utils.getBytes32FromIpfsHash(temparray[j]);
+            attributes.push(212);
+
         }
         converted.push(temparray);
         temparray = [];
     }
-    console.log(converted);
-    let attributes = 212;
     for(data of converted){
         await addAssetPackToContract("AssetPack",attributes, data,2000);
     }

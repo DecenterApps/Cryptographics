@@ -148,10 +148,12 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
     // let src = await assetManagerContract.methods.getAssetIpfs(objs[i].id).call();
     image.src = "http://ipfs.decenter.com/ipfs/" + hashes[i];
     // image.src = require('../dist/assets/' + val + '.png');
-      image.crossOrigin = "Anonymous";
+    image.crossOrigin = "Anonymous";
 
-      images.push(image);
+    images.push(image);
   }
+
+
 
 
   let imagesLoaded = 0;
