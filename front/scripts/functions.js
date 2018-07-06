@@ -63,10 +63,24 @@ async function getHoversForAssetPacks(assetPackIds) {
     for(let i=0; i<hovers.length; i++) {
         hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
     }
-    console.log(hovers);
     return hovers;
 }
 
+async function getPackInformation(assetPacksIds, account) {
+    let srcs = await getHoversForAssetPacks(assetPacksIds);
+    let names = await getAssetPacksNames(assetPacksIds);
+    let stats = await getOwnedAssetsFromPacks(assetPacksIds, account);
+
+    let data =[];
+    for(let i=0; i<srcs.length; i++) {
+        data.push({
+            name: names[i],
+            source: 'https://ipfs.decenter.com/ipfs/' + srcs[i],
+            stats: stats[i],
+        });
+    }
+    return data;
+}
 async function getOwnedAssetsFromPacks(assetPackIds, account) {
     let data = await assetManagerContract.methods.getOwnedAssetsFromPacks(assetPackIds,account).call();
     let stats = [];
@@ -285,7 +299,7 @@ async function test() {
     // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // console.log(await getAssetPackData(0));
     // console.log(await getAssetPackData(0));
-    console.log(await getOwnedAssetsFromPacks([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
 }
 
 
@@ -318,5 +332,6 @@ module.exports = {
     getAssetsIpfs,
     getHoversForAssetPacks,
     getAssetPacksNames,
-    getOwnedAssetsFromPacks
+    getOwnedAssetsFromPacks,
+    getPackInformation
 }
