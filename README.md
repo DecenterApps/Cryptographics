@@ -26,7 +26,6 @@ ADDRESS="YOUR_ETH_ADDRESS"
 $ truffle migrate --network=kovan
 $ cd front/scripts
 $ python update_config.py
-$ node addAssets.js
 ```
 
 After that, to run client side :
