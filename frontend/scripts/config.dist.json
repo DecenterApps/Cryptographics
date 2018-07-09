@@ -813,10 +813,10 @@
     ],
     "networks": {
       "42": {
-        "address": "0xbc9b45d6668de759bc735cf881470036a1ca67e4",
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
         "events": {},
         "links": {},
-        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"
+        "address": "0x4dae7aaa8e647b12094621c89ef9ff8414724193"
       }
     }
   },
@@ -870,14 +870,6 @@
       {
         "inputs": [
           {
-            "type": "string",
-            "name": "_name"
-          },
-          {
-            "type": "uint256[]",
-            "name": "_attributes"
-          },
-          {
             "type": "bytes32[]",
             "name": "_ipfsHashes"
           },
@@ -896,10 +888,6 @@
       {
         "inputs": [
           {
-            "type": "uint256",
-            "name": "_attributes"
-          },
-          {
             "type": "bytes32",
             "name": "_ipfsHash"
           },
@@ -913,20 +901,6 @@
         "outputs": [],
         "stateMutability": "nonpayable",
         "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "_assetPackId"
-          }
-        ],
-        "constant": false,
-        "name": "buyAssetPack",
-        "outputs": [],
-        "stateMutability": "payable",
-        "payable": true,
         "type": "function"
       },
       {
@@ -1046,10 +1020,6 @@
             "name": ""
           },
           {
-            "type": "uint256",
-            "name": ""
-          },
-          {
             "type": "address",
             "name": ""
           },
@@ -1162,63 +1132,6 @@
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "_id"
-          }
-        ],
-        "constant": true,
-        "name": "getAssetAttributes",
-        "outputs": [
-          {
-            "type": "uint256",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256[]",
-            "name": "_ids"
-          }
-        ],
-        "constant": true,
-        "name": "getIpfsForAssets",
-        "outputs": [
-          {
-            "type": "bytes32[]",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256[]",
-            "name": "_ids"
-          }
-        ],
-        "constant": true,
-        "name": "getAttributesForAssets",
-        "outputs": [
-          {
-            "type": "uint256[]",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
         "inputs": [],
         "constant": false,
         "name": "withdraw",
@@ -1238,107 +1151,11 @@
         "name": "getAssetPackData",
         "outputs": [
           {
-            "type": "string",
-            "name": ""
-          },
-          {
-            "type": "uint256[]",
-            "name": ""
-          },
-          {
             "type": "uint256[]",
             "name": ""
           },
           {
             "type": "bytes32[]",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "_assetPackId"
-          }
-        ],
-        "constant": true,
-        "name": "getAssetPackName",
-        "outputs": [
-          {
-            "type": "string",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256[]",
-            "name": "_packIds"
-          }
-        ],
-        "constant": true,
-        "name": "getHoverImagesForAssetPacks",
-        "outputs": [
-          {
-            "type": "bytes32[]",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "packId"
-          },
-          {
-            "type": "address",
-            "name": "_userAddress"
-          }
-        ],
-        "constant": true,
-        "name": "getAssetsUserHaveInPack",
-        "outputs": [
-          {
-            "type": "uint256[]",
-            "name": ""
-          }
-        ],
-        "stateMutability": "view",
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "type": "uint256[]",
-            "name": "_assetPacksIds"
-          },
-          {
-            "type": "address",
-            "name": "_userAddress"
-          }
-        ],
-        "constant": true,
-        "name": "getOwnedAssetsFromPacks",
-        "outputs": [
-          {
-            "type": "uint256[]",
-            "name": ""
-          },
-          {
-            "type": "uint256[]",
             "name": ""
           }
         ],
@@ -1349,10 +1166,10 @@
     ],
     "networks": {
       "42": {
-        "address": "0x1af7ec6001762ac2049de3ec84ef63fe59be590e",
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
         "events": {},
         "links": {},
-        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"
+        "address": "0x813d484b3c4c91a117dbe9c2262739721c702d0e"
       }
     }
   }

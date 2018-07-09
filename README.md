@@ -1,30 +1,13 @@
 # Cyptographics
 
-### Documentation - website directory
-- `$ cd DigitalPrint/website`
-- `$ npm install`
-- `$ npm start`
-- `open localhost:3000`
 
-
-Create ".env" file in folders : 
-- `./scripts `
-- `./` (project root)
-
-With following: 
-```
-ETHEREUM_ACCOUNT_MNEMONIC="YOUR_PRIV_KEY"
-PRIV_KEY="YOUR_PRIV_KEY"
-ADDRESS="YOUR_ETH_ADDRESS"
-```
 
 ### To run application
 - Make sure you have solc compiler version >=0.4.23
-- To deploy contracts and add automatically 20 assets: 
-- Setup .env files
+- To deploy contracts:  
 ```
 $ truffle migrate --network=kovan
-$ cd front/scripts
+$ cd frontend/scripts
 $ python update_config.py
 ```
 
@@ -33,3 +16,17 @@ After that, to run client side :
 - `$ yarn`
 - `$ yarn start`
 - `open localhost:3000`
+
+
+### Documentation for contracts 
+We use Docosaurus as tool for generating documentation for our Smart Contracts
+
+- `$ cd Cryptographis/documentation/website`
+- `$ npm install`
+- `$ npm start`
+- `open localhost:3000`
+
+```
+If you change contracts, to keep docs up to date run this within documentation folder:
+$ solidity-docgen solidity-docgen ../ ../contracts ./
+```

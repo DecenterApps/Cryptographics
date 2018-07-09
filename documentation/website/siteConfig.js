@@ -21,9 +21,9 @@ const users = [
 ];
 
 const siteConfig = {
-  title: 'Cryptographic docs' /* title for your website */,
+  title: 'Cryptographic docs' /* title for your documentation */,
   tagline: '',
-  url: 'https://your-docusaurus-test-site.com' /* your website url */,
+  url: 'https://your-docusaurus-test-site.com' /* your documentation url */,
   baseUrl: '/' /* base url for your project */,
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
@@ -49,13 +49,13 @@ const siteConfig = {
   footerIcon: 'img/docusaurus.svg',
   favicon: 'img/favicon.png',
 
-  /* colors for website */
+  /* colors for documentation */
   colors: {
     primaryColor: '#2E8555',
     secondaryColor: '#205C3B',
   },
 
-  /* custom fonts for website */
+  /* custom fonts for documentation */
   /*fonts: {
     myFont: [
       "Times New Roman",

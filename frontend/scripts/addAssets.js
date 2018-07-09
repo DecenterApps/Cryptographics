@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 const conf = require('./config.json');
+const account_config = require('../../config.json');
 const EthereumTx = require('ethereumjs-tx');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -13,12 +14,11 @@ require('dotenv').load();
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
-const ourAddress = process.env.ADDRESS;
-const ourPrivateKey = process.env.PRIV_KEY;
 
-web3.eth.defaultAccount = ourAddress;
 
-console.log(ourAddress);
+web3.eth.defaultAccount = account_config.address;
+
+console.log(account_config.address);
 
 
 let nonce = 0;
@@ -28,7 +28,7 @@ const assetManagerContractAddress = conf.assetManagerContract.networks["42"].add
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
 async function getNonce() {
-    nonce = await web3.eth.getTransactionCount(ourAddress);
+    nonce = await web3.eth.getTransactionCount(account_config.address);
     console.log(nonce);
 }
 
@@ -37,7 +37,7 @@ getNonce();
 const sendTransaction = async (web3, contractMethod, from, params, _gasPrice, nonce, to) =>
     new Promise(async (resolve, reject) => {
         try {
-            const privateKey = new Buffer(ourPrivateKey, 'hex');
+            const privateKey = new Buffer(account_config.privKey, 'hex');
 
             const data = contractMethod(...params).encodeABI();
 
@@ -76,7 +76,7 @@ const sendRawTransaction = (web3, transactionParams, privateKey) =>
 const addAssetToContract = async (attributes, ipfs, price, address) => {
     try {
         let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAsset, ourAddress, [attributes, ipfs, price],
+        await sendTransaction(web3, assetManagerContract.methods.createAsset, account_config.address, [attributes, ipfs, price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -87,8 +87,8 @@ const addAssetToContract = async (attributes, ipfs, price, address) => {
 
 const addAssetPackToContract = async (name, attributes, ipfs, price, address) => {
     try {
-        let n = await web3.utils.numberToHex(nonce);
-        await sendTransaction(web3, assetManagerContract.methods.createAssetPack, ourAddress, [name, attributes, ipfs, price],
+        let n = web3.utils.numberToHex(nonce);
+        let p = await sendTransaction(web3, assetManagerContract.methods.createAssetPack, account_config.address, [name, attributes, ipfs, price],
             gasPrice, n, assetManagerContractAddress);
         nonce++;
     } catch (err) {
@@ -99,7 +99,7 @@ const addAssetPackToContract = async (name, attributes, ipfs, price, address) =>
 const addAssetPackToContract1 = async(ipfsHashes, price, address) => {
     try {
         return await assetManagerContract.methods.createAssetPack(ipfsHashes,price).send({
-            from: ourAddress, to: assetManagerContract
+            from: account_config.address, to: assetManagerContract
         }, (a,b) => {
             console.log(a,b);
         });
@@ -162,7 +162,7 @@ async function testAddAssetPacks() {
         converted.push(temparray);
         temparray = [];
     }
-    for(data of converted){
+    for(data of converted) {
         await addAssetPackToContract("AssetPack",attributes, data,2000);
     }
 }
