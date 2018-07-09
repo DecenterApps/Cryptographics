@@ -6,6 +6,7 @@
 - Make sure you have solc compiler version >=0.4.23
 - To deploy contracts:  
 ```
+$ npm install
 $ truffle migrate --network=kovan
 $ cd frontend/scripts
 $ python update_config.py
@@ -13,7 +14,7 @@ $ python update_config.py
 
 After that, to run client side :
 
-- `$ yarn`
+
 - `$ yarn start`
 - `open localhost:3000`
 
