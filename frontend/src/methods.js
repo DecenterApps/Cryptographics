@@ -13,6 +13,8 @@ const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageCo
 const assetManagerContractAddress = conf.assetManagerContract.networks['42'].address;
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
+const DELAY = 300;
+
 async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) {
   potentialAssets = utils.encode(potentialAssets);
   console.log('ENCODED POTENTIAL ASSETS: ' + potentialAssets);
@@ -238,9 +240,10 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
       let x = objs[j].x_coordinate % canvasWidth;
       let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
-      await delay(300*j);
+      await delay(DELAY*j);
       drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {
+          console.log("All assets loaded.")
         // WRITE FRAME
         context.strokeStyle = '#FFF';
         context.beginPath();
