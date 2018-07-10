@@ -1,7 +1,7 @@
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
 
 
-const utils = require("../front/scripts/utils.js");
+const utils = require("../frontend/scripts/utils.js");
 
 
 contract('AssetManager', async(accounts) => {
@@ -79,11 +79,13 @@ contract('AssetManager', async(accounts) => {
                 'QmPNSue3FwTVeYsYrDtMBPWWofFQCtP72C3m8vtYS3xEAu'];
 
           let attributes = [212,222,222,211,121];
+
+          let coverHash = "0x123456789";
           for (let i=0; i<ipfsHashes.length; i++){
                ipfsHashes[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
           }
 
-          await assetManagerContract.createAssetPack("Pakovanje 1",attributes,ipfsHashes,500000);
+          await assetManagerContract.createAssetPack(coverHash, "Pakovanje 1",attributes,ipfsHashes,500000);
 
           let userPacks = await assetManagerContract.getAssetPacksUserCreated(accounts[0]);
 
@@ -93,8 +95,10 @@ contract('AssetManager', async(accounts) => {
     it("... should fail if there is no assets in pack", async() => {
        let ipfsHashes = [];
        let attributes = [212,222,222,211,121];
+       let coverHash = "0x123456789";
 
-        await assetManagerContract.createAssetPack("Pakovanje2",attributes,ipfsHashes,500).catch(error => {
+
+        await assetManagerContract.createAssetPack(coverHash, "Pakovanje2",attributes,ipfsHashes,500).catch(error => {
            console.log("Error we have caught: "  + error);
            assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
        });
@@ -110,11 +114,12 @@ contract('AssetManager', async(accounts) => {
             'QmPNSue3FwTVeYsYrDtMBPWwofFQCtP72C3m8vtYS3xEAu'];
         let attributes = [212,222,222,211,121];
         let ipfsHashes1 = [];
+        let coverHash = "0x123456789";
         for (let i=0; i<ipfsHashes.length; i++){
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
         }
 
-        await assetManagerContract.createAssetPack("Pakovanje 3", attributes, ipfsHashes1,500000);
+        await assetManagerContract.createAssetPack(coverHash, "Pakovanje 3", attributes, ipfsHashes1,500000);
 
         let packData = await assetManagerContract.getAssetPackData(0);
         let id = 4;
@@ -138,14 +143,14 @@ contract('AssetManager', async(accounts) => {
             'QmQAkZzh8BX3epSnMeZKR9UyFzafsFeyrZ1MdfGWSvWMMt',
             'QmSJwe6FDjxLVr2C6ax63JWaLUJYzwJ3Px948MgrT7eTVM'
         ];
-
+        let coverHash = "0x123456789";
         let attributes = [212,222,222,211,121,212,222,222,211,121,222,111];
         let ipfsHashes1 = [];
         for (let i=0; i<ipfsHashes.length; i++){
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
         }
 
-        await assetManagerContract.createAssetPack("Pakovanje 4",attributes, ipfsHashes1,500000);
+        await assetManagerContract.createAssetPack(coverHash, "Pakovanje 4",attributes, ipfsHashes1,500000);
 
         let numberOfPacks = await assetManagerContract.getNumberOfAssetPacks();
 
@@ -172,7 +177,10 @@ contract('AssetManager', async(accounts) => {
        for (let i=0; i<ipfsHashes.length; i++){
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
        }
-       await assetManagerContract.createAssetPack(packName, attributes, ipfsHashes1,500000);
+
+       let coverHash = "0x123456789";
+
+       await assetManagerContract.createAssetPack(coverHash, packName, attributes, ipfsHashes1,500000);
 
        let hover = await assetManagerContract.getHoverImagesForAssetPacks([3]);
        assert.equal(utils.getIpfsHashFromBytes32(hover[0]), ipfsHashes[0], "First asset should be equal");

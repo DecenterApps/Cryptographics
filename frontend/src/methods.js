@@ -52,10 +52,10 @@ async function createAsset(attributes,  ipfsHash, price, account) {
   }
 }
 
-async function createAssetPack(name, attributes, ipfsHashes, price, account) {
+async function createAssetPack(coverImage, name, attributes, ipfsHashes, price, account) {
   try {
       let nonce = await web3.eth.getTransactionCount(account);
-      return await assetManagerContract.methods.createAssetPack(name, attributes, ipfsHashes, price).send({
+      return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, price).send({
         from: account, to: assetManagerContract, nonce
     }, (a,b) => {
       console.log(a,b);
@@ -121,7 +121,73 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
   return allDataAboutAsset;
 
 }
+function makeCoverImage(image_paths, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 } ) {
+    let context = c.getContext('2d');
+    const { left, right, bottom, top } = frame;
+    const canvasHeight = height;
+    const canvasWidth = width;
+    width = width - left - right;
+    height = height - top - bottom;
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+    let images = [];
+    for(let i=0; i<image_paths.length; i++) {
+      let image = new Image();
+      image.src = image_paths[i];
+      image.width = 90;
+      image.height = 90;
+      image.crossOrigin = "Anonymous";
+      images.push({
+          image: image,
+          x_coordinate: Math.floor(Math.random() * 350),
+          y_coordinate: Math.floor(Math.random() * 350),
+          rotation: Math.floor(Math.random() * 360),
+          scale: 800 + Math.floor(Math.random()*200)
+      });
+    }
+    console.log(images);
 
+    let imagesLoaded = 0;
+
+    for (let j = 0; j < images.length; j++) {
+        console.log(images[j].image);
+        images[j].image.onload = function () {
+            imagesLoaded++;
+            let x = images[j].x_coordinate % canvasWidth;
+            let y = images[j].y_coordinate % canvasHeight;
+            let rotation = images[j].rotation;
+            drawImageRot(context, images[j].image, x, y, width / 4, height / 4, rotation);
+            if (imagesLoaded === images.length && frame.left > 0) {
+                // WRITE FRAME
+                context.strokeStyle = '#FFF';
+                context.beginPath();
+                context.moveTo(left / 2, 0);
+                context.lineWidth = left;
+                context.lineTo(left / 2, canvasHeight);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(0, canvasHeight - bottom / 2);
+                context.lineWidth = bottom;
+                context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(canvasWidth - right / 2, canvasHeight);
+                context.lineWidth = right;
+                context.lineTo(canvasWidth - right / 2, 0);
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(canvasWidth, top / 2);
+                context.lineWidth = top;
+                context.lineTo(0, top / 2);
+                context.stroke();
+            }
+        };
+    }
+}
 async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
@@ -154,9 +220,6 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
 
     images.push(image);
   }
-
-
-
 
   let imagesLoaded = 0;
 
@@ -249,4 +312,5 @@ module.exports = {
   createAsset,
   createAssetPack,
   getSize,
+  makeCoverImage
 };

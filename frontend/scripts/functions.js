@@ -67,7 +67,7 @@ async function getPaginatedAssetPacks(pagination, count, address) {
 }
 
 async function getCoversForAssetPacks(assetPackIds) {
-    let hovers = await assetManagerContract.methods.getHoverImagesForAssetPacks(assetPackIds).call();
+    let hovers = await assetManagerContract.methods.getCoversForPacks(assetPackIds).call();
     for(let i=0; i<hovers.length; i++) {
         hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
     }

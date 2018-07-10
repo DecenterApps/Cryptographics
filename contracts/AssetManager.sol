@@ -17,6 +17,7 @@ contract AssetManager is Ownable {
     }
 
     struct AssetPack {
+        bytes32 packCover;
         string name;
         uint [] assetIds;
         address creator;
@@ -31,6 +32,11 @@ contract AssetManager is Ownable {
     Asset [] assets;
     AssetPack [] assetPacks;
 
+    mapping(address => string) username;
+    mapping(address => bytes32) profilePicture;
+    mapping(string => bool) usernameExists;
+    mapping(bytes32 => bool) profilePictureExists;
+
     mapping(address => uint) artistBalance;
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(bytes32 => bool) hashExists;
@@ -39,14 +45,39 @@ contract AssetManager is Ownable {
     mapping(address => uint[]) createdAssets;
     mapping(address => uint[]) createdAssetPacks;
 
+    /// @notice Function to add username
+    /// @dev username needs to be unique
+    /// @param username is username of user
+    function addUserName(string username) {
+        require(username != "");
+        require(usernameExists[username] == false);
+        username[msg.sender] = username;
+    }
+
+    /// @notice Function to add profile picture
+    /// @dev profile picture needs to be unique needs to be unique
+    /// @param ipfsHashToImage is ipfs hash to profile image of user
+    function addProfilePicture(bytes32 ipfsHashToImage) {
+        require(profilePictureExists[ipfsHashToImage] == false);
+        profilePicture[msg.sender] = ipfsHashToImage;
+    }
+
+    /// @notice Funtion to allow user if he wants to upload both profile image and username to do it in one trnx
+    /// @param username is username
+    /// @param ipfsHashToImage is ipfs hash of image
+    function uploadInfo(string username, bytes32 ipfsHashToImage) {
+        addUserName(username);
+        addProfilePicture(ipfsHashToImage);
+    }
 
     /// @notice Function to create assetpack
     /// @dev ADD ATTRIBUTES VALIDATION
+    /// @param _packCover is cover image for asset pack
     /// @param _name is name of the asset pack
     /// @param _attributes is array of attributes
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
-    function createAssetPack(string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
+    function createAssetPack(bytes32 _packCover, string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
         require(_attributes.length < 50);
@@ -60,6 +91,7 @@ contract AssetManager is Ownable {
         }
 
         assetPacks.push(AssetPack({
+            packCover: _packCover,
             name: _name,
             assetIds: ids,
             creator: msg.sender,
@@ -295,6 +327,18 @@ contract AssetManager is Ownable {
         return hashes;
     }
 
+    /// @notice Function to get cover image for every assetpack
+    /// @param _packIds is array of asset pack ids
+    /// @return bytes32[] array of hashes
+    function getCoversForPacks(uint [] _packIds) public view returns (bytes32[]) {
+        require(_packIds.length > 0);
+        bytes32[] memory covers = new bytes32[](_packIds.length);
+        for(uint i=0; i<_packIds.length; i++) {
+            AssetPack memory assetPack = assetPacks[_packIds[i]];
+            covers[i] = assetPack.packCover;
+        }
+        return covers;
+    }
 
     function getAssetsUserHaveInPack(uint packId, address _userAddress) public view returns (uint[]) {
         AssetPack memory assetPack = assetPacks[packId];

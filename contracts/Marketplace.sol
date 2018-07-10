@@ -42,6 +42,8 @@ contract Marketplace is Ownable {
 
         numberOfAds++;
         imagesOnSale.push(_imageId);
+        digitalPrintImageContract._approveByMarketplace(this, _imageId);
+        digitalPrintImageContract.transferFrom(msg.sender, this, _imageId);
 
         positionOfImage[_imageId] = imagesOnSale.length -1;
 
