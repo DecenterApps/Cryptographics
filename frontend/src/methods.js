@@ -199,6 +199,19 @@ async function delay(delayInms) {
     });
 }
 
+function scaleImage(width, height, canvasWidth, canvasHeight) {
+  const DEFAULT_WIDTH = 2480;
+  const DEFAULT_HEIGHT = 3508;
+
+  const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
+  const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
+
+  return {
+    width: width / horizontalRatio,
+    height: height / verticalRatio,
+  }
+}
+
 async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
@@ -241,7 +254,8 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
       let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
       await delay(DELAY*j);
-      drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
+      const imageDimensions = scaleImage(images[j].width, images[j].height, canvasWidth, canvasHeight);
+      drawImageRot(context, images[j], x, y, imageDimensions.width, imageDimensions.height, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {
           console.log("All assets loaded.")
         // WRITE FRAME
@@ -285,7 +299,11 @@ async function drawImageRot(context, img, x, y, width, height, deg) {
   context.rotate(rad);
 
   //draw the image
-  context.drawImage(img, width / 2 * (-1), height / 2 * (-1), width, height);
+  const coords = {
+    x: width / 2 * (-1),
+    y: height / 2 * (-1)
+  };
+  context.drawImage(img, coords.x, coords.y, width, height);
 
   //reset the canvas
   context.rotate(rad * (-1));
