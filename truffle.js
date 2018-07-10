@@ -8,7 +8,7 @@ module.exports = {
                 return new HDWalletProvider(config.privKey, `https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`);
             },
             network_id: '42',
-            gasPrice: 4700000, // 2 GWei
+            gasPrice: 2000000000, // 2 GWei
         }
     }
 }

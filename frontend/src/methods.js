@@ -188,6 +188,15 @@ function makeCoverImage(image_paths, c, width, height, frame = { left: 0, right:
         };
     }
 }
+
+async function delay(delayInms) {
+    return new Promise(resolve  => {
+        setTimeout(() => {
+            resolve(2);
+        }, delayInms);
+    });
+}
+
 async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
@@ -261,7 +270,7 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
   }
 }
 
-function drawImageRot(context, img, x, y, width, height, deg) {
+async function drawImageRot(context, img, x, y, width, height, deg) {
   //Convert degrees to radian
   var rad = deg * Math.PI / 180;
 

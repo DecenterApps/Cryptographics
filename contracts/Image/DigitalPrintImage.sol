@@ -2,7 +2,7 @@ pragma solidity ^0.4.23;
 
 import "./ImageToken.sol";
 import "../Utils/Functions.sol";
-import "../AssetManager.sol";
+import "../IAssetManager.sol";
 
 
 contract DigitalPrintImage is ImageToken,Functions {
@@ -23,7 +23,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     mapping(uint => string) public idToIpfsHash;
 
     address marketplaceContract;
-    AssetManager assetManager;
+    IAssetManager assetManager;
 
 
     modifier onlyMarketplaceContract() {
@@ -54,10 +54,17 @@ contract DigitalPrintImage is ImageToken,Functions {
         (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
         address _owner = msg.sender;
 
-        uint finalPrice = calculatePrice(pickedAssets, _owner);
+        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
+
+        uint finalPrice = calculatePrice(pickedAssetPacks, _owner);
         require(msg.value >= finalPrice);
 
-        assetManager.givePermission(msg.sender, pickedAssets);
+        for(uint i=0; i<pickedAssetPacks.length ;i++) {
+            if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false){
+                assetManager.givePermission(msg.sender, pickedAssetPacks[i]);
+            }
+        }
+
         uint id = createImage(_owner);
 
         imageMetadata[id] = ImageMetadata({
@@ -75,30 +82,25 @@ contract DigitalPrintImage is ImageToken,Functions {
         return id;
     }
 
-
     /// @notice Function to calculate final price for an image based on selected assets
-    /// @param _pickedAssets is array of picked assets
+    /// @param _pickedAssets is array of picked packs
     /// @param _owner is address of image owner
     /// @return finalPrice for the image
     function calculatePrice(uint [] _pickedAssets, address _owner) public view returns (uint) {
         if(_pickedAssets.length == 0) {
             return 0;
         }
+        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
         uint finalPrice = 0;
-        for(uint i=0; i<_pickedAssets.length; i++){
-            if(assetManager.checkHasPermission(_owner, _pickedAssets[i]) == false){
-                finalPrice += assetManager.getAssetPrice(_pickedAssets[i]);
+        for(uint i=0; i<pickedAssetPacks.length; i++) {
+            if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false) {
+                finalPrice += assetManager.getAssetPackPrice(pickedAssetPacks[i]);
             }
         }
         return finalPrice;
     }
 
-    /// @notice Function to add assetManager
-    /// @dev during testing can be changed, after deployment to main network can be set only once
-    /// @param _assetManager is address of assetManager contract
-    function addAssetManager(address _assetManager) public onlyOwner {
-        assetManager = AssetManager(_assetManager);
-    }
+
 
     function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address, string) {
         require(_imageId < numOfImages);
@@ -129,6 +131,14 @@ contract DigitalPrintImage is ImageToken,Functions {
             tokensForApproved[_imageId] = _to;
             emit Approval(msg.sender, _to, _imageId);
         }
+    }
+
+
+    /// @notice Function to add assetManager
+    /// @dev during testing can be changed, after deployment to main network can be set only once
+    /// @param _assetManager is address of assetManager contract
+    function addAssetManager(address _assetManager) public onlyOwner {
+        assetManager = IAssetManager(_assetManager);
     }
 
 }
