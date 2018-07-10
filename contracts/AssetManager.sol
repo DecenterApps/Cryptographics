@@ -32,6 +32,11 @@ contract AssetManager is Ownable {
     Asset [] assets;
     AssetPack [] assetPacks;
 
+    mapping(address => string) username;
+    mapping(address => bytes32) profilePicture;
+    mapping(string => bool) usernameExists;
+    mapping(bytes32 => bool) profilePictureExists;
+
     mapping(address => uint) artistBalance;
     mapping(address => mapping(uint => bool)) hasPermission;
     mapping(bytes32 => bool) hashExists;
@@ -40,6 +45,30 @@ contract AssetManager is Ownable {
     mapping(address => uint[]) createdAssets;
     mapping(address => uint[]) createdAssetPacks;
 
+    /// @notice Function to add username
+    /// @dev username needs to be unique
+    /// @param username is username of user
+    function addUserName(string username) {
+        require(username != "");
+        require(usernameExists[username] == false);
+        username[msg.sender] = username;
+    }
+
+    /// @notice Function to add profile picture
+    /// @dev profile picture needs to be unique needs to be unique
+    /// @param ipfsHashToImage is ipfs hash to profile image of user
+    function addProfilePicture(bytes32 ipfsHashToImage) {
+        require(profilePictureExists[ipfsHashToImage] == false);
+        profilePicture[msg.sender] = ipfsHashToImage;
+    }
+
+    /// @notice Funtion to allow user if he wants to upload both profile image and username to do it in one trnx
+    /// @param username is username
+    /// @param ipfsHashToImage is ipfs hash of image
+    function uploadInfo(string username, bytes32 ipfsHashToImage) {
+        addUserName(username);
+        addProfilePicture(ipfsHashToImage);
+    }
 
     /// @notice Function to create assetpack
     /// @dev ADD ATTRIBUTES VALIDATION
