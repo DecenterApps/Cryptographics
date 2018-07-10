@@ -4,6 +4,7 @@ FE/__pycache__
 node_modules
 .DS_STORE
 .idea
+.vscode
 scripts/doxity/node_modules
 dev-scripts
 contracts/.env
