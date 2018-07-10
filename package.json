@@ -46,6 +46,7 @@
     "vue-loader": "^15.2.4",
     "vue-masonry": "^0.11.4",
     "vue-router": "^3.0.1",
+    "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.8",
     "web3": "^1.0.0-beta.34",
     "webpack": "^4.15.1",
