@@ -1,1 +1,1382 @@
-{"digitalPrintImageContract": {"abi": [{"inputs": [{"type": "uint256", "name": ""}], "constant": true, "name": "tokenPosInArr", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "name", "outputs": [{"type": "string", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": ""}], "constant": true, "name": "tokensForOwner", "outputs": [{"type": "address", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_to"}, {"type": "uint256", "name": "_imageId"}], "constant": false, "name": "approve", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": ""}], "constant": true, "name": "tokensForApproved", "outputs": [{"type": "address", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "implementsERC721", "outputs": [{"type": "bool", "name": ""}], "stateMutability": "pure", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "totalSupply", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_from"}, {"type": "address", "name": "_to"}, {"type": "uint256", "name": "_imageId"}], "constant": false, "name": "transferFrom", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_random_seed"}], "constant": true, "name": "pickRandomAssetPosition", "outputs": [{"type": "uint256", "name": ""}, {"type": "uint256", "name": ""}, {"type": "uint256", "name": ""}, {"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_owner"}, {"type": "uint256", "name": "_index"}], "constant": true, "name": "tokenOfOwnerByIndex", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_random_seed"}, {"type": "uint256", "name": "_iterations"}], "constant": true, "name": "getFinalSeed", "outputs": [{"type": "bytes32", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "getLen", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": ""}], "constant": true, "name": "imageMetadata", "outputs": [{"type": "uint256", "name": "randomSeed"}, {"type": "uint256", "name": "iterations"}, {"type": "uint256", "name": "timestamp"}, {"type": "string", "name": "author"}, {"type": "address", "name": "owner"}, {"type": "string", "name": "ipfsHash"}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_imageId"}], "constant": true, "name": "ownerOf", "outputs": [{"type": "address", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_owner"}], "constant": true, "name": "balanceOf", "outputs": [{"type": "uint256", "name": "balance"}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": ""}, {"type": "uint256", "name": ""}], "constant": true, "name": "tokensOwned", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "owner", "outputs": [{"type": "address", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "symbol", "outputs": [{"type": "string", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "assetId"}, {"type": "uint256", "name": "random_seed"}], "constant": true, "name": "getSeed", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "pure", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_random_seed"}, {"type": "uint256", "name": "_iterations"}, {"type": "bytes32[]", "name": "_potentialAssets"}], "constant": true, "name": "pickRandomAssets", "outputs": [{"type": "uint256[]", "name": ""}, {"type": "uint256[]", "name": ""}, {"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_to"}, {"type": "uint256", "name": "_imageId"}], "constant": false, "name": "transfer", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_index"}], "constant": true, "name": "getRandomHash", "outputs": [{"type": "bytes32", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_randomHashIds"}, {"type": "uint256", "name": "_timestamp"}], "constant": true, "name": "calculateSeed", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": ""}], "constant": true, "name": "idToIpfsHash", "outputs": [{"type": "string", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "random_seed"}], "constant": true, "name": "toHex", "outputs": [{"type": "bytes32", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "bytes32[]", "name": "_potentialAssets"}], "constant": true, "name": "decodeAssets", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "numOfImages", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_owner"}], "constant": true, "name": "getUserImages", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "newOwner"}], "constant": false, "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"indexed": true, "type": "address", "name": "from"}, {"indexed": true, "type": "address", "name": "to"}, {"indexed": true, "type": "uint256", "name": "tokenId"}], "type": "event", "name": "Transfer", "anonymous": false}, {"inputs": [{"indexed": true, "type": "address", "name": "owner"}, {"indexed": true, "type": "address", "name": "approved"}, {"indexed": true, "type": "uint256", "name": "tokenId"}], "type": "event", "name": "Approval", "anonymous": false}, {"inputs": [{"indexed": true, "type": "address", "name": "_to"}, {"indexed": true, "type": "uint256", "name": "_tokenId"}], "type": "event", "name": "Mint", "anonymous": false}, {"inputs": [{"indexed": true, "type": "address", "name": "previousOwner"}, {"indexed": true, "type": "address", "name": "newOwner"}], "type": "event", "name": "OwnershipTransferred", "anonymous": false}, {"inputs": [{"type": "uint256[]", "name": "_randomHashIds"}, {"type": "uint256", "name": "_timestamp"}, {"type": "uint256", "name": "_iterations"}, {"type": "bytes32[]", "name": "_potentialAssets"}, {"type": "string", "name": "_author"}, {"type": "string", "name": "_ipfsHash"}], "constant": false, "name": "createImage", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "payable", "payable": true, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_pickedAssets"}, {"type": "address", "name": "_owner"}], "constant": true, "name": "calculatePrice", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_assetManager"}], "constant": false, "name": "addAssetManager", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_imageId"}], "constant": true, "name": "getImageMetadata", "outputs": [{"type": "uint256", "name": ""}, {"type": "uint256", "name": ""}, {"type": "bytes32[]", "name": ""}, {"type": "uint256", "name": ""}, {"type": "string", "name": ""}, {"type": "address", "name": ""}, {"type": "string", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_marketplaceContract"}], "constant": false, "name": "addMarketplaceContract", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_to"}, {"type": "uint256", "name": "_imageId"}], "constant": false, "name": "_approveByMarketplace", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}], "networks": {"42": {"address": "0xba0919304d26feb896c7faf5e86d50ee8ef00c3e", "events": {}, "links": {}, "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"}}}, "assetManagerContract": {"abi": [{"inputs": [], "constant": true, "name": "owner", "outputs": [{"type": "address", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "newOwner"}], "constant": false, "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"indexed": true, "type": "address", "name": "previousOwner"}, {"indexed": true, "type": "address", "name": "newOwner"}], "type": "event", "name": "OwnershipTransferred", "anonymous": false}, {"inputs": [{"type": "string", "name": "_name"}, {"type": "uint256[]", "name": "_attributes"}, {"type": "bytes32[]", "name": "_ipfsHashes"}, {"type": "uint256", "name": "_packPrice"}], "constant": false, "name": "createAssetPack", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_attributes"}, {"type": "bytes32", "name": "_ipfsHash"}, {"type": "uint256", "name": "_price"}], "constant": false, "name": "createAsset", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_assetPackId"}], "constant": false, "name": "buyAssetPack", "outputs": [], "stateMutability": "payable", "payable": true, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_assetId"}], "constant": false, "name": "buyAssetPermision", "outputs": [], "stateMutability": "payable", "payable": true, "type": "function"}, {"inputs": [], "constant": true, "name": "getNumberOfAssets", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": true, "name": "getNumberOfAssetPacks", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_address"}, {"type": "uint256", "name": "_assetId"}], "constant": true, "name": "checkHasPermission", "outputs": [{"type": "bool", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "bytes32", "name": "_ipfsHash"}], "constant": true, "name": "checkHashExists", "outputs": [{"type": "bool", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_address"}, {"type": "uint256[]", "name": "_pickedAssets"}], "constant": false, "name": "givePermission", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "id"}], "constant": true, "name": "getAssetInfo", "outputs": [{"type": "uint256", "name": ""}, {"type": "uint256", "name": ""}, {"type": "address", "name": ""}, {"type": "bytes32", "name": ""}, {"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "id"}], "constant": true, "name": "getAssetPrice", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_address"}], "constant": true, "name": "getAssetsForUser", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_address"}], "constant": true, "name": "getAssetsUserCreated", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "address", "name": "_address"}], "constant": true, "name": "getAssetPacksUserCreated", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_id"}], "constant": true, "name": "getAssetIpfs", "outputs": [{"type": "bytes32", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_id"}], "constant": true, "name": "getAssetAttributes", "outputs": [{"type": "uint256", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_ids"}], "constant": true, "name": "getIpfsForAssets", "outputs": [{"type": "bytes32[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_ids"}], "constant": true, "name": "getAttributesForAssets", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [], "constant": false, "name": "withdraw", "outputs": [], "stateMutability": "nonpayable", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_assetPackId"}], "constant": true, "name": "getAssetPackData", "outputs": [{"type": "string", "name": ""}, {"type": "uint256[]", "name": ""}, {"type": "uint256[]", "name": ""}, {"type": "bytes32[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "_assetPackId"}], "constant": true, "name": "getAssetPackName", "outputs": [{"type": "string", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_packIds"}], "constant": true, "name": "getHoverImagesForAssetPacks", "outputs": [{"type": "bytes32[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256", "name": "packId"}, {"type": "address", "name": "_userAddress"}], "constant": true, "name": "getAssetsUserHaveInPack", "outputs": [{"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}, {"inputs": [{"type": "uint256[]", "name": "_assetPacksIds"}, {"type": "address", "name": "_userAddress"}], "constant": true, "name": "getOwnedAssetsFromPacks", "outputs": [{"type": "uint256[]", "name": ""}, {"type": "uint256[]", "name": ""}], "stateMutability": "view", "payable": false, "type": "function"}], "networks": {"42": {"address": "0xa5ac6622e7bf86604c4cbdabc7ba8f3e8bbf9d62", "events": {}, "links": {}, "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536"}}}}
+{
+  "digitalPrintImageContract": {
+    "abi": [
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "tokenPosInArr",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "name",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "tokensForOwner",
+        "outputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_to"
+          },
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": false,
+        "name": "approve",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "tokensForApproved",
+        "outputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "implementsERC721",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ],
+        "stateMutability": "pure",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "totalSupply",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_from"
+          },
+          {
+            "type": "address",
+            "name": "_to"
+          },
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": false,
+        "name": "transferFrom",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_random_seed"
+          }
+        ],
+        "constant": true,
+        "name": "pickRandomAssetPosition",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_owner"
+          },
+          {
+            "type": "uint256",
+            "name": "_index"
+          }
+        ],
+        "constant": true,
+        "name": "tokenOfOwnerByIndex",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_random_seed"
+          },
+          {
+            "type": "uint256",
+            "name": "_iterations"
+          }
+        ],
+        "constant": true,
+        "name": "getFinalSeed",
+        "outputs": [
+          {
+            "type": "bytes32",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "getLen",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "imageMetadata",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": "randomSeed"
+          },
+          {
+            "type": "uint256",
+            "name": "iterations"
+          },
+          {
+            "type": "uint256",
+            "name": "timestamp"
+          },
+          {
+            "type": "string",
+            "name": "author"
+          },
+          {
+            "type": "address",
+            "name": "owner"
+          },
+          {
+            "type": "string",
+            "name": "ipfsHash"
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": true,
+        "name": "ownerOf",
+        "outputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_owner"
+          }
+        ],
+        "constant": true,
+        "name": "balanceOf",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": "balance"
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "tokensOwned",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "owner",
+        "outputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "symbol",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "assetId"
+          },
+          {
+            "type": "uint256",
+            "name": "random_seed"
+          }
+        ],
+        "constant": true,
+        "name": "getSeed",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "pure",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_random_seed"
+          },
+          {
+            "type": "uint256",
+            "name": "_iterations"
+          },
+          {
+            "type": "bytes32[]",
+            "name": "_potentialAssets"
+          }
+        ],
+        "constant": true,
+        "name": "pickRandomAssets",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_to"
+          },
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": false,
+        "name": "transfer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_index"
+          }
+        ],
+        "constant": true,
+        "name": "getRandomHash",
+        "outputs": [
+          {
+            "type": "bytes32",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_randomHashIds"
+          },
+          {
+            "type": "uint256",
+            "name": "_timestamp"
+          }
+        ],
+        "constant": true,
+        "name": "calculateSeed",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "constant": true,
+        "name": "idToIpfsHash",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "random_seed"
+          }
+        ],
+        "constant": true,
+        "name": "toHex",
+        "outputs": [
+          {
+            "type": "bytes32",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "bytes32[]",
+            "name": "_potentialAssets"
+          }
+        ],
+        "constant": true,
+        "name": "decodeAssets",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "numOfImages",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_owner"
+          }
+        ],
+        "constant": true,
+        "name": "getUserImages",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "constant": false,
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "from"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "to"
+          },
+          {
+            "indexed": true,
+            "type": "uint256",
+            "name": "tokenId"
+          }
+        ],
+        "type": "event",
+        "name": "Transfer",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "owner"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "approved"
+          },
+          {
+            "indexed": true,
+            "type": "uint256",
+            "name": "tokenId"
+          }
+        ],
+        "type": "event",
+        "name": "Approval",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "_to"
+          },
+          {
+            "indexed": true,
+            "type": "uint256",
+            "name": "_tokenId"
+          }
+        ],
+        "type": "event",
+        "name": "Mint",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "previousOwner"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "type": "event",
+        "name": "OwnershipTransferred",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_randomHashIds"
+          },
+          {
+            "type": "uint256",
+            "name": "_timestamp"
+          },
+          {
+            "type": "uint256",
+            "name": "_iterations"
+          },
+          {
+            "type": "bytes32[]",
+            "name": "_potentialAssets"
+          },
+          {
+            "type": "string",
+            "name": "_author"
+          },
+          {
+            "type": "string",
+            "name": "_ipfsHash"
+          }
+        ],
+        "constant": false,
+        "name": "createImage",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "payable",
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_pickedAssets"
+          },
+          {
+            "type": "address",
+            "name": "_owner"
+          }
+        ],
+        "constant": true,
+        "name": "calculatePrice",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_assetManager"
+          }
+        ],
+        "constant": false,
+        "name": "addAssetManager",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": true,
+        "name": "getImageMetadata",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "bytes32[]",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "string",
+            "name": ""
+          },
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_marketplaceContract"
+          }
+        ],
+        "constant": false,
+        "name": "addMarketplaceContract",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_to"
+          },
+          {
+            "type": "uint256",
+            "name": "_imageId"
+          }
+        ],
+        "constant": false,
+        "name": "_approveByMarketplace",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      }
+    ],
+    "networks": {
+      "42": {
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
+        "events": {},
+        "links": {},
+        "address": "0x9b7504a3f41d9d280787a54437addfa98c9b0ba9"
+      }
+    }
+  },
+  "assetManagerContract": {
+    "abi": [
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "owner",
+        "outputs": [
+          {
+            "type": "address",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "constant": false,
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "previousOwner"
+          },
+          {
+            "indexed": true,
+            "type": "address",
+            "name": "newOwner"
+          }
+        ],
+        "type": "event",
+        "name": "OwnershipTransferred",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "type": "bytes32",
+            "name": "_packCover"
+          },
+          {
+            "type": "string",
+            "name": "_name"
+          },
+          {
+            "type": "uint256[]",
+            "name": "_attributes"
+          },
+          {
+            "type": "bytes32[]",
+            "name": "_ipfsHashes"
+          },
+          {
+            "type": "uint256",
+            "name": "_packPrice"
+          }
+        ],
+        "constant": false,
+        "name": "createAssetPack",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_attributes"
+          },
+          {
+            "type": "bytes32",
+            "name": "_ipfsHash"
+          },
+          {
+            "type": "uint256",
+            "name": "_price"
+          }
+        ],
+        "constant": false,
+        "name": "createAsset",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": false,
+        "name": "buyAssetPack",
+        "outputs": [],
+        "stateMutability": "payable",
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetId"
+          }
+        ],
+        "constant": false,
+        "name": "buyAssetPermision",
+        "outputs": [],
+        "stateMutability": "payable",
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "getNumberOfAssets",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": true,
+        "name": "getNumberOfAssetPacks",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          },
+          {
+            "type": "uint256",
+            "name": "_assetId"
+          }
+        ],
+        "constant": true,
+        "name": "checkHasPermission",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "bytes32",
+            "name": "_ipfsHash"
+          }
+        ],
+        "constant": true,
+        "name": "checkHashExists",
+        "outputs": [
+          {
+            "type": "bool",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          },
+          {
+            "type": "uint256[]",
+            "name": "_pickedAssets"
+          }
+        ],
+        "constant": false,
+        "name": "givePermission",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetInfo",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          },
+          {
+            "type": "address",
+            "name": ""
+          },
+          {
+            "type": "bytes32",
+            "name": ""
+          },
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPrice",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetsForUser",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetsUserCreated",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "address",
+            "name": "_address"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPacksUserCreated",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetIpfs",
+        "outputs": [
+          {
+            "type": "bytes32",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_id"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetAttributes",
+        "outputs": [
+          {
+            "type": "uint256",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_ids"
+          }
+        ],
+        "constant": true,
+        "name": "getIpfsForAssets",
+        "outputs": [
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_ids"
+          }
+        ],
+        "constant": true,
+        "name": "getAttributesForAssets",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "constant": false,
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPackData",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "_assetPackId"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetPackName",
+        "outputs": [
+          {
+            "type": "string",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_packIds"
+          }
+        ],
+        "constant": true,
+        "name": "getHoverImagesForAssetPacks",
+        "outputs": [
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_packIds"
+          }
+        ],
+        "constant": true,
+        "name": "getCoversForPacks",
+        "outputs": [
+          {
+            "type": "bytes32[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256",
+            "name": "packId"
+          },
+          {
+            "type": "address",
+            "name": "_userAddress"
+          }
+        ],
+        "constant": true,
+        "name": "getAssetsUserHaveInPack",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "type": "uint256[]",
+            "name": "_assetPacksIds"
+          },
+          {
+            "type": "address",
+            "name": "_userAddress"
+          }
+        ],
+        "constant": true,
+        "name": "getOwnedAssetsFromPacks",
+        "outputs": [
+          {
+            "type": "uint256[]",
+            "name": ""
+          },
+          {
+            "type": "uint256[]",
+            "name": ""
+          }
+        ],
+        "stateMutability": "view",
+        "payable": false,
+        "type": "function"
+      }
+    ],
+    "networks": {
+      "42": {
+        "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
+        "events": {},
+        "links": {},
+        "address": "0x4cd84d2fc617dc4cf334d586bdaf83bd4322cc8b"
+      }
+    }
+  }
+}
