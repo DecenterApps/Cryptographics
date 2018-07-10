@@ -233,11 +233,12 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
   let imagesLoaded = 0;
 
   for (let j = 0; j < objs.length; j++) {
-    images[j].onload = function () {
+    images[j].onload = async function () {
       imagesLoaded++;
       let x = objs[j].x_coordinate % canvasWidth;
       let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
+      await delay(300*j);
       drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {
         // WRITE FRAME
@@ -269,8 +270,8 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
     };
   }
 }
-
 async function drawImageRot(context, img, x, y, width, height, deg) {
+
   //Convert degrees to radian
   var rad = deg * Math.PI / 180;
 
