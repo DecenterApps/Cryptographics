@@ -17,6 +17,7 @@ contract AssetManager is Ownable {
     }
 
     struct AssetPack {
+        bytes32 packCover;
         string name;
         uint [] assetIds;
         address creator;
@@ -42,11 +43,12 @@ contract AssetManager is Ownable {
 
     /// @notice Function to create assetpack
     /// @dev ADD ATTRIBUTES VALIDATION
+    /// @param _packCover is cover image for asset pack
     /// @param _name is name of the asset pack
     /// @param _attributes is array of attributes
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
-    function createAssetPack(string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
+    function createAssetPack(bytes32 _packCover, string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public {
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
         require(_attributes.length < 50);
@@ -60,6 +62,7 @@ contract AssetManager is Ownable {
         }
 
         assetPacks.push(AssetPack({
+            packCover: _packCover,
             name: _name,
             assetIds: ids,
             creator: msg.sender,
@@ -295,6 +298,18 @@ contract AssetManager is Ownable {
         return hashes;
     }
 
+    /// @notice Function to get cover image for every assetpack
+    /// @param _packIds is array of asset pack ids
+    /// @return bytes32[] array of hashes
+    function getCoversForPacks(uint [] _packIds) public view returns (bytes32[]) {
+        require(_packIds.length > 0);
+        bytes32[] memory covers = new bytes32[](_packIds.length);
+        for(uint i=0; i<_packIds.length; i++) {
+            AssetPack memory assetPack = assetPacks[_packIds[i]];
+            covers[i] = assetPack.packCover;
+        }
+        return covers;
+    }
 
     function getAssetsUserHaveInPack(uint packId, address _userAddress) public view returns (uint[]) {
         AssetPack memory assetPack = assetPacks[packId];

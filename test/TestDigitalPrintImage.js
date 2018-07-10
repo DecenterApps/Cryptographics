@@ -1,5 +1,5 @@
-const utils = require('../front/scripts/utils');
-const imgFunctions = require('../front/scripts/functions');
+const utils = require('../frontend/scripts/utils');
+const imgFunctions = require('../frontend/scripts/functions');
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 
 contract('DigitalPrintImage', async(accounts) => {
@@ -36,27 +36,27 @@ contract('DigitalPrintImage', async(accounts) => {
 
 	});
 
-	it("... should fail if more than 50 assets",async () => {
-		let arr = [];
-		for(let i=0; i<51; i++){
-			arr.push(i);
-		}
-		let encoded = utils.encode(arr);
-		let randomHashIds = [1,2,3,4,5,6,7,8,9,10];
-		let timestamp = 123456789;
-		let iterations = 5;
-		let author = "Madjar";
-		let ipfsHash = "QmXBmAt1KMoDqAKcU9mwxQbEmBtRJczRP5vKvb1yHwSsCM";
-		await functionsContract.createImage(randomHashIds, timestamp, iterations, encoded, author, ipfsHash).catch(error => {
-            console.log("Error we have caught: "  + error);
-            assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
-        });
-	});
+	// it("... should fail if more than 50 assets",async () => {
+	// 	let arr = [];
+	// 	for(let i=0; i<51; i++){
+	// 		arr.push(i);
+	// 	}
+	// 	let encoded = utils.encode(arr);
+	// 	let randomHashIds = [1,2,3,4,5,6,7,8,9,10];
+	// 	let timestamp = 123456789;
+	// 	let iterations = 5;
+	// 	let author = "Madjar";
+	// 	let ipfsHash = "QmXBmAt1KMoDqAKcU9mwxQbEmBtRJczRP5vKvb1yHwSsCM";
+	// 	await functionsContract.createImage(randomHashIds, timestamp, iterations, encoded, author, ipfsHash).catch(error => {
+     //        console.log("Error we have caught: "  + error);
+     //        assert.equal(error, 'Error: VM Exception while processing transaction: revert', "Transaction shoud be reverted");
+     //    });
+	// });
 
 
 	it("... should fail if empty bytes with all 0 sent",async () => {
 		let decoded = await functionsContract.decodeAssets(["0x0000000000000000000000000000000000000000000000000000000000000000"]);
-		
+		console.log(decoded);
 		assert.equal(decoded.length, 0, "Length should be zero");
 
 	});
