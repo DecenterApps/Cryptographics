@@ -17,7 +17,10 @@
 
                 <div class="buttons">
                     <button class="default-button submit" @click="uploadToIpfs"> Submit</button>
-                    <button class="default-button no-background try" @click="uploadAssets"> Try</button>
+                    <button class="default-button no-background try" @click="renderCanvas"> Try</button>
+                </div>
+                <div>
+                    <canvas id="canvas"></canvas>
                 </div>
             </div>
 
@@ -38,17 +41,24 @@
 <script>
   import * as ipfsService from '../../../scripts/ipfsService.js';
   import { getAccounts } from '../../../scripts/helpers';
-  import { createAssetPack } from '../../methods';
+  import {createAssetPack, makeCoverImage} from '../../methods';
   import * as utils from '../../../scripts/utils';
   import IconTrash from './template/IconTrash.vue';
   import IconBackground from './template/IconBackground.vue';
 
   export default {
     name: 'upload-asset-packs',
-    components: { IconTrash, IconBackground },
+    components: {
+        IconTrash, IconBackground },
     data: () => ({
       metamask_account: 0,
       assets: [],
+      canvasData: {
+            assets: [],
+            ratio: '1:1',
+            frame: false,
+        },
+      canvas_ratio: '1:1'
     }),
 
     methods: {
@@ -63,9 +73,25 @@
         }
       },
 
+      renderCanvas() {
+          let assets = this.assets;
+          this.canvasData.assets = [];
+          for(let i=0; i<assets.length; i++) {
+              this.canvasData.assets.push(assets[i].path);
+          }
+          let canvas = document.getElementById('canvas');
+          canvas.width = 350;
+          canvas.height = 350;
+
+          console.log(canvas);
+          makeCoverImage(this.canvasData.assets, canvas, 350,350);
+      },
       async uploadToIpfs() {
         let hashes = [];
         let counter = this.assets.length;
+        let canvas = document.getElementById('canvas');
+        let coverImage = canvas.toDataURL('image/png');
+        let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
         const price = document.querySelector('input[name=price]').value;
         const name = document.querySelector('input[name=pack_name').value;
         for (let i = 0; i < this.assets.length; i++) {
@@ -78,7 +104,7 @@
               console.log(hashes);
               console.log(price);
               const attributes = this.assets.map(item => item.attribute);
-              await createAssetPack(name, attributes, hashes, price, this.metamask_account);
+              await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.metamask_account);
             }
           };
           reader.readAsDataURL(this.assets[i].file);
@@ -106,6 +132,12 @@
 
 <style scoped lang="scss">
 
+    canvas {
+        margin-top: 20px;
+        background-color: white;
+        /*width:350px;*/
+        /*height: 350px;*/
+    }
     .upload-assets-page {
         background: #D9D9D9;
         min-height: calc(100vh - 70px);
