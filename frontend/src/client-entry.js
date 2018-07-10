@@ -1,11 +1,11 @@
 import { app } from './app';
 import Web3 from 'web3';
-import IPFS from 'ipfs';
 import * as ipfsService from '../scripts/ipfsService';
 
 window.onload = () => {
+  console.log(Ipfs);
   window.web3 = new Web3(window.web3.currentProvider);
-  window.node = new IPFS({
+  window.node = new Ipfs({
     repo: 'cryptographics',
     config: {
       Bootstrap: ipfsService.bootstrapNodes,

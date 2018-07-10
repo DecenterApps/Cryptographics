@@ -33,7 +33,7 @@
 </script>
 
 
-<style lang="scss">
+<style scoped lang="scss">
     canvas {
         margin: 10px;
         width: 1000px;
