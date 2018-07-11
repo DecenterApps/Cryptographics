@@ -50,7 +50,7 @@ contract Marketplace is Ownable {
         for (uint i = 0; i<numberOfAds; i++) {
             Ad memory ad = sellAds[allAds[i]];
             // active on sale are only those that exists and its still the same owner
-            if (ad.exists && (ad.exchanger == digitalPrintImageContract.ownerOf(allAds[i]))) {
+            if (isImageOnSale(allAds[i])) {
                 count++;
             }
         }
@@ -60,11 +60,17 @@ contract Marketplace is Ownable {
         for (i = 0; i<numberOfAds; i++) {
             ad = sellAds[allAds[i]];
             // active on sale are only those that exists and its still the same owner
-            if (ad.exists && (ad.exchanger == digitalPrintImageContract.ownerOf(allAds[i]))) {
+            if (isImageOnSale(allAds[i])) {
                 imageIds[i] = allAds[i];
                 prices[i] = ad.price;
             }
         }
+    }
+
+    function isImageOnSale(uint _imageId) public view returns(bool) {
+        Ad memory ad = sellAds[_imageId];
+
+        return ad.exists && (ad.exchanger == digitalPrintImageContract.ownerOf(_imageId));
     }
 
     /// @notice Function to buy image from Marketplace
@@ -75,7 +81,7 @@ contract Marketplace is Ownable {
 
         removeOrder(_imageId);
 
-        //@dev transfer to user
+        digitalPrintImageContract.transferFromMarketplace(sellAds[_imageId].exchanger, msg.sender, _imageId);
     }
 
     /// @notice Function to remove image from Marketplace
