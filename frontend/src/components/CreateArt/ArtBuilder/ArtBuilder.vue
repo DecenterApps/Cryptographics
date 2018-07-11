@@ -1,7 +1,7 @@
 <template>
     <div class="art-builder-wrapper">
         <div class="left-group">
-            <Canvas :canvasData="canvasData" :canvas_ratio="canvas_ratio"></Canvas>
+            <Canvas :canvasData="canvasData"></Canvas>
         </div>
         <div class="right-group">
             <div class="recreate" @click="renderCanvas">
@@ -51,10 +51,9 @@
       metamask_account: 0,
       canvasData: {
         assets: [],
-        ratio: '1:1',
+        ratio: '2:3',
         frame: false,
       },
-      canvas_ratio: '1:1',
       random_seed: 0,
       iterations: 0,
       timestamp: new Date().getTime(),
@@ -153,6 +152,7 @@
         display: flex;
         height: 100%;
         position: relative;
+        justify-content: space-between;
 
         .left-group {
             flex-shrink: 1;
@@ -168,9 +168,11 @@
             padding: 0 30px;
             display: flex;
             align-items: flex-end;
+            justify-content: space-between;
+            flex-grow: 1;
+            min-width: 300px;
 
             .recreate {
-                margin-right: 260px;
             }
 
         }
@@ -180,6 +182,10 @@
 
             .asset-pack-circle {
                 margin: 20px 12px 0;
+
+                &:last-child {
+                    margin-right: 0;
+                }
             }
 
         }

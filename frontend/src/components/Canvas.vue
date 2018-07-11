@@ -24,6 +24,7 @@
             bottom: size.height / 6.3,
             right: size.width / 20,
             top: size.width / 20,
+            ratio: this.canvasData.ratio
           } : undefined;
           methods.makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
         },

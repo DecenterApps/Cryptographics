@@ -97,13 +97,13 @@ async function loadDataForAssets() {
 }
 
 function getSize(width, height, ratio) {
-  const MAX_HEIGHT = 550;
+  const MAX_HEIGHT = 3508;
   if (ratio === '1:1') {
-    if (height > MAX_HEIGHT) height = 550;
+    if (height > MAX_HEIGHT) height = MAX_HEIGHT;
     return { width: height, height };
   }
   if (ratio === '2:3') {
-    if (height > MAX_HEIGHT) height = 550;
+    if (height > MAX_HEIGHT) height = MAX_HEIGHT;
 
     width = (height * 10) / 14;
 
@@ -199,9 +199,9 @@ async function delay(delayInms) {
     });
 }
 
-function scaleImage(width, height, canvasWidth, canvasHeight) {
+function scaleImage(width, height, canvasWidth, canvasHeight, ratio) {
   const DEFAULT_WIDTH = 2480;
-  const DEFAULT_HEIGHT = 3508;
+  const DEFAULT_HEIGHT = ratio === '2:3' ?  3508 : 2480;
 
   const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
   const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
@@ -212,7 +212,7 @@ function scaleImage(width, height, canvasWidth, canvasHeight) {
   }
 }
 
-async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
+async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0, ratio: '2:3' }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
@@ -254,7 +254,7 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
       let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
       await delay(DELAY*j);
-      const imageDimensions = scaleImage(images[j].width, images[j].height, canvasWidth, canvasHeight);
+      const imageDimensions = scaleImage(images[j].width, images[j].height, canvasWidth, canvasHeight, frame.ratio);
       drawImageRot(context, images[j], x, y, imageDimensions.width, imageDimensions.height, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {
           console.log("All assets loaded.")
