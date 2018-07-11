@@ -22,7 +22,7 @@ contract DigitalPrintImage is ImageToken, Functions {
     mapping(uint => ImageMetadata) public imageMetadata;
     mapping(uint => string) public idToIpfsHash;
 
-    address marketplaceContract;
+    address public marketplaceContract;
     IAssetManager assetManager;
 
 
@@ -30,6 +30,11 @@ contract DigitalPrintImage is ImageToken, Functions {
         require(msg.sender == address(marketplaceContract));
         _;
     }
+
+    /// @dev only for testing purposes
+    // function createImageTest() public returns(uint) {
+    //     return createImage(msg.sender);
+    // }
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
@@ -75,7 +80,7 @@ contract DigitalPrintImage is ImageToken, Functions {
             author: _author,
             owner: _owner,
             ipfsHash: _ipfsHash
-            });
+        });
 
         idToIpfsHash[id] = _ipfsHash;
         seedExists[finalSeed] = true;
@@ -90,6 +95,7 @@ contract DigitalPrintImage is ImageToken, Functions {
         if(_pickedAssets.length == 0) {
             return 0;
         }
+
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
         uint finalPrice = 0;
         for(uint i=0; i<pickedAssetPacks.length; i++) {
@@ -97,6 +103,7 @@ contract DigitalPrintImage is ImageToken, Functions {
                 finalPrice += assetManager.getAssetPackPrice(pickedAssetPacks[i]);
             }
         }
+
         return finalPrice;
     }
 

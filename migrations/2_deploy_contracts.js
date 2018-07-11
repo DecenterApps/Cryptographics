@@ -8,5 +8,8 @@ module.exports = function (deployer) {
         .then((digitalPrintImage) => digitalPrintImage.addAssetManager(AssetManager.address))
         .then(() => DigitalPrintImage.deployed())
         .then((digitalPrintImage) => digitalPrintImage.fillWithHashes())
+        .then(() => deployer.deploy(Marketplace, DigitalPrintImage.address))
+        .then(() => DigitalPrintImage.deployed())
+        .then((digitalPrintImage) => digitalPrintImage.addMarketplaceContract(Marketplace.address))
         .then(() => true);
 };

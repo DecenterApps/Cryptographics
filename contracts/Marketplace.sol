@@ -11,7 +11,7 @@ contract Marketplace is Ownable {
         bool exists;
     }
 
-    DigitalPrintImage digitalPrintImageContract;
+    DigitalPrintImage public digitalPrintImageContract;
 
     uint public creatorPercentage = 5; // 5 percentage
     uint public numberOfAds;
@@ -98,14 +98,5 @@ contract Marketplace is Ownable {
     /// @param _imageId is id of image we want to remove
     function removeOrder(uint _imageId) private {
         sellAds[_imageId].exists = false;
-    }
-
-    /// @notice Function to assign digitalPrintImage contract
-    /// @dev this should be onlyOwner
-    /// @param _digitalPrintImageContract is address of that contract
-    function addDigitalPrintImageContract(address _digitalPrintImageContract) public {
-        if (address(digitalPrintImageContract) == address(0)) {
-            digitalPrintImageContract = DigitalPrintImage(_digitalPrintImageContract);
-        }
     }
 }
