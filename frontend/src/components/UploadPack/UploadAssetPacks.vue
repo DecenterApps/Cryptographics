@@ -86,7 +86,7 @@
           for(let i=0; i<this.assets.length; i++) {
               asset_paths.push(this.assets[i].path);
           }
-          makeCoverImage(asset_paths, canvas, 350,350);
+          makeCoverImage(false, asset_paths, canvas, 350,350);
       },
       async uploadToIpfs() {
         let hashes = [];

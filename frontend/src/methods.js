@@ -123,7 +123,7 @@ async function getData(randomSeed, iterations, potentialAssets, allAssets) {
   return allDataAboutAsset;
 
 }
-function makeCoverImage(image_paths, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 } ) {
+function makeCoverImage(isHome, image_paths, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 } ) {
     let context = c.getContext('2d');
     const { left, right, bottom, top } = frame;
     const canvasHeight = height;
@@ -136,7 +136,11 @@ function makeCoverImage(image_paths, c, width, height, frame = { left: 0, right:
     let images = [];
     for(let i=0; i<image_paths.length; i++) {
       let image = new Image();
-      image.src = image_paths[i];
+      if(isHome) {
+          image.src = require('../dist/assets/' + image_paths[i] + '.png');
+      } else {
+          image.src = image_paths[i];
+      }
       image.width = 90;
       image.height = 90;
       image.crossOrigin = "Anonymous";
