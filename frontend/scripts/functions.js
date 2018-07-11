@@ -22,7 +22,11 @@ function pickTenRandoms() {
     }
     return randoms;
 }
-
+async function getAttributesForAssets(assetIds) {
+    let attributes = await assetManagerContract.methods.getAttributesForAssets(assetIds).call();
+    console.log(attributes);
+    return attributes;
+}
 async function getAssetIpfs(assetId) {
     let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
     let ipfsDecoded = utils.getIpfsHashFromBytes32(ipfsHash);
@@ -221,7 +225,7 @@ function getAssetMetadata(seed, assetId) {
 
 //INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
-function getImage(random_seed, iterations, potentialAssets) {
+async function getImage(random_seed, iterations, potentialAssets) {
     random_seed = random_seed.toString(16);
     var seed = calculateFinalSeed(random_seed, iterations);
     let pot_assets = [];
@@ -235,6 +239,7 @@ function getImage(random_seed, iterations, potentialAssets) {
     // var pot_assets = utils.decode(potentialAssets).reverse();
     console.log(pot_assets);
     var pickedAssets = [];
+    let attributes = await getAttributesForAssets(pot_assets);
 
     for (let i = 0; i < pot_assets.length; i++) {
         // seed = seed.substr(2);
@@ -283,6 +288,7 @@ async function test() {
     // console.log(await getAssetPackData(0));
     // console.log(await getAssetPackData(5));
     // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    // await getAttributesForAssets([1,2,3,4]);
 }
 
 

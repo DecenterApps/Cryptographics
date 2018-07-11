@@ -113,7 +113,7 @@ function getSize(width, height, ratio) {
 
 async function getData(randomSeed, iterations, potentialAssets, allAssets) {
   console.log(randomSeed);
-  let assets = functions.getImage(randomSeed, iterations, potentialAssets);
+  let assets = await functions.getImage(randomSeed, iterations, potentialAssets);
   var allDataAboutAsset = [];
   for (let i = 0; i < assets.length; i++) {
     let stats = allAssets[assets[i]];
@@ -232,6 +232,7 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
       ids.push(objs[j].id -1);
   }
   let hashes = await functions.getAssetsIpfs(ids);
+  let attributes = await functions.
   let images = [];
   for (let i = 0; i < objs.length; i++) {
     console.log(objs[i].id + " hash : " + hashes[i]);
