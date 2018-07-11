@@ -28,6 +28,7 @@
     ],
     "UNCATEGORIZED": [
       "AssetManager",
+      "IAssetManager",
       "Marketplace",
       "Migrations"
     ]
