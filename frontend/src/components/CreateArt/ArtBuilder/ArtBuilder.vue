@@ -102,10 +102,12 @@
           picked.push(this.canvasData.assets[i].id);
         }
         let price = await functions.calculatePrice(picked, this.metamask_account);
+
         if (pot.length === 0) {
           this.image_price = 0;
         }
         this.image_price = parseInt(price, 10);
+          console.log("PRICE : " + this.image_price);
       },
       changeTab() {
         this.$emit('tabChange', 'picker');

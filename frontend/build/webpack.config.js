@@ -1,30 +1,50 @@
-const path = require('path');
 const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 require('babel-polyfill');
 
 const config = {
-  entry: {
-    app: path.resolve(__dirname, '../src/client-entry.js'),
+  entry: [
+    'babel-polyfill',
+    'webpack/hot/only-dev-server',
+    'webpack-dev-server/client?http://127.0.0.1:3300',
+    path.resolve(__dirname, '../src/client-entry.js'),
+  ],
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: path.join(__dirname, './dist/'),
+    hot: true,
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  },
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].js',
+    publicPath: '/'
   },
   resolve: {
-    alias: {
-      vue: 'vue/dist/vue.js'
-    }
+    extensions: ['.vue', '.js', '.scss', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.png', '.jpg'],
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          css: 'css-loader',
-          scss: 'css-loader|sass-loader',
-        }
+        loader: 'vue-loader'
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -59,11 +79,24 @@ const config = {
       },
     ],
   },
-  output: {
-    path: path.resolve(__dirname, '../'),
-    filename: 'dist/assets/js/[name].js',
-  },
-  plugins: [],
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.join(__dirname, '../prod.html'),
+      filename: 'index.html',
+      // favicon: 'src/favicon.ico',
+      hash: true,
+    }),
+    new AddAssetHtmlPlugin([
+      {
+        filepath: require.resolve('../lib/ipfs.min.js'),
+        includeSourcemap: false,
+      },
+    ]),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new VueLoaderPlugin()
+  ],
 };
 
 module.exports = config;

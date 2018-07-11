@@ -13,6 +13,8 @@ const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageCo
 const assetManagerContractAddress = conf.assetManagerContract.networks['42'].address;
 const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
 
+const DELAY = 300;
+
 async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) {
   potentialAssets = utils.encode(potentialAssets);
   console.log('ENCODED POTENTIAL ASSETS: ' + potentialAssets);
@@ -188,6 +190,28 @@ function makeCoverImage(image_paths, c, width, height, frame = { left: 0, right:
         };
     }
 }
+
+async function delay(delayInms) {
+    return new Promise(resolve  => {
+        setTimeout(() => {
+            resolve(2);
+        }, delayInms);
+    });
+}
+
+function scaleImage(width, height, canvasWidth, canvasHeight) {
+  const DEFAULT_WIDTH = 2480;
+  const DEFAULT_HEIGHT = 3508;
+
+  const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
+  const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
+
+  return {
+    width: width / horizontalRatio,
+    height: height / verticalRatio,
+  }
+}
+
 async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bottom: 0, top: 0 }) {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
@@ -224,13 +248,16 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
   let imagesLoaded = 0;
 
   for (let j = 0; j < objs.length; j++) {
-    images[j].onload = function () {
+    images[j].onload = async function () {
       imagesLoaded++;
       let x = objs[j].x_coordinate % canvasWidth;
       let y = objs[j].y_coordinate % canvasHeight;
       let rotation = objs[j].rotation;
-      drawImageRot(context, images[j], x, y, width / 4, height / 4, rotation);
+      await delay(DELAY*j);
+      const imageDimensions = scaleImage(images[j].width, images[j].height, canvasWidth, canvasHeight);
+      drawImageRot(context, images[j], x, y, imageDimensions.width, imageDimensions.height, rotation);
       if (imagesLoaded === objs.length && frame.left > 0) {
+          console.log("All assets loaded.")
         // WRITE FRAME
         context.strokeStyle = '#FFF';
         context.beginPath();
@@ -260,8 +287,8 @@ async function makeImage(objs, c, width, height, frame = { left: 0, right: 0, bo
     };
   }
 }
+async function drawImageRot(context, img, x, y, width, height, deg) {
 
-function drawImageRot(context, img, x, y, width, height, deg) {
   //Convert degrees to radian
   var rad = deg * Math.PI / 180;
 
@@ -272,7 +299,11 @@ function drawImageRot(context, img, x, y, width, height, deg) {
   context.rotate(rad);
 
   //draw the image
-  context.drawImage(img, width / 2 * (-1), height / 2 * (-1), width, height);
+  const coords = {
+    x: width / 2 * (-1),
+    y: height / 2 * (-1)
+  };
+  context.drawImage(img, coords.x, coords.y, width, height);
 
   //reset the canvas
   context.rotate(rad * (-1));

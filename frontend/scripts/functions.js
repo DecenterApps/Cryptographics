@@ -45,12 +45,6 @@ async function getImageIpfs(imageId) {
     return ipfsHash;
 }
 
-async function getBoughtAssets(address) {
-    let assetIds = await assetManagerContract.methods.getAssetsForUser(address).call();
-    console.log("ASSET IDS :" + assetIds);
-    return assetIds;
-}
-
 
 async function getCreatedAssetPacks(address) {
     let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
@@ -77,33 +71,14 @@ async function getCoversForAssetPacks(assetPackIds) {
 async function getPackInformation(assetPacksIds, account) {
     let srcs = await getCoversForAssetPacks(assetPacksIds);
     let names = await getAssetPacksNames(assetPacksIds);
-    let stats = await getOwnedAssetsFromPacks(assetPacksIds, account);
-
     let data =[];
     for(let i=0; i<srcs.length; i++) {
         data.push({
             name: names[i],
             src: 'https://ipfs.decenter.com/ipfs/' + srcs[i],
-            stats: stats[i],
         });
     }
     return data;
-}
-
-
-
-async function getOwnedAssetsFromPacks(assetPackIds, account) {
-    let data = await assetManagerContract.methods.getOwnedAssetsFromPacks(assetPackIds,account).call();
-    let stats = [];
-    for(let i=0; i<data[0].length; i++) {
-        var asset = {
-            pack_id: assetPackIds[i],
-            owned: parseInt(data[0][i],10),
-            total : parseInt(data[1][i],10)
-        }
-        stats.push(asset);
-    }
-    return stats;
 }
 
 async function getAssetPacksNames(assetPacksIds) {
@@ -162,10 +137,6 @@ async function getNumberOfAssets() {
     return number;
 }
 
-async function getAssetsUserCreated(address) {
-    let assets = await assetManagerContract.methods.getAssetsUserCreated(address).call();
-    return assets;
-}
 
 async function getUserImages(address) {
     if (address.length != 42) {
@@ -292,10 +263,9 @@ async function getAssetStats(id) {
         let info = await assetManagerContract.methods.getAssetInfo(id).call();
         let Info = {
             id: parseInt(info[0], 10),
-            creator: info[1],
+            pack_id: parseInt(info[1],10),
+            attributes: info[2],
             ipfsHash: info[2],
-            price: parseInt(info[3], 10),
-            layer: layer
         }
         return Info;
     }
@@ -311,7 +281,7 @@ async function test() {
 
     // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // console.log(await getAssetPackData(0));
-    console.log(await getAssetPackData(5));
+    // console.log(await getAssetPackData(5));
     // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
 }
 
@@ -331,13 +301,11 @@ module.exports = {
     getNumberOfAssets,
     calculatePrice,
     getImageIpfs,
-    getAssetsUserCreated,
     getImageMetadataFromContract,
     calculateFirstSeed,
     pickTenRandoms,
     getUserImages,
     convertSeed,
-    getBoughtAssets,
     getAssetIpfs,
     getCreatedAssetPacks,
     getAssetPackData,
@@ -345,7 +313,6 @@ module.exports = {
     getAssetsIpfs,
     getCoversForAssetPacks,
     getAssetPacksNames,
-    getOwnedAssetsFromPacks,
     getPackInformation,
     getPaginatedAssetPacks
 }

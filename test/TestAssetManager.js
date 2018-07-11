@@ -14,10 +14,9 @@ contract('AssetManager', async(accounts) => {
 
     it("... should fail if there is not created an asset", async () => {
         let ipfsHash = "0x123456789";
-        let price = 500000000000000;
         let attr = 212;
 
-        await assetManagerContract.createAsset(attr, ipfsHash, price,  {from: accounts[0]});
+        await assetManagerContract.createAsset(attr, ipfsHash, 1, {from: accounts[0]});
 
         let numberOfAssets = await assetManagerContract.getNumberOfAssets();
 
@@ -27,14 +26,13 @@ contract('AssetManager', async(accounts) => {
 
     it("... should fail if there is same hash twice", async() => {
         let ipfsHash = "0x1234567";
-        let price = 500000000000000;
         let attr = 212;
 
-        await assetManagerContract.createAsset(attr, ipfsHash, price, {from:accounts[0]}).catch(error => {
+        await assetManagerContract.createAsset(attr, ipfsHash, 1, {from:accounts[0]}).catch(error => {
             console.log("Error we have caught: "  + error);
         });
 
-        await assetManagerContract.createAsset(attr, ipfsHash, price, {from:accounts[0]}).catch(error => {
+        await assetManagerContract.createAsset(attr, ipfsHash, 1, {from:accounts[0]}).catch(error => {
             console.log("Error we have caught: "  + error);
         });
 
@@ -43,33 +41,6 @@ contract('AssetManager', async(accounts) => {
         assert.equal(numberOfAssets,2,"There'd be only 2 assets ( 1 created in previous test and 1 in this test");
     });
 
-
-
-    it("... user should have  permission for asset he created", async() => {
-        let ipfsHash = "0x12345678";
-        let price = 500000000000000;
-        let attr = 212;
-
-        await assetManagerContract.createAsset(attr, ipfsHash, price, {from: accounts[0]});
-
-        let permission = await assetManagerContract.checkHasPermission(accounts[0], 0);
-        assert.equal(permission, true, "User had to have permission for this asset")
-    });
-
-
-    it("... user should have  permission for asset he bought", async() => {
-        let ipfsHash = "0x12345678abc";
-        let price = 500000000000000;
-        let attr = 212;
-
-        await assetManagerContract.createAsset(attr, ipfsHash, price, {from: accounts[0]});
-
-        await assetManagerContract.buyAssetPermision(0, {from: accounts[1], value: 500000000000000});
-
-
-        let permission = await assetManagerContract.checkHasPermission(accounts[1], 0);
-        assert.equal(permission, true, "User had to have permission for this asset ha has bought")
-    });
 
     it("... user should be owner of asset pack", async() => {
           let ipfsHashes = [ 'QmUJeMDc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
@@ -122,7 +93,8 @@ contract('AssetManager', async(accounts) => {
         await assetManagerContract.createAssetPack(coverHash, "Pakovanje 3", attributes, ipfsHashes1,500000);
 
         let packData = await assetManagerContract.getAssetPackData(0);
-        let id = 4;
+        let id = 2;
+        console.log(packData[1][0].c[0]);
         for(let i=0; i<packData[1].length; i++){
             assert.equal(id, packData[1][i].c[0], "Assets id should be same");
             id++;
@@ -178,17 +150,12 @@ contract('AssetManager', async(accounts) => {
             ipfsHashes1[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
        }
 
-       let coverHash = "0x123456789";
+       let coverHash = "QmW9W3AHpp9HYJZqMWxvtZsGU8yyGqXYWxHNPzbsvZeQuj";
 
-       await assetManagerContract.createAssetPack(coverHash, packName, attributes, ipfsHashes1,500000);
+       await assetManagerContract.createAssetPack(utils.getBytes32FromIpfsHash(coverHash), packName, attributes, ipfsHashes1,500000);
 
-       let hover = await assetManagerContract.getHoverImagesForAssetPacks([3]);
-       assert.equal(utils.getIpfsHashFromBytes32(hover[0]), ipfsHashes[0], "First asset should be equal");
-
-
-       let packData = await assetManagerContract.getAssetPackData(3);
-       assert.equal(packData[0], packName);
-
+       let hover = await assetManagerContract.getCoversForPacks([3]);
+        console.log(utils.getIpfsHashFromBytes32(hover));
     });
 
 

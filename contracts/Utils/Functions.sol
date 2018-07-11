@@ -4,23 +4,20 @@ contract Functions {
 
     bytes32[] randomHashes;
 
-
-    constructor() public {
-
+    function fillWithHashes() public {
         for(uint i = block.number - 100; i < block.number; i++){
             randomHashes.push(blockhash(i));
         }
     }
 
-
-//        /// @notice Function for test purposes because in local rpc can't get last 100 blocks
-//        function fillRadnomHashes() public {
-//            bytes32 initialHash = "0x1234567891011111112131311";
-//
-//            for(uint i=0; i<100; i++){
-//                randomHashes.push(keccak256(initialHash,i));
-//            }
-//        }
+    //        /// @notice Function for test purposes because in local rpc can't get last 100 blocks
+    //        function fillRadnomHashes() public {
+    //            bytes32 initialHash = "0x1234567891011111112131311";
+    //
+    //            for(uint i=0; i<100; i++){
+    //                randomHashes.push(keccak256(initialHash,i));
+    //            }
+    //        }
 
 
     /// @notice Function which decodes bytes32 to array of integers

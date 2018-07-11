@@ -98,9 +98,6 @@
         this.my_images_on_chain = await functions.getUserImages(this.metamask_account);
       },
 
-      async getCreatedAssetPacks() {
-        this.created_assets = await functions.getAssetsUserCreated(this.metamask_account);
-      },
 
       async getBoughtAssets() {
         this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
