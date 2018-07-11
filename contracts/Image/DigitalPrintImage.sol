@@ -54,7 +54,7 @@ contract DigitalPrintImage is ImageToken, Functions {
         (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
         address _owner = msg.sender;
 
-        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
+        uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
 
         uint finalPrice = calculatePrice(pickedAssetPacks, _owner);
         require(msg.value >= finalPrice);
@@ -90,7 +90,7 @@ contract DigitalPrintImage is ImageToken, Functions {
         if(_pickedAssets.length == 0) {
             return 0;
         }
-        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
+        uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
         uint finalPrice = 0;
         for(uint i=0; i<pickedAssetPacks.length; i++) {
             if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false) {
