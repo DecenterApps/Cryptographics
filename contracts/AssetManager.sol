@@ -18,7 +18,7 @@ contract AssetManager is Ownable {
     struct AssetPack {
         bytes32 packCover;
         string name;
-        uint [] assetIds;
+        uint[] assetIds;
         address creator;
         uint price;
     }
@@ -27,19 +27,14 @@ contract AssetManager is Ownable {
     uint numberOfAssets;
     uint numberOfAssetPacks;
 
-
-    Asset [] assets;
-    AssetPack [] assetPacks;
-
-
+    Asset[] assets;
+    AssetPack[] assetPacks;
 
     mapping(address => uint) artistBalance;
     mapping(bytes32 => bool) hashExists;
 
     mapping(address => uint[]) createdAssetPacks;
     mapping(address => uint[]) boughtAssetPacks;
-
-
 
 
     /// @notice Function to create assetpack
@@ -147,7 +142,7 @@ contract AssetManager is Ownable {
         boughtAssetPacks[_address].push(_packId);
     }
 
-    function pickUniquePacks(uint [] assetIds) public view returns (uint[]){
+    function pickUniquePacks(uint[] assetIds) public view returns (uint[]){
         require(assetIds.length > 0);
         uint[] memory packs = new uint[](assetIds.length);
         uint last = 1;
@@ -213,7 +208,7 @@ contract AssetManager is Ownable {
     /// @dev need for data parsing on frontend efficiently
     /// @param _ids is array of ids
     /// @return bytes32 array of hashes
-    function getIpfsForAssets(uint [] _ids) public view returns (bytes32[]) {
+    function getIpfsForAssets(uint[] _ids) public view returns (bytes32[]) {
         bytes32[] memory hashes = new bytes32[](_ids.length);
         for(uint i=0; i<_ids.length; i++) {
             Asset memory asset = assets[_ids[i]];
@@ -223,7 +218,7 @@ contract AssetManager is Ownable {
         return hashes;
     }
 
-    function getAttributesForAssets(uint [] _ids) public view returns(uint[]) {
+    function getAttributesForAssets(uint[] _ids) public view returns(uint[]) {
         uint[] memory attributes = new uint[](_ids.length);
         for(uint i=0; i< _ids.length; i++) {
             Asset memory asset = assets[_ids[i]];
@@ -277,7 +272,7 @@ contract AssetManager is Ownable {
     /// @notice Function to get cover image for every assetpack
     /// @param _packIds is array of asset pack ids
     /// @return bytes32[] array of hashes
-    function getCoversForPacks(uint [] _packIds) public view returns (bytes32[]) {
+    function getCoversForPacks(uint[] _packIds) public view returns (bytes32[]) {
         require(_packIds.length > 0);
         bytes32[] memory covers = new bytes32[](_packIds.length);
         for(uint i=0; i<_packIds.length; i++) {

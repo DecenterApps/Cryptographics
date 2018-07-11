@@ -47,7 +47,7 @@ contract ImageToken is Ownable,ERC721 {
     /// @param _imageId id of image we have that we send to another address
     function transfer(address _to, uint256 _imageId) public {
         require(tokensForOwner[_imageId] != 0x0);
-        require(tokensForOwner[_imageId] != msg.sender);
+        require(ownerOf(_imageId) == msg.sender);
 
         tokensForApproved[_imageId] = 0x0;
         removeImage(msg.sender, _imageId);
@@ -93,7 +93,7 @@ contract ImageToken is Ownable,ERC721 {
     /// @dev for internal usage, will be called in another method, just writing clean code
     /// @param _owner is address of new image owner
     /// @param _imageId is Id of image for new owner
-    function addImage(address _owner, uint _imageId) private {
+    function addImage(address _owner, uint _imageId) internal {
         tokensForOwner[_imageId] = _owner;
         tokensOwned[_owner].push(_imageId);
         tokenPosInArr[_imageId] = tokensOwned[_owner].length - 1;
@@ -104,7 +104,7 @@ contract ImageToken is Ownable,ERC721 {
     /// @dev for internal usage, will be called in another method, just writing clean code
     /// @param _owner is address of current image owner
     /// @param _imageId is Id of image we are removing from him
-    function removeImage(address _owner, uint _imageId) private {
+    function removeImage(address _owner, uint _imageId) internal {
         uint length = tokensOwned[_owner].length;
         uint index = tokenPosInArr[_imageId];
         uint swapToken = tokensOwned[_owner][length-1];
