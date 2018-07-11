@@ -74,7 +74,6 @@
       },
 
       renderCanvas() {
-          let assets = this.assets;
           let canvas = document.getElementById('canvas');
           canvas.width = 350;
           canvas.height = 350;
@@ -115,6 +114,15 @@
 
       remove(index) {
         this.assets.splice(index, 1);
+        let assets = this.assets;
+        let canvas = document.getElementById('canvas');
+        canvas.width = 350;
+        canvas.height = 350;
+          let asset_paths = [];
+          for(let i=0; i<this.assets.length; i++) {
+              asset_paths.push(this.assets[i].path);
+          }
+        makeCoverImage(false, asset_paths, canvas, 350,350);
       },
 
       toggleBackground(index) {
