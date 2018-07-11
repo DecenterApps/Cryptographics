@@ -5,7 +5,7 @@ import "../Utils/Functions.sol";
 import "../IAssetManager.sol";
 
 
-contract DigitalPrintImage is ImageToken,Functions {
+contract DigitalPrintImage is ImageToken, Functions {
 
     struct ImageMetadata {
         uint randomSeed;
@@ -22,7 +22,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     mapping(uint => ImageMetadata) public imageMetadata;
     mapping(uint => string) public idToIpfsHash;
 
-    address marketplaceContract;
+    address public marketplaceContract;
     IAssetManager assetManager;
 
 
@@ -30,6 +30,11 @@ contract DigitalPrintImage is ImageToken,Functions {
         require(msg.sender == address(marketplaceContract));
         _;
     }
+
+    /// @dev only for testing purposes
+    // function createImageTest() public returns(uint) {
+    //     return createImage(msg.sender);
+    // }
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
@@ -54,7 +59,7 @@ contract DigitalPrintImage is ImageToken,Functions {
         (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
         address _owner = msg.sender;
 
-        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
+        uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
 
         uint finalPrice = calculatePrice(pickedAssetPacks, _owner);
         require(msg.value >= finalPrice);
@@ -75,7 +80,7 @@ contract DigitalPrintImage is ImageToken,Functions {
             author: _author,
             owner: _owner,
             ipfsHash: _ipfsHash
-            });
+        });
 
         idToIpfsHash[id] = _ipfsHash;
         seedExists[finalSeed] = true;
@@ -86,17 +91,19 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _pickedAssets is array of picked packs
     /// @param _owner is address of image owner
     /// @return finalPrice for the image
-    function calculatePrice(uint [] _pickedAssets, address _owner) public view returns (uint) {
+    function calculatePrice(uint[] _pickedAssets, address _owner) public view returns (uint) {
         if(_pickedAssets.length == 0) {
             return 0;
         }
-        uint [] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
+
+        uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
         uint finalPrice = 0;
         for(uint i=0; i<pickedAssetPacks.length; i++) {
             if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false) {
                 finalPrice += assetManager.getAssetPackPrice(pickedAssetPacks[i]);
             }
         }
+
         return finalPrice;
     }
 
@@ -117,7 +124,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _marketplaceContract address of marketplace contract
     function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
         // not required while on testnet
-        // require(address(marketplaceContract) == 0x0);
+        // @dev require(address(marketplaceContract) == 0x0);
         marketplaceContract = _marketplaceContract;
     }
 
@@ -125,12 +132,16 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @notice approving image to be taken from specific address
     /// @param _to address that we give permission to take image
     /// @param _imageId we are willing to give
-    function _approveByMarketplace(address _to, uint256 _imageId) public onlyMarketplaceContract {
+    function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
         require(tokensForOwner[_imageId] != 0x0);
-        if (_getApproved(_imageId) != 0x0 || _to != 0x0) {
-            tokensForApproved[_imageId] = _to;
-            emit Approval(msg.sender, _to, _imageId);
-        }
+        require(ownerOf(_imageId) == _from);
+
+        tokensForApproved[_imageId] = 0x0;
+        removeImage(_from, _imageId);
+        addImage(_to, _imageId);
+
+        emit Approval(_from, 0, _imageId);
+        emit Transfer(_from, _to, _imageId);
     }
 
 

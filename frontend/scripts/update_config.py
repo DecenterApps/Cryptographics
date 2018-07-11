@@ -4,7 +4,7 @@ import json
 
 """
 ==============
-This script is going to fill config.dist.json file with addresses and abi's from last build. 
+This script is going to fill config.json file with addresses and abi's from last build. 
 This means whenever you do "truffle migrate", you need to run this script and update config file.
 ==============
 

@@ -4,19 +4,28 @@
 
 ### To run application
 - Make sure you have solc compiler version >=0.4.23
-- To deploy contracts:  
+- To deploy and run application with new contracts:  
 ```
+$ git pull | git clone & cd Cryptographics
 $ npm install
 $ truffle migrate --network=kovan
 $ cd frontend/scripts
+$ cp config.json.dist config.json
 $ python update_config.py
+
+```
+- To run application with already deployed and used contracts:
+```
+$ git pull | git clone & cd Cryptographics
+$ npm install
+$ cd frontend/scripts
+$ cp config.json.dist config.json
 ```
 
-After that, to run client side :
+After that, to run client side from root of the project:
 
-
-- `$ yarn start`
-- `open localhost:3000`
+- `$ yarn dev`
+- `open http://127.0.0.1:3300/create`
 
 
 ### Documentation for contracts 
