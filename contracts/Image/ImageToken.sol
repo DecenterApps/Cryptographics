@@ -47,7 +47,7 @@ contract ImageToken is Ownable,ERC721 {
     /// @param _imageId id of image we have that we send to another address
     function transfer(address _to, uint256 _imageId) public {
         require(tokensForOwner[_imageId] != 0x0);
-        require(tokensForOwner[_imageId] != msg.sender);
+        require(ownerOf(_imagerId) == msg.sender);
 
         tokensForApproved[_imageId] = 0x0;
         removeImage(msg.sender, _imageId);

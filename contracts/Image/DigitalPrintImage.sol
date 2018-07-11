@@ -125,7 +125,7 @@ contract DigitalPrintImage is ImageToken, Functions {
     /// @param _imageId we are willing to give
     function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
         require(tokensForOwner[_imageId] != 0x0);
-        require(tokensForOwner[_imageId] != _from);
+        require(ownerOf(_imageId) == _from);
 
         tokensForApproved[_imageId] = 0x0;
         removeImage(_from, _imageId);
