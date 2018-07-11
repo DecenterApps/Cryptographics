@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div>
+            <canvas></canvas>
+        </div>
         <slider-gallery></slider-gallery>
         <home-gallery :displayFilters="true" :images="blocks"></home-gallery>
         <Footer></Footer>
