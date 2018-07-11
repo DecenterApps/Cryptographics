@@ -58,7 +58,6 @@
             ratio: '1:1',
             frame: false,
         },
-      canvas_ratio: '1:1'
     }),
 
     methods: {
@@ -126,6 +125,7 @@
       },
 
       toggleBackground(index) {
+          console.log(index);
         if (this.assets[index].attribute === 122) {
           return this.assets[index].attribute = 222;
         }

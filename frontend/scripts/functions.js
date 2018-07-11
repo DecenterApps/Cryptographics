@@ -251,7 +251,10 @@ async function getImage(random_seed, iterations, potentialAssets) {
         let metadata = getAssetMetadata(x, pot_assets[i]);
 
         if (metadata != null) {
-            pickedAssets.push(metadata);
+            pickedAssets.push({
+              ...metadata,
+              background: attributes[i],
+            });
         }
     }
     return pickedAssets;
