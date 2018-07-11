@@ -5,7 +5,7 @@ import "../Utils/Functions.sol";
 import "../AssetManager.sol";
 
 
-contract DigitalPrintImage is ImageToken,Functions {
+contract DigitalPrintImage is ImageToken, Functions {
 
     struct ImageMetadata {
         uint randomSeed;
@@ -80,7 +80,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _pickedAssets is array of picked assets
     /// @param _owner is address of image owner
     /// @return finalPrice for the image
-    function calculatePrice(uint [] _pickedAssets, address _owner) public view returns (uint) {
+    function calculatePrice(uint[] _pickedAssets, address _owner) public view returns (uint) {
         if(_pickedAssets.length == 0) {
             return 0;
         }
@@ -115,7 +115,7 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @param _marketplaceContract address of marketplace contract
     function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
         // not required while on testnet
-        // require(address(marketplaceContract) == 0x0);
+        // @dev require(address(marketplaceContract) == 0x0);
         marketplaceContract = _marketplaceContract;
     }
 
@@ -123,12 +123,16 @@ contract DigitalPrintImage is ImageToken,Functions {
     /// @notice approving image to be taken from specific address
     /// @param _to address that we give permission to take image
     /// @param _imageId we are willing to give
-    function _approveByMarketplace(address _to, uint256 _imageId) public onlyMarketplaceContract {
+    function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
         require(tokensForOwner[_imageId] != 0x0);
-        if (_getApproved(_imageId) != 0x0 || _to != 0x0) {
-            tokensForApproved[_imageId] = _to;
-            emit Approval(msg.sender, _to, _imageId);
-        }
+        require(tokensForOwner[_imageId] != _from);
+
+        tokensForApproved[_imageId] = 0x0;
+        removeImage(_from, _imageId);
+        addImage(_to, _imageId);
+
+        emit Approval(_from, 0, _imageId);
+        emit Transfer(_from, _to, _imageId);
     }
 
 }
