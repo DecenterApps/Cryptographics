@@ -172,12 +172,12 @@ contract AssetManager is Ownable {
     /// @notice Method to get all info for an asset
     /// @param id is id of asset
     /// @return All data for an asset
-    function getAssetInfo(uint id) public view returns (uint, uint, bytes32){
+    function getAssetInfo(uint id) public view returns (uint, uint, uint, bytes32){
         require(id >= 0);
         require(id < numberOfAssets);
         Asset memory asset = assets[id];
 
-        return (asset.id, asset.attributes, asset.ipfsHash);
+        return (asset.id, asset.pack_id, asset.attributes, asset.ipfsHash);
     }
 
 
