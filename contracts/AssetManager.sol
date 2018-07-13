@@ -177,7 +177,7 @@ contract AssetManager is Ownable {
 
         return finalPacks;
     }
-    
+
     /// @notice Method to get all info for an asset
     /// @param id is id of asset
     /// @return All data for an asset
@@ -188,8 +188,6 @@ contract AssetManager is Ownable {
 
         return (asset.id, asset.packId, asset.attributes, asset.ipfsHash);
     }
-
-
 
     function getAssetPacksUserCreated(address _address) public view returns(uint[]){
         return createdAssetPacks[_address];
@@ -238,7 +236,9 @@ contract AssetManager is Ownable {
     ///@notice Function where all artists can withdraw their funds
     function withdraw() public {
         require(msg.sender != address(0));
+        
         uint amount = artistBalance[msg.sender];
+        artistBalance[msg.sender] = 0;
 
         msg.sender.transfer(amount);
     }
