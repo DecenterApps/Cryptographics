@@ -61,7 +61,7 @@ contract AssetManager is Ownable {
             assetIds: ids,
             creator: msg.sender,
             price: _packPrice
-            }));
+        }));
 
         createdAssetPacks[msg.sender].push(numberOfAssetPacks);
         numberOfAssetPacks++;
@@ -100,7 +100,8 @@ contract AssetManager is Ownable {
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
         require(msg.value >= assetPack.price);
-        artistBalance[assetPack.creator] += assetPack.price;
+        // if someone wants to pay more money for asset pack, we will give all of it to creator
+        artistBalance[assetPack.creator] += msg.value;
         boughtAssetPacks[msg.sender].push(_assetPackId);
     }
 
@@ -121,14 +122,16 @@ contract AssetManager is Ownable {
     /// @param _packId is id of pack
     function checkHasPermissionForPack(address _address, uint _packId) public view returns (bool) {
         AssetPack memory assetPack = assetPacks[_packId];
-        if(assetPack.creator ==  _address) {
+        if (assetPack.creator == _address) {
             return true;
         }
-        for(uint i=0; i<boughtAssetPacks[_address].length; i++) {
-            if(boughtAssetPacks[_address][i] == _packId) {
+
+        for(uint i = 0; i<boughtAssetPacks[_address].length; i++) {
+            if (boughtAssetPacks[_address][i] == _packId) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -147,31 +150,34 @@ contract AssetManager is Ownable {
 
     function pickUniquePacks(uint[] assetIds) public view returns (uint[]){
         require(assetIds.length > 0);
+
         uint[] memory packs = new uint[](assetIds.length);
-        uint last = 1;
-        Asset memory asset1 = assets[assetIds[0]];
-        packs[0] = asset1.packId;
-        uint flag = 0;
-        for(uint i=0; i<assetIds.length; i++){
+        uint packsCount = 0;
+        
+        for(uint i = 0; i<assetIds.length; i++){
             Asset memory asset = assets[assetIds[i]];
-            for(uint j=0; j<last;j++) {
+            bool exists = false;
+
+            for(uint j = 0; j<packsCount; j++) {
                 if(asset.packId == packs[j]) {
-                    flag = 1;
+                    exists = true;
                 }
             }
-            if(flag == 0) {
-                packs[last] = asset.packId;
-                last++;
+
+            if (!exists) {
+                packs[packsCount] = asset.packId;
+                packsCount++;
             }
-            flag = 0;
         }
 
-        uint[] memory finalPacks = new uint[](last);
-        for(uint z=0; z<last; z++) {
-            finalPacks[z] = packs[z];
+        uint[] memory finalPacks = new uint[](packsCount);
+        for(i = 0; i<packsCount; i++) {
+            finalPacks[i] = packs[i];
         }
+
         return finalPacks;
     }
+    
     /// @notice Method to get all info for an asset
     /// @param id is id of asset
     /// @return All data for an asset
