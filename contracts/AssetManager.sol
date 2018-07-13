@@ -6,11 +6,11 @@ contract AssetManager is Ownable {
 
     struct Asset {
         uint id;
+        uint packId;
         /// atributes field is going to be 3 digit uint where every digit can be "1" or "2"
         /// 1st digit will tell us if asset is background 1 - true / 2 - false
         /// 2nd digit will tell us if rotation is enabled 1 - true / 2 - false
         /// 3rd digit will tell us if scaling  is enabled 1 - true / 2 - false
-        uint pack_id;
         uint attributes;
         bytes32 ipfsHash;
     }
@@ -27,8 +27,8 @@ contract AssetManager is Ownable {
     uint numberOfAssets;
     uint numberOfAssetPacks;
 
-    Asset[] assets;
-    AssetPack[] assetPacks;
+    Asset[] public assets;
+    AssetPack[] public assetPacks;
 
     mapping(address => uint) artistBalance;
     mapping(bytes32 => bool) hashExists;
@@ -38,7 +38,6 @@ contract AssetManager is Ownable {
 
 
     /// @notice Function to create assetpack
-    /// @dev ADD ATTRIBUTES VALIDATION
     /// @param _packCover is cover image for asset pack
     /// @param _name is name of the asset pack
     /// @param _attributes is array of attributes
@@ -52,8 +51,8 @@ contract AssetManager is Ownable {
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
         for(uint i=0; i< _ipfsHashes.length; i++){
-            ids[i] = numberOfAssets;
-            createAsset(_attributes[i], _ipfsHashes[i], numberOfAssetPacks);
+            require(isAttributesValid(_attributes[i]), "Attributes are not valid.");
+            ids[i] = createAsset(_attributes[i], _ipfsHashes[i], numberOfAssetPacks);
         }
 
         assetPacks.push(AssetPack({
@@ -74,18 +73,22 @@ contract AssetManager is Ownable {
     /// @dev add attributes validation
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
-    function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public {
+    function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public returns(uint) {
         require(hashExists[_ipfsHash] == false);
 
+        uint id = numberOfAssets;
+
         assets.push(Asset({
-            id : numberOfAssets,
-            pack_id: _packId,
+            id : id,
+            packId: _packId,
             attributes: _attributes,
             ipfsHash : _ipfsHash
             }));
 
         hashExists[_ipfsHash] = true;
         numberOfAssets++;
+
+        return id;
     }
 
 
@@ -147,17 +150,17 @@ contract AssetManager is Ownable {
         uint[] memory packs = new uint[](assetIds.length);
         uint last = 1;
         Asset memory asset1 = assets[assetIds[0]];
-        packs[0] = asset1.pack_id;
+        packs[0] = asset1.packId;
         uint flag = 0;
         for(uint i=0; i<assetIds.length; i++){
             Asset memory asset = assets[assetIds[i]];
             for(uint j=0; j<last;j++) {
-                if(asset.pack_id == packs[j]) {
+                if(asset.packId == packs[j]) {
                     flag = 1;
                 }
             }
             if(flag == 0) {
-                packs[last] = asset.pack_id;
+                packs[last] = asset.packId;
                 last++;
             }
             flag = 0;
@@ -177,7 +180,7 @@ contract AssetManager is Ownable {
         require(id < numberOfAssets);
         Asset memory asset = assets[id];
 
-        return (asset.id, asset.pack_id, asset.attributes, asset.ipfsHash);
+        return (asset.id, asset.packId, asset.attributes, asset.ipfsHash);
     }
 
 
@@ -280,6 +283,21 @@ contract AssetManager is Ownable {
             covers[i] = assetPack.packCover;
         }
         return covers;
+    }
+
+    function isAttributesValid(uint attributes) private pure returns(bool) {
+        if (attributes < 100 || attributes > 999) {
+            return false;
+        }
+
+        while (attributes > 0) {
+            if (attributes % 10 != 1 && attributes % 10 != 2) {
+                return false;
+            } 
+            attributes = attributes / 10;
+        }
+
+        return true;
     }
 
 
