@@ -117,7 +117,6 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     }
 
 
-
     function getImageMetadata(uint _imageId) public view returns(uint, bytes32[], uint, string, address, string) {
         require(_imageId < numOfImages);
 
@@ -133,7 +132,6 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         );
 
     }
-
 
 
     /// @notice adds marketplace address to contract only if it doesn't already exist

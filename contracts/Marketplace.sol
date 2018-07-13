@@ -13,11 +13,13 @@ contract Marketplace is Ownable {
 
     DigitalPrintImage public digitalPrintImageContract;
 
-    uint public creatorPercentage = 5; // 5 percentage
+    uint public creatorPercentage = 3; // 3 percentage
+    uint public marketplacePercentage = 2; // 2 percentage
     uint public numberOfAds;
     uint[] public allAds;
     //image id to Ad
     mapping(uint => Ad) public sellAds;
+    mapping(address => uint) public balances;
 
     constructor(address _digitalPrintImageContract) public{
         digitalPrintImageContract = DigitalPrintImage(_digitalPrintImageContract);
@@ -76,10 +78,18 @@ contract Marketplace is Ownable {
     /// @notice Function to buy image from Marketplace
     /// @param _imageId is Id of image we are going to buy
     function buy(uint _imageId) public payable {
-        require(sellAds[_imageId].exists == true);
+        require(isImageOnSale(_imageId));
         require(msg.value >= sellAds[_imageId].price);
 
         removeOrder(_imageId);
+
+        address _creator;
+        address _imageOwner = digitalPrintImageContract.ownerOf(_imageId);
+        (,,_creator,) = digitalPrintImageContract.imageMetadata(_imageId);
+
+        balances[_creator] = msg.value * 3 / 100;
+        balances[owner] = msg.value * 2 / 100;
+        balances[_imageOwner] = msg.value * 95 / 100;
 
         digitalPrintImageContract.transferFromMarketplace(sellAds[_imageId].exchanger, msg.sender, _imageId);
     }
@@ -98,5 +108,13 @@ contract Marketplace is Ownable {
     /// @param _imageId is id of image we want to remove
     function removeOrder(uint _imageId) private {
         sellAds[_imageId].exists = false;
+    }
+
+    function withdraw() public {
+        
+        uint amount = balances[msg.sender];
+        balances[msg.sender] = 0;
+
+        msg.sender.transfer(amount);
     }
 }
