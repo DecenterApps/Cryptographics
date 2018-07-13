@@ -283,7 +283,7 @@ contract AssetManager is Ownable {
     function getCoversForPacks(uint[] _packIds) public view returns (bytes32[]) {
         require(_packIds.length > 0);
         bytes32[] memory covers = new bytes32[](_packIds.length);
-        for(uint i=0; i<_packIds.length; i++) {
+        for(uint i = 0; i<_packIds.length; i++) {
             AssetPack memory assetPack = assetPacks[_packIds[i]];
             covers[i] = assetPack.packCover;
         }
@@ -295,11 +295,13 @@ contract AssetManager is Ownable {
             return false;
         }
 
-        while (attributes > 0) {
-            if (attributes % 10 != 1 && attributes % 10 != 2) {
+        uint num = attributes;
+
+        while (num > 0) {
+            if (num % 10 != 1 && num % 10 != 2) {
                 return false;
             } 
-            attributes = attributes / 10;
+            num = num / 10;
         }
 
         return true;
