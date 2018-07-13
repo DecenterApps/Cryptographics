@@ -50,7 +50,7 @@ contract AssetManager is Ownable {
 
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
-        for(uint i=0; i< _ipfsHashes.length; i++){
+        for(uint i = 0; i<_ipfsHashes.length; i++){
             require(isAttributesValid(_attributes[i]), "Attributes are not valid.");
             ids[i] = createAsset(_attributes[i], _ipfsHashes[i], numberOfAssetPacks);
         }
@@ -94,7 +94,7 @@ contract AssetManager is Ownable {
 
     function buyAssetPack(uint _assetPackId) public payable {
         ///validate if user have already bought permission for this pack
-        for(uint i=0; i<boughtAssetPacks[msg.sender].length; i++) {
+        for(uint i = 0; i<boughtAssetPacks[msg.sender].length; i++) {
             require(boughtAssetPacks[msg.sender][i] != _assetPackId);
         }
 

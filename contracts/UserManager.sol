@@ -7,30 +7,27 @@ contract UserManager {
         bytes32 hashToProfilePicture;
     }
 
-    User [] users;
     uint numberOfUsers;
 
     mapping(string => bool) userNameExists;
     mapping(bytes32 => bool) profilePictureExists;
-
-
-
-    mapping(string => uint) usernameToId;
+    /// @dev remove this if not needed on frontend/check if there is a case where we want to get user by username
+    mapping(string => address) usernameToAddress;
     mapping(address => User) addressToUser;
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
         require(userNameExists[_username] == false);
         require(profilePictureExists[_hashToProfilePicture] == false);
 
-        users.push(User({
+        addressToUser[msg.sender] = User({
             username: _username,
             hashToProfilePicture: _hashToProfilePicture
-            }));
+        });
 
         userNameExists[_username] = true;
         profilePictureExists[_hashToProfilePicture] = true;
-        usernameToId[_username] = numberOfUsers;
-        addressToUser[msg.sender] = users[numberOfUsers];
+        usernameToAddress[_username] = msg.sender;
+
         numberOfUsers++;
     }
 
