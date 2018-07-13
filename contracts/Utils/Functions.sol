@@ -23,12 +23,12 @@ contract Functions {
     /// @notice Function which decodes bytes32 to array of integers
     /// @param _potentialAssets are potential assets user would like to have
     /// @return array of assetIds
-    function decodeAssets(bytes32[] _potentialAssets) public view returns (uint[]) {
+    function decodeAssets(bytes32[] _potentialAssets) public pure returns (uint[]) {
         require(_potentialAssets.length > 0);
         uint[] memory assets = new uint[](_potentialAssets.length*10);
         uint numberOfAssets = 0;
 
-        for(uint j=0; j<_potentialAssets.length; j++){
+        for(uint j = 0; j<_potentialAssets.length; j++){
             uint input;
             bytes32 pot = _potentialAssets[j];
 
@@ -36,7 +36,7 @@ contract Functions {
                 input := pot
             }
 
-            for(uint i=0;i<10;i++){
+            for(uint i = 0; i<10; i++){
                 uint mask = (2 << (i * 24)) / 2;
                 uint b = (input & (mask * 16777215)) / mask;
 
@@ -48,48 +48,42 @@ contract Functions {
         }
 
         uint[] memory ass = new uint[](numberOfAssets);
-        for(uint z=0; z< numberOfAssets; z++){
-            ass[z] = assets[z];
+        for(i = 0; i<numberOfAssets; i++){
+            ass[i] = assets[i];
         }
-
 
         return ass;
     }
 
 
     /// @notice Function to pick random assets from potentialAssets array
-    /// @param _random_seed is random seed at that moment
+    /// @param _finalSeed is final random seed
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @return uint[] array of randomly picked assets
-    function pickRandomAssets(uint _random_seed, uint _iterations, bytes32[] _potentialAssets) public view returns(uint[],uint[],uint[]) {
-        require(_iterations!=0);
-        require(_random_seed!=0);
+    function pickRandomAssets(uint _finalSeed, bytes32[] _potentialAssets) public pure returns(uint[],uint[],uint[]) {
+        require(_finalSeed != 0);
         require(_potentialAssets.length > 0);
-        _random_seed = uint(getFinalSeed(_random_seed,_iterations));
 
         uint[] memory assetIds = decodeAssets(_potentialAssets);
         uint[] memory pickedIds = new uint[](assetIds.length);
         uint[] memory x = new uint[](assetIds.length);
         uint[] memory y = new uint[](assetIds.length);
 
-
-
+        uint finalSeedCopy = _finalSeed;
         uint index = 0;
 
-        for(uint i=0; i<assetIds.length; i++){
-            _random_seed = uint(keccak256(_random_seed, assetIds[i]));
-            if(_random_seed % 2 == 0){
-                //randoms[index] = _random_seed;
+        for(uint i = 0; i<assetIds.length; i++){
+            finalSeedCopy = uint(keccak256(abi.encodePacked(finalSeedCopy, assetIds[i])));
+            if(finalSeedCopy % 2 == 0){
                 pickedIds[index] = assetIds[i];
-                (x[index],y[index],,) = pickRandomAssetPosition(_random_seed);
+                (x[index],y[index],,) = pickRandomAssetPosition(finalSeedCopy);
                 index++;
             }
-
         }
 
         uint[] memory finalPicked = new uint[](index);
-        for(uint z=0; z<index; z++){
-            finalPicked[z] = pickedIds[z];
+        for(i = 0; i<index; i++){
+            finalPicked[i] = pickedIds[i];
         }
 
         return (finalPicked,x,y);
@@ -100,7 +94,7 @@ contract Functions {
     /// @dev based on id and random_seed
     /// @param _random_seed is random seed for that image
     /// @return tuple of uints representing x,y,zoom,and rotation
-    function pickRandomAssetPosition(uint _random_seed) public view returns (uint,uint,uint,uint) {
+    function pickRandomAssetPosition(uint _random_seed) public pure returns (uint,uint,uint,uint) {
         require(_random_seed!=0);
         uint rs = _random_seed;
 
@@ -111,7 +105,7 @@ contract Functions {
         uint zoom;
         uint rotation;
 
-        if (rs %2 ==0) {
+        if (rs % 2 == 0) {
             x = rs%2450;
             y = rs%3500;
             zoom = rs%200 + 800;
@@ -130,12 +124,16 @@ contract Functions {
         require(_timestamp!=0);
         require(_randomHashIds.length == 10);
 
-        bytes32 randomSeed = keccak256(randomHashes[_randomHashIds[0]],
-            randomHashes[_randomHashIds[1]],randomHashes[_randomHashIds[2]],
-            randomHashes[_randomHashIds[3]], randomHashes[_randomHashIds[4]],
-            randomHashes[_randomHashIds[5]], randomHashes[_randomHashIds[6]],
-            randomHashes[_randomHashIds[7]], randomHashes[_randomHashIds[8]],
-            randomHashes[_randomHashIds[9]], _timestamp);
+        bytes32 randomSeed = keccak256(
+            abi.encodePacked(
+            randomHashes[_randomHashIds[0]], randomHashes[_randomHashIds[1]],
+            randomHashes[_randomHashIds[2]], randomHashes[_randomHashIds[3]],
+            randomHashes[_randomHashIds[4]], randomHashes[_randomHashIds[5]],
+            randomHashes[_randomHashIds[6]], randomHashes[_randomHashIds[7]],
+            randomHashes[_randomHashIds[8]], randomHashes[_randomHashIds[9]],
+            _timestamp
+            )
+        );
 
         return uint(randomSeed);
     }
@@ -145,14 +143,14 @@ contract Functions {
     /// @param _random_seed is initially given random seed
     /// @param _iterations is number of iterations
     /// @return final seed for user as uint
-    function getFinalSeed(uint _random_seed, uint _iterations) public view returns (bytes32){
+    function getFinalSeed(uint _random_seed, uint _iterations) public pure returns (bytes32){
         require(_random_seed!=0);
         require(_iterations!=0);
         bytes32 finalSeed = bytes32(_random_seed);
 
-        finalSeed = keccak256(_random_seed,_iterations);
-        for(uint i=0; i<_iterations; i++){
-            finalSeed = keccak256(finalSeed,i);
+        finalSeed = keccak256(abi.encodePacked(_random_seed, _iterations));
+        for(uint i = 0; i<_iterations; i++){
+            finalSeed = keccak256(abi.encodePacked(finalSeed, i));
         }
 
         return finalSeed;
@@ -168,11 +166,10 @@ contract Functions {
     }
 
     function getSeed(uint assetId, uint random_seed) public pure returns(uint) {
-        return uint(keccak256(random_seed,assetId));
+        return uint(keccak256(abi.encodePacked(random_seed, assetId)));
     }
 
-    function toHex(uint random_seed) public view returns (bytes32) {
+    function toHex(uint random_seed) public pure returns (bytes32) {
         return bytes32(random_seed);
     }
-
 }

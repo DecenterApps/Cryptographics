@@ -9,8 +9,7 @@ import "../UserManager.sol";
 contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
     struct ImageMetadata {
-        uint randomSeed;
-        uint iterations;
+        uint finalSeed;
         bytes32[] potentialAssets;
         uint timestamp;
         address creator;
@@ -62,14 +61,13 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
             register(_author, "0x0");
         }
 
-        uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
-        uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
+        uint finalSeed = uint(getFinalSeed(calculateSeed(_randomHashIds, _timestamp), _iterations));
 
         require(seedExists[finalSeed] == false);
 
         uint[] memory pickedAssets;
 
-        (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
+        (pickedAssets,,) = pickRandomAssets(finalSeed, _potentialAssets);
         address _creator = msg.sender;
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
@@ -86,8 +84,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         uint id = createImage(_creator);
 
         imageMetadata[id] = ImageMetadata({
-            randomSeed: randomSeed,
-            iterations: _iterations,
+            finalSeed: finalSeed,
             potentialAssets: _potentialAssets,
             timestamp: _timestamp,
             creator: _creator,
@@ -121,14 +118,13 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
 
 
-    function getImageMetadata(uint _imageId) public view returns(uint, uint, bytes32[], uint, string, address, string) {
+    function getImageMetadata(uint _imageId) public view returns(uint, bytes32[], uint, string, address, string) {
         require(_imageId < numOfImages);
 
         ImageMetadata memory metadata = imageMetadata[_imageId];
 
         return(
-            metadata.randomSeed,
-            metadata.iterations,
+            metadata.finalSeed,
             metadata.potentialAssets,
             metadata.timestamp,
             addressToUser[metadata.creator].username,
