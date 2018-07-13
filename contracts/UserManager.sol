@@ -5,30 +5,37 @@ contract UserManager {
     struct User {
         string username;
         bytes32 hashToProfilePicture;
+        bool exists;
     }
 
     uint numberOfUsers;
 
-    mapping(string => bool) userNameExists;
+    mapping(string => bool) usernameExists;
     mapping(bytes32 => bool) profilePictureExists;
-    /// @dev remove this if not needed on frontend/check if there is a case where we want to get user by username
     mapping(string => address) usernameToAddress;
     mapping(address => User) addressToUser;
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
-        require(userNameExists[_username] == false);
+        require(usernameExists[_username] == false);
         require(profilePictureExists[_hashToProfilePicture] == false);
 
         addressToUser[msg.sender] = User({
             username: _username,
-            hashToProfilePicture: _hashToProfilePicture
+            hashToProfilePicture: _hashToProfilePicture,
+            exists: true
         });
 
-        userNameExists[_username] = true;
+        usernameExists[_username] = true;
         profilePictureExists[_hashToProfilePicture] = true;
         usernameToAddress[_username] = msg.sender;
 
         numberOfUsers++;
+    }
+
+    function changeProfilePicture(bytes32 _hashToProfilePicture) public {
+        require(addressToUser[msg.sender].exists, "User doesn't exists");
+
+        addressToUser[msg.sender].hashToProfilePicture = _hashToProfilePicture;
     }
 
     function getUserInfo(address _address) public view returns(string, bytes32) {

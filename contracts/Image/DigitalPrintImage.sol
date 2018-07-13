@@ -3,17 +3,17 @@ pragma solidity ^0.4.23;
 import "./ImageToken.sol";
 import "../Utils/Functions.sol";
 import "../IAssetManager.sol";
+import "../UserManager.sol";
 
 
-contract DigitalPrintImage is ImageToken, Functions {
+contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
     struct ImageMetadata {
         uint randomSeed;
         uint iterations;
         bytes32[] potentialAssets;
         uint timestamp;
-        string author;
-        address owner;
+        address creator;
         string ipfsHash;
     }
 
@@ -46,8 +46,21 @@ contract DigitalPrintImage is ImageToken, Functions {
     /// @param _author is nickname of image owner
     /// @param _ipfsHash is ipfsHash of the image .png
     /// @return returns id of created image
-    function createImage(uint[] _randomHashIds, uint _timestamp, uint _iterations, bytes32[]  _potentialAssets, string _author, string _ipfsHash) public payable returns (uint) {
+    function createImage(
+        uint[] _randomHashIds,
+        uint _timestamp,
+        uint _iterations,
+        bytes32[] _potentialAssets,
+        string _author,
+        string _ipfsHash) public payable returns (uint) {
         require(_potentialAssets.length <= 5);
+        // if user exists send his username, if it doesn't check for some username that doesn't exists
+        require(msg.sender == usernameToAddress[_author] || !usernameExists[_author]);
+
+        // if user doesn't exists create that user with no profile picture
+        if (!usernameExists[_author]) {
+            register(_author, "0x0");
+        }
 
         uint randomSeed = calculateSeed(_randomHashIds, _timestamp);
         uint finalSeed = uint(getFinalSeed(randomSeed, _iterations));
@@ -57,28 +70,27 @@ contract DigitalPrintImage is ImageToken, Functions {
         uint[] memory pickedAssets;
 
         (pickedAssets,,) = pickRandomAssets(randomSeed,_iterations, _potentialAssets);
-        address _owner = msg.sender;
+        address _creator = msg.sender;
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
 
-        uint finalPrice = calculatePrice(pickedAssetPacks, _owner);
+        uint finalPrice = calculatePrice(pickedAssetPacks, _creator);
         require(msg.value >= finalPrice);
 
-        for(uint i=0; i<pickedAssetPacks.length ;i++) {
-            if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false){
+        for(uint i = 0; i<pickedAssetPacks.length ;i++) {
+            if(assetManager.checkHasPermissionForPack(_creator, pickedAssetPacks[i]) == false){
                 assetManager.givePermission(msg.sender, pickedAssetPacks[i]);
             }
         }
 
-        uint id = createImage(_owner);
+        uint id = createImage(_creator);
 
         imageMetadata[id] = ImageMetadata({
             randomSeed: randomSeed,
             iterations: _iterations,
             potentialAssets: _potentialAssets,
             timestamp: _timestamp,
-            author: _author,
-            owner: _owner,
+            creator: _creator,
             ipfsHash: _ipfsHash
         });
 
@@ -98,7 +110,7 @@ contract DigitalPrintImage is ImageToken, Functions {
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(_pickedAssets);
         uint finalPrice = 0;
-        for(uint i=0; i<pickedAssetPacks.length; i++) {
+        for(uint i = 0; i<pickedAssetPacks.length; i++) {
             if(assetManager.checkHasPermissionForPack(_owner, pickedAssetPacks[i]) == false) {
                 finalPrice += assetManager.getAssetPackPrice(pickedAssetPacks[i]);
             }
@@ -114,7 +126,15 @@ contract DigitalPrintImage is ImageToken, Functions {
 
         ImageMetadata memory metadata = imageMetadata[_imageId];
 
-        return(metadata.randomSeed, metadata.iterations, metadata.potentialAssets, metadata.timestamp, metadata.author, metadata.owner, metadata.ipfsHash);
+        return(
+            metadata.randomSeed,
+            metadata.iterations,
+            metadata.potentialAssets,
+            metadata.timestamp,
+            addressToUser[metadata.creator].username,
+            ownerOf(_imageId),
+            metadata.ipfsHash
+        );
 
     }
 
@@ -130,6 +150,7 @@ contract DigitalPrintImage is ImageToken, Functions {
 
 
     /// @notice approving image to be taken from specific address
+    /// @param _from address from which we transfer image
     /// @param _to address that we give permission to take image
     /// @param _imageId we are willing to give
     function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
