@@ -1,9 +1,8 @@
 const utils = require('./utils');
 const Web3 = require('web3');
-const util = require('ethereumjs-util');
 const leftPad = require('left-pad')
 const conf = require('./config.json');
-const bs58 = require('bs58');
+const starter_packs = require('./starter_packs.json');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
@@ -279,6 +278,20 @@ async function getAssetStats(id) {
     }
 }
 
+function generatePacks() {
+    let packId = starter_packs["0"].id;
+    let packData = starter_packs["0"].data;
+
+    let pack = {
+        id: packId,
+        data: packData
+    }
+    let arr = [];
+    arr.push(pack);
+    console.log(pack);
+    return arr;
+}
+
 async function test() {
     // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
     // printImageData(assets);
@@ -323,5 +336,6 @@ module.exports = {
     getCoversForAssetPacks,
     getAssetPacksNames,
     getPackInformation,
-    getPaginatedAssetPacks
+    getPaginatedAssetPacks,
+    generatePacks
 }

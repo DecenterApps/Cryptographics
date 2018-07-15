@@ -11,7 +11,7 @@
                 <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs
                 </button>
                 <div class="selected-asset-packs">
-                    <div class="asset-pack-circle small selected" v-for="asset in selectedAssetPacks">
+                    <div class="asset-pack-circle small selected" v-for="asset in selected_packs">
                         {{asset.id}}
                     </div>
                 </div>
@@ -61,6 +61,7 @@
       image_price: 0,
       potential_assets: [],
       all_assets: [],
+      selected_packs: [],
     }),
     props: ['selectedAssetPacks'],
     methods: {
@@ -70,7 +71,7 @@
         let image = canvas.toDataURL('image/png');
         console.log(image);
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
-        let pot = this.selectedAssetPacks.map(assetPack =>
+        let pot = this.selected_packs.map(assetPack =>
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
         console.log(pot);
@@ -89,7 +90,11 @@
 
       },
       async renderCanvas() {
-        let pot = this.selectedAssetPacks.map(assetPack =>
+        if(window.sessionStorage.length > 0) {
+            this.selected_packs.push(...functions.generatePacks());
+        }
+        this.selected_packs.push(...this.selectedAssetPacks);
+        let pot = this.selected_packs.map(assetPack =>
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
         console.log(pot);
@@ -115,11 +120,31 @@
         this.canvasData.ratio = ratio;
       }
     },
-
+      async created() {
+          if (window.sessionStorage.length > 0) {
+              this.random_hash_ids = JSON.parse(sessionStorage.getItem("random_hash_ids"));
+              this.timestamp = sessionStorage.getItem("timestamp");
+              this.iterations = sessionStorage.getItem("iterations");
+              this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+              this.random_seed = await functions.convertSeed(this.random_seed);
+              console.log("Random hash ids: " + this.random_hash_ids);
+              console.log("Random seed " + this.random_seed);
+              console.log("Iterations: " + this.iterations);
+              console.log("Timestamp : " + this.timestamp);
+              await this.renderCanvas()
+          }
+      },
     async beforeCreate() {
-      this.random_hash_ids = functions.pickTenRandoms();
-      this.timestamp = new Date().getTime();
-      this.metamask_account = await getAccounts();
+        this.metamask_account = await getAccounts();
+        //If session storage is empty then we will generate new params
+        if(window.sessionStorage.length == 0) {
+          this.random_hash_ids = functions.pickTenRandoms();
+          this.timestamp = new Date().getTime();
+          this.iterations = 0;
+          this.all_assets = await methods.loadDataForAssets();
+          this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
+          this.random_seed = await functions.convertSeed(this.random_seed);
+        }
       window.node = new IPFS({
         repo: 'cryptographics',
         config: {
@@ -130,14 +155,11 @@
         }
       });
 
-      this.iterations = 0;
-      this.all_assets = await methods.loadDataForAssets();
-      this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
-      this.random_seed = await functions.convertSeed(this.random_seed);
     },
 
     watch: {
       selectedAssetPacks: async function () {
+          this.selected_packs = this.selectedAssetPacks();
         this.iterations = 0;
         this.timestamp = new Date().getTime();
         this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
