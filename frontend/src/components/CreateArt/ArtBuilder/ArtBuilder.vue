@@ -91,9 +91,10 @@
       },
       async renderCanvas() {
         if(window.sessionStorage.length > 0) {
-            this.selected_packs.push(...functions.generatePacks());
+            this.selected_packs = this.selected_packs.concat(functions.generatePacks());
+            this.selected_packs = [...new Set([...this.selected_packs ,...functions.generatePacks()])];
         }
-        this.selected_packs.push(...this.selectedAssetPacks);
+        this.selected_packs = [...new Set([...this.selected_packs, ...this.selectedAssetPacks])];
         let pot = this.selected_packs.map(assetPack =>
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
@@ -132,6 +133,7 @@
               console.log("Iterations: " + this.iterations);
               console.log("Timestamp : " + this.timestamp);
               await this.renderCanvas()
+              window.sessionStorage.clear();
           }
       },
     async beforeCreate() {
@@ -159,7 +161,7 @@
 
     watch: {
       selectedAssetPacks: async function () {
-          this.selected_packs = this.selectedAssetPacks();
+        this.selected_packs = this.selectedAssetPacks;
         this.iterations = 0;
         this.timestamp = new Date().getTime();
         this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
