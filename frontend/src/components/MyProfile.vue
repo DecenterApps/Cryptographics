@@ -88,20 +88,12 @@
     methods: {
       async generateData() {
         await this.getImages();
-        await this.getCreatedAssetPacks();
-        await this.getBoughtAssets();
         await this.getAllAssets();
         await this.getAssetPacks();
       },
 
       async getImages() {
         this.my_images_on_chain = await functions.getUserImages(this.metamask_account);
-      },
-
-
-      async getBoughtAssets() {
-        this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
-        this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
       },
 
       async getAllAssets() {
