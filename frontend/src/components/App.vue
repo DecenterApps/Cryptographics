@@ -19,10 +19,12 @@
 <style src="../templates/styles/reset.css"></style>
 <style lang="scss" src="../templates/styles/common.scss"></style>
 <style>
+    *, *:after, *:before {
+        box-sizing: border-box;
+    }
     body, html {
         font-family: Roboto, sans-serif;
     }
-
     @font-face {
         font-family: 'YoungSerif-Regular';
         src: url('../assets/fonts/YoungSerif-Regular.eot');
