@@ -1,25 +1,129 @@
-.default-button {
-  background-color: #fff;
-  border-radius: 5px;
-  outline: 0;
-  border: 0;
-  height: 33px;
-  width: 74px;
-  cursor: pointer;
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+p {
+  color: #717171;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: .5px;
+  margin-bottom: 16px;
+}
 
-  &.no-background {
-    background: 0;
+.large-title {
+  font-family: 'YoungSerif-Regular', serif;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.icon-button {
+  margin: 0; padding: 0;
+  outline: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.default-button {
+  outline: 0;
+  padding: 9px;
+  min-width: 105px;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 12px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.default-input {
+    outline: 0;
+    padding: 9px;
+    font-size: 12px;
+    background-color: transparent;
+    color: #000;
     border: 1px solid #000;
-    width: auto;
-    padding: 0 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.default-button.button-negative {
+  color: #fff;
+  background-color: #000;
+}
+
+.default-button.no-background {
+  background: none;
+  border: 1px solid #000;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 17px;
+  .fieldset-title {
+    color: #949494;
+    font-size: 12px;
+    margin-bottom: 6px;
+    display: block
   }
-  &.submit {
-    background-color: #000;
-    color: #fff;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  input {
+    flex: 0 0 48%;
+  }
+}
+
+.label {
+  font-size: 12px;
+}
+
+.radio-input {
+  display: block;
+  margin-bottom: 8px;
+  cursor: pointer;
+  input {
+    display: none;
+    &:checked {
+      & + span:before {
+        background-color: #000;
+      }
+    }
+  }
+  .label {
+    font-size: 12px;
+    &:before {
+      content: "";
+      display: inline-flex;
+      width: 15px; height: 15px;
+      border: 1px solid #000;
+      border-radius: 5px;
+      margin-right: 8px;
+      background-color: transparent;
+      transition: background-color .2s ease-in-out;
+      bottom: -2px;
+      position: relative;
+    }
+  }
+}
+
+.background-wrapper {
+  width: 100%;
+  position: relative;
+  .black-bg {
+      position: absolute;
+      top: 0;
+      height: 350px;
+      width: 100%;
+      background-color: #000;
+      margin: 0 auto;
+      z-index: -1;
+      overflow: hidden;
   }
 }
 

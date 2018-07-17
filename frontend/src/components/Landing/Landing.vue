@@ -6,7 +6,7 @@
                     <h2 class="large-title">Cryptographics</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                    <router-link to="/gallery" class="default-button button-negative">Gallery</router-link>
+                    <router-link tag="button" to="/gallery" class="default-button button-negative">Gallery</router-link>
                 </div>
                 <div class="right">
                     <div class="create-art">
@@ -17,6 +17,9 @@
                                 @click="renderCanvas">Recompose</button>
                         </div>
                         <div class="canvas-wrapper">
+                            <div class="overlay">
+                                <button class="icon-button"><img src="./assets/ico-download.png"></button>
+                            </div>
                             <canvas id="canvas"></canvas>
                             <img class="cg-stamp" src="./assets/cg-stamp.png">
                         </div>
@@ -35,7 +38,7 @@
                 <h3 class="large-title">Artist</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                <button class="default-button button-negative">Upload Assets Pack</button>
+                <router-link tag="button" to="" class="default-button button-negative">Upload Assets Pack</router-link>
             </div>
         </div>
         <div class="assets-slider">
@@ -142,43 +145,6 @@
 </script>
 
 <style scoped lang="scss">
-p {
-    color: #717171;
-    font-size: 12px;
-    line-height: 19px;
-    letter-spacing: .5px;
-    margin-bottom: 16px;
-}
-
-.default-button {
-    background-color: #fff;
-    color: #000;
-    border-radius: 5px;
-    outline: 0;
-    border: 1px solid #000;
-    width: auto;
-    height: auto;
-    cursor: pointer;
-    display: inline-flex;
-    padding: 9px 20px;
-    font-size: 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.default-button.button-negative {
-    color: #fff;
-    background-color: #000;
-}
-
-.default-button.no-background {
-    background: none;
-    border: 1px solid #000;
-    width: auto;
-    padding: 9px 20px;
-}
-
 .hero {
     background-color: #D9D9D9;
     padding: 45px 0;
@@ -188,14 +154,16 @@ p {
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-
+        .left {
+            p:last-of-type {
+                margin-bottom: 30px;
+            }
+        }
         .right {
             display: flex; 
             justify-content: flex-end;
         }
-
         @media screen and (max-width: 1120px) {
-
             flex-direction: column;
             .left {
                 margin-bottom: 30px;
@@ -206,7 +174,6 @@ p {
             }
             .right {
                 flex-direction: column;
-
                 .create-art {
                     flex-direction: column-reverse;
                     align-items: center;
@@ -230,11 +197,7 @@ p {
                     }
                 }
             }
-
         }
-    }
-    .large-title {
-        margin-bottom: 30px;
     }
     p {
         max-width: 320px;
@@ -255,6 +218,7 @@ p {
     }
 }
 .canvas-wrapper {
+    position: relative;
     margin: 0 20px;
     padding: 30px 30px 0 30px;
     background-color: #ffffff;
@@ -262,6 +226,24 @@ p {
     max-width:440px;
     flex-direction: column;
     align-items: flex-start;
+    .overlay {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        opacity: 0;
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity .2s ease-in-out;
+        .icon-button {
+            margin: 0 20px;
+        }
+    }
+    &:hover {
+        .overlay {
+            opacity: .7;
+        }
+    }
     canvas {
         background-color: white;
         width: 100%;
@@ -280,20 +262,18 @@ p {
         margin-bottom: 30px;
     }
 }
-
 .artist-cta {
     background-color: #D9D9D9;
+    padding: 70px 0;
     .container {
         width: 100%;
         max-width: 600px;
         text-align: center;
-        padding: 70px 0;
-        .large-title {
+        p:last-of-type {
             margin-bottom: 30px;
         }
     }
 }
-
 .assets-slider {
     background-color: #D9D9D9;
     padding: 0 0 50px;

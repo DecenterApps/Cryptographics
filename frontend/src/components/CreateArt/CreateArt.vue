@@ -49,21 +49,6 @@
 </script>
 
 <style scoped lang="scss">
-    .background-wrapper {
-        width: 100%;
-        position: relative;
-        .black-bg {
-            position: absolute;
-            top: 0;
-            height: 350px;
-            width: 100%;
-            background-color: #000;
-            margin: 0 auto;
-            z-index: -1;
-            overflow: hidden;
-        }
-    }
-
     .create-art-wrapper {
         background-color: #D9D9D9;
         min-height: calc(100vh - 70px);
