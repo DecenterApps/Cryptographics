@@ -175,9 +175,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.23;\n\ncontract ERC721 {\n    function implementsERC721() public pure returns (bool);\n    function totalSupply() public view returns (uint256 total);\n    function balanceOf(address _owner) public view returns (uint256 balance);\n    function ownerOf(uint256 _tokenId) public view returns (address owner);\n    function approve(address _to, uint256 _tokenId) public;\n    function transferFrom(address _from, address _to, uint256 _tokenId) public;\n    function transfer(address _to, uint256 _tokenId) public;\n    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);\n    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);\n}",
-  "sourcePath": "/Users/nikolaklipa/Decenter/Cryptographics/contracts/Image/ERC721.sol",
+  "sourcePath": "/Users/nikolamadjarevic/Desktop/Decenter/Cryptographics/contracts/Image/ERC721.sol",
   "ast": {
-    "absolutePath": "/Users/nikolaklipa/Decenter/Cryptographics/contracts/Image/ERC721.sol",
+    "absolutePath": "/Users/nikolamadjarevic/Desktop/Decenter/Cryptographics/contracts/Image/ERC721.sol",
     "exportedSymbols": {
       "ERC721": [
         1624
@@ -960,7 +960,7 @@
     "src": "0:705:3"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nikolaklipa/Decenter/Cryptographics/contracts/Image/ERC721.sol",
+    "absolutePath": "/Users/nikolamadjarevic/Desktop/Decenter/Cryptographics/contracts/Image/ERC721.sol",
     "exportedSymbols": {
       "ERC721": [
         1624
@@ -1748,5 +1748,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-07-13T12:59:48.843Z"
+  "updatedAt": "2018-07-17T09:41:19.473Z"
 }

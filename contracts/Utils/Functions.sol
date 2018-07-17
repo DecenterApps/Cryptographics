@@ -88,7 +88,38 @@ contract Functions {
 
         return (finalPicked,x,y);
     }
+    /// @notice Function to pick random assets from potentialAssets array
+    /// @param _finalSeed is final random seed
+    /// @param _potentialAssets is bytes32[] array of potential assets
+    /// @return uint[] array of randomly picked assets
+    function pickRandomZoomAndRotation(uint _finalSeed, bytes32[] _potentialAssets) public pure returns(uint[],uint[],uint[]) {
+        require(_finalSeed != 0);
+        require(_potentialAssets.length > 0);
 
+        uint[] memory assetIds = decodeAssets(_potentialAssets);
+        uint[] memory pickedIds = new uint[](assetIds.length);
+        uint[] memory zoom = new uint[](assetIds.length);
+        uint[] memory rotation = new uint[](assetIds.length);
+
+        uint finalSeedCopy = _finalSeed;
+        uint index = 0;
+
+        for(uint i = 0; i<assetIds.length; i++){
+            finalSeedCopy = uint(keccak256(abi.encodePacked(finalSeedCopy, assetIds[i])));
+            if(finalSeedCopy % 2 == 0){
+                pickedIds[index] = assetIds[i];
+                (,,zoom[index],rotation[index]) = pickRandomAssetPosition(finalSeedCopy);
+                index++;
+            }
+        }
+
+        uint[] memory finalPicked = new uint[](index);
+        for(i = 0; i<index; i++){
+            finalPicked[i] = pickedIds[i];
+        }
+
+        return (finalPicked,zoom,rotation);
+    }
 
     /// @notice Function to pick random position for an asset
     /// @dev based on id and random_seed
