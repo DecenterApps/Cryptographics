@@ -22,6 +22,21 @@
     *, *:after, *:before {
         box-sizing: border-box;
     }
+    ::placeholder {
+        color:#949494;
+    }
+    ::-webkit-input-placeholder {
+        color: #949494;
+    }
+    ::-moz-placeholder {
+        color: #949494;
+    }
+    :-ms-input-placeholder {
+        color: #949494;
+    }
+    :-moz-placeholder {
+        color: #949494;
+    }
     body, html {
         font-family: Roboto, sans-serif;
     }
@@ -36,7 +51,6 @@
         font-weight: normal;
         font-style: normal;
     }
-
     .large-title {
         font-family: 'YoungSerif-Regular', sans-serif;
         font-size: 32px;

@@ -6,20 +6,20 @@
                     <h2 class="large-title">Cryptographics</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                    <router-link tag="button" to="/gallery" class="default-button button-negative">Gallery</router-link>
+                    <button-link to="/gallery">Gallery</button-link>
                 </div>
                 <div class="right">
                     <div class="create-art">
                         <div class="button-group">
-                            <button class="default-button button-negative">Open in editor</button>
-                            <button
-                                class="default-button no-background"
-                                @click="renderCanvas">Recompose</button>
+                            <cg-button>Open in editor</cg-button>
+                            <cg-button
+                                button-style="transparent"
+                                @click="renderCanvas">
+                                Recompose
+                            </cg-button>
                         </div>
                         <div class="canvas-wrapper">
-                            <div class="overlay">
-                                <button class="icon-button"><img src="./assets/ico-download.png"></button>
-                            </div>
+                            <overlay><button-icon icon-type="download"/></overlay>
                             <canvas id="canvas"></canvas>
                             <img class="cg-stamp" src="./assets/cg-stamp.png">
                         </div>
@@ -32,26 +32,21 @@
                 </div>
             </div>
         </div>
-        <landing-gallery :displayFilters="true" :images="blocks"></landing-gallery>
+        <landing-gallery :images="blocks"></landing-gallery>
         <div class="artist-cta">
             <div class="container">
                 <h3 class="large-title">Artist</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                <router-link tag="button" to="" class="default-button button-negative">Upload Assets Pack</router-link>
+                <button-link to="/upload-assets">Upload Assets Pack</button-link>
             </div>
         </div>
         <div class="assets-slider">
             <div class="container">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
-                <img src="./assets/asset.png">
+                <div v-for="i in 26" class="asset" :key="i">
+                    <overlay><button-icon icon-type="zoom"/></overlay>
+                    <img src="./assets/asset.png">
+                </div>
             </div>
         </div>
         <PageFooter></PageFooter>
@@ -181,7 +176,7 @@
                         flex-direction: row;
                         align-items: center;
                         margin-bottom: 30px;
-                        .default-button {
+                        .button {
                             margin: 0 10px 0;
                         }
                     }
@@ -209,7 +204,7 @@
         display: flex;
         justify-content: flex-end;
         flex-direction: column;
-        .default-button {
+        .button {
             margin-bottom: 20px;
             &:last-of-type {
                 margin: 0;
@@ -226,22 +221,9 @@
     max-width:440px;
     flex-direction: column;
     align-items: flex-start;
-    .overlay {
-        position: absolute;
-        top: 0; right: 0; bottom: 0; left: 0;
-        opacity: 0;
-        background-color: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity .2s ease-in-out;
-        .icon-button {
-            margin: 0 20px;
-        }
-    }
     &:hover {
         .overlay {
-            opacity: .7;
+            opacity: 1;
         }
     }
     canvas {
@@ -259,6 +241,7 @@
     display: flex;
     flex-direction: column;
     img {
+        position: relative;
         margin-bottom: 30px;
     }
 }
@@ -281,8 +264,14 @@
         overflow: hidden;
         width: 100%;
         display: flex;
-        img {
+        .asset {
+            position: relative;
             margin: 0 10px;
+            &:hover {
+                .overlay {
+                    opacity: 1;
+                }
+            }
         }
     }
 }

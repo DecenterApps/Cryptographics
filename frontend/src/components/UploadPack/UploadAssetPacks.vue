@@ -25,7 +25,7 @@
             </div>
 
             <div class="right-data">
-                <div class="asset" v-for="asset, index in assets">
+                <div class="asset" v-for="(asset, index) in assets" :key="index">
                     <img :src="asset.path" />
 
                     <div class="overlay" v-bind:class="asset.attribute === 122 ? 'bg-selected' : ''">

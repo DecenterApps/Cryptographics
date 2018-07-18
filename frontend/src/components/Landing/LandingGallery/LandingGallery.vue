@@ -2,27 +2,23 @@
     <div class="landing-gallery">
         <div class="container">
             <div class="masonry-wrapper"
-                 v-masonry transition-duration="0.3s"
-                 item-selector=".item"
-                 gutter=".gutter-sizer"
-                 fit-width="true"
-            >
+                v-masonry transition-duration="0.3s"
+                item-selector=".item"
+                gutter=".gutter-sizer"
+                fit-width="true">
                 <div class="grid">
                     <div class="gutter-sizer"></div>
                 </div>
                 <div v-masonry-tile class="item" v-for="(item, index) in images" :key="index">
                     <div class="artwork">
-                        <div class="overlay">
-                            <button class="icon-button"><img src="./assets/ico-download.png"></button>
-                            <button class="icon-button"><img src="./assets/ico-magnifier.png"></button>
-                        </div>
+                        <overlay>
+                            <button-icon icon-type="download"/>
+                            <button-icon icon-type="zoom"/>
+                        </overlay>
                         <img v-bind:class="item.className" v-bind:src="item.src" alt="">
                     </div>
                     <div class="artwork-details">
-                        <a href="" class="author">
-                            <img class="avatar" src="" alt="">
-                            <span class="username">@username</span>
-                        </a>
+                        <user-link to="/userurl" name="username" avatar="/avatarurl"/>
                         <span class="price">0.45</span>
                     </div>
                     
@@ -77,22 +73,9 @@
             .artwork-description {
                 font-size: 5px;
             }
-            .overlay {
-                position: absolute;
-                top: 0; right: 0; bottom: 0; left: 0;
-                opacity: 0;
-                background-color: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: opacity .2s ease-in-out;
-                .icon-button {
-                    margin: 0 20px;
-                }
-            }
             &:hover {
                 .overlay {
-                    opacity: .7;
+                    opacity: 1;
                 }
             }
         }
@@ -122,12 +105,11 @@
                 font-size: 12px;
                 font-weight: bold;
                 &:after {
-                    content: "";
-                    width: 6px;
-                    height: 7px;
-                    margin-left: 5px;
+                    content: "\039E";
                     display: inline-flex;
-                    background-image: url(./assets/ico-eth-currency.png);
+                    margin-left: 8px;
+                    font-family: Roboto, sans-serif;
+                    font-size: 12px;
                 }
             }
         }
