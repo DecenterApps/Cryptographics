@@ -278,23 +278,9 @@ async function getAssetStats(id) {
     }
 }
 async function getPositionsOfAssetsInImage(finalSeed, potentialAssets) {
-    let xy = await digitalPrintImageContract.methods.pickRandomAssets(finalSeed, potentialAssets).call();
-    let zr = await digitalPrintImageContract.methods.pickRandomZoomAndRotation(finalSeed, potentialAssets).call();
+    let data = await digitalPrintImageContract.methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
-
-    x = xy[1].slice(0,xy[0].length);
-    y = xy[2].slice(0,xy[0].length);
-    zoom = zr[1].slice(0,xy[0].length);
-    rotation = zr[2].slice(0,xy[0].length);
-
-    let data = {
-        picked : xy[0],
-        x: x,
-        y: y,
-        zoom: zoom,
-        rotation: rotation
-    }
-
+    console.log(data);
     return data;
 }
 function generatePacks() {
@@ -325,9 +311,10 @@ async function test() {
     // console.log(await getAssetPackData(5));
     // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
     // await getImageMetadataFromContract(0);
-    console.log(await getPositionsOfAssetsInImage('0x9ecb050117843b48e16053b3cbfd6983ad9f47238ee0a5554af44d3d24163417',
-        [ '0x0000000000000001000002000003000004000005000006000007000008000009',
-            '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013' ]));
+    await getPositionsOfAssetsInImage('0x240610f366b57b4546eeaaa4de0e441613c1412f0b7f6689e1f19e858f056925',
+        [ '0x0000000000000001000002000003000004000005000006000007000008000009', '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013',
+        '0x000000001400001500001600001700001800001900001a00001b00001c00001d',
+        '0x000000001e00001f000020000021000022000023000024000025000026000027' ]);
     // await getAttributesForAssets([1,2,3,4]);
 }
 
