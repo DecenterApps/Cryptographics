@@ -1,0 +1,141 @@
+<template>
+    <div class="gallery">
+        <div class="container">
+            <div v-if="displayFilters" class="filters">
+                <div class="filter-group">
+                    <span class="active">High</span>
+                    <span>Low</span>
+                    <span>Recent</span>
+                </div>
+                <div class="filter-group">
+                    <span class="active">All</span>
+                    <span>Select Asset Pack</span>
+                </div>
+            </div>
+            <div class="masonry-wrapper"
+                v-masonry transition-duration="0.3s"
+                item-selector=".item"
+                gutter=".gutter-sizer"
+                fit-width="true">
+                <div class="grid">
+                    <div class="gutter-sizer"></div>
+                </div>
+                <div v-masonry-tile class="item" v-for="(item, index) in images" :key="index">
+                    <div class="artwork">
+                        <overlay v-if="displayOverlay">
+                            <button-icon icon-type="download"/>
+                            <button-icon icon-type="zoom"/>
+                        </overlay>
+                        <img v-bind:class="item.className" v-bind:src="item.src" alt="">
+                    </div>
+                    <div class="artwork-details">
+                        <user-link to="/userurl" name="username" avatar="/avatarurl"/>
+                        <span class="price">0.45</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'Gallery',
+        props: {
+            displayFilters: {
+                type: Boolean,
+                default: true
+            },
+            images: {
+                type: Array,
+                default: []
+            },
+            displayOverlay: {
+                type: Boolean,
+                default: false
+            }
+        }
+    };
+</script>
+
+<style scoped lang="scss">
+.gallery {
+    background-color: #EEEEEE;
+    padding: 70px 0;
+    .masonry-wrapper {
+        margin: 0 auto;
+    }
+    .gutter-sizer {
+        width: 70px;
+    }
+    .filters {
+        padding: 30px 0 70px 0;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        span {
+            margin-right: 14px;
+            &.active {
+                text-decoration: underline;
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    .item {
+        width: 307px;
+        margin-bottom: 30px;
+        .artwork {
+            padding: 14px 14px 40px 14px;
+            background-color: #fff;
+            position: relative;
+            img {
+                max-width: 100%;
+            }
+            .artwork-description {
+                font-size: 5px;
+            }
+            &:hover {
+                .overlay {
+                    opacity: 1;
+                }
+            }
+        }
+        .artwork-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            .author {
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                .avatar {
+                    display: inline-flex;
+                    background-color: #555;
+                    border-radius: 50%;
+                    width: 33px;
+                    height: 33px;
+                    margin-right: 10px;
+                }
+                .username {
+                    color: #858585;
+                    font-size: 12px;
+                }
+            }
+            .price {
+                font-size: 12px;
+                font-weight: bold;
+                &:after {
+                    content: "\039E";
+                    display: inline-flex;
+                    margin-left: 8px;
+                    font-family: Roboto, sans-serif;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+</style>

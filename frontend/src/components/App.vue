@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import Header from './Header.vue';
+  import Header from './Shared/Header/Header.vue';
 
   export default {
     name: 'App',
@@ -39,6 +39,9 @@
     }
     body, html {
         font-family: Roboto, sans-serif;
+    }
+    html {
+        overflow-y: scroll;
     }
     @font-face {
         font-family: 'YoungSerif-Regular';
