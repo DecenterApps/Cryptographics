@@ -3,7 +3,6 @@
         <div class="asset-packs-wrapper">
             <div class="asset-pack" v-for="(assetPack, index) in assetPacks" :key="index">
                 <img class="asset-pack-image" :src="assetPack.src" />
-
                 <div class="asset-meta">
                     <div class="asset-description">
                         <span class="asset-thumbnail"></span>
@@ -15,8 +14,14 @@
             </div>
         </div>
         <div class="asset-controls">
-            <button v-if="pagination > 1" @click="prevPage" class="default-button submit">Prev</button>
-            <button v-if="assetPacks.length > 1" @click="nextPage" class="default-button submit">Next</button>
+          <cg-button
+            button-style="transparent"
+            v-if="pagination > 1"
+            @click="prevPage">Prev</cg-button>
+          <cg-button
+            button-style="transparent"
+            v-if="assetPacks.length > 1"
+            @click="nextPage">Next</cg-button>
         </div>
     </div>
 </template>
@@ -92,23 +97,19 @@
         flex-wrap: wrap;
         justify-content: space-between;
         margin: 40px 0;
-
         .asset-pack {
             font-family: 'YoungSerif-Regular', sans-serif;
             font-size: 22px;
             margin-bottom: 40px;
-
             .asset-pack-image {
                 height: 365px;
                 width: 500px;
             }
-
             .asset-meta {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 height: 50px;
-
                 .asset-thumbnail {
                     display: inline-block;
                     height: 33px;
@@ -120,16 +121,13 @@
             }
         }
     }
-
     .asset-controls {
         display: flex;
         align-items: flex-end;
         justify-content: flex-end;
-
         button:first-child {
             margin-right: 10px;
         }
         margin: 30px 0;
     }
-
 </style>

@@ -31,6 +31,8 @@ export default {
     display: inline-flex;
     justify-content: center;
     min-width: 105px;
+    max-height: 33px;
+    min-height: 33px;
     padding: 9px;
     font-size: 12px;
     border-radius: 5px;

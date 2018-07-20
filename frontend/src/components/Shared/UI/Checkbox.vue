@@ -11,15 +11,14 @@
 
 <script>
 export default {
-    name: 'Radio',
+    name: 'Checkbox',
     props: {
         name: {
             type: String,
             default: ''
         },
         value: {
-            type: String,
-            default: ''
+            type: Boolean
         }
     }
 }

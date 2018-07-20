@@ -3,14 +3,13 @@
         <slider-gallery/>
         <div class="container">
             <div class="all-assets-header">
-                <h1 class="large-title"> Asset Packs </h1>
-                <router-link to="/create-asset-pack">
-                    <button class="default-button submit">Create Asset Pack</button>
+                <h1 class="large-title">Asset Packs</h1>
+                <router-link to="/upload-asset-pack">
+                    <cg-button button-style="transparent">Create Asset Pack</cg-button>
                 </router-link>
             </div>
             <asset-packs-pagination :show-all="true" />
         </div>
-        <cg-footer/>
     </div>
 </template>
 

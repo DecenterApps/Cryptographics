@@ -55,6 +55,9 @@ export default {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
+    .image {
+        width: 100%;
+    }
     .details {
         width: 100%;
         padding: 10px 0 16px;

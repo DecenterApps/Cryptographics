@@ -1,41 +1,65 @@
 <template>
-    <div class="upload-assets-page">
-        <div class="container main">
-            <div class="left-data">
-                <h1 class="large-title">Create asset pack</h1>
-                <div class="input-data">
-                    <input class="pack-name" name="pack_name" type="text" placeholder="Asset Pack name" />
-                    <label for="files" class="default-button no-background file-upload-button">
-                        <span>Browse</span>
-                        <input class="uploadFiles" id="files" type="file" multiple size="50" @change="uploadAssets">
-                    </label>
-                </div>
-                <input class="pack-price" name="price" type="text" placeholder="Value" />
-                <div class="number-of-assets">
-                    <span> Assets in pack 15-20 </span>
-                </div>
-
-                <div class="buttons">
-                    <button class="default-button submit" @click="uploadToIpfs"> Submit</button>
-                    <button class="default-button no-background try" @click="renderCanvas"> Try</button>
-                </div>
-                <div>
-                    <canvas id="canvas"></canvas>
-                </div>
-            </div>
-
-            <div class="right-data">
-                <div class="asset" v-for="(asset, index) in assets" :key="index">
-                    <img :src="asset.path" />
-
-                    <div class="overlay" v-bind:class="asset.attribute === 122 ? 'bg-selected' : ''">
-                        <IconBackground @click.native="toggleBackground(index)"></IconBackground>
-                        <IconTrash @click.native="remove(index)"></IconTrash>
+    <layout layout-style="pulled-left">
+                <div class="left">
+                    <div>
+                        <h1 class="large-title">Upload asset pack</h1>
+                        <div class="input-group">
+                            <cg-input name="pack_name" placeholder="Asset Pack name"/>
+                            <cg-input name="price" placeholder="Value"/>                    
+                        </div>
+                    </div>
+                    <div>
+                        <div class="upload-assets">
+                            <input-file
+                                id="files"
+                                button-style="transparent"
+                                @change="uploadAssets"/>
+                            <div class="info">
+                                <span>Upload multiple assets</span>
+                                <span>Assets in pack 15 of 50</span>
+                            </div>
+                        </div>
+                        <div class="graphic-preview">
+                            <canvas id="canvas"></canvas>
+                            <cg-button
+                                button-style="transparent">
+                                Generate
+                            </cg-button>
+                        </div>
+                        <div class="button-group">
+                            <cg-button
+                                @click="uploadToIpfs">
+                                Submit
+                            </cg-button>
+                            <cg-button
+                                button-style="transparent"
+                                @click="renderCanvas">
+                                Try
+                            </cg-button>
+                            <cg-button button-style="no-border">
+                                Cancel
+                            </cg-button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+
+                <div class="right">
+                    <div v-bar> <!-- how to apply styles for v-bar component?? -->
+                        <div>
+                            <div
+                                class="asset"
+                                v-for="(asset, index) in assets"
+                                :key="index">
+                                <img :src="asset.path"/>
+                                <div class="overlay" v-bind:class="asset.attribute === 122 ? 'bg-selected' : ''">
+                                    <IconBackground @click.native="toggleBackground(index)"></IconBackground>
+                                    <IconTrash @click.native="remove(index)"></IconTrash>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </layout>
 </template>
 
 <script>
@@ -43,13 +67,19 @@
   import { getAccounts } from '../../../../scripts/helpers';
   import {createAssetPack, makeCoverImage} from '../../../methods';
   import * as utils from '../../../../scripts/utils';
+
   import IconTrash from './template/IconTrash.vue';
   import IconBackground from './template/IconBackground.vue';
+  import InputFile from './template/InputFile.vue';
+
 
   export default {
-    name: 'upload-asset-packs',
+    name: 'UploadAssetPack',
     components: {
-        IconTrash, IconBackground },
+        IconTrash,
+        IconBackground,
+        InputFile
+        },
     data: () => ({
       metamask_account: 0,
       assets: [],
@@ -141,74 +171,97 @@
 </script>
 
 <style scoped lang="scss">
-
-    canvas {
-        margin-top: 20px;
-        background-color: white;
-        /*width:350px;*/
-        /*height: 350px;*/
-    }
-    .upload-assets-page {
-        background: #D9D9D9;
-        min-height: calc(100vh - 70px);
-        font-size: 12px;
-    }
-
-    .number-of-assets {
-        margin-top: 17px;
-
-        span {
-            font-size: 12px;
-            font-family: 'Roboto', sans-serif;
+.left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .input-group {
+        width: 100%;
+        .input {
+            &:first-of-type {
+                width: 69%;
+            }
+            &:last-of-type {
+                width: 29%;
+            }
         }
     }
+    .upload-assets {
+        display: inline-flex;
+        margin-bottom: 30px;
+        .info {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-around;
+            font-size: 12px;
+            margin-left: 15px;
+            span:first-of-type {
+                color: #949494;
+            }
+        }
+    }
+    .button-group {
+        display: inline-flex;
+        .button {
+            margin: 0 5px;
+            &:first-of-type {
+                margin-left: 0;
+            }
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+    }
+    .graphic-preview {
+        display: inline-flex;
+        align-items: flex-end;
+        margin-bottom: 20px;
+        canvas {
+            background-color: white;
+            width: 220px;
+            height: 220px;
+        }
+        .button {
+            margin-left: 10px;
+        }
+    }
+}
 
-    .input-data {
-        display: flex;
+.right > div {
+    flex-wrap: wrap;
+    max-height: 432px;
+    overflow: hidden;
+    
+}
+// how to apply styles for v-bar component??
+.vb {
+        width: 100%;
+}
+.vb-content {
+    width: 100%;
+    display: flex !important;
+    flex-wrap: wrap;
+}
+.vb-dragger {
+    width: 20px !important;
+    right: 40px !important;
+}
+.vb-dragger-styler {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.pack-name {
+    width: 210px;
+    margin-right: 20px;
+}
+
+.pack-price {
+    width: 92px;
     }
 
-    input:not([type=file]) {
-        border-radius: 5px;
-        background-color: #D9D9D9;
-        border: 1px solid #000;
-        box-shadow: none;
-        padding: 9px 15px;
-        box-sizing: border-box;
-        font-size: 12px;
-        outline: none;
-        height: 33px;
-        margin-top: 15px;
-    }
 
-    input[type=file] {
-        display: none;
-    }
-
-    .file-upload-button {
-        margin-top: 15px;
-        width: 90px;
-        box-sizing: border-box;
-    }
-
-    .pack-name {
-        width: 210px;
-        margin-right: 20px;
-    }
-
-    .pack-price {
-        width: 92px;
-    }
-
-    input.uploadFiles {
-        padding-left: 20px;
-    }
-
-    button.uploadFiles {
-        border-radius: 5px;
-        width: 89px;
-        height: 33px;
-        margin-left: 20px;
-    }
 
     .asset {
         position: relative;
@@ -291,47 +344,4 @@
             display: none;
         }
     }
-
-    .large-title {
-        margin-bottom: 11px;
-    }
-
-    .left-data {
-        margin-right: 20px;
-    }
-
-    .right-data {
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .main {
-        display: flex;
-        padding-top: 82px;
-    }
-
-    .buttons {
-        margin-top: 125px;
-        display: flex;
-        button {
-            margin-right: 10px;
-        }
-    }
-
-    button {
-        width: 89px;
-        height: 33px;
-        border-radius: 5px;
-    }
-
-    button.submit {
-        background-color: black;
-        color: white;
-    }
-
-    button.try {
-        width: 89px;
-    }
-
 </style>

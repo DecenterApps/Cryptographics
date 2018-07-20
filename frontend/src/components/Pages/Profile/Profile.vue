@@ -41,7 +41,6 @@
             <gallery :images="images"/>
         </div>
         </div>
-        <cg-footer/>
     </div>
 </template>
 

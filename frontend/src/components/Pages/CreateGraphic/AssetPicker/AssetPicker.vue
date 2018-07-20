@@ -3,18 +3,20 @@
         <div class="asset-picker-header">
             <span class="large-title">Select Asset Pack</span>
             <div>
-                <button v-on:click="changeTab" class="default-button">Back</button>
+                <cg-button
+                    v-on:click="changeTab"
+                    button-style="transparent">Back</cg-button>
             </div>
         </div>
         <div class="asset-packs">
-            <div v-bind:class="[isSelected(asset), 'asset-pack-circle']" v-on:click="toggleAsset(asset)"
-                 v-for="(asset, index) in assetPacks" :key="index">
-                {{ asset.id }}
-            </div>
-
-            <button v-on:click="changeTab" class="default-button no-background">
-                Select
-            </button>
+            <div
+                v-bind:class="[isSelected(asset), 'asset-pack-circle']"
+                v-on:click="toggleAsset(asset)"
+                v-for="(asset, index) in assetPacks" :key="index">
+                {{ asset.id }}</div>
+            <cg-button
+                v-on:click="changeTab"
+                button-style="transparent">Select</cg-button>
         </div>
     </div>
 </template>

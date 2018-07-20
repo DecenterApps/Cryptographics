@@ -2,7 +2,6 @@
     <div>
         <slider-gallery/>
         <gallery :images="blocks"/>
-        <cg-footer/>
     </div>
 </template>
 

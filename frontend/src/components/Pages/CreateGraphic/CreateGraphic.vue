@@ -4,16 +4,14 @@
         <div class="create-art-wrapper" v-bind:class="[activeTab === 'create' ? 'create' : '']">
             <div class="container create-container">
                 <art-builder
-                        v-if="activeTab === 'create'"
-                        v-on:tabChange="changeTab"
-                        :selectedAssetPacks="selectedAssetPacks"
-                ></art-builder>
+                    v-if="activeTab === 'create'"
+                    v-on:tabChange="changeTab"
+                    :selectedAssetPacks="selectedAssetPacks"/>
                 <asset-picker
-                        v-if="activeTab === 'picker'"
-                        v-on:tabChange="changeTab"
-                        v-on:pickAsset="toggleAsset"
-                        :selectedAssetPacks="selectedAssetPacks"
-                ></asset-picker>
+                    v-if="activeTab === 'picker'"
+                    v-on:tabChange="changeTab"
+                    v-on:pickAsset="toggleAsset"
+                    :selectedAssetPacks="selectedAssetPacks"/>
             </div>
         </div>
     </div>
@@ -24,7 +22,7 @@
   import ArtBuilder from './ArtBuilder/ArtBuilder.vue';
 
   export default {
-    name: 'create-art',
+    name: 'CreateGraphic',
     components: { ArtBuilder, AssetPicker },
     data: () => ({
       activeTab: 'create',

@@ -2,7 +2,7 @@
     <header class="header">
         <div class="header-container container">
             <div class="logo">
-                <router-link to="/"><img src="./assets/logo.png"></router-link>
+                <router-link to="/"><logo/></router-link>
             </div>
             <div class="links-section">
                 <div class="links">
@@ -14,7 +14,7 @@
                 <div class="profile">
                     <router-link to="/profile">My Profile</router-link>
                     <span class="profile-img"></span>
-                    <button-link to="/create" button-style="positive">Create</button-link>
+                    <button-link to="/create-graphic" button-style="positive">Create</button-link>
                 </div>
             </div>
         </div>
@@ -22,8 +22,13 @@
 </template>
 
 <script>
+import Logo from '../UI/Logo.vue';
+
   export default {
-    name: 'Header'
+    name: 'CgHeader',
+    components: {
+        Logo
+    }
   };
 </script>
 

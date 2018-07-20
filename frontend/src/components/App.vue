@@ -1,19 +1,22 @@
 <template>
-    <div>
-        <Header></Header>
-        <router-view></router-view>
-    </div>
+    <main>
+        <cg-header/>
+        <router-view/>
+        <cg-footer/>
+    </main>
 </template>
 
 <script>
-  import Header from './Shared/Header/Header.vue';
+import CgHeader from './Shared/CgHeader/CgHeader.vue';
+import CgFooter from './Shared/CgFooter/CgFooter.vue';
 
-  export default {
+export default {
     name: 'App',
     components: {
-      Header,
+        CgHeader,
+        CgFooter
     }
-  };
+};
 </script>
 
 <style src="../templates/styles/reset.css"></style>

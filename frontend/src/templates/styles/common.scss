@@ -11,46 +11,18 @@ p {
   font-family: inherit;
 }
 
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  & .input {
+      flex: 0 0 48%;
+  }
+}
+
 .large-title {
   font-family: 'YoungSerif-Regular', serif;
   font-size: 32px;
   margin-bottom: 30px;
-}
-
-.icon-button {
-  margin: 0; padding: 0;
-  outline: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.default-button {
-  outline: 0;
-  padding: 9px;
-  min-width: 105px;
-  display: inline-flex;
-  justify-content: center;
-  font-size: 12px;
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #000;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-  text-transform: capitalize;
-  white-space: nowrap;
-}
-
-.default-button.button-negative {
-  color: #fff;
-  background-color: #000;
-}
-
-.default-button.no-background {
-  background: none;
-  border: 1px solid #000;
 }
 
 .background-wrapper {
@@ -77,11 +49,9 @@ p {
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-
   &.selected {
     border: 1.2px solid #000000;
   }
-
   &.small {
     height: 33px;
     width: 33px;
@@ -91,7 +61,6 @@ p {
 .container {
   width: 1120px;
   margin: 0 auto;
-
   @media all and (max-width: 1120px) {
     width: 80%;
   }

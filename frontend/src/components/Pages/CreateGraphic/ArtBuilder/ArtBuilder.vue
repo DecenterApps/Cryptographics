@@ -5,10 +5,12 @@
         </div>
         <div class="right-group">
             <div class="recreate" @click="renderCanvas">
-                <button class="default-button no-background">Recreate</button>
+                <cg-button button-style="transparent">Recreate</cg-button>
             </div>
             <div class="controls">
-                <button type="button" v-on:click="changeTab" class="default-button no-background">Select Asset Packs</button>
+                <cg-button
+                    v-on:click="changeTab"
+                    button-style="transparent">Select Asset Packs</cg-button>
                 <div class="selected-asset-packs">
                     <div class="asset-pack-circle small selected" v-for="(asset, index) in selectedAssetPacks" :key="index">
                         {{asset.id}}
@@ -25,9 +27,9 @@
                     </div>
                 </div>
                 <div class="frame">
-                    <label>Frame <input v-model="canvasData.frame" type="checkbox" /> </label>
+                    <cg-checkbox v-model="canvasData.frame">Frame</cg-checkbox>
                 </div>
-                <button class="default-button submit" @click="buyImage">Submit</button>
+                <cg-button @click="buyImage">Submit</cg-button>
             </div>
         </div>
     </div>

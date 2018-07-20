@@ -2,7 +2,7 @@
     <footer class="footer">
         <div class="container footer-container">
             <router-link to="/" class="logo">
-                <img src="./assets/logo.png" alt="Cryptographics"> 
+                <logo/>
                 <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
             </router-link>
             <div class="links-section">
@@ -11,35 +11,32 @@
                 <router-link to="/about" class-active="active">About</router-link>
             </div>
             <div class="social">
-                <a
+                <ico-social
                     v-for="(item, index) in social"
                     :href="item.url"
-                    :key="index"
-                    target="_blank">
-                    <img :src="item.img" :alt="item.name">
-                </a>
+                    :social-media="item.name"
+                    :key="index"/>
             </div>
         </div>
     </footer>
 </template>
 
 <script>
+import Logo from '../UI/Logo.vue';
+import IcoSocial from './IcoSocial.vue';
+
   export default {
-    name: 'Footer',
+    name: 'CgFooter',
+    components: {
+        Logo,
+        IcoSocial
+    },
     data: () => ({
         social: [
-            {   name: 'facebook',
-                img: require('./assets/facebook.png'),
-                url: 'https://www.facebook.com' },
-            {   name: 'instagram',
-                img: require('./assets/instagram.png'),
-                url: 'https://www.facebook.com' },
-            {   name: 'twitter',
-                img: require('./assets/twitter.png'), 
-                url: 'https://www.facebook.com' },
-            {   name: 'youtube',
-                img: require('./assets/youtube.png'), 
-                url: 'https://www.facebook.com' }
+            { name: 'facebook', url: 'https://www.facebook.com' },
+            { name: 'instagram', url: 'https://www.facebook.com' },
+            { name: 'twitter', url: 'https://www.facebook.com' },
+            { name: 'youtube', url: 'https://www.facebook.com' }
         ]
     })
   };
@@ -72,7 +69,7 @@
                 color: #fff;
                 font-size: 15px;
                 font-family: Roboto, sans-serif;
-                img {
+                svg {
                     margin-right: 15px;
                 }
                 div {
@@ -107,7 +104,7 @@
             .social {
                 display: flex;
                 align-items: center;
-                img {
+                a {
                     margin-right: 20px;
                 }
             }

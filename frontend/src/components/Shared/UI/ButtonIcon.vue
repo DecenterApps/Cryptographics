@@ -3,12 +3,15 @@
         class="button"
         v-bind="$attrs"
         v-on="$listeners">
-        <img v-if="iconType === 'download'" src="./icons/ico-download.png">
-        <img v-if="iconType === 'zoom'"  src="./icons/ico-magnifier.png">
+        <ico-download v-if="iconType === 'download'"/>
+        <ico-magnifier v-if="iconType === 'zoom'"/>
     </button>
 </template>
 
 <script>
+import IcoDownload from './Icons/IcoDownload.vue';
+import IcoMagnifier from './Icons/IcoMagnifier.vue';
+
 export default {
     name: 'ButtonIcon',
     props: {
@@ -16,6 +19,10 @@ export default {
             type: String,
             default: 'download'
         }
+    },
+    components: {
+        IcoDownload,
+        IcoMagnifier
     }
 }
 </script>

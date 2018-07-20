@@ -2,9 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { VueMasonryPlugin } from 'vue-masonry';
 import routes from './routes';
+import Vuebar from 'vuebar';
 
 import App from './components/App.vue';
-import Footer from './components/Shared/Footer/Footer.vue';
+import Layout from './components/Shared/Layout/Layout.vue';
 import SliderGallery from './components/Shared/SliderGallery/SliderGallery.vue';
 import Button from './components/Shared/UI/Button.vue';
 import ButtonLink from './components/Shared/UI/ButtonLink.vue';
@@ -16,7 +17,7 @@ import UserLink from './components/Shared/UI/UserLink.vue';
 import Overlay from './components/Shared/UI/Overlay.vue';
 import ButtonIcon from './components/Shared/UI/ButtonIcon.vue';
 
-Vue.component('cgFooter', Footer);
+Vue.component('layout', Layout);
 Vue.component('sliderGallery', SliderGallery);
 Vue.component('cgButton', Button);
 Vue.component('buttonLink', ButtonLink);
@@ -35,6 +36,7 @@ const router = new VueRouter({
 
 Vue.use(VueRouter);
 Vue.use(VueMasonryPlugin);
+Vue.use(Vuebar);
 
 const app = new Vue({
   ...App,

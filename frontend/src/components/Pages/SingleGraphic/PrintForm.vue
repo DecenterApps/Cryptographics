@@ -103,13 +103,6 @@ export default {
         }
     }
 }
-.input-group {
-  display: flex;
-  justify-content: space-between;
-  input {
-    flex: 0 0 48%;
-  }
-}
 .graphic-controls {
     .price {
         font-family: 'YoungSerif-Regular', serif;

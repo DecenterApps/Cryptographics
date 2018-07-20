@@ -6,7 +6,7 @@ import SingleGraphic from './components/Pages/SingleGraphic/SingleGraphic.vue';
 import AssetPacks from './components/Pages/AssetPacks/AssetPacks.vue';
 import Profile from './components/Pages/Profile/Profile.vue';
 import CreateGraphic from './components/Pages/CreateGraphic/CreateGraphic.vue';
-import CreateAssetPacks from './components/Pages/CreateAssetPacks/CreateAssetPacks.vue';
+import UploadAssetPack from './components/Pages/UploadAssetPack/UploadAssetPack.vue';
 
 export default [
   { path: '/', component: Home },
@@ -16,7 +16,7 @@ export default [
   { path: '/single-graphic', component: SingleGraphic },
   { path: '/create-graphic', component: CreateGraphic },
   { path: '/gallery', component: About }, // Gallery here
-  { path: '/create-asset-pack', component: CreateAssetPacks},
+  { path: '/upload-asset-pack', component: UploadAssetPack},
   { path: '/asset-packs', component: AssetPacks },
   { path: '/profile', component: Profile },
 ];

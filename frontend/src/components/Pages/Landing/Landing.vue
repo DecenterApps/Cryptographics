@@ -49,7 +49,6 @@
                 </div>
             </div>
         </div>
-        <cg-footer/>
     </div>
 </template>
 
