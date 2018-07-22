@@ -48,7 +48,11 @@ contract('DigitalPrintImage', async (accounts) => {
         for (let i=0; i<res.length; i++) {
             res[i] = parseInt([i]);
         }
-
+        console.log("start");
+        let seed = await dpm.calculateSeed([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213);
+        console.log(seed);
+        let final = await dpm.getFinalSeed(seed, 1);
+        console.log(final);
         let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213, 1, encoded_arr, "Author", "hash"); 
         let balance = await dpm.balanceOf(accounts[0]);
         assert.equal(balance, 1, "User should have image he just created");
