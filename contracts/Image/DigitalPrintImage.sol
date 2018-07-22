@@ -71,7 +71,6 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         address _creator = msg.sender;
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
-
         uint finalPrice = calculatePrice(pickedAssetPacks, _creator);
         require(msg.value >= finalPrice);
 

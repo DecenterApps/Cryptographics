@@ -24,8 +24,13 @@ contract('Marketplace', async (accounts) => {
 
     it("...Should create token and put it on sale", async () => {
         let price = 100000000;
+        let res;
         
-        let res = await dpm.createImageTest();
+        try {
+            res = await dpm.createImageTest();
+        }catch (err) {
+            assert.equal(true, false, "You need to enable 'createImageTest' in DigitalPrintImage contract for testing purposes");
+        }
         let tokenId = res.logs[0].args._tokenId.toString();
         let b = await marketplace.sell(tokenId, price);
 
@@ -39,8 +44,13 @@ contract('Marketplace', async (accounts) => {
 
     it("...Should be able to buy token from sale", async () => {
         let price = 100000000;
-        
-        let res = await dpm.createImageTest();
+        let res;
+
+        try {
+            res = await dpm.createImageTest();
+        }catch (err) {
+            assert.equal(true, false, "You need to enable 'createImageTest' in DigitalPrintImage contract for testing purposes");
+        }
         let tokenId = res.logs[0].args._tokenId.toString();
         let b = await marketplace.sell(tokenId, price);
         let c = await marketplace.buy(tokenId, {from: accounts[1], value: price});
