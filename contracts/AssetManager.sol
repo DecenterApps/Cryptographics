@@ -24,8 +24,8 @@ contract AssetManager is Ownable {
     }
 
 
-    uint numberOfAssets;
-    uint numberOfAssetPacks;
+    uint public numberOfAssets;
+    uint public numberOfAssetPacks;
 
     Asset[] public assets;
     AssetPack[] public assetPacks;

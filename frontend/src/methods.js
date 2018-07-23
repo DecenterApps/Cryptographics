@@ -23,7 +23,7 @@ async function createImage(randomHashIds, timestamp, iterations, potentialAssets
   try {
     console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
     return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
-      value: price.toString(),
+      value: parseInt(price),
       from: account,
       to: digitalPrintImageContractAddress,
     }, (a, b) => {

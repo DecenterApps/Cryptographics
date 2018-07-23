@@ -17,7 +17,6 @@ contract UserManager {
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
         require(usernameExists[_username] == false);
-        require(profilePictureExists[_hashToProfilePicture] == false);
 
         addressToUser[msg.sender] = User({
             username: _username,

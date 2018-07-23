@@ -1,9 +1,8 @@
 const utils = require('./utils');
 const Web3 = require('web3');
-const util = require('ethereumjs-util');
 const leftPad = require('left-pad')
 const conf = require('./config.json');
-const bs58 = require('bs58');
+const starter_packs = require('./starter_packs.json');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
@@ -278,6 +277,26 @@ async function getAssetStats(id) {
         return Info;
     }
 }
+async function getPositionsOfAssetsInImage(finalSeed, potentialAssets) {
+    let data = await digitalPrintImageContract.methods.pickRandomAssets(finalSeed, potentialAssets).call();
+
+    console.log(data);
+    return data;
+}
+function generatePacks() {
+    let packId = starter_packs["0"].id;
+    let packData = starter_packs["0"].data;
+
+    let pack = {
+        id: packId,
+        data: packData
+    }
+    let arr = [];
+    arr.push(pack);
+    console.log(pack);
+    return arr;
+}
+
 
 async function test() {
     // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
@@ -291,6 +310,11 @@ async function test() {
     // console.log(await getAssetPackData(0));
     // console.log(await getAssetPackData(5));
     // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
+    // await getImageMetadataFromContract(0);
+    await getPositionsOfAssetsInImage('0x240610f366b57b4546eeaaa4de0e441613c1412f0b7f6689e1f19e858f056925',
+        [ '0x0000000000000001000002000003000004000005000006000007000008000009', '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013',
+        '0x000000001400001500001600001700001800001900001a00001b00001c00001d',
+        '0x000000001e00001f000020000021000022000023000024000025000026000027' ]);
     // await getAttributesForAssets([1,2,3,4]);
 }
 
@@ -323,5 +347,7 @@ module.exports = {
     getCoversForAssetPacks,
     getAssetPacksNames,
     getPackInformation,
-    getPaginatedAssetPacks
+    getPaginatedAssetPacks,
+    generatePacks,
+    getPositionsOfAssetsInImage
 }

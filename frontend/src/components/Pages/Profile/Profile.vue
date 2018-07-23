@@ -78,8 +78,6 @@
     methods: {
       async generateData() {
         await this.getImages();
-        await this.getCreatedAssetPacks();
-        await this.getBoughtAssets();
         await this.getAllAssets();
         await this.getAssetPacks();
       },
