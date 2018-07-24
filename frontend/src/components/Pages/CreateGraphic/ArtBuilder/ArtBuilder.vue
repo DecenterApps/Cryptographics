@@ -84,7 +84,7 @@
         let img = await methods.createImage(
             this.random_hash_ids, 
             this.timestamp, 
-            this.iterations - 1, 
+            this.iterations, 
             pot, 
             this.username, 
             this.metamask_account, 

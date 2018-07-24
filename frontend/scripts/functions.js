@@ -118,6 +118,18 @@ async function getAssetPackData(assetPackId) {
     return data;
 }
 
+async function usernameExists(username) {
+    let res = await digitalPrintImageContract.methods.isUsernameExists(username).call();
+
+    return res;
+} 
+
+async function getUsername(address) {
+    let res = await digitalPrintImageContract.methods.getUsername(address).call();
+
+    return res;
+}
+
 async function calculatePrice(pickedAssets, owner) {
     console.log(pickedAssets);
     if (pickedAssets.length == 0) {
@@ -349,5 +361,7 @@ module.exports = {
     getPackInformation,
     getPaginatedAssetPacks,
     generatePacks,
-    getPositionsOfAssetsInImage
+    getPositionsOfAssetsInImage,
+    getUsername,
+    usernameExists
 }
