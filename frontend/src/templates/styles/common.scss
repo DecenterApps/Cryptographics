@@ -65,3 +65,59 @@ p {
     width: 80%;
   }
 }
+
+.vb-content {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.vb > .vb-dragger {
+    z-index: 5;
+    width: 20px;
+    right: 0;
+}
+
+.vb > .vb-dragger > .vb-dragger-styler {
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden;
+    -webkit-transform: rotate3d(0,0,0,0);
+    transform: rotate3d(0,0,0,0);
+    -webkit-transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    background-color: #000;
+    width: 20px;
+    height: 100%;
+    display: block;
+}
+
+.vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: #000;
+}
+
+.vb > .vb-dragger:hover > .vb-dragger-styler {
+    background-color: #000;
+}
+
+.vb.vb-dragging > .vb-dragger > .vb-dragger-styler {
+    background-color: #000;
+}
+
+.vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: #000;
+}
+
+.vb-visible .vb-content:after {
+    content: "";
+    width: 2px;
+    display: block;
+    height: 100%;
+    background: black;
+    position: absolute;
+    right: 10px;
+}

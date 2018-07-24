@@ -44,14 +44,14 @@
                 </div>
 
                 <div class="right">
-                    <div v-bar> <!-- how to apply styles for v-bar component?? -->
+                    <div v-bar="{ preventParentScroll: true }"> 
                         <div>
                             <div
                                 class="asset"
                                 v-for="(asset, index) in assets"
                                 :key="index">
                                 <img :src="asset.path"/>
-                                <div class="overlay" v-bind:class="asset.attribute === 122 ? 'bg-selected' : ''">
+                                <div class="overlay" :class="asset.attribute === 122 ? 'bg-selected' : ''">
                                     <IconBackground @click.native="toggleBackground(index)"></IconBackground>
                                     <IconTrash @click.native="remove(index)"></IconTrash>
                                 </div>
@@ -71,7 +71,6 @@
   import IconTrash from './template/IconTrash.vue';
   import IconBackground from './template/IconBackground.vue';
   import InputFile from './template/InputFile.vue';
-
 
   export default {
     name: 'UploadAssetPack',
@@ -226,122 +225,104 @@
         }
     }
 }
-
-.right > div {
-    flex-wrap: wrap;
-    max-height: 432px;
-    overflow: hidden;
-    
-}
-// how to apply styles for v-bar component??
-.vb {
-        width: 100%;
-}
-.vb-content {
-    width: 100%;
-    display: flex !important;
-    flex-wrap: wrap;
-}
-.vb-dragger {
-    width: 20px !important;
-    right: 40px !important;
-}
-.vb-dragger-styler {
-    width: 100%;
-    height: 100%;
-    background-color: black;
+.right {
+    & > div {
+        width: 100% !important;
+        max-width: 688px !important;
+        max-height: 432px !important;
+        overflow: hidden !important;
+    }
 }
 
 .pack-name {
     width: 210px;
     margin-right: 20px;
 }
-
 .pack-price {
     width: 92px;
-    }
+}
+.asset {
+    position: relative;
+    background: #ECECEC;
+    margin-bottom: 20px;
+    width: 206px;
+    height: 206px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-
-
-    .asset {
-        position: relative;
-        background: #ECECEC;
-        margin-bottom: 20px;
+    .overlay {
+        opacity: 0;
+        position: absolute;
+        top: 0;
         width: 206px;
         height: 206px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: rgba(0, 0, 0, 0.74);
+        transition: opacity 0.3s ease;
 
-        .overlay {
-            opacity: 0;
-            position: absolute;
-            top: 0;
-            width: 206px;
-            height: 206px;
-            background: rgba(0, 0, 0, 0.74);
-            transition: opacity 0.3s ease;
-
-            &.bg-selected {
-                .icon-background {
-                    fill: #fff;
-                    path {
-                        fill: #fff
-                    }
+        &.bg-selected {
+            .icon-background {
+                fill: #fff;
+                path {
+                    fill: #fff
                 }
             }
         }
+    }
 
-        img {
-            width: 180px;
-            height: 180px;
-        }
+    img {
+        width: 180px;
+        height: 180px;
+    }
 
-        &:nth-child(3n + 2) {
-            margin: 0 20px;
-        }
+    &:nth-child(3n + 2) {
+        margin: 0 20px;
+    }
+    &:nth-last-child(-n+3) {
+        margin-bottom: 0;
+    }
 
-        .icon-trash {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
+    .icon-trash {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
 
-        .icon-background {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-        }
+    .icon-background {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+    }
 
-        svg {
-            cursor: pointer;
-            fill: #636363;
-            path {
-                fill: #636363
-            }
-        }
-
-        svg:hover {
-            fill: #fff;
-            path {
-                fill: #fff;
-            }
-        }
-
-        &:hover {
-            .overlay {
-                opacity: 1;
-            }
-
-            button.delete {
-                display: block;
-            }
-            button.background {
-                display: block;
-            }
-        }
-        button.background, button.delete {
-            display: none;
+    svg {
+        cursor: pointer;
+        fill: #636363;
+        path {
+            fill: #636363
         }
     }
+
+    svg:hover {
+        fill: #fff;
+        path {
+            fill: #fff;
+        }
+    }
+
+    &:hover {
+        .overlay {
+            opacity: 1;
+        }
+
+        button.delete {
+            display: block;
+        }
+        button.background {
+            display: block;
+        }
+    }
+    button.background, button.delete {
+        display: none;
+    }
+}
 </style>

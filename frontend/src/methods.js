@@ -17,7 +17,7 @@ const DELAY = 300;
 
 async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) {
   potentialAssets = utils.encode(potentialAssets);
-  console.log('ENCODED POTENTIAL ASSETS: ' + potentialAssets);
+
   timestamp = parseInt(timestamp, 10);
   iterations = parseInt(iterations, 10);
   try {

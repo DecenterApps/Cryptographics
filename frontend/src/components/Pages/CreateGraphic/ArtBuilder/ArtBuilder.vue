@@ -12,7 +12,7 @@
                     v-on:click="changeTab"
                     button-style="transparent">Select Asset Packs</cg-button>
                 <div class="selected-asset-packs">
-                    <div class="asset-pack-circle small selected" v-for="(asset, index) in selected_packs" :key="index">
+                    <div class="asset-pack-circle small selected" v-for="(asset, index) in selectedAssetPacks" :key="index">
                         {{asset.id}}
                     </div>
                 </div>
@@ -46,7 +46,7 @@
   import * as ipfsService from '../../../../../scripts/ipfsService';
 
   export default {
-    name: 'art-builder',
+    name: 'ArtBuilder',
     components: { Canvas },
     data: () => ({
       metamask_account: 0,
@@ -63,32 +63,46 @@
       potential_assets: [],
       all_assets: [],
       selected_packs: [],
+      username: undefined
     }),
     props: ['selectedAssetPacks'],
     methods: {
 
       async buyImage() {
+
+        if (!this.username) {
+            this.username = window.prompt('Enter your username: ');
+        }
+
         let canvas = Canvas.methods.getCanvasElement();
         let image = canvas.toDataURL('image/png');
-        console.log(image);
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         let pot = this.selected_packs.map(assetPack =>
-          assetPack.data.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
-        console.log(pot);
+        assetPack.data.map(asset => parseInt(asset.id)))
+        .reduce((a, b) => a.concat(b), []);
 
-        console.log('RANDOM HASHES: ' + this.random_hash_ids);
-        console.log('TIMESTAMP: ' + this.timestamp);
-        console.log('ITERATIONS: ' + this.iterations);
-        console.log('POTENTIAL ASSETS: ' + pot);
-        console.log('MM ACCOUNT: ' + this.metamask_account);
-        console.log('IMAGE PRICE: ' + this.image_price);
-        let img = await methods.createImage(this.random_hash_ids, this.timestamp, this.iterations - 1, pot, 'Madjar', this.metamask_account, this.image_price, ipfsHash);
-        console.log(img);
+        let img = await methods.createImage(
+            this.random_hash_ids, 
+            this.timestamp, 
+            this.iterations - 1, 
+            pot, 
+            this.username, 
+            this.metamask_account, 
+            this.image_price, 
+            ipfsHash);
+
+        // console.log('THIS IS IMAGE: ' + image);
+        // console.log(pot);
+        // console.log('RANDOM HASHES: ' + this.random_hash_ids);
+        // console.log('TIMESTAMP: ' + this.timestamp);
+        // console.log('ITERATIONS: ' + this.iterations);
+        // console.log('POTENTIAL ASSETS: ' + pot);
+        // console.log('MM ACCOUNT: ' + this.metamask_account);
+        // console.log('IMAGE PRICE: ' + this.image_price);
+        // console.log(img);
         // this.timestamp = new Date().getTime();
         // this.random_seed = await functions.calculateFirstSeed(this.timestamp, this.random_hash_ids);
         // this.iterations = 0;
-
       },
       async renderCanvas() {
         if(window.sessionStorage.length > 0) {
