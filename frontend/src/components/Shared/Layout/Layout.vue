@@ -2,7 +2,10 @@
     <div v-if="layoutStyle === 'pulled-left'" class="background-wrapper">
         <div class="black-bg"></div>
         <div class="content-wrapper">
-            <div class="container">
+            <template v-if="layoutContent === 'tabbed'">
+                <slot/>
+            </template>
+            <div v-else class="container">
                 <slot/>
             </div>
         </div>
@@ -16,6 +19,10 @@ export default {
         layoutStyle: {
             type: String,
             default: 'pulled-left'
+        },
+        layoutContent: {
+            type: String,
+            default: ''
         }
     }
 }

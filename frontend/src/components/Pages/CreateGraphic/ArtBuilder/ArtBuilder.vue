@@ -1,9 +1,9 @@
 <template>
-    <div class="art-builder-wrapper">
-        <div class="left-group">
+    <div class="container">
+        <div class="left">
             <Canvas :canvasData="canvasData"></Canvas>
         </div>
-        <div class="right-group">
+        <div class="right">
             <div class="recreate" @click="renderCanvas">
                 <cg-button button-style="transparent">Recreate</cg-button>
             </div>
@@ -187,30 +187,30 @@
 </script>
 
 <style scoped lang="scss">
-    .art-builder-wrapper {
+.container {
+    display: flex;
+    height: 100%;
+    position: relative;
+    justify-content: space-between;
+    .left {
+        flex-shrink: 1;
+        img {
+            height: 100%;
+        }
+    }
+    .right {
+        box-sizing: border-box;
+        padding: 0 30px;
         display: flex;
-        height: 100%;
-        position: relative;
+        align-items: flex-end;
         justify-content: space-between;
+        flex-grow: 1;
+        min-width: 300px;
 
-        .left-group {
-            flex-shrink: 1;
+    }
+}
 
-            img {
-                height: 100%;
-            }
 
-        }
-
-        .right-group {
-            box-sizing: border-box;
-            padding: 0 30px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            flex-grow: 1;
-            min-width: 300px;
-        }
 
         .selected-asset-packs {
             margin-bottom: 20px;
@@ -266,20 +266,13 @@
             text-align: right;
         }
 
-        .default-button.submit {
-            background-color: #000;
-            color: #fff;
-            float: right;
-            margin-top: 20px;
-        }
-
         @media all and (max-width: 1280px) {
-            .right-group {
+            .right {
                 .recreate {
                     margin-right: 50px
                 }
             }
 
         }
-    }
+
 </style>

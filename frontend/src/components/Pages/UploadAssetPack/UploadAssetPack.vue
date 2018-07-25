@@ -1,14 +1,14 @@
 <template>
     <layout layout-style="pulled-left">
                 <div class="left">
-                    <div>
+                    <div class="up">
                         <h1 class="large-title">Upload asset pack</h1>
                         <div class="input-group">
                             <cg-input name="pack_name" placeholder="Asset Pack name"/>
                             <cg-input name="price" placeholder="Value"/>                    
                         </div>
                     </div>
-                    <div>
+                    <div class="down">
                         <div class="upload-assets">
                             <input-file
                                 id="files"
@@ -16,7 +16,7 @@
                                 @change="uploadAssets"/>
                             <div class="info">
                                 <span>Upload multiple assets</span>
-                                <span>Assets in pack 15 of 50</span>
+                                <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
                             </div>
                         </div>
                         <div class="graphic-preview">
@@ -36,9 +36,9 @@
                                 @click="renderCanvas">
                                 Try
                             </cg-button>
-                            <cg-button button-style="no-border">
+                            <button-link to="/asset-packs" button-style="no-border">
                                 Cancel
-                            </cg-button>
+                            </button-link>
                         </div>
                     </div>
                 </div>
@@ -51,10 +51,10 @@
                                 v-for="(asset, index) in assets"
                                 :key="index">
                                 <img :src="asset.path"/>
-                                <div class="overlay" :class="asset.attribute === 122 ? 'bg-selected' : ''">
-                                    <IconBackground @click.native="toggleBackground(index)"></IconBackground>
-                                    <IconTrash @click.native="remove(index)"></IconTrash>
-                                </div>
+                                <overlay :class="asset.attribute === 122 ? 'bg-selected' : ''">
+                                    <ico-background @click.native="toggleBackground(index)"/>
+                                    <ico-trash @click.native="remove(index)"/>
+                                </overlay>
                             </div>
                         </div>
                     </div>
@@ -68,21 +68,22 @@
   import {createAssetPack, makeCoverImage} from '../../../methods';
   import * as utils from '../../../../scripts/utils';
 
-  import IconTrash from './template/IconTrash.vue';
-  import IconBackground from './template/IconBackground.vue';
+  import IcoTrash from './template/IcoTrash.vue';
+  import IcoBackground from './template/IcoBackground.vue';
   import InputFile from './template/InputFile.vue';
 
-  export default {
+export default {
     name: 'UploadAssetPack',
     components: {
-        IconTrash,
-        IconBackground,
+        IcoTrash,
+        IcoBackground,
         InputFile
         },
     data: () => ({
-      metamask_account: 0,
-      assets: [],
-      canvasData: {
+        maxAssets: 50,
+        metamask_account: 0,
+        assets: [],
+        canvasData: {
             assets: [],
             ratio: '1:1',
             frame: false,
@@ -174,14 +175,19 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    .up {
+        margin-bottom: 90px;
+    }
     .input-group {
         width: 100%;
         .input {
             &:first-of-type {
                 width: 69%;
+                flex: 0 0 69%;
             }
             &:last-of-type {
                 width: 29%;
+                flex: 0 0 29%;
             }
         }
     }
@@ -218,7 +224,7 @@
         canvas {
             background-color: white;
             width: 220px;
-            height: 220px;
+            height: 120px;
         }
         .button {
             margin-left: 10px;
@@ -233,7 +239,6 @@
         overflow: hidden !important;
     }
 }
-
 .pack-name {
     width: 210px;
     margin-right: 20px;
@@ -250,18 +255,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     .overlay {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        width: 206px;
-        height: 206px;
-        background: rgba(0, 0, 0, 0.74);
-        transition: opacity 0.3s ease;
-
         &.bg-selected {
-            .icon-background {
+            .ico-background {
                 fill: #fff;
                 path {
                     fill: #fff
@@ -269,12 +265,10 @@
             }
         }
     }
-
     img {
         width: 180px;
         height: 180px;
     }
-
     &:nth-child(3n + 2) {
         margin: 0 20px;
     }
@@ -282,13 +276,13 @@
         margin-bottom: 0;
     }
 
-    .icon-trash {
+    .ico-trash {
         position: absolute;
         top: 15px;
         right: 15px;
     }
 
-    .icon-background {
+    .ico-background {
         position: absolute;
         bottom: 15px;
         left: 15px;

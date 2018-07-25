@@ -58,5 +58,10 @@ export default {
     background: none;
     border: 1px solid #000;
 }
+.no-border {
+    color: #000;
+    background: none;
+    border: 1px solid transparent;
+}
 </style>
 

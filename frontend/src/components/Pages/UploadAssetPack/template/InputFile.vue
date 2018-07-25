@@ -9,6 +9,7 @@
             type="file"
             multiple
             :size="maxFiles"
+            :accept="accept"
             v-on="$listeners">
     </label>
 </template>
@@ -28,6 +29,10 @@ export default {
         buttonStyle: {
             type: String,
             default: 'negative'
+        },
+        accept: {
+            type: String,
+            default: 'image/*'
         }
     }
 }

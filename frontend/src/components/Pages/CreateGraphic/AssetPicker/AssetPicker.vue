@@ -1,5 +1,5 @@
 <template>
-    <div class="asset-picker">
+    <div class="container">
         <div class="asset-picker-header">
             <span class="large-title">Select Asset Pack</span>
             <div>
