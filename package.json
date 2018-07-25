@@ -49,6 +49,7 @@
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.8",
     "vuebar": "0.0.18",
+    "vuex": "^3.0.1",
     "web3": "^1.0.0-beta.34",
     "webpack": "^4.15.1",
     "webpack-cli": "^2.0.14",

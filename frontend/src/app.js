@@ -1,8 +1,11 @@
 import Vue from 'vue';
+import Vuex from 'vuex'; 
 import VueRouter from 'vue-router';
 import { VueMasonryPlugin } from 'vue-masonry';
 import routes from './routes';
 import Vuebar from 'vuebar';
+
+// import VuexStore from './store/store';
 
 import App from './components/App.vue';
 import Layout from './components/Shared/Layout/Layout.vue';
@@ -29,18 +32,22 @@ Vue.component('userLink', UserLink);
 Vue.component('overlay', Overlay);
 Vue.component('buttonIcon', ButtonIcon);
 
-const router = new VueRouter({
-  mode: 'history',
-  routes,
-});
-
+Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueMasonryPlugin);
 Vue.use(Vuebar);
 
+const router = new VueRouter({
+  mode: 'history',
+  routes
+});
+
+// const store = new Vuex.Store(VuexStore);
+
 const app = new Vue({
   ...App,
   router,
+  // store
 });
 
 export { app };
