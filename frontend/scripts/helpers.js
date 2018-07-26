@@ -1,4 +1,3 @@
-
 export function getAccounts() {
     return new Promise((resolve, reject) => {
         web3.eth.getAccounts((err, data) => {

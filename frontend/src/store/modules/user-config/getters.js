@@ -1,9 +1,9 @@
-// import {
-//     GETTER_NAME,
-//     ACTION_NAME,
-//     MUTATION_NAME
-// } from './types';
+import {
+    METAMASK_ACC
+} from './types';
 
-// export default {
-
-// };
+export default {
+    [METAMASK_ACC]: state => {
+        return state.metamaskAcc;
+    }
+};

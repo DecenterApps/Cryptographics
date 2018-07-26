@@ -9,10 +9,9 @@
                     <router-link to="/gallery" class-active="active" > Gallery</router-link>
                     <router-link to="/asset-packs" class-active="active" >Asset Packs</router-link>
                     <router-link to="/about" class-active="active" >About</router-link>
-                    <span>|</span>
                 </div>
                 <div class="profile">
-                    <router-link to="/profile">My Profile</router-link>
+                    <router-link to="/profile">{{ username }}</router-link>
                     <span class="profile-img"></span>
                     <button-link to="/create-graphic" button-style="positive">Create</button-link>
                 </div>
@@ -22,12 +21,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { METAMASK_ACC } from 'store/user-config/types';
+
 import Logo from '../UI/Logo.vue';
+
+
 
   export default {
     name: 'CgHeader',
+    // data: () => ({
+    //     username: 'Anon'
+    // }),
     components: {
         Logo
+    },
+    computed: {
+        ...mapGetters({
+            username: METAMASK_ACC
+        })
     }
   };
 </script>

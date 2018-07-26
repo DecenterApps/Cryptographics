@@ -1,14 +1,14 @@
-// /**
-//  * GETTERS
-//  */
-// export const GETTER_NAME = 'GETTER_NAME';
+/**
+ * GETTERS
+ */
+export const METAMASK_ACC = 'METAMASK_ACC';
 
-// /**
-//  * ACTIONS
-//  */
-// export const ACTION_NAME = 'ACTION_NAME';
+/**
+ * ACTIONS
+ */
+export const UPDATE_METAMASK_ACC = 'UPDATE_METAMASK_ACC';
 
 // /**
 //  * MUTATION
 //  */
-// export const MUTATION_NAME = 'MUTATION_NAME';
+export const MUTATE_METAMASK_ACC = 'MUTATE_METAMASK_ACC';

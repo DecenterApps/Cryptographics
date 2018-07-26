@@ -1,5 +1,5 @@
 export default {
-    username: '',
+    username: 'Anon',
     metamaskAcc: '',
     assetsCreated: [],
     assetsBought: [],

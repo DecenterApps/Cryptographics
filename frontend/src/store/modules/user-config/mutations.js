@@ -1,9 +1,12 @@
-// import {
-//     GETTER_NAME,
-//     ACTION_NAME,
-//     MUTATION_NAME
-// } from './types';
+import {
+    MUTATE_METAMASK_ACC
+} from './types';
 
-// export default {
+export default {
+    [MUTATE_METAMASK_ACC]: (state, payload) => {
+        state.metamaskAcc = payload;
+    }
+};
 
-// };
+
+

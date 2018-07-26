@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import { UPDATE_METAMASK_ACC } from 'store/user-config/types';
+
 import CgHeader from './Shared/CgHeader/CgHeader.vue';
 import CgFooter from './Shared/CgFooter/CgFooter.vue';
 
@@ -15,6 +18,14 @@ export default {
     components: {
         CgHeader,
         CgFooter
+    },
+    beforeMount() {
+        this[UPDATE_METAMASK_ACC]();
+    },
+    methods: {
+        ...mapActions({
+            UPDATE_METAMASK_ACC
+        })
     }
 };
 </script>

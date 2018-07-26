@@ -15,6 +15,10 @@ const config = {
   },
   resolve: {
     extensions: ['.vue', '.js', '.scss', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.png', '.jpg'],
+    alias: {
+      store: path.resolve(__dirname, '../src/store/modules'),
+      helpers: path.resolve(__dirname, '../scripts/helpers')
+    }
   },
   module: {
     rules: [
