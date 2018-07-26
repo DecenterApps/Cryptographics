@@ -30,12 +30,13 @@ export default {
 
 <style lang="scss" scoped>
 .content-wrapper {
-    background-color: #D9D9D9;
-    min-height: calc(100vh - 280px);
+    display: flex;
+    min-height: calc(100vh - 279px);
     width: 100%;
     max-width: 1120px;
     margin: 0 auto;
     position: relative;
+    background-color: #D9D9D9;
     &:before {
         content: "";
         background-color: #D9D9D9;

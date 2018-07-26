@@ -83,11 +83,12 @@ p {
 }
 
 .container {
-  width: 1120px;
-  margin: 0 auto;
-  @media all and (max-width: 1120px) {
-    width: 80%;
-  }
+    max-width: 1120px;
+    width: 100%;
+    margin: 0 auto;
+    @media screen and (max-width: 1120px) {
+        width: 80%;
+    }
 }
 
 .vb-content {

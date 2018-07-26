@@ -2,9 +2,9 @@
     <div class="graphic-details">
         <div class="graphic-meta">
             <div class="assets-pack">
-                <asset-circle to="/assetpackurl" name="03" color="#492246"/>
-                <asset-circle to="/assetpackurl" name="01" color="#494946"/>
-                <asset-circle to="/assetpackurl" name="05" color="#797979"/>
+                <asset-circle-link to="/assetpackurl" name="03" color="#492246"/>
+                <asset-circle-link to="/assetpackurl" name="01" color="#494946"/>
+                <asset-circle-link to="/assetpackurl" name="05" color="#797979"/>
             </div>
             <p>Assets pack used in this Cryptographic</p>
         </div>
@@ -95,6 +95,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding-bottom: 70px;
 }
 .graphic-name {
     margin-bottom: 50px;

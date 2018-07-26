@@ -1,11 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex'; 
-import VueRouter from 'vue-router';
 import { VueMasonryPlugin } from 'vue-masonry';
-import routes from './routes';
+import router from './router';
+import store from './store/store';
 import Vuebar from 'vuebar';
-
-// import VuexStore from './store/store';
 
 import App from './components/App.vue';
 import Layout from './components/Shared/Layout/Layout.vue';
@@ -16,6 +13,7 @@ import Input from './components/Shared/UI/Input.vue';
 import Radio from './components/Shared/UI/Radio.vue';
 import Checkbox from './components/Shared/UI/Checkbox.vue';
 import AssetCircle from './components/Shared/UI/AssetCircle.vue';
+import AssetCircleLink from './components/Shared/UI/AssetCircleLink.vue';
 import UserLink from './components/Shared/UI/UserLink.vue';
 import Overlay from './components/Shared/UI/Overlay.vue';
 import ButtonIcon from './components/Shared/UI/ButtonIcon.vue';
@@ -28,26 +26,18 @@ Vue.component('cgInput', Input);
 Vue.component('cgRadio', Radio);
 Vue.component('cgCheckbox', Checkbox);
 Vue.component('assetCircle', AssetCircle);
+Vue.component('assetCircleLink', AssetCircleLink);
 Vue.component('userLink', UserLink);
 Vue.component('overlay', Overlay);
 Vue.component('buttonIcon', ButtonIcon);
 
-Vue.use(Vuex);
-Vue.use(VueRouter);
 Vue.use(VueMasonryPlugin);
 Vue.use(Vuebar);
-
-const router = new VueRouter({
-  mode: 'history',
-  routes
-});
-
-// const store = new Vuex.Store(VuexStore);
 
 const app = new Vue({
   ...App,
   router,
-  // store
+  store
 });
 
 export { app };

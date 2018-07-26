@@ -1,10 +1,10 @@
 <template>
     <button 
-        class="button"
+        class="button ico-button"
         v-bind="$attrs"
         v-on="$listeners">
-        <ico-download v-if="iconType === 'download'"/>
-        <ico-magnifier v-if="iconType === 'zoom'"/>
+        <ico-download v-if="iconType === 'download'" :width="width" :height="height" :color="color"/>
+        <ico-magnifier v-if="iconType === 'zoom'" :size="size" :color="color"/>
     </button>
 </template>
 
@@ -18,6 +18,18 @@ export default {
         iconType: {
             type: String,
             default: 'download'
+        },
+        color: {
+            type: String
+        },
+        size: {
+            type: String
+        },
+        width: {
+            type: String
+        },
+        height: {
+            type: String
         }
     },
     components: {

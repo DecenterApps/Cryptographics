@@ -1,6 +1,6 @@
 <template>
     <layout layout-style="pulled-left" layout-content="tabbed">
-        <art-builder
+        <graphic-builder
         v-if="activeTab === 'create'"
         v-on:tabChange="changeTab"
         :selectedAssetPacks="selectedAssetPacks"/>
@@ -30,11 +30,14 @@
 
 <script>
   import AssetPicker from './AssetPicker/AssetPicker.vue';
-  import ArtBuilder from './ArtBuilder/ArtBuilder.vue';
+  import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
 
   export default {
     name: 'CreateGraphic',
-    components: { ArtBuilder, AssetPicker },
+    components: { 
+        GraphicBuilder, 
+        AssetPicker
+    },
     data: () => ({
       activeTab: 'create',
       selectedAssetPacks: [],
