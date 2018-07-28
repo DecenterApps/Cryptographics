@@ -45,13 +45,13 @@
 </template>
 
 <script>
-  import functions from '../../../../scripts/functions';
-  import methods from '../../../methods';
+  import functions from 'scripts/functions';
+  import methods from 'methods';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
-  import AssetPacksPagination from '../../Shared/AssetPacksPagination/AssetPacksPagination.vue';
-  import Gallery from '../../Shared/Gallery/Gallery.vue';
+  import AssetPacksPagination from 'shared/AssetPacksPagination/AssetPacksPagination.vue';
+  import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
     name: 'my-profile',

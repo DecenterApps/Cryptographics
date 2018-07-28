@@ -5,18 +5,19 @@ import store from './store/store';
 import Vuebar from 'vuebar';
 
 import App from './components/App.vue';
-import Layout from './components/Shared/Layout/Layout.vue';
-import SliderGallery from './components/Shared/SliderGallery/SliderGallery.vue';
-import Button from './components/Shared/UI/Button.vue';
-import ButtonLink from './components/Shared/UI/ButtonLink.vue';
-import Input from './components/Shared/UI/Input.vue';
-import Radio from './components/Shared/UI/Radio.vue';
-import Checkbox from './components/Shared/UI/Checkbox.vue';
-import AssetCircle from './components/Shared/UI/AssetCircle.vue';
-import AssetCircleLink from './components/Shared/UI/AssetCircleLink.vue';
-import UserLink from './components/Shared/UI/UserLink.vue';
-import Overlay from './components/Shared/UI/Overlay.vue';
-import ButtonIcon from './components/Shared/UI/ButtonIcon.vue';
+
+import Layout from 'shared/Layout/Layout.vue';
+import SliderGallery from 'shared/SliderGallery/SliderGallery.vue';
+import Button from 'shared/UI/Button.vue';
+import ButtonLink from 'shared/UI/ButtonLink.vue';
+import Input from 'shared/UI/Input.vue';
+import Radio from 'shared/UI/Radio.vue';
+import Checkbox from 'shared/UI/Checkbox.vue';
+import AssetCircle from 'shared/UI/AssetCircle.vue';
+import AssetCircleLink from 'shared/UI/AssetCircleLink.vue';
+import UserLink from 'shared/UI/UserLink.vue';
+import Overlay from 'shared/UI/Overlay.vue';
+import ButtonIcon from 'shared/UI/ButtonIcon.vue';
 
 Vue.component('layout', Layout);
 Vue.component('sliderGallery', SliderGallery);

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import AssetPacksPagination from '../../Shared/AssetPacksPagination/AssetPacksPagination.vue';
+  import AssetPacksPagination from 'shared/AssetPacksPagination/AssetPacksPagination.vue';
 
   export default {
     name: 'AssetPacks',

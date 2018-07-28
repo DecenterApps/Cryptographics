@@ -23,13 +23,11 @@ function pickTenRandoms() {
 }
 async function getAttributesForAssets(assetIds) {
     let attributes = await assetManagerContract.methods.getAttributesForAssets(assetIds).call();
-    console.log(attributes);
     return attributes;
 }
 async function getAssetIpfs(assetId) {
     let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
     let ipfsDecoded = utils.getIpfsHashFromBytes32(ipfsHash);
-    console.log("Asset ipfs hash = " + ipfsHash);
     return ipfsDecoded;
 }
 
@@ -44,14 +42,12 @@ async function getAssetsIpfs(assetIds) {
 
 async function getImageIpfs(imageId) {
     let ipfsHash = await digitalPrintImageContract.methods.idToIpfsHash(imageId).call();
-    console.log("Image ipfs hash = " + ipfsHash);
     return ipfsHash;
 }
 
 
 async function getCreatedAssetPacks(address) {
     let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
-    console.log("ASSET PACK IDS : " + assetPacksIds);
     return assetPacksIds;
 }
 
@@ -59,7 +55,6 @@ async function getPaginatedAssetPacks(pagination, count, address) {
     let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
     let beginning = (pagination-1)*count;
     let end = pagination+count -1;
-    console.log(beginning,end);
     return assetPacksIds.slice(beginning, end);
 }
 
@@ -147,8 +142,6 @@ async function calculatePrice(pickedAssets, owner) {
 // Function to get total number of assets existing on contract
 async function getNumberOfAssets() {
     let number = await assetManagerContract.methods.getNumberOfAssets().call();
-    console.log(assetManagerContract.methods.getNumberOfAssets());
-    console.log(await assetManagerContract.methods.getNumberOfAssets().call())
     return number;
 }
 
@@ -180,10 +173,7 @@ async function convertSeed(randomSeed) {
 // Function to calculate first random seed, it will be executed from contract
 
 async function calculateFirstSeed(timestamp, rands) {
-    console.log("Timestamp: " + timestamp);
-    console.log("Rands: " + rands);
     let randomSeed = await digitalPrintImageContract.methods.calculateSeed(rands, timestamp).call();
-    console.log("RANDOM SEED: " + randomSeed)
     return randomSeed;
 }
 
@@ -292,7 +282,6 @@ async function getAssetStats(id) {
 async function getPositionsOfAssetsInImage(finalSeed, potentialAssets) {
     let data = await digitalPrintImageContract.methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
-    console.log(data);
     return data;
 }
 function generatePacks() {
@@ -305,7 +294,6 @@ function generatePacks() {
     }
     let arr = [];
     arr.push(pack);
-    console.log(pack);
     return arr;
 }
 
@@ -334,7 +322,6 @@ async function test() {
 function printImageData(assets) {
     for (let i = 0; i < assets.length; i++) {
         let obj = assets[i];
-        console.log(obj)
     }
 }
 

@@ -6,11 +6,11 @@
 </template>
 
 <script>
-    import * as functions from "../../../../scripts/functions";
-    import * as methods from "../../../methods";
-    import * as utils from "../../../../scripts/utils";
+    import * as functions from "scripts/functions";
+    import * as methods from "methods";
+    import * as utils from "scripts/utils";
 
-    import Gallery from '../../Shared/Gallery/Gallery.vue';
+    import Gallery from 'shared/Gallery/Gallery.vue';
 
     export default {
         name: 'about',

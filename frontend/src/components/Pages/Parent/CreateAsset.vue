@@ -12,8 +12,8 @@
 
     // const util = require('util');
     // const exec = util.promisify(require('child_process').exec);
-    const methods = require("../../../methods.js");
-    const ipfsService = require('../../../../scripts/ipfsService.js');
+    const methods = require("methods");
+    const ipfsService = require('scripts/ipfsService');
 
     export default {
         data:  () => ({

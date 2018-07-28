@@ -17,7 +17,10 @@ const config = {
     extensions: ['.vue', '.js', '.scss', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.png', '.jpg'],
     alias: {
       store: path.resolve(__dirname, '../src/store/modules'),
-      helpers: path.resolve(__dirname, '../scripts/helpers')
+      scripts: path.resolve(__dirname, '../scripts'),
+      methods: path.resolve(__dirname, '../src/methods'),
+      shared: path.resolve(__dirname, '../src/components/Shared'),
+      pages: path.resolve(__dirname, '../src/components/Pages')
     }
   },
   module: {

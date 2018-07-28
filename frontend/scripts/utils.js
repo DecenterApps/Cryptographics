@@ -24,7 +24,6 @@ function dec2bin(dec){
     return toSize(bits,BITS_PER_ID);
 }
 
-
 function convertInputToBin(arr){
     var solution = "";
     for(var i=0; i<arr.length; i++){
@@ -33,12 +32,9 @@ function convertInputToBin(arr){
     return solution;
 }
 
-
 function chunkString(str, length) {
     return str.match(new RegExp('.{1,' + length + '}', 'g'));
 }
-
-// arr = [1,2,3,4,5,6,7,8];
 
 function encode(arr) {
     let bits = convertInputToBin(arr);
@@ -66,14 +62,12 @@ function decode(arr) {
         }
         var numbers = chunkString(x, 24);
         for (let i = 0; i < numbers.length; i++) {
-            // console.log(numbers[i] + "   " + bin2dec(numbers[i]));
             decoded.push(bin2dec(numbers[i]));
         }
     }
     return decoded;
 }
 
-//Function to pick 10 random numbers between 0,100
 function pickRandomHashes() {
     let arr = [];
     for(let i=0; i<10; i++){
@@ -98,18 +92,10 @@ function merge_objects(obj1, obj2) {
     return obj3;
 }
 
-
 function getBytes32FromIpfsHash(ipfsHash) {
     return "0x"+bs58.decode(ipfsHash).slice(2).toString('hex')
 }
-//
-// decode(["0x0000000000000000000001000002000003000004000005000006000007000008",
-// "0x0000000000000000000001000002000003000004000005000006000007000008"]);
 
-console.log(encode([1,2,3,4,5,6,7,8,9,10]));
-
-
-// console.log(encode([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]));
 module.exports = {
     encode,
     decode,

@@ -1,6 +1,6 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
-const utils = require('../frontend/scripts/utils.js');
+const utils = require('scripts/utils.js');
 const Web3 = require('web3');
 
 contract('DigitalPrintImage', async (accounts) => {

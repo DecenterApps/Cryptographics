@@ -1,11 +1,9 @@
-const functions = require('../scripts/functions');
-const utils = require('../scripts/utils');
-const conf = require('../scripts/config.json');
-const Web3 = require('web3');
+const functions = require('scripts/functions');
+const utils = require('scripts/utils');
+const conf = require('scripts/config.json');
+const helpers = require('scripts/helpers');
 
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.decenter.com'));
-
-const web3 = new Web3(window.web3.currentProvider);
+helpers.checkProvider();
 
 const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
@@ -76,10 +74,8 @@ async function getNumberOfAss() {
 async function loadDataForAssets() {
   return new Promise(async (resolve, reject) => {
     let assets = parseInt(await getNumberOfAss(), 10);
-    console.log(assets);
     const promises = [];
     for (let i = 0; i < assets; i++) {
-      console.log('loading');
       let promise = functions.getAssetStats(i);
       promises.push(promise);
     }
@@ -87,8 +83,6 @@ async function loadDataForAssets() {
     Promise.all(promises)
       .then((data) => {
         resolve(data);
-        console.log('all data ');
-        console.log(data);
       })
       .catch((err) => {
         reject(new Error('Couldn\'t load all data.'));

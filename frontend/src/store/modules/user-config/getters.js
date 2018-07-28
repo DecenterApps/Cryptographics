@@ -1,9 +1,13 @@
 import {
-    METAMASK_ACC
+    METAMASK_ADDRESS,
+    USERNAME
 } from './types';
 
 export default {
-    [METAMASK_ACC]: state => {
-        return state.metamaskAcc;
+    [METAMASK_ADDRESS]: state => {
+        return state.metamaskAddress;
+    },
+    [USERNAME]: state => {
+        return state.username;
     }
 };

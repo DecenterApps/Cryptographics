@@ -8,10 +8,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { UPDATE_METAMASK_ACC } from 'store/user-config/types';
+import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG } from 'store/user-config/types';
 
-import CgHeader from './Shared/CgHeader/CgHeader.vue';
-import CgFooter from './Shared/CgFooter/CgFooter.vue';
+import CgHeader from 'shared/CgHeader/CgHeader.vue';
+import CgFooter from 'shared/CgFooter/CgFooter.vue';
 
 export default {
     name: 'App',
@@ -20,11 +20,15 @@ export default {
         CgFooter
     },
     beforeMount() {
-        this[UPDATE_METAMASK_ACC]();
+        this[SET_USER_CONFIG]();
+    },
+    mounted() {
+        this[UPDATE_USER_CONFIG]();
     },
     methods: {
         ...mapActions({
-            UPDATE_METAMASK_ACC
+            SET_USER_CONFIG,
+            UPDATE_USER_CONFIG
         })
     }
 };
@@ -37,10 +41,10 @@ export default {
         font-family: 'YoungSerif-Regular';
         src: url('../assets/fonts/YoungSerif-Regular.eot');
         src: url('../assets/fonts/YoungSerif-Regular.woff2') format('woff2'),
-        url('../assets/fonts/YoungSerif-Regular.woff') format('woff'),
-        url('../assets/fonts/YoungSerif-Regular.ttf') format('truetype'),
-        url('../assets/fonts/YoungSerif-Regular.svg#YoungSerif-Regular') format('svg'),
-        url('../assets/fonts/YoungSerif-Regular.eot?#iefix') format('embedded-opentype');
+             url('../assets/fonts/YoungSerif-Regular.woff') format('woff'),
+             url('../assets/fonts/YoungSerif-Regular.ttf') format('truetype'),
+             url('../assets/fonts/YoungSerif-Regular.svg#YoungSerif-Regular') format('svg'),
+             url('../assets/fonts/YoungSerif-Regular.eot?#iefix') format('embedded-opentype');
         font-weight: normal;
         font-style: normal;
     }

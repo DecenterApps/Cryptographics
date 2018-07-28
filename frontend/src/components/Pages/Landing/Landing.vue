@@ -54,7 +54,7 @@
 
 <script>
   import { makeCoverImage } from "../../../methods";
-  import Gallery from '../../Shared/Gallery/Gallery.vue';
+  import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
     name: 'Landing',

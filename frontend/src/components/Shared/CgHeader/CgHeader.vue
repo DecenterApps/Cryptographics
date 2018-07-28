@@ -6,9 +6,9 @@
             </div>
             <div class="links-section">
                 <div class="links">
-                    <router-link to="/gallery" class-active="active" > Gallery</router-link>
-                    <router-link to="/asset-packs" class-active="active" >Asset Packs</router-link>
-                    <router-link to="/about" class-active="active" >About</router-link>
+                    <router-link to="/gallery" class-active="active">Gallery</router-link>
+                    <router-link to="/asset-packs" class-active="active">Asset Packs</router-link>
+                    <router-link to="/about" class-active="active">About</router-link>
                 </div>
                 <div class="profile">
                     <router-link to="/profile">{{ username }}</router-link>
@@ -22,23 +22,18 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { METAMASK_ACC } from 'store/user-config/types';
+import { USERNAME } from 'store/user-config/types';
 
 import Logo from '../UI/Logo.vue';
 
-
-
   export default {
     name: 'CgHeader',
-    // data: () => ({
-    //     username: 'Anon'
-    // }),
     components: {
         Logo
     },
     computed: {
         ...mapGetters({
-            username: METAMASK_ACC
+            username: USERNAME
         })
     }
   };

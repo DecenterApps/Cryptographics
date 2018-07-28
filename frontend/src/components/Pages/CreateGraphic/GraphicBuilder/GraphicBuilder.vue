@@ -56,11 +56,11 @@
 import Canvas from './Canvas.vue';
 
 import IPFS from 'ipfs';
-import * as utils from '../../../../../scripts/utils';
-import * as functions from '../../../../../scripts/functions';
-import * as methods from '../../../../methods';
-import { getAccounts } from '../../../../../scripts/helpers';
-import * as ipfsService from '../../../../../scripts/ipfsService';
+import * as utils from 'scripts/utils';
+import * as functions from 'scripts/functions';
+import * as methods from 'methods';
+import { getAccounts } from 'scripts/helpers';
+import * as ipfsService from 'scripts/ipfsService';
 
 export default {
     name: 'GraphicBuilder',

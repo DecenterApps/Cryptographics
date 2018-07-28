@@ -63,10 +63,10 @@
 </template>
 
 <script>
-  import * as ipfsService from '../../../../scripts/ipfsService.js';
-  import { getAccounts } from '../../../../scripts/helpers';
-  import {createAssetPack, makeCoverImage} from '../../../methods';
-  import * as utils from '../../../../scripts/utils';
+  import * as ipfsService from 'scripts/ipfsService';
+  import { getAccounts } from 'scripts/helpers';
+  import {createAssetPack, makeCoverImage} from 'methods';
+  import * as utils from 'scripts/utils';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';

@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Parent from './components/Pages/Parent/Parent.vue';
-import About from './components/Pages/About/About.vue';
-import Home from './components/Pages/Home/Home.vue';
-import Landing from './components/Pages/Landing/Landing.vue';
-import SingleGraphic from './components/Pages/SingleGraphic/SingleGraphic.vue';
-import AssetPacks from './components/Pages/AssetPacks/AssetPacks.vue';
-import Profile from './components/Pages/Profile/Profile.vue';
-import CreateGraphic from './components/Pages/CreateGraphic/CreateGraphic.vue';
-import UploadAssetPack from './components/Pages/UploadAssetPack/UploadAssetPack.vue';
+// import Parent from 'pages/Parent/Parent.vue';
+import About from 'pages/About/About.vue';
+import Home from 'pages/Home/Home.vue';
+import Landing from 'pages/Landing/Landing.vue';
+import SingleGraphic from 'pages/SingleGraphic/SingleGraphic.vue';
+import AssetPacks from 'pages/AssetPacks/AssetPacks.vue';
+import Profile from 'pages/Profile/Profile.vue';
+import CreateGraphic from 'pages/CreateGraphic/CreateGraphic.vue';
+import UploadAssetPack from 'pages/UploadAssetPack/UploadAssetPack.vue';
 
 Vue.use(VueRouter);
 
@@ -17,7 +17,7 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: Home },
-    { path: '/legacy', component: Parent },
+    // { path: '/legacy', component: Parent },
     { path: '/about', component: About },
     { path: '/landing', component: Landing },
     { path: '/single-graphic', component: SingleGraphic },

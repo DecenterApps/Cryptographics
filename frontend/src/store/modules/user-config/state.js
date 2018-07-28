@@ -1,6 +1,6 @@
 export default {
     username: 'Anon',
-    metamaskAcc: '',
+    metamaskAddress: undefined,
     assetsCreated: [],
     assetsBought: [],
     graphicsCreated: [],

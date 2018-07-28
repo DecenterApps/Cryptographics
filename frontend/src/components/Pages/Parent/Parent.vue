@@ -60,10 +60,10 @@
   import MyImages from './MyImages.vue';
   import CreateAsset from './CreateAsset.vue';
 
-  const methods = require('../../../methods.js');
-  const utils = require('../../../../scripts/utils.js');
-  const functions = require('../../../../scripts/functions.js');
-  const ipfsService = require('../../../../scripts/ipfsService.js');
+  const methods = require('methods');
+  const utils = require('scripts/utils');
+  const functions = require('scripts/functions');
+  const ipfsService = require('scripts/ipfsService');
 
   export default {
     data: () => ({

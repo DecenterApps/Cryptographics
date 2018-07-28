@@ -27,9 +27,9 @@
 </template>
 
 <script>
-  import { getAccounts } from '../../../../scripts/helpers';
+  import { getAccounts } from 'scripts/helpers';
 
-  const functions = require('../../../../scripts/functions.js');
+  const functions = require('scripts/functions.js');
 
   const NUM_PER_PAGE = 2;
 

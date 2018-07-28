@@ -31,7 +31,7 @@
 </template>
 
 <script>
-const functions = require('../../../../../scripts/functions.js');
+const functions = require('scripts/functions.js');
 
 export default {
     name: 'AssetPicker',

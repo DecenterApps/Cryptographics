@@ -5,8 +5,8 @@
 </template>
 
 <script>
-    import methods from '../../../methods'
-    const functions = require('../../../../scripts/functions.js');
+    import methods from 'methods'
+    const functions = require('scripts/functions.js');
     export default {
         data:  () => ({
         }),
