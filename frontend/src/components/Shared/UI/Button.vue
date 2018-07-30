@@ -36,6 +36,7 @@ export default {
     text-align: center;
     text-transform: capitalize;
     white-space: nowrap;
+    line-height: 1;
 }
 .positive {
     color: #000;
