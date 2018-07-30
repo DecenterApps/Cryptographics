@@ -5,14 +5,29 @@
 </template>
 
 <script>
+  import { mapActions, mapState } from 'vuex';
+  import { TOGGLE_CANVAS_DRAWING } from 'store/canvas/types';
   import { getSize, makeImage } from 'services/imageService';
 
   export default {
     data: () => ({}),
     props: ['canvasData', 'frame'],
+    methods: {
+      ...mapActions({
+        toggleDrawing: TOGGLE_CANVAS_DRAWING,
+      }),
+      getCanvasElement() {
+        return document.getElementById('canvas');
+      },
+    },
+    computed: {
+      ...mapState({
+        isCanvasDrawing: ({ canvas }) => canvas.isCanvasDrawing,
+      })
+    },
     watch: {
       canvasData: {
-        handler: function (newData) {
+        handler: async function (newData) {
           let canvas = document.getElementById('canvas');
           const rect = canvas.parentNode.getBoundingClientRect();
           const size = getSize(rect.width, rect.height, this.canvasData.ratio);
@@ -26,7 +41,10 @@
             top: size.width / 20,
             ratio: this.canvasData.ratio
           } : undefined;
-          makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
+          this.toggleDrawing();
+          await makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
+          console.log(1);
+          this.toggleDrawing();
         },
         deep: true,
       }
@@ -42,11 +60,6 @@
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     },
-    methods: {
-      getCanvasElement() {
-        return document.getElementById('canvas');
-      },
-    }
   };
 </script>
 

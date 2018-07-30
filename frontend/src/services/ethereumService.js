@@ -31,8 +31,9 @@ export const getAssetIpfs = async (assetId) => {
   return utils.getIpfsHashFromBytes32(ipfsHash);
 };
 
-export const getAssetsIpfs = async (assetIds) => {
-  let ipfsHashes = await assetManagerContract.methods.getIpfsForAssets(assetIds).call();
+export const getAssetsIpfs = async (assets) => {
+  const ids = assets.map(asset => asset.id - 1);
+  let ipfsHashes = await assetManagerContract.methods.getIpfsForAssets(ids).call();
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }

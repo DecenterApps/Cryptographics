@@ -5,6 +5,7 @@
         </div>
         <div class="right">
             <cg-button
+                    :disabled="isCanvasDrawing"
                     @click="renderCanvas"
                     button-style="transparent">
                 Recreate
@@ -44,7 +45,7 @@
                     </div>
                 </div>
                 <div class="frame">
-                    <cg-checkbox v-model="canvasData.frame">Frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
                 </div>
                 <cg-button @click="buyImage">Submit</cg-button>
             </div>
@@ -66,6 +67,7 @@
   import * as ipfsService from 'services/ipfsService';
   import { mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { CANVAS_DRAWING } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -91,6 +93,7 @@
       ...mapGetters({
         userAddress: METAMASK_ADDRESS,
         username: USERNAME,
+        isCanvasDrawing: CANVAS_DRAWING,
       })
     },
     props: ['selectedAssetPacks'],

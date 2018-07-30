@@ -118,6 +118,52 @@ export const getData = async (randomSeed, iterations, potentialAssets, allAssets
   return allDataAboutAsset;
 };
 
+const drawFrame = (context, canvasHeight, canvasWidth, frame) => {
+  const { left, right, bottom, top } = frame;
+
+  context.strokeStyle = '#FFF';
+  context.beginPath();
+  context.moveTo(left / 2, 0);
+  context.lineWidth = left;
+  context.lineTo(left / 2, canvasHeight);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(0, canvasHeight - bottom / 2);
+  context.lineWidth = bottom;
+  context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(canvasWidth - right / 2, canvasHeight);
+  context.lineWidth = right;
+  context.lineTo(canvasWidth - right / 2, 0);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(canvasWidth, top / 2);
+  context.lineWidth = top;
+  context.lineTo(0, top / 2);
+  context.stroke();
+};
+
+const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame, index) => {
+  let x = asset.x_coordinate % canvasWidth;
+  let y = asset.y_coordinate % canvasHeight;
+  let rotation = asset.rotation;
+  await delay(DELAY * index);
+  const imageDimensions = scaleImage(asset.image.width, asset.image.height, canvasWidth, canvasHeight, frame.ratio);
+  drawImageRot(
+    context,
+    asset.image,
+    x,
+    y,
+    imageDimensions.width,
+    imageDimensions.height,
+    rotation,
+    { isBackground: asset.isBackground, canvasWidth, canvasHeight });
+};
+
 export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
   left: 0,
   right: 0,
@@ -166,30 +212,7 @@ export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
       drawImageRot(context, images[j].image, x, y, width / 4, height / 4, rotation);
       if (imagesLoaded === images.length && frame.left > 0) {
         // WRITE FRAME
-        context.strokeStyle = '#FFF';
-        context.beginPath();
-        context.moveTo(left / 2, 0);
-        context.lineWidth = left;
-        context.lineTo(left / 2, canvasHeight);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(0, canvasHeight - bottom / 2);
-        context.lineWidth = bottom;
-        context.lineTo(canvasWidth, canvasHeight - bottom / 2);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(canvasWidth - right / 2, canvasHeight);
-        context.lineWidth = right;
-        context.lineTo(canvasWidth - right / 2, 0);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(canvasWidth, top / 2);
-        context.lineWidth = top;
-        context.lineTo(0, top / 2);
-        context.stroke();
+        drawFrame(context, canvasHeight, canvasWidth, frame);
       }
     };
   }
@@ -216,106 +239,67 @@ export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
   };
 };
 
-export const makeImage = async (objs, c, width, height, frame = {
+export const makeImage = (objs, c, width, height, frame = {
   left: 0,
   right: 0,
   bottom: 0,
   top: 0,
   ratio: '2:3'
-}) => {
-  let context = c.getContext('2d');
-  const { left, right, bottom, top } = frame;
-  const canvasHeight = height;
-  const canvasWidth = width;
-  width = width - left - right;
-  height = height - top - bottom;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = '#fff';
-  context.fillRect(0, 0, canvasWidth, canvasHeight);
-  let ids = [];
-  for (let j = 0; j < objs.length; j++) {
-    //ids -1 because on contract goes from 0
-    ids.push(objs[j].id - 1);
-  }
-  let hashes = await getAssetsIpfs(ids);
-  let images = [];
-  for (let i = 0; i < objs.length; i++) {
-    console.log(objs[i].id + ' hash : ' + hashes[i]);
-    let image = new Image();
-    let val = objs[i].id;
-    if (val < 10) {
-      val = '0' + val;
+}) =>
+  new Promise(async (resolve, reject) => {
+    let assets = [...objs];
+    let context = c.getContext('2d');
+    const { left, right, bottom, top } = frame;
+    const canvasHeight = height;
+    const canvasWidth = width;
+    width = width - left - right;
+    height = height - top - bottom;
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    let hashes = await getAssetsIpfs(assets);
+    for (let i = 0; i < objs.length; i++) {
+      console.log(assets[i].id + ' hash : ' + hashes[i]);
+      let image = new Image();
+      let val = assets[i].id;
+      if (val < 10) {
+        val = '0' + val;
+      }
+
+      image.src = 'http://ipfs.decenter.com/ipfs/' + hashes[i];
+      image.crossOrigin = 'Anonymous';
+
+      assets[i] = {
+        ...assets[i],
+        background: objs[i].background,
+        isBackground: objs[i].background === '122',
+        image,
+      };
     }
+    assets = helpers.sortBy(assets, 'background');
 
-    // let src = await assetManagerContract.methods.getAssetIpfs(objs[i].id).call();
-    image.src = 'http://ipfs.decenter.com/ipfs/' + hashes[i];
-    // image.src = require('../dist/assets/' + val + '.png');
-    image.crossOrigin = 'Anonymous';
+    let imagesLoaded = 0;
 
-    images.push({
-      background: objs[i].background,
-      isBackground: objs[i].background === '122',
-      image,
-    });
-  }
+    for (let i = 0; i < assets.length; i++) {
+      assets[i].image.onload = async function () {
+        waitForBackgroundLoad(assets, async () => {
+          await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i);
+          imagesLoaded++;
 
-  images = images.sort((a, b) => {
-    return parseInt(a.background) > parseInt(b.background);
+          if (imagesLoaded === assets.length) {
+            console.log('All assets loaded.');
+            resolve({ message: 'Success' });
+
+            if (frame.left > 0 && frame.right > 0) {
+              // DRAW FRAME
+              drawFrame(context, canvasHeight, canvasWidth, frame);
+            }
+          }
+        });
+      };
+    }
   });
-
-  let imagesLoaded = 0;
-
-  for (let j = 0; j < objs.length; j++) {
-    const image = images[j].image;
-    image.onload = async function () {
-      waitForBackgroundLoad(images, async () => {
-        imagesLoaded++;
-        let x = objs[j].x_coordinate % canvasWidth;
-        let y = objs[j].y_coordinate % canvasHeight;
-        let rotation = objs[j].rotation;
-        await delay(DELAY * j);
-        const imageDimensions = scaleImage(image.width, image.height, canvasWidth, canvasHeight, frame.ratio);
-        drawImageRot(
-          context,
-          image,
-          x,
-          y,
-          imageDimensions.width,
-          imageDimensions.height,
-          rotation,
-          { isBackground: images[j].isBackground, canvasWidth, canvasHeight });
-        if (imagesLoaded === objs.length && frame.left > 0) {
-          console.log('All assets loaded.');
-          // WRITE FRAME
-          context.strokeStyle = '#FFF';
-          context.beginPath();
-          context.moveTo(left / 2, 0);
-          context.lineWidth = left;
-          context.lineTo(left / 2, canvasHeight);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(0, canvasHeight - bottom / 2);
-          context.lineWidth = bottom;
-          context.lineTo(canvasWidth, canvasHeight - bottom / 2);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(canvasWidth - right / 2, canvasHeight);
-          context.lineWidth = right;
-          context.lineTo(canvasWidth - right / 2, 0);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(canvasWidth, top / 2);
-          context.lineWidth = top;
-          context.lineTo(0, top / 2);
-          context.stroke();
-        }
-      });
-    };
-  }
-};
 
 const imgLoaded = (img) => img.complete && img.naturalHeight !== 0;
 

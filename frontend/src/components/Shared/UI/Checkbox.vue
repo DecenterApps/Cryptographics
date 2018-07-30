@@ -4,7 +4,7 @@
             type="checkbox"
             :name="name"
             :value="value"
-            @input="$emit('checked', $event.target.value)"
+            @change="$emit('checked', $event.target.checked)"
             v-bind="$attrs">
         <span class="label"><slot/></span>
     </label>

@@ -1,0 +1,14 @@
+/**
+ * GETTERS
+ */
+export const CANVAS_DRAWING = 'CANVAS_DRAWING';
+
+/**
+ * ACTIONS
+ */
+export const TOGGLE_CANVAS_DRAWING = 'TOGGLE_CANVAS_DRAWING';
+
+/**
+ * MUTATION
+ */
+export const MUTATE_CANVAS_DRAWING = 'MUTATE_TOGGLE_CANVAS_DRAWING';

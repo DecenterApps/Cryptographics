@@ -37,6 +37,10 @@ export default {
     text-transform: capitalize;
     white-space: nowrap;
     line-height: 1;
+
+    &[disabled=disabled], &:disabled {
+        background: red;
+    }
 }
 .positive {
     color: #000;
