@@ -9,16 +9,13 @@
                         </div>
                     </div>
                     <div class="down">
-                        <div class="upload-assets">
-                            <input-file
-                                id="files"
-                                button-style="transparent"
-                                @change="uploadAssets"/>
-                            <div class="info">
-                                <span>Upload multiple assets</span>
-                                <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
-                            </div>
-                        </div>
+                        <input-file
+                            id="files"
+                            button-style="transparent"
+                            @change="uploadAssets">
+                            <span>Upload multiple assets</span>
+                            <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
+                        </input-file>
                         <div class="graphic-preview">
                             <canvas id="canvas"></canvas>
                             <cg-button
@@ -70,14 +67,12 @@
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
-  import InputFile from './template/InputFile.vue';
 
 export default {
     name: 'UploadAssetPack',
     components: {
         IcoTrash,
-        IcoBackground,
-        InputFile
+        IcoBackground
         },
     data: () => ({
         maxAssets: 50,
@@ -191,19 +186,8 @@ export default {
             }
         }
     }
-    .upload-assets {
-        display: inline-flex;
+    .input-file {
         margin-bottom: 30px;
-        .info {
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: space-around;
-            font-size: 12px;
-            margin-left: 15px;
-            span:first-of-type {
-                color: #949494;
-            }
-        }
     }
     .button-group {
         display: inline-flex;

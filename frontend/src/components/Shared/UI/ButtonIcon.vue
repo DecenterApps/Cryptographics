@@ -5,12 +5,14 @@
         v-on="$listeners">
         <ico-download v-if="iconType === 'download'" :width="width" :height="height" :color="color"/>
         <ico-magnifier v-if="iconType === 'zoom'" :size="size" :color="color"/>
+        <ico-close v-if="iconType === 'close'" :size="size" :color="color"/>
     </button>
 </template>
 
 <script>
 import IcoDownload from './Icons/IcoDownload.vue';
 import IcoMagnifier from './Icons/IcoMagnifier.vue';
+import IcoClose from './Icons/IcoClose.vue';
 
 export default {
     name: 'ButtonIcon',
@@ -34,7 +36,8 @@ export default {
     },
     components: {
         IcoDownload,
-        IcoMagnifier
+        IcoMagnifier,
+        IcoClose
     }
 }
 </script>

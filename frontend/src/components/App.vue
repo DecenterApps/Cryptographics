@@ -3,12 +3,14 @@
         <cg-header/>
         <router-view/>
         <cg-footer/>
+        <modal v-if="showModal" :content="content"/>
     </main>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG } from 'store/user-config/types';
+import { TOGGLE_MODAL } from 'store/modal/types';
 
 import CgHeader from 'shared/CgHeader/CgHeader.vue';
 import CgFooter from 'shared/CgFooter/CgFooter.vue';
@@ -28,7 +30,14 @@ export default {
     methods: {
         ...mapActions({
             SET_USER_CONFIG,
-            UPDATE_USER_CONFIG
+            UPDATE_USER_CONFIG,
+            openModal: TOGGLE_MODAL
+        })
+    },
+    computed: {
+        ...mapState({
+            showModal: ({ modal }) => modal.showModal,
+            content: ({ modal }) => modal.content
         })
     }
 };
@@ -36,7 +45,7 @@ export default {
 
 <style src="../templates/styles/reset.css"></style>
 <style lang="scss" src="../templates/styles/common.scss"></style>
-<style>
+<style lang="scss">
     @font-face {
         font-family: 'YoungSerif-Regular';
         src: url('../assets/fonts/YoungSerif-Regular.eot');
@@ -51,5 +60,8 @@ export default {
     .large-title {
         font-family: 'YoungSerif-Regular', sans-serif;
         font-size: 32px;
+    }
+    main {
+        position: relative;
     }
 </style>
