@@ -61,7 +61,7 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
 export const createAssetPack = async (coverImage, name, attributes, ipfsHashes, price, account) => {
   try {
     let nonce = await web3.eth.getTransactionCount(account);
-    return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, price).send({
+    return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
       from: account, to: assetManagerContract, nonce
     }, (a, b) => {
       console.log(a, b);
