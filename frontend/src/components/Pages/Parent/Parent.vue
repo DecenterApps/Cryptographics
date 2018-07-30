@@ -61,9 +61,9 @@
   import CreateAsset from './CreateAsset.vue';
 
   const methods = require('methods');
-  const utils = require('scripts/utils');
-  const functions = require('scripts/functions');
-  const ipfsService = require('scripts/ipfsService');
+  const utils = require('scripts/../../../services/utils');
+  const functions = require('src/services/ethereumService');
+  const ipfsService = require('scripts/../../../services/ipfsService');
 
   export default {
     data: () => ({

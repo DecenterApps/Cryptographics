@@ -8,7 +8,7 @@
 
 <script>
 
-    import functions from 'scripts/functions.js';
+    import functions from 'src/services/ethereumService.js';
 
     export default {
         data:  () => ({

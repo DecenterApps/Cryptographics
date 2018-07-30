@@ -12,8 +12,8 @@
 
     // const util = require('util');
     // const exec = util.promisify(require('child_process').exec);
-    const methods = require("methods");
-    const ipfsService = require('scripts/ipfsService');
+    import * as imageService from "services/imageService";
+    const ipfsService = require('scripts/../../../services/ipfsService');
 
     export default {
         data:  () => ({
@@ -32,7 +32,7 @@
                     image = reader.result.substr(22);
                     let ipfsHash = await ipfsService.uploadFile(image);
                     console.log(ipfsHash);
-                    let asset = await methods.createAsset(parseInt(this.price,10), ipfsHash, this.metamask_account);
+                    let asset = await imageService.createAsset(parseInt(this.price,10), ipfsHash, this.metamask_account);
                     console.log(asset);
                 };
                 if(file){

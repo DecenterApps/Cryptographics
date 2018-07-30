@@ -8,7 +8,7 @@ import {
 } from './types';
 
 import { getAccounts } from 'scripts/helpers';
-import { getUsername } from 'scripts/functions';
+import { getUsername } from 'services/ethereumService';
 
 export default {
     [SET_METAMASK_ADDRESS]: async ({ commit }) => {

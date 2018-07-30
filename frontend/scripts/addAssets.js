@@ -1,12 +1,12 @@
 const Web3 = require('web3');
-const conf = require('./config.json');
+const conf = require('../config/config.json');
 const account_config = require('../../config.json');
 const EthereumTx = require('ethereumjs-tx');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 
-const utils = require('./utils');
+const utils = require('../src/services/utils');
 
 
 require('dotenv').load();

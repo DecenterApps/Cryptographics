@@ -1,5 +1,5 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
-const utils = require('scripts/utils.js');
+const utils = require('scripts/../frontend/src/services/utils');
 
 contract('Functions', async (accounts) => {
 

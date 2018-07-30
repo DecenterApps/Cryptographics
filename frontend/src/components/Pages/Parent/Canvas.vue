@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import methods from '../../../methods';
+  import methods from '../../../services/imageService';
 
   export default {
     data: () => ({}),

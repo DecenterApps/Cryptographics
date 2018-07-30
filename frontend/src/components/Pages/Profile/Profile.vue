@@ -1,6 +1,6 @@
 <template>
     <div class="profile-page">
-        <slider-gallery/>
+        <slider-gallery />
         <div class="container">
             <div class="profile">
                 <div class="profile-image">
@@ -11,42 +11,48 @@
                 </div>
 
                 <p class="large-title">Asset Packs</p>
-                <asset-packs-pagination :show-all="true"/>
+                <asset-packs-pagination :show-all="true" />
                 <p class="large-title">Gallery</p>
             </div>
             <h3> My profile </h3>
             <div>
-            <div>
-            <label> Metamask account : {{this.metamask_account}}</label>
+                <div>
+                    <label> Metamask account : {{this.metamask_account}}</label>
+                </div>
+                <div>
+                    <label> My bought assets : {{this.bought_assets}}</label>
+                </div>
+                <div>
+                    <label> Assets I've created: {{this.created_assets}}</label>
+                </div>
+                <div>
+                    <label> Asset Packs I've created : {{ this.asset_packs}}</label>
+                </div>
+                <div>
+                    <label> My images on chain: {{this.my_images_on_chain}}</label>
+                </div>
+                <div>
+                    <button @click="generateData"> Generate data</button>
+                </div>
+                <div>
+                    <button @click="renderMyImagesCanvas"> View image</button>
+                    <input placeholder="Type id of your image: " v-model="id_to_show" />
+                </div>
+                <gallery :images="images" />
             </div>
-            <div>
-            <label> My bought assets : {{this.bought_assets}}</label>
-            </div>
-            <div>
-            <label> Assets I've created: {{this.created_assets}}</label>
-            </div>
-            <div>
-            <label> Asset Packs I've created : {{ this.asset_packs}}</label>
-            </div>
-            <div>
-            <label> My images on chain: {{this.my_images_on_chain}}</label>
-            </div>
-            <div>
-            <button @click="generateData"> Generate data</button>
-            </div>
-            <div>
-            <button @click="renderMyImagesCanvas"> View image</button>
-            <input placeholder="Type id of your image: " v-model="id_to_show" />
-            </div>
-            <gallery :images="images"/>
-        </div>
         </div>
     </div>
 </template>
 
 <script>
-  import functions from 'scripts/functions';
-  import methods from 'methods';
+  import {
+    getUserImages,
+    getBoughtAssets,
+    getCreatedAssetPacks,
+    getImageMetadataFromContract,
+    getImageIpfs,
+  } from 'services/ethereumService';
+  import { getData, loadDataForAssets } from 'services/imageService';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
@@ -54,7 +60,7 @@
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
-    name: 'my-profile',
+    name: 'profile',
     data: () => ({
       asset_packs: [],
       allAssetPaths: [],
@@ -83,19 +89,19 @@
       },
 
       async getImages() {
-        this.my_images_on_chain = await functions.getUserImages(this.metamask_account);
+        this.my_images_on_chain = await getUserImages(this.metamask_account);
       },
       async getBoughtAssets() {
-        this.bought_assets = await functions.getBoughtAssets(this.metamask_account);
+        this.bought_assets = await getBoughtAssets(this.metamask_account);
         this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
       },
 
       async getAllAssets() {
-        this.allAssets = await methods.loadDataForAssets();
+        this.allAssets = await loadDataForAssets();
       },
 
       async getAssetPacks() {
-        this.asset_packs = await functions.getCreatedAssetPacks(this.metamask_account);
+        this.asset_packs = await getCreatedAssetPacks(this.metamask_account);
       },
 
       async renderMyImagesCanvas() {
@@ -113,16 +119,16 @@
           this.id_to_show = -1;
           return;
         }
-        let data = await functions.getImageMetadataFromContract(this.id_to_show);
-        this.myobjects = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
+        let data = await getImageMetadataFromContract(this.id_to_show);
+        this.myobjects = await getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
       },
 
       async getImages() {
-        let images = await functions.getUserImages(this.metamask_account);
-        let prefix = "https://ipfs.decenter.com/ipfs/";
+        let images = await getUserImages(this.metamask_account);
+        let prefix = 'https://ipfs.decenter.com/ipfs/';
         let hashes = [];
         for (let i = 0; i < images.length; i++) {
-          let hash = await functions.getImageIpfs(images[i]);
+          let hash = await getImageIpfs(images[i]);
           hashes.push({
             address: this.metamask_account,
             src: prefix + hash,

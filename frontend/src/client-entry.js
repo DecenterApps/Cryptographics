@@ -1,5 +1,5 @@
 import { app } from './app';
-import * as ipfsService from 'scripts/ipfsService';
+import * as ipfsService from 'services/ipfsService';
 
 window.onload = () => {
   window.node = new Ipfs({

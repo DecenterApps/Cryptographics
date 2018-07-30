@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import { makeCoverImage } from "../../../methods";
+  import { makeCoverImage } from "../../../services/imageService";
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {

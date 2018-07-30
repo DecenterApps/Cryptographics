@@ -1,19 +1,25 @@
-const functions = require('scripts/functions');
-const utils = require('scripts/utils');
-const conf = require('scripts/config.json');
-const helpers = require('scripts/helpers');
+import {
+  getNumberOfAssets,
+  getAssetStats,
+  getImage,
+  getAssetsIpfs,
+} from 'services/ethereumService';
+
+import utils from 'services/utils';
+import config from 'config/config.json';
+import * as helpers from 'scripts/helpers';
 
 helpers.checkProvider();
 
-const digitalPrintImageContractAddress = conf.digitalPrintImageContract.networks['42'].address;
-const digitalPrintImageContract = new web3.eth.Contract(conf.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
+const digitalPrintImageContract = new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-const assetManagerContractAddress = conf.assetManagerContract.networks['42'].address;
-const assetManagerContract = new web3.eth.Contract(conf.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
+const assetManagerContract = new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const DELAY = 300;
 
-async function createImage(randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) {
+export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) => {
   potentialAssets = utils.encode(potentialAssets);
 
   timestamp = parseInt(timestamp, 10);
@@ -31,9 +37,9 @@ async function createImage(randomHashIds, timestamp, iterations, potentialAssets
     console.log(e);
     throw new Error('Cannot create image');
   }
-}
+};
 
-async function createAsset(attributes, ipfsHash, price, account) {
+export const createAsset = async (attributes, ipfsHash, price, account) => {
   console.log('Price: ' + price);
   console.log('Ipfs hash: ' + ipfsHash);
   console.log('Attributes: ' + attributes);
@@ -50,9 +56,9 @@ async function createAsset(attributes, ipfsHash, price, account) {
     console.log(e);
     throw new Error('Cannot create asset');
   }
-}
+};
 
-async function createAssetPack(coverImage, name, attributes, ipfsHashes, price, account) {
+export const createAssetPack = async (coverImage, name, attributes, ipfsHashes, price, account) => {
   try {
     let nonce = await web3.eth.getTransactionCount(account);
     return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, price).send({
@@ -64,19 +70,14 @@ async function createAssetPack(coverImage, name, attributes, ipfsHashes, price, 
     console.log(e);
     throw new Error('Cannot create asset pack');
   }
-}
+};
 
-async function getNumberOfAss() {
-  let assets = await functions.getNumberOfAssets();
-  return assets;
-}
-
-async function loadDataForAssets() {
+export const loadDataForAssets = async () => {
   return new Promise(async (resolve, reject) => {
-    let assets = parseInt(await getNumberOfAss(), 10);
+    let assets = parseInt(await getNumberOfAssets(), 10);
     const promises = [];
     for (let i = 0; i < assets; i++) {
-      let promise = functions.getAssetStats(i);
+      let promise = getAssetStats(i);
       promises.push(promise);
     }
 
@@ -88,9 +89,9 @@ async function loadDataForAssets() {
         reject(new Error('Couldn\'t load all data.'));
       });
   });
-}
+};
 
-function getSize(width, height, ratio) {
+export const getSize = (width, height, ratio) => {
   const MAX_HEIGHT = 3508;
   if (ratio === '1:1') {
     if (height > MAX_HEIGHT) height = MAX_HEIGHT;
@@ -103,27 +104,26 @@ function getSize(width, height, ratio) {
 
     return { width: width, height };
   }
-}
+};
 
-async function getData(randomSeed, iterations, potentialAssets, allAssets) {
+export const getData = async (randomSeed, iterations, potentialAssets, allAssets) => {
   console.log(randomSeed);
-  let assets = await functions.getImage(randomSeed, iterations, potentialAssets);
-  var allDataAboutAsset = [];
+  let assets = await getImage(randomSeed, iterations, potentialAssets);
+  let allDataAboutAsset = [];
   for (let i = 0; i < assets.length; i++) {
     let stats = allAssets[assets[i]];
     let final = { ...assets[i], ...stats };
     allDataAboutAsset.push(final);
   }
   return allDataAboutAsset;
+};
 
-}
-
-function makeCoverImage(isHome, image_paths, c, width, height, frame = {
+export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
   left: 0,
   right: 0,
   bottom: 0,
   top: 0
-}) {
+}) => {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
@@ -137,7 +137,7 @@ function makeCoverImage(isHome, image_paths, c, width, height, frame = {
   for (let i = 0; i < image_paths.length; i++) {
     let image = new Image();
     if (isHome) {
-      image.src = require('../dist/assets/' + image_paths[i] + '.png');
+      image.src = require('../../dist/assets/' + image_paths[i] + '.png');
     } else {
       image.src = image_paths[i];
     }
@@ -193,17 +193,17 @@ function makeCoverImage(isHome, image_paths, c, width, height, frame = {
       }
     };
   }
-}
+};
 
-async function delay(delayInms) {
+const delay = async (delayInms) => {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(2);
     }, delayInms);
   });
-}
+};
 
-function scaleImage(width, height, canvasWidth, canvasHeight, ratio) {
+export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
   const DEFAULT_WIDTH = 2480;
   const DEFAULT_HEIGHT = ratio === '2:3' ? 3508 : 2480;
 
@@ -214,15 +214,15 @@ function scaleImage(width, height, canvasWidth, canvasHeight, ratio) {
     width: width / horizontalRatio,
     height: height / verticalRatio,
   };
-}
+};
 
-async function makeImage(objs, c, width, height, frame = {
+export const makeImage = async (objs, c, width, height, frame = {
   left: 0,
   right: 0,
   bottom: 0,
   top: 0,
   ratio: '2:3'
-}) {
+}) => {
   let context = c.getContext('2d');
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
@@ -237,7 +237,7 @@ async function makeImage(objs, c, width, height, frame = {
     //ids -1 because on contract goes from 0
     ids.push(objs[j].id - 1);
   }
-  let hashes = await functions.getAssetsIpfs(ids);
+  let hashes = await getAssetsIpfs(ids);
   let images = [];
   for (let i = 0; i < objs.length; i++) {
     console.log(objs[i].id + ' hash : ' + hashes[i]);
@@ -315,13 +315,11 @@ async function makeImage(objs, c, width, height, frame = {
       });
     };
   }
-}
+};
 
-function imgLoaded(img) {
-  return img.complete && img.naturalHeight !== 0;
-}
+const imgLoaded = (img) => img.complete && img.naturalHeight !== 0;
 
-function waitForBackgroundLoad(images, cb) {
+const waitForBackgroundLoad = (images, cb) => {
   const interval = setInterval(() => {
     let backgrounds = images.filter(image => image.isBackground);
     for (let i = 0; i < backgrounds.length; i++) {
@@ -330,9 +328,9 @@ function waitForBackgroundLoad(images, cb) {
     cb();
     clearInterval(interval);
   }, 300);
-}
+};
 
-function drawImageRot(context, img, x, y, width, height, deg, options) {
+export const drawImageRot = (context, img, x, y, width, height, deg, options) => {
   const coords = {
     x: width / 2 * (-1),
     y: height / 2 * (-1)
@@ -344,7 +342,7 @@ function drawImageRot(context, img, x, y, width, height, deg, options) {
   }
 
   //Convert degrees to radian
-  var rad = deg * Math.PI / 180;
+  const rad = deg * Math.PI / 180;
 
   //Set the origin to the center of the image
   context.translate(x, y);
@@ -360,7 +358,7 @@ function drawImageRot(context, img, x, y, width, height, deg, options) {
 
   //
   context.translate((x) * (-1), (y) * (-1));
-}
+};
 
 // let randomSeed = 123123;
 // let iterations = 5;
@@ -384,14 +382,3 @@ async function test() {
 }
 
 // test();
-
-module.exports = {
-  getData,
-  loadDataForAssets,
-  makeImage,
-  createImage,
-  createAsset,
-  createAssetPack,
-  getSize,
-  makeCoverImage
-};

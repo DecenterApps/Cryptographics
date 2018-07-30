@@ -1,14 +1,14 @@
 <template>
     <layout layout-style="pulled-left" layout-content="tabbed">
         <graphic-builder
-        v-if="activeTab === 'create'"
-        v-on:tabChange="changeTab"
-        :selectedAssetPacks="selectedAssetPacks"/>
+                v-if="activeTab === 'create'"
+                v-on:tabChange="changeTab"
+                :selectedAssetPacks="selectedAssetPacks" />
         <asset-picker
-        v-if="activeTab === 'picker'"
-        v-on:tabChange="changeTab"
-        v-on:pickAsset="toggleAsset"
-        :selectedAssetPacks="selectedAssetPacks"/>
+                v-if="activeTab === 'picker'"
+                v-on:tabChange="changeTab"
+                v-on:pickAsset="toggleAsset"
+                :selectedAssetPacks="selectedAssetPacks" />
     </layout>
     <!-- <div class="background-wrapper">
         <div class="black-bg"></div>
@@ -34,9 +34,9 @@
 
   export default {
     name: 'CreateGraphic',
-    components: { 
-        GraphicBuilder, 
-        AssetPicker
+    components: {
+      GraphicBuilder,
+      AssetPicker
     },
     data: () => ({
       activeTab: 'create',

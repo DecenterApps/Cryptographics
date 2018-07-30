@@ -14,14 +14,16 @@
             </div>
         </div>
         <div class="asset-controls">
-          <cg-button
-            button-style="transparent"
-            v-if="pagination > 1"
-            @click="prevPage">Prev</cg-button>
-          <cg-button
-            button-style="transparent"
-            v-if="assetPacks.length > 1"
-            @click="nextPage">Next</cg-button>
+            <cg-button
+                    button-style="transparent"
+                    v-if="pagination > 1"
+                    @click="prevPage">Prev
+            </cg-button>
+            <cg-button
+                    button-style="transparent"
+                    v-if="assetPacks.length > 1"
+                    @click="nextPage">Next
+            </cg-button>
         </div>
     </div>
 </template>
@@ -29,7 +31,11 @@
 <script>
   import { getAccounts } from 'scripts/helpers';
 
-  const functions = require('scripts/functions.js');
+  import {
+    getPaginatedAssetPacks,
+    getPackInformation,
+    getNumberOfAssetPacks
+  } from 'services/ethereumService';
 
   const NUM_PER_PAGE = 2;
 
@@ -51,19 +57,19 @@
 
     methods: {
       async getMyAssetPacks(page, count) {
-        const assetPacksIds = await functions.getPaginatedAssetPacks(page, count, this.metamask_account);
-        this.assetPacks = await functions.getPackInformation(assetPacksIds, this.metamask_account);
+        const assetPacksIds = await getPaginatedAssetPacks(page, count, this.metamask_account);
+        this.assetPacks = await getPackInformation(assetPacksIds, this.metamask_account);
       },
 
       async getPacks(page, count) {
         let ids = [];
-        let numberOfPacks = await functions.getNumberOfAssetPacks();
+        let numberOfPacks = await getNumberOfAssetPacks();
         for (let i = (page - 1) * count; i < page * count; i++) {
           if (i < numberOfPacks) {
             ids.push(i);
           }
         }
-        this.assetPacks = await functions.getPackInformation(ids, this.metamask_account);
+        this.assetPacks = await getPackInformation(ids, this.metamask_account);
       },
 
       nextPage() {
@@ -121,6 +127,7 @@
             }
         }
     }
+
     .asset-controls {
         display: flex;
         align-items: flex-end;

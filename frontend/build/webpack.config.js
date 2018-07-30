@@ -29,6 +29,8 @@ const config = {
     alias: {
       store: path.resolve(__dirname, '../src/store/modules'),
       scripts: path.resolve(__dirname, '../scripts'),
+      config: path.resolve(__dirname, '../config'),
+      services: path.resolve(__dirname, '../src/services'),
       methods: path.resolve(__dirname, '../src/methods'),
       shared: path.resolve(__dirname, '../src/components/Shared'),
       pages: path.resolve(__dirname, '../src/components/Pages')

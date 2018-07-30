@@ -40,49 +40,49 @@
                     </div>
                 </div>
 
-                <div class="right">
-                    <div v-bar="{ preventParentScroll: true }"> 
-                        <div>
-                            <div
-                                class="asset"
-                                v-for="(asset, index) in assets"
-                                :key="index">
-                                <img :src="asset.path"/>
-                                <overlay :class="asset.attribute === 122 ? 'bg-selected' : ''">
-                                    <ico-background @click.native="toggleBackground(index)"/>
-                                    <ico-trash @click.native="remove(index)"/>
-                                </overlay>
-                            </div>
-                        </div>
+        <div class="right">
+            <div v-bar="{ preventParentScroll: true }">
+                <div>
+                    <div
+                            class="asset"
+                            v-for="(asset, index) in assets"
+                            :key="index">
+                        <img :src="asset.path" />
+                        <overlay :class="asset.attribute === 122 ? 'bg-selected' : ''">
+                            <ico-background @click.native="toggleBackground(index)" />
+                            <ico-trash @click.native="remove(index)" />
+                        </overlay>
                     </div>
                 </div>
+            </div>
+        </div>
     </layout>
 </template>
 
 <script>
-  import * as ipfsService from 'scripts/ipfsService';
+  import * as ipfsService from 'services/ipfsService';
   import { getAccounts } from 'scripts/helpers';
-  import {createAssetPack, makeCoverImage} from 'methods';
-  import * as utils from 'scripts/utils';
+  import { createAssetPack, makeCoverImage } from 'services/imageService';
+  import * as utils from 'services/utils';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
 
-export default {
+  export default {
     name: 'UploadAssetPack',
     components: {
         IcoTrash,
         IcoBackground
         },
     data: () => ({
-        maxAssets: 50,
-        metamask_account: 0,
+      maxAssets: 50,
+      metamask_account: 0,
+      assets: [],
+      canvasData: {
         assets: [],
-        canvasData: {
-            assets: [],
-            ratio: '1:1',
-            frame: false,
-        },
+        ratio: '1:1',
+        frame: false,
+      },
     }),
 
     methods: {
@@ -98,18 +98,18 @@ export default {
       },
 
       renderCanvas() {
-          let canvas = document.getElementById('canvas');
-          canvas.width = 350;
-          canvas.height = 350;
-          // const propComparator = (propName) =>
-          //     (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
-          // this.assets.sort(propComparator('attribute'));
-          console.log(this.assets);
-          let asset_paths = [];
-          for(let i=0; i<this.assets.length; i++) {
-              asset_paths.push(this.assets[i].path);
-          }
-          makeCoverImage(false, asset_paths, canvas, 350,350);
+        let canvas = document.getElementById('canvas');
+        canvas.width = 350;
+        canvas.height = 350;
+        // const propComparator = (propName) =>
+        //     (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
+        // this.assets.sort(propComparator('attribute'));
+        console.log(this.assets);
+        let asset_paths = [];
+        for (let i = 0; i < this.assets.length; i++) {
+          asset_paths.push(this.assets[i].path);
+        }
+        makeCoverImage(false, asset_paths, canvas, 350, 350);
       },
       async uploadToIpfs() {
         let hashes = [];
@@ -142,15 +142,15 @@ export default {
         let canvas = document.getElementById('canvas');
         canvas.width = 350;
         canvas.height = 350;
-          let asset_paths = [];
-          for(let i=0; i<this.assets.length; i++) {
-              asset_paths.push(this.assets[i].path);
-          }
-        makeCoverImage(false, asset_paths, canvas, 350,350);
+        let asset_paths = [];
+        for (let i = 0; i < this.assets.length; i++) {
+          asset_paths.push(this.assets[i].path);
+        }
+        makeCoverImage(false, asset_paths, canvas, 350, 350);
       },
 
       toggleBackground(index) {
-          console.log(index);
+        console.log(index);
         if (this.assets[index].attribute === 122) {
           return this.assets[index].attribute = 222;
         }
