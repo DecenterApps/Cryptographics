@@ -1,5 +1,5 @@
 <template>
-    <layout layout-style="pulled-left" layout-content="tabbed">
+    <layout layout-style="pulled-left" layout-content="no-container">
         <graphic-builder
                 v-if="activeTab === 'create'"
                 v-on:tabChange="changeTab"

@@ -1,58 +1,32 @@
 <template>
-    <div class="profile-page">
-        <slider-gallery />
-        <div class="container">
-            <div class="profile">
-                <div class="header">
-                  <img class="avatar">
-                  <div class="left">
-                    <h1 class="name">Anon</h1>
-                  </div>
-                  <div class="right">
-                    <cg-button 
-                      button-style="transparent"
-                      @click="openModal('editProfile')">
-                      Edit Profile
-                    </cg-button>
-                    <button-link
-                      to="/upload-asset-pack">
-                      Create Asset Pack
-                    </button-link>
-                  </div>
-                </div>
-
-                <p class="large-title">Asset Packs</p>
-                <asset-packs-pagination :show-all="true" />
-                <p class="large-title">Gallery</p>
-            </div>
-            <h3> My profile </h3>
-            <div>
-                <div>
-                    <label> Metamask account : {{this.metamask_account}}</label>
-                </div>
-                <div>
-                    <label> My bought assets : {{this.bought_assets}}</label>
-                </div>
-                <div>
-                    <label> Assets I've created: {{this.created_assets}}</label>
-                </div>
-                <div>
-                    <label> Asset Packs I've created : {{ this.asset_packs}}</label>
-                </div>
-                <div>
-                    <label> My images on chain: {{this.my_images_on_chain}}</label>
-                </div>
-                <div>
-                    <button @click="generateData"> Generate data</button>
-                </div>
-                <div>
-                    <button @click="renderMyImagesCanvas"> View image</button>
-                    <input placeholder="Type id of your image: " v-model="id_to_show" />
-                </div>
-                <gallery :images="images" />
-            </div>
+  <layout
+    layout-style="full-width"
+    layout-content="no-container"
+    :slider-gallery="true">
+    <div class="container">
+      <div class="header">
+        <img class="avatar">
+        <div class="left">
+          <h1 class="name">Anon</h1>
         </div>
+        <div class="right">
+          <cg-button 
+            button-style="transparent"
+            @click="openModal('editProfile')">
+            Edit Profile
+          </cg-button>
+          <button-link
+            to="/upload-asset-pack">
+            Create Asset Pack
+          </button-link>
+        </div>
+      </div>
+      <h2 class="large-title">Asset Packs</h2>
+      <asset-packs-pagination :show-all="true" />
+      <h2 class="large-title">Gallery</h2>
+      <gallery :images="images" />
     </div>
+  </layout>
 </template>
 
 <script>
@@ -171,24 +145,30 @@
 </script>
 
 <style scoped lang="scss">
-.header {
-  padding-left: 190px;
-  padding-top: 47px;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  .avatar {
-    background-color: #333;
-    width: 160px; height: 160px;
-    position: absolute;
-    top: -80px;
-    left: 0;
-  }
-  .name {
-    font-family: 'YoungSerif-Regular', sans-serif;
-    font-size: 32px;
+.container {
+  padding-top: 0 !important;
+  flex-direction: column;
+  position: relative;
+  .header {
+    padding-left: 190px;
+    padding-top: 47px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    .avatar {
+      background-color: #333;
+      width: 160px; height: 160px;
+      position: absolute;
+      top: -80px;
+      left: 0;
+    }
+    .name {
+      font-family: 'YoungSerif-Regular', sans-serif;
+      font-size: 32px;
+    }
   }
 }
+
 
 
     .profile-page {
