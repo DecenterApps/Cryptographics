@@ -28,6 +28,7 @@
     watch: {
       canvasData: {
         handler: async function (newData) {
+          console.log(newData);
           let canvas = document.getElementById('canvas');
           const rect = canvas.parentNode.getBoundingClientRect();
           const size = getSize(rect.width, rect.height, this.canvasData.ratio);
@@ -43,7 +44,6 @@
           } : undefined;
           this.toggleDrawing();
           await makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
-          console.log(1);
           this.toggleDrawing();
         },
         deep: true,
