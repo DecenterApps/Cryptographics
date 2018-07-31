@@ -258,6 +258,8 @@ export const makeImage = (objs, c, width, height, frame = {
     context.fillStyle = '#fff';
     context.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    if (assets.length === 0) return resolve('No assets provided.');
+
     let hashes = await getAssetsIpfs(assets);
     for (let i = 0; i < objs.length; i++) {
       console.log(assets[i].id + ' hash : ' + hashes[i]);
@@ -277,7 +279,9 @@ export const makeImage = (objs, c, width, height, frame = {
         image,
       };
     }
+    console.log(assets);
     assets = helpers.sortBy(assets, 'background');
+    console.log(assets);
 
     let imagesLoaded = 0;
 
