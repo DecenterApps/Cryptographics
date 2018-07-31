@@ -2,7 +2,7 @@ import utils from 'services/utils';
 import Web3 from 'web3';
 import leftPad from 'left-pad';
 import config from 'config/config.json';
-import starterPacks from 'config/starter_packs.json';
+import landingAssetPacks from 'config/landingAssetPacks.json';
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
@@ -266,16 +266,7 @@ export const getBoughtAssets = async () => {
 };
 
 export const generatePacks = () => {
-  let packId = starterPacks['0'].id;
-  let packData = starterPacks['0'].data;
-
-  let pack = {
-    id: packId,
-    data: packData
-  };
-  let arr = [];
-  arr.push(pack);
-  return arr;
+  return landingAssetPacks;
 };
 
 async function test() {
