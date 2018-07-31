@@ -4,13 +4,13 @@ import leftPad from 'left-pad';
 import config from 'config/config.json';
 import starterPacks from 'config/starter_packs.json';
 
-const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
+// const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
-const assetManagerContract = new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
-const digitalPrintImageContract = new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 // Function to pick ten random integers [0,99]
 // Will be executed during generating initial random seed
@@ -23,17 +23,17 @@ export const pickTenRandoms = () => {
 };
 
 export const getAttributesForAssets = async (assetIds) => {
-  return await assetManagerContract.methods.getAttributesForAssets(assetIds).call();
+  return await assetManagerContract().methods.getAttributesForAssets(assetIds).call();
 };
 
 export const getAssetIpfs = async (assetId) => {
-  let ipfsHash = await assetManagerContract.methods.getAssetIpfs(assetId).call();
+  let ipfsHash = await assetManagerContract().methods.getAssetIpfs(assetId).call();
   return utils.getIpfsHashFromBytes32(ipfsHash);
 };
 
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id - 1);
-  let ipfsHashes = await assetManagerContract.methods.getIpfsForAssets(ids).call();
+  let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
@@ -41,22 +41,22 @@ export const getAssetsIpfs = async (assets) => {
 };
 
 export const getImageIpfs = async (imageId) => {
-  return await digitalPrintImageContract.methods.idToIpfsHash(imageId).call();
+  return await digitalPrintImageContract().methods.idToIpfsHash(imageId).call();
 };
 
 export const getCreatedAssetPacks = async (address) => {
-  return await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
+  return await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
 };
 
 export const getPaginatedAssetPacks = async (pagination, count, address) => {
-  let assetPacksIds = await assetManagerContract.methods.getAssetPacksUserCreated(address).call();
+  let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
   let beginning = (pagination - 1) * count;
   let end = pagination + count - 1;
   return assetPacksIds.slice(beginning, end);
 };
 
 export const getCoversForAssetPacks = async (assetPackIds) => {
-  let hovers = await assetManagerContract.methods.getCoversForPacks(assetPackIds).call();
+  let hovers = await assetManagerContract().methods.getCoversForPacks(assetPackIds).call();
   for (let i = 0; i < hovers.length; i++) {
     hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
   }
@@ -79,18 +79,18 @@ export const getPackInformation = async (assetPacksIds, account) => {
 export const getAssetPacksNames = async (assetPacksIds) => {
   let names = [];
   for (let i = 0; i < assetPacksIds.length; i++) {
-    let name = await assetManagerContract.methods.getAssetPackName(assetPacksIds[i]).call();
+    let name = await assetManagerContract().methods.getAssetPackName(assetPacksIds[i]).call();
     names.push(name);
   }
   return names;
 };
 
 export const getNumberOfAssetPacks = async () => {
-  return await assetManagerContract.methods.getNumberOfAssetPacks().call();
+  return await assetManagerContract().methods.getNumberOfAssetPacks().call();
 };
 
 export const getAssetPackData = async (assetPackId) => {
-  let response = await assetManagerContract.methods.getAssetPackData(assetPackId).call();
+  let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   let ids = response[1];
   let data = [];
   for (let i = 0; i < ids.length; i++) {
@@ -105,15 +105,25 @@ export const getAssetPackData = async (assetPackId) => {
 };
 
 export const usernameExists = async (username) => {
-  return await digitalPrintImageContract.methods.isUsernameExists(username).call();
+  return await digitalPrintImageContract().methods.isUsernameExists(username).call();
 };
 
 export const getUsername = async (address) => {
-  return await digitalPrintImageContract.methods.getUsername(address).call();
+  return await digitalPrintImageContract().methods.getUsername(address).call();
 };
 
-export const registerUser = async (username, bytes32) => {
-  return await digitalPrintImageContract.methods.register(username, bytes32).send();
+export const registerUser = async (username, hashToProfilePicture, account) => {
+  try {
+    console.log(account);
+    return await digitalPrintImageContract().methods.register(username, hashToProfilePicture).send({
+      from: account
+    }, (a, b) => {
+      console.log(a, b);
+    });
+  } catch (e) {
+    console.log(e);
+    throw new Error('Cannot register user');
+  }
 };
 
 export const calculatePrice = async (pickedAssets, owner) => {
@@ -125,38 +135,38 @@ export const calculatePrice = async (pickedAssets, owner) => {
     return null;
   }
 
-  return await digitalPrintImageContract.methods.calculatePrice(pickedAssets, owner).call();
+  return await digitalPrintImageContract().methods.calculatePrice(pickedAssets, owner).call();
 };
 
 // Function to get total number of assets existing on contract
 export const getNumberOfAssets = async () => {
-  return await assetManagerContract.methods.getNumberOfAssets().call();
+  return await assetManagerContract().methods.getNumberOfAssets().call();
 };
 
 export const getUserImages = async (address) => {
   if (address.length !== 42) {
     return -1;
   }
-  return await digitalPrintImageContract.methods.getUserImages(address).call();
+  return await digitalPrintImageContract().methods.getUserImages(address).call();
 };
 
 export const getImageMetadataFromContract = async (image_id) => {
   if (image_id < 0) {
     return null;
   }
-  let imageMetadata = await digitalPrintImageContract.methods.getImageMetadata(image_id).call();
+  let imageMetadata = await digitalPrintImageContract().methods.getImageMetadata(image_id).call();
   imageMetadata[0] = await convertSeed(imageMetadata[0]);
   return imageMetadata;
 };
 
 export const convertSeed = async (randomSeed) => {
-  return await digitalPrintImageContract.methods.toHex(randomSeed).call();
+  return await digitalPrintImageContract().methods.toHex(randomSeed).call();
 };
 
 // Function to calculate first random seed, it will be executed from contract
 
 export const calculateFirstSeed = async (timestamp, rands) => {
-  return await digitalPrintImageContract.methods.calculateSeed(rands, timestamp).call();
+  return await digitalPrintImageContract().methods.calculateSeed(rands, timestamp).call();
 };
 
 // Function to calculate keccak256 when input is (int and int)
@@ -240,13 +250,13 @@ export const getImage = async (random_seed, iterations, potentialAssets) => {
 
 //Function to get data from contract for every asset (id,creator, ipfsHash, and price) - based on asset id
 export const getAssetStats = async (id) => {
-  let numberOfAssets = await assetManagerContract.methods.getNumberOfAssets().call();
+  let numberOfAssets = await assetManagerContract().methods.getNumberOfAssets().call();
   numberOfAssets = parseInt(numberOfAssets, 10);
   let layer = Math.floor(Math.random() * 10);
   if (id >= numberOfAssets) {
     return null;
   } else {
-    let info = await assetManagerContract.methods.getAssetInfo(id).call();
+    let info = await assetManagerContract().methods.getAssetInfo(id).call();
     return {
       id: parseInt(info[0], 10),
       pack_id: parseInt(info[1], 10),
@@ -257,7 +267,7 @@ export const getAssetStats = async (id) => {
 };
 
 export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets) => {
-  return await digitalPrintImageContract.methods.pickRandomAssets(finalSeed, potentialAssets).call();
+  return await digitalPrintImageContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
 };
 
 export const getBoughtAssets = async () => {

@@ -1,12 +1,25 @@
 <template>
     <div>
         <h3 class="large-title">Edit Profile</h3>
-        <div class="edit-profile-modal">
+        <form
+            class="edit-profile-modal"
+            @submit.prevent="changeUsername(newUsername)">
             <div class="left">
             <img class="avatar" src="">
             <div class="input-group">
-                {{ newUsername }}
-                <cg-input :value="newUsername" @input="(val) => newUsername = val" placeholder="Enter username"/>
+                <span
+                    class="info fail"
+                    v-if="isExistingUsername">
+                    Existing username, please try again
+                </span>
+                <span
+                    class="info success"
+                    v-if="isChanged">
+                    You have updated your profile successfully!
+                </span>
+                <cg-input
+                    v-model="newUsername"
+                    placeholder="Enter username"/>
                 <input-file
                     id="avatar-image"
                     button-style="transparent">
@@ -16,18 +29,17 @@
             </div>
             <div class="right">
                 <cg-button
-                    type="submit" 
-                    @submit.prevent="editUsername()">
+                    type="submit">
                     Submit
                 </cg-button>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { EDIT_USERNAME } from 'store/user-config/types';
+import { mapActions, mapGetters } from 'vuex';
+import { CHANGE_USERNAME, USERNAME_EXISTENCE, CHANGE_USERNAME_RESULT } from 'store/user-config/types';
 
 export default {
     name: 'EditProfile',
@@ -36,7 +48,13 @@ export default {
     }),
     methods: {
         ...mapActions({
-            editUsername: EDIT_USERNAME
+            changeUsername: CHANGE_USERNAME,
+        })
+    },
+    computed: {
+        ...mapGetters({
+            isExistingUsername: USERNAME_EXISTENCE,
+            isChanged: CHANGE_USERNAME_RESULT
         })
     }
 }
@@ -59,6 +77,17 @@ export default {
             display: inline-flex;
             flex-direction: column;
             margin-left: 20px;
+            .info {
+                margin-bottom: 10px;
+                font-size: 12px;
+                &.fail {
+                    color: #d82d2d;
+                }
+                &.success {
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
         }
     }
     .right {

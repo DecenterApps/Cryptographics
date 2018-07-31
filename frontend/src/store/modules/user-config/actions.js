@@ -3,9 +3,12 @@ import {
     UPDATE_USER_CONFIG,
     SET_METAMASK_ADDRESS,
     SET_USERNAME,
-    EDIT_USERNAME,
+    CHECK_USERNAME_EXISTENCE,
+    CHANGE_USERNAME,
     MUTATE_METAMASK_ADDRESS,
-    MUTATE_USERNAME
+    MUTATE_USERNAME,
+    MUTATE_USERNAME_EXISTENCE,
+    MUTATE_USERNAME_RESULT
 } from './types';
 
 import { getAccounts } from 'scripts/helpers';
@@ -38,11 +41,22 @@ export default {
         }, 1000)
         return true;
     },
-    [EDIT_USERNAME]: async ({ dispatch }, newUsername) => {
+    [CHECK_USERNAME_EXISTENCE]: async ({ commit }, newUsername) => {
         let isExisting = await usernameExists(newUsername);
-        if (!isExisting) {
-            await registerUser(newUsername, "0x0");
-            await dispatch(SET_USERNAME);
+        commit(MUTATE_USERNAME_EXISTENCE, isExisting);
+    },
+    [CHANGE_USERNAME]: async ({ commit, dispatch, state }, newUsername, hashToProfilePicture) => {
+        await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
+        if (!state.changeUsername.isExisting) {
+            await registerUser(newUsername, '0x00000000000000000000000000000000', state.metamaskAddress);
+
+            let result = true;
+            commit(MUTATE_USERNAME_RESULT, result);
+
+            await dispatch(SET_USER_CONFIG);
+        } else {
+            let result = false;
+            commit(MUTATE_USERNAME_RESULT, result);
         }
     }
 };

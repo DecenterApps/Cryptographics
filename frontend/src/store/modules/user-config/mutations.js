@@ -1,6 +1,8 @@
 import {
     MUTATE_METAMASK_ADDRESS,
-    MUTATE_USERNAME
+    MUTATE_USERNAME,
+    MUTATE_USERNAME_EXISTENCE,
+    MUTATE_USERNAME_RESULT
 } from './types';
 
 export default {
@@ -9,6 +11,12 @@ export default {
     },
     [MUTATE_USERNAME]: (state, username) => {
         state.username = username;
+    },
+    [MUTATE_USERNAME_EXISTENCE]: (state, isExisting) => {
+        state.changeUsername.isExisting = isExisting;
+    },
+    [MUTATE_USERNAME_RESULT]: (state, result) => {
+        state.changeUsername.result = result;
     }
 };
 

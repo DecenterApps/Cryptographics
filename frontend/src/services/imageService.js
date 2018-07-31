@@ -9,13 +9,12 @@ import utils from 'services/utils';
 import config from 'config/config.json';
 import * as helpers from 'scripts/helpers';
 
-helpers.checkProvider();
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
-const digitalPrintImageContract = new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
-const assetManagerContract = new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const DELAY = 300;
 
@@ -26,7 +25,7 @@ export const createImage = async (randomHashIds, timestamp, iterations, potentia
   iterations = parseInt(iterations, 10);
   try {
     console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-    return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
+    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
       value: parseInt(price),
       from: account,
       to: digitalPrintImageContractAddress,
@@ -45,10 +44,9 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
   console.log('Attributes: ' + attributes);
   console.log('Account: ' + account);
 
-  let nonce = await web3.eth.getTransactionCount(account);
   try {
-    return await assetManagerContract.methods.createAsset(attributes, ipfsHash, price).send({
-      from: account, to: assetManagerContract, nonce
+    return await assetManagerContract().methods.createAsset(attributes, ipfsHash, price).send({
+      from: account
     }, (a, b) => {
       console.log(a, b);
     });
@@ -60,9 +58,8 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
 
 export const createAssetPack = async (coverImage, name, attributes, ipfsHashes, price, account) => {
   try {
-    let nonce = await web3.eth.getTransactionCount(account);
-    return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
-      from: account, to: assetManagerContract, nonce
+    return await assetManagerContract().methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
+      from: account
     }, (a, b) => {
       console.log(a, b);
     });

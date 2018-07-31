@@ -4,5 +4,9 @@ export default {
     assetsCreated: [],
     assetsBought: [],
     graphicsCreated: [],
-    graphicsBought: []
+    graphicsBought: [],
+    changeUsername: {
+        isExisting: undefined,
+        result: undefined
+    }
 };
