@@ -4,18 +4,22 @@
         :class="inputStyle"
         :type="inputType"
         v-bind="$attrs"
+        v-model="content"
         @input="handleInput">
 </template>
 
 <script>
 export default {
     name: 'Input',
-    data: () => ({
-        content: this.value
-    }),
+    data() {
+        return {
+            content: this.value
+        }
+    },
     props: {
         value: {
-            type: String
+            type: String,
+            default: ''
         },
         inputType: {
             type: String,
