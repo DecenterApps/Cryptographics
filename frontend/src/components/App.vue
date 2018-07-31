@@ -60,6 +60,7 @@ export default {
     .large-title {
         font-family: 'YoungSerif-Regular', sans-serif;
         font-size: 32px;
+        line-height: 1;
     }
     main {
         position: relative;
