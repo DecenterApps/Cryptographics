@@ -3,12 +3,13 @@ import {
     UPDATE_USER_CONFIG,
     SET_METAMASK_ADDRESS,
     SET_USERNAME,
+    EDIT_USERNAME,
     MUTATE_METAMASK_ADDRESS,
     MUTATE_USERNAME
 } from './types';
 
 import { getAccounts } from 'scripts/helpers';
-import { getUsername } from 'services/ethereumService';
+import { getUsername, usernameExists, registerUser } from 'services/ethereumService';
 
 export default {
     [SET_METAMASK_ADDRESS]: async ({ commit }) => {
@@ -37,4 +38,11 @@ export default {
         }, 1000)
         return true;
     },
+    [EDIT_USERNAME]: async ({ dispatch }, newUsername) => {
+        let isExisting = await usernameExists(newUsername);
+        if (!isExisting) {
+            await registerUser(newUsername, "0x0");
+            await dispatch(SET_USERNAME);
+        }
+    }
 };

@@ -24,7 +24,7 @@
       <h2 class="large-title">Asset Packs</h2>
       <asset-packs-pagination :show-all="true" />
       <h2 class="large-title">Gallery</h2>
-      <gallery :images="images" />
+      <gallery :images="images"/>
     </div>
   </layout>
 </template>
@@ -162,9 +162,22 @@
       top: -80px;
       left: 0;
     }
-    .name {
-      font-family: 'YoungSerif-Regular', sans-serif;
-      font-size: 32px;
+    .left {
+      .name {
+        font-family: 'YoungSerif-Regular', sans-serif;
+        font-size: 32px;
+      }
+    }
+    .right {
+      & .button {
+        margin: 0 15px;
+        &:first-of-type {
+          margin-left: 0;
+        }
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
     }
   }
 }

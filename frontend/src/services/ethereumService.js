@@ -112,6 +112,10 @@ export const getUsername = async (address) => {
   return await digitalPrintImageContract.methods.getUsername(address).call();
 };
 
+export const registerUser = async (username, bytes32) => {
+  return await digitalPrintImageContract.methods.register(username, bytes32).send();
+};
+
 export const calculatePrice = async (pickedAssets, owner) => {
   if (pickedAssets.length === 0) {
     return 0;

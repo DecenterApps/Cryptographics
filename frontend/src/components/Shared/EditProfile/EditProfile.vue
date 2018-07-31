@@ -5,7 +5,8 @@
             <div class="left">
             <img class="avatar" src="">
             <div class="input-group">
-                <cg-input placeholder="Enter username"/>
+                {{ newUsername }}
+                <cg-input :value="newUsername" @input="(val) => newUsername = val" placeholder="Enter username"/>
                 <input-file
                     id="avatar-image"
                     button-style="transparent">
@@ -14,7 +15,9 @@
             </div>
             </div>
             <div class="right">
-                <cg-button>
+                <cg-button
+                    type="submit" 
+                    @submit.prevent="editUsername()">
                     Submit
                 </cg-button>
             </div>
@@ -23,8 +26,19 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import { EDIT_USERNAME } from 'store/user-config/types';
+
 export default {
-    name: 'EditProfile'
+    name: 'EditProfile',
+    data: () => ({
+        newUsername: ''
+    }),
+    methods: {
+        ...mapActions({
+            editUsername: EDIT_USERNAME
+        })
+    }
 }
 </script>
 
