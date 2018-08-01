@@ -16,13 +16,13 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: Home },
+    { path: '/', component: Landing },
     // { path: '/legacy', component: Parent },
     { path: '/about', component: About },
-    { path: '/landing', component: Landing },
+    // { path: '/landing', component: Landing },
     { path: '/single-graphic', component: SingleGraphic },
     { path: '/create-graphic', component: CreateGraphic },
-    { path: '/gallery', component: About }, // Gallery here
+    { path: '/gallery', component: Home }, // Gallery here
     { path: '/upload-asset-pack', component: UploadAssetPack},
     { path: '/asset-packs', component: AssetPacks },
     { path: '/profile', component: Profile }

@@ -5,48 +5,73 @@
 </template>
 
 <script>
+  import { mapActions, mapState } from 'vuex';
+  import { TOGGLE_CANVAS_DRAWING } from 'store/canvas/types';
   import { getSize, makeImage } from 'services/imageService';
 
   export default {
     data: () => ({}),
     props: ['canvasData', 'frame'],
+    methods: {
+      ...mapActions({
+        toggleDrawing: TOGGLE_CANVAS_DRAWING,
+      }),
+      getCanvasElement() {
+        return document.getElementById('canvas');
+      },
+      async drawCanvas(assets, delay) {
+        let canvas = document.getElementById('canvas');
+        const rect = canvas.parentNode.getBoundingClientRect();
+        const size = getSize(rect.width, rect.height, this.canvasData.ratio);
+        const frame = this.canvasData.frame || false;
+        canvas.width = size.canvasWidth;
+        canvas.height = size.canvasHeight;
+        console.log(size);
+        canvas.style.width = size.width + 'px';
+        canvas.style.height = size.height + 'px';
+        const FRAME_BOUNDARIES = {
+          left: canvas.width / 20,
+          bottom: canvas.height / 6.3,
+          right: canvas.width / 20,
+          top: canvas.width / 20,
+          ratio: this.canvasData.ratio,
+          shouldDrawFrame: frame,
+        };
+        this.toggleDrawing();
+        try {
+          await makeImage(assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES, delay);
+        } catch (e) {
+          console.error(e);
+        }
+        this.toggleDrawing();
+      }
+    },
+    computed: {
+      ...mapState({
+        isCanvasDrawing: ({ canvas }) => canvas.isCanvasDrawing,
+      })
+    },
     watch: {
       canvasData: {
-        handler: function (newData) {
-          let canvas = document.getElementById('canvas');
-          const rect = canvas.parentNode.getBoundingClientRect();
-          const size = getSize(rect.width, rect.height, this.canvasData.ratio);
-          const frame = this.canvasData.frame || false;
-          canvas.width = size.width;
-          canvas.height = size.height;
-          const FRAME_BOUNDARIES = frame ? {
-            left: size.width / 20,
-            bottom: size.height / 6.3,
-            right: size.width / 20,
-            top: size.width / 20,
-            ratio: this.canvasData.ratio
-          } : undefined;
-          makeImage(newData.assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES);
+        handler: async function (newData) {
+          this.drawCanvas(newData.assets);
         },
         deep: true,
       }
     },
     mounted: function () {
-      let canvas = document.getElementById('canvas');
-      const rect = canvas.parentNode.getBoundingClientRect();
-      const size = getSize(rect.width, rect.height, this.canvasData.ratio);
-      const frame = this.canvasData.frame || false;
-      canvas.width = size.width;
-      canvas.height = size.height;
-      var ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      this.drawCanvas(this.canvasData.assets);
+
+      // window.addEventListener('resize', () => {
+      //   // clear the timeout
+      //   clearTimeout(timeout);
+      //   // start timing for event "completion"
+      //   timeout = setTimeout(() => {
+      //     this.drawCanvas(this.canvasData.assets, 0);
+      //   }, 500);
+      //
+      // });
     },
-    methods: {
-      getCanvasElement() {
-        return document.getElementById('canvas');
-      },
-    }
   };
 </script>
 

@@ -5,6 +5,7 @@
         </div>
         <div class="right">
             <cg-button
+                    :disabled="isCanvasDrawing"
                     @click="renderCanvas"
                     button-style="transparent">
                 Recreate
@@ -44,7 +45,7 @@
                     </div>
                 </div>
                 <div class="frame">
-                    <cg-checkbox v-model="canvasData.frame">Frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
                 </div>
                 <cg-button @click="buyImage">Submit</cg-button>
             </div>
@@ -66,6 +67,7 @@
   import * as ipfsService from 'services/ipfsService';
   import { mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { CANVAS_DRAWING } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -77,6 +79,7 @@
         assets: [],
         ratio: '2:3',
         frame: false,
+        noBottomFrame: false,
       },
       randomSeed: 0,
       iterations: 0,
@@ -91,6 +94,7 @@
       ...mapGetters({
         userAddress: METAMASK_ADDRESS,
         username: USERNAME,
+        isCanvasDrawing: CANVAS_DRAWING,
       })
     },
     props: ['selectedAssetPacks'],
@@ -133,6 +137,7 @@
           this.selectedPacks = [...new Set([...this.selectedPacks, ...generatePacks()])];
         }
         this.selectedPacks = [...new Set([...this.selectedPacks, ...this.selectedAssetPacks])];
+        console.log(this.selectedPacks);
         let pot = this.selectedPacks.map(assetPack =>
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
@@ -161,11 +166,12 @@
     },
     async created() {
       if (window.sessionStorage.length > 0) {
-        this.randomHashIds = JSON.parse(sessionStorage.getItem('random_hash_ids'));
+        this.canvasData.ratio = "1:1";
+        this.randomHashIds = JSON.parse(sessionStorage.getItem('randomHashIds'));
         this.timestamp = sessionStorage.getItem('timestamp');
-        this.iterations = sessionStorage.getItem('iterations');
-        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
-        this.randomSeed = await convertSeed(this.randomSeed);
+        this.iterations = parseInt(sessionStorage.getItem('iterations'), 10);
+        const firstSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
+        this.randomSeed = await convertSeed(firstSeed);
         console.log('Random hash ids: ' + this.randomHashIds);
         console.log('Random seed ' + this.randomSeed);
         console.log('Iterations: ' + this.iterations);

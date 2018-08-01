@@ -1,5 +1,5 @@
 <template>
-    <layout layout-style="pulled-left" layout-content="tabbed">
+    <layout layout-style="pulled-left" layout-content="no-container">
         <graphic-builder
                 v-if="activeTab === 'create'"
                 v-on:tabChange="changeTab"
@@ -10,22 +10,6 @@
                 v-on:pickAsset="toggleAsset"
                 :selectedAssetPacks="selectedAssetPacks" />
     </layout>
-    <!-- <div class="background-wrapper">
-        <div class="black-bg"></div>
-        <div class="create-art-wrapper" v-bind:class="[activeTab === 'create' ? 'create' : '']">
-            <div class="container create-container">
-                <art-builder
-                    v-if="activeTab === 'create'"
-                    v-on:tabChange="changeTab"
-                    :selectedAssetPacks="selectedAssetPacks"/>
-                <asset-picker
-                    v-if="activeTab === 'picker'"
-                    v-on:tabChange="changeTab"
-                    v-on:pickAsset="toggleAsset"
-                    :selectedAssetPacks="selectedAssetPacks"/>
-            </div>
-        </div>
-    </div> -->
 </template>
 
 <script>

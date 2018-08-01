@@ -4,6 +4,7 @@
             type="checkbox"
             :name="name"
             :value="value"
+            @change="$emit('checked', $event.target.checked)"
             v-bind="$attrs">
         <span class="label"><slot/></span>
     </label>
@@ -13,13 +14,13 @@
 export default {
     name: 'Checkbox',
     props: {
-        name: {
-            type: String,
-            default: ''
-        },
-        value: {
-            type: Boolean
-        }
+      name: {
+          type: String,
+          default: ''
+      },
+      value: {
+          type: Boolean
+      }
     }
 }
 </script>

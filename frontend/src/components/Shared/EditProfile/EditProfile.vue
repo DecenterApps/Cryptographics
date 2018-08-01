@@ -1,11 +1,25 @@
 <template>
     <div>
         <h3 class="large-title">Edit Profile</h3>
-        <div class="edit-profile-modal">
+        <form
+            class="edit-profile-modal"
+            @submit.prevent="changeUsername(newUsername)">
             <div class="left">
             <img class="avatar" src="">
             <div class="input-group">
-                <cg-input placeholder="Enter username"/>
+                <span
+                    class="info fail"
+                    v-if="isExistingUsername">
+                    Existing username, please try again
+                </span>
+                <span
+                    class="info success"
+                    v-if="isChanged">
+                    You have updated your profile successfully!
+                </span>
+                <cg-input
+                    v-model="newUsername"
+                    placeholder="Enter username"/>
                 <input-file
                     id="avatar-image"
                     button-style="transparent">
@@ -14,17 +28,35 @@
             </div>
             </div>
             <div class="right">
-                <cg-button>
+                <cg-button
+                    type="submit">
                     Submit
                 </cg-button>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import { CHANGE_USERNAME, USERNAME_EXISTENCE, CHANGE_USERNAME_RESULT } from 'store/user-config/types';
+
 export default {
-    name: 'EditProfile'
+    name: 'EditProfile',
+    data: () => ({
+        newUsername: ''
+    }),
+    methods: {
+        ...mapActions({
+            changeUsername: CHANGE_USERNAME,
+        })
+    },
+    computed: {
+        ...mapGetters({
+            isExistingUsername: USERNAME_EXISTENCE,
+            isChanged: CHANGE_USERNAME_RESULT
+        })
+    }
 }
 </script>
 
@@ -45,6 +77,17 @@ export default {
             display: inline-flex;
             flex-direction: column;
             margin-left: 20px;
+            .info {
+                margin-bottom: 10px;
+                font-size: 12px;
+                &.fail {
+                    color: #d82d2d;
+                }
+                &.success {
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
         }
     }
     .right {

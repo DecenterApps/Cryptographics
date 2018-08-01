@@ -23,6 +23,7 @@ const config = {
       methods: path.resolve(__dirname, '../src/methods'),
       shared: path.resolve(__dirname, '../src/components/Shared'),
       pages: path.resolve(__dirname, '../src/components/Pages'),
+      assets: path.resolve(__dirname, '../src/assets'),
     }
   },
   module: {

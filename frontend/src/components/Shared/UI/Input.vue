@@ -3,13 +3,24 @@
         class="input"
         :class="inputStyle"
         :type="inputType"
-        v-bind="$attrs">
+        v-bind="$attrs"
+        v-model="content"
+        @input="handleInput">
 </template>
 
 <script>
 export default {
     name: 'Input',
+    data() {
+        return {
+            content: this.value
+        }
+    },
     props: {
+        value: {
+            type: String,
+            default: ''
+        },
         inputType: {
             type: String,
             default: 'text'
@@ -17,6 +28,11 @@ export default {
         inputStyle: {
             type: String,
             default: 'input'
+        }
+    },
+    methods: {
+        handleInput (e) {
+            this.$emit('input', this.content)
         }
     }
 }

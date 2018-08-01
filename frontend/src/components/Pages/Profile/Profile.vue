@@ -1,47 +1,32 @@
 <template>
-    <div class="profile-page">
-        <slider-gallery />
-        <div class="container">
-            <div class="profile">
-                <div class="profile-image">
-                    <div class="thumbnail"></div>
-                </div>
-                <div class="description">
-                    <span class="creator-label">Creator:</span> <span class="creator-name">Anon</span>
-                </div>
-
-                <p class="large-title">Asset Packs</p>
-                <asset-packs-pagination :show-all="true" />
-                <p class="large-title">Gallery</p>
-            </div>
-            <h3> My profile </h3>
-            <div>
-                <div>
-                    <label> Metamask account : {{this.metamask_account}}</label>
-                </div>
-                <div>
-                    <label> My bought assets : {{this.bought_assets}}</label>
-                </div>
-                <div>
-                    <label> Assets I've created: {{this.created_assets}}</label>
-                </div>
-                <div>
-                    <label> Asset Packs I've created : {{ this.asset_packs}}</label>
-                </div>
-                <div>
-                    <label> My images on chain: {{this.my_images_on_chain}}</label>
-                </div>
-                <div>
-                    <button @click="generateData"> Generate data</button>
-                </div>
-                <div>
-                    <button @click="renderMyImagesCanvas"> View image</button>
-                    <input placeholder="Type id of your image: " v-model="id_to_show" />
-                </div>
-                <gallery :images="images" />
-            </div>
+  <layout
+    layout-style="full-width"
+    layout-content="no-container"
+    :slider-gallery="true">
+    <div class="container">
+      <div class="header">
+        <img class="avatar">
+        <div class="left">
+          <h1 class="name">Anon</h1>
         </div>
+        <div class="right">
+          <cg-button 
+            button-style="transparent"
+            @click="openModal('editProfile')">
+            Edit Profile
+          </cg-button>
+          <button-link
+            to="/upload-asset-pack">
+            Create Asset Pack
+          </button-link>
+        </div>
+      </div>
+      <h2 class="large-title">Asset Packs</h2>
+      <asset-packs-pagination :show-all="true" />
+      <h2 class="large-title">Gallery</h2>
+      <gallery :images="images"/>
     </div>
+  </layout>
 </template>
 
 <script>
@@ -53,6 +38,8 @@
     getImageIpfs,
   } from 'services/ethereumService';
   import { getData, loadDataForAssets } from 'services/imageService';
+  import { mapActions } from 'vuex';
+  import { TOGGLE_MODAL } from 'store/modal/types';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
@@ -82,6 +69,9 @@
     // computed: {
     // },
     methods: {
+      ...mapActions({
+        openModal: TOGGLE_MODAL
+      }),
       async generateData() {
         await this.getImages();
         await this.getAllAssets();
@@ -155,6 +145,45 @@
 </script>
 
 <style scoped lang="scss">
+.container {
+  padding-top: 0 !important;
+  flex-direction: column;
+  position: relative;
+  .header {
+    padding-left: 190px;
+    padding-top: 47px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    .avatar {
+      background-color: #333;
+      width: 160px; height: 160px;
+      position: absolute;
+      top: -80px;
+      left: 0;
+    }
+    .left {
+      .name {
+        font-family: 'YoungSerif-Regular', sans-serif;
+        font-size: 32px;
+      }
+    }
+    .right {
+      & .button {
+        margin: 0 15px;
+        &:first-of-type {
+          margin-left: 0;
+        }
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+
+
     .profile-page {
         background-color: #F9F9F9;
 
@@ -163,14 +192,14 @@
             .thumbnail {
                 position: absolute;
                 top: -96px;
-                width: 138px;
-                height: 138px;
+                width: 160px;
+                height: 160px;
                 background-color: #D4D4D4;
             }
 
             .description {
                 display: flex;
-                padding: 10px 0 32px 0;
+                padding: 32px 0;
                 justify-content: flex-end;
                 font-family: 'YoungSerif-Regular', sans-serif;
                 font-size: 15px;

@@ -9,15 +9,14 @@ import utils from 'services/utils';
 import config from 'config/config.json';
 import * as helpers from 'scripts/helpers';
 
-helpers.checkProvider();
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
-const digitalPrintImageContract = new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
-const assetManagerContract = new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
-const DELAY = 300;
+const DELAY = 150;
 
 export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) => {
   potentialAssets = utils.encode(potentialAssets);
@@ -26,7 +25,7 @@ export const createImage = async (randomHashIds, timestamp, iterations, potentia
   iterations = parseInt(iterations, 10);
   try {
     console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-    return await digitalPrintImageContract.methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
+    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
       value: parseInt(price),
       from: account,
       to: digitalPrintImageContractAddress,
@@ -45,10 +44,9 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
   console.log('Attributes: ' + attributes);
   console.log('Account: ' + account);
 
-  let nonce = await web3.eth.getTransactionCount(account);
   try {
-    return await assetManagerContract.methods.createAsset(attributes, ipfsHash, price).send({
-      from: account, to: assetManagerContract, nonce
+    return await assetManagerContract().methods.createAsset(attributes, ipfsHash, price).send({
+      from: account
     }, (a, b) => {
       console.log(a, b);
     });
@@ -60,9 +58,8 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
 
 export const createAssetPack = async (coverImage, name, attributes, ipfsHashes, price, account) => {
   try {
-    let nonce = await web3.eth.getTransactionCount(account);
-    return await assetManagerContract.methods.createAssetPack(coverImage, name, attributes, ipfsHashes, price).send({
-      from: account, to: assetManagerContract, nonce
+    return await assetManagerContract().methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
+      from: account
     }, (a, b) => {
       console.log(a, b);
     });
@@ -93,16 +90,27 @@ export const loadDataForAssets = async () => {
 
 export const getSize = (width, height, ratio) => {
   const MAX_HEIGHT = 3508;
+  const MAX_WIDTH = 2480;
   if (ratio === '1:1') {
-    if (height > MAX_HEIGHT) height = MAX_HEIGHT;
-    return { width: height, height };
+    if (height > MAX_WIDTH) height = MAX_WIDTH;
+    return {
+      width: height,
+      height,
+      canvasWidth: MAX_WIDTH,
+      canvasHeight: MAX_WIDTH,
+    };
   }
   if (ratio === '2:3') {
     if (height > MAX_HEIGHT) height = MAX_HEIGHT;
 
     width = (height * 10) / 14;
 
-    return { width: width, height };
+    return {
+      width: width,
+      height,
+      canvasWidth: MAX_WIDTH,
+      canvasHeight: MAX_HEIGHT,
+    };
   }
 };
 
@@ -116,6 +124,69 @@ export const getData = async (randomSeed, iterations, potentialAssets, allAssets
     allDataAboutAsset.push(final);
   }
   return allDataAboutAsset;
+};
+
+const drawFrame = (context, canvasHeight, canvasWidth, frame) => {
+  const { left, right, bottom, top } = frame;
+
+  context.strokeStyle = '#FFF';
+  context.beginPath();
+  context.moveTo(left / 2, 0);
+  context.lineWidth = left;
+  context.lineTo(left / 2, canvasHeight);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(canvasWidth - right / 2, canvasHeight);
+  context.lineWidth = right;
+  context.lineTo(canvasWidth - right / 2, 0);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(canvasWidth, top / 2);
+  context.lineWidth = top;
+  context.lineTo(0, top / 2);
+  context.stroke();
+};
+
+const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
+  let { bottom, left } = frame;
+
+  context.strokeStyle = '#FFF';
+  context.beginPath();
+  context.moveTo(0, canvasHeight - bottom / 2);
+  context.lineWidth = bottom;
+  context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+  context.stroke();
+
+  let image = new Image();
+  image.src = require(`assets/cg-logo.png`);
+
+  image.onload = () => {
+    const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
+    const leftAlign = left;
+
+    context.drawImage(image, leftAlign, verticalAlign, image.width, image.height);
+  };
+  image.onerror = (err) => console.error(err);
+};
+
+const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame, index, delayTime) => {
+  let x = asset.x_coordinate % canvasWidth;
+  let y = asset.y_coordinate % canvasHeight;
+  let rotation = asset.rotation;
+  if (delayTime > 0) {
+    await delay(delayTime * index);
+  }
+  drawImageRot(
+    context,
+    asset.image,
+    x,
+    y,
+    asset.image.width,
+    asset.image.height,
+    rotation,
+    { isBackground: asset.isBackground, canvasWidth, canvasHeight });
 };
 
 export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
@@ -152,7 +223,6 @@ export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
       scale: 800 + Math.floor(Math.random() * 200)
     });
   }
-  console.log(images);
 
   let imagesLoaded = 0;
 
@@ -164,32 +234,9 @@ export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
       let y = images[j].y_coordinate % canvasHeight;
       let rotation = images[j].rotation;
       drawImageRot(context, images[j].image, x, y, width / 4, height / 4, rotation);
-      if (imagesLoaded === images.length && frame.left > 0) {
+      if (imagesLoaded === images.length && frame.shouldDrawFrame) {
         // WRITE FRAME
-        context.strokeStyle = '#FFF';
-        context.beginPath();
-        context.moveTo(left / 2, 0);
-        context.lineWidth = left;
-        context.lineTo(left / 2, canvasHeight);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(0, canvasHeight - bottom / 2);
-        context.lineWidth = bottom;
-        context.lineTo(canvasWidth, canvasHeight - bottom / 2);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(canvasWidth - right / 2, canvasHeight);
-        context.lineWidth = right;
-        context.lineTo(canvasWidth - right / 2, 0);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(canvasWidth, top / 2);
-        context.lineWidth = top;
-        context.lineTo(0, top / 2);
-        context.stroke();
+        drawFrame(context, canvasHeight, canvasWidth, frame);
       }
     };
   }
@@ -216,106 +263,73 @@ export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
   };
 };
 
-export const makeImage = async (objs, c, width, height, frame = {
+export const makeImage = (objs, c, width, height, frame = {
   left: 0,
   right: 0,
   bottom: 0,
   top: 0,
   ratio: '2:3'
-}) => {
-  let context = c.getContext('2d');
-  const { left, right, bottom, top } = frame;
-  const canvasHeight = height;
-  const canvasWidth = width;
-  width = width - left - right;
-  height = height - top - bottom;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = '#fff';
-  context.fillRect(0, 0, canvasWidth, canvasHeight);
-  let ids = [];
-  for (let j = 0; j < objs.length; j++) {
-    //ids -1 because on contract goes from 0
-    ids.push(objs[j].id - 1);
-  }
-  let hashes = await getAssetsIpfs(ids);
-  let images = [];
-  for (let i = 0; i < objs.length; i++) {
-    console.log(objs[i].id + ' hash : ' + hashes[i]);
-    let image = new Image();
-    let val = objs[i].id;
-    if (val < 10) {
-      val = '0' + val;
+}, delay = DELAY) =>
+  new Promise(async (resolve, reject) => {
+    let assets = [...objs];
+    let context = c.getContext('2d');
+    const { left, right, bottom, top } = frame;
+    const canvasHeight = height;
+    const canvasWidth = width;
+    width = width - left - right;
+    height = height - top - bottom;
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    if (assets.length === 0) return resolve('No assets provided.');
+
+    let hashes = await getAssetsIpfs(assets);
+    for (let i = 0; i < objs.length; i++) {
+      let image = new Image();
+      let val = assets[i].id;
+      if (val < 10) {
+        val = '0' + val;
+      }
+
+      image.src = 'http://ipfs.decenter.com/ipfs/' + hashes[i];
+      image.crossOrigin = 'Anonymous';
+
+      assets[i] = {
+        ...assets[i],
+        background: objs[i].background,
+        isBackground: objs[i].background === '122',
+        image,
+      };
     }
+    assets = helpers.sortBy(assets, 'background');
 
-    // let src = await assetManagerContract.methods.getAssetIpfs(objs[i].id).call();
-    image.src = 'http://ipfs.decenter.com/ipfs/' + hashes[i];
-    // image.src = require('../dist/assets/' + val + '.png');
-    image.crossOrigin = 'Anonymous';
+    let imagesLoaded = 0;
 
-    images.push({
-      background: objs[i].background,
-      isBackground: objs[i].background === '122',
-      image,
-    });
-  }
+    for (let i = 0; i < assets.length; i++) {
+      assets[i].image.onload = async () => {
+        waitForBackgroundLoad(assets, async () => {
+          await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
+          imagesLoaded++;
 
-  images = images.sort((a, b) => {
-    return parseInt(a.background) > parseInt(b.background);
+          if (imagesLoaded === assets.length) {
+            console.log('All assets loaded.');
+            resolve({ message: 'Success' });
+
+            drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+
+            if (frame.shouldDrawFrame) {
+              // DRAW FRAME
+              drawFrame(context, canvasHeight, canvasWidth, frame);
+            }
+          }
+        });
+      };
+      assets[i].image.onerror = () => {
+        reject('One of the images failed to load.');
+      };
+    }
   });
-
-  let imagesLoaded = 0;
-
-  for (let j = 0; j < objs.length; j++) {
-    const image = images[j].image;
-    image.onload = async function () {
-      waitForBackgroundLoad(images, async () => {
-        imagesLoaded++;
-        let x = objs[j].x_coordinate % canvasWidth;
-        let y = objs[j].y_coordinate % canvasHeight;
-        let rotation = objs[j].rotation;
-        await delay(DELAY * j);
-        const imageDimensions = scaleImage(image.width, image.height, canvasWidth, canvasHeight, frame.ratio);
-        drawImageRot(
-          context,
-          image,
-          x,
-          y,
-          imageDimensions.width,
-          imageDimensions.height,
-          rotation,
-          { isBackground: images[j].isBackground, canvasWidth, canvasHeight });
-        if (imagesLoaded === objs.length && frame.left > 0) {
-          console.log('All assets loaded.');
-          // WRITE FRAME
-          context.strokeStyle = '#FFF';
-          context.beginPath();
-          context.moveTo(left / 2, 0);
-          context.lineWidth = left;
-          context.lineTo(left / 2, canvasHeight);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(0, canvasHeight - bottom / 2);
-          context.lineWidth = bottom;
-          context.lineTo(canvasWidth, canvasHeight - bottom / 2);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(canvasWidth - right / 2, canvasHeight);
-          context.lineWidth = right;
-          context.lineTo(canvasWidth - right / 2, 0);
-          context.stroke();
-
-          context.beginPath();
-          context.moveTo(canvasWidth, top / 2);
-          context.lineWidth = top;
-          context.lineTo(0, top / 2);
-          context.stroke();
-        }
-      });
-    };
-  }
-};
 
 const imgLoaded = (img) => img.complete && img.naturalHeight !== 0;
 
