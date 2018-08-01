@@ -1,7 +1,8 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
-const utils = require('scripts/../frontend/src/services/utils');
+const utils = require('../frontend/src/services/utils');
 const Web3 = require('web3');
+const advanceToBlock = require('./helpers/advanceToBlock').advanceToBlock;
 
 contract('DigitalPrintImage', async (accounts) => {
 
@@ -11,9 +12,7 @@ contract('DigitalPrintImage', async (accounts) => {
         dpm = await DigitalPrintImage.deployed();
         assetManager = await AssetManager.deployed();
     
-        for (let i=0; i<150; i++) {
-            await dpm.getLen();
-        }
+        await advanceToBlock(200);
 
         await dpm.fillWithHashes();
 
@@ -48,11 +47,11 @@ contract('DigitalPrintImage', async (accounts) => {
         for (let i=0; i<res.length; i++) {
             res[i] = parseInt([i]);
         }
-        console.log("start");
+        // console.log("start");
         let seed = await dpm.calculateSeed([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213);
-        console.log(seed);
+        // console.log(seed);
         let final = await dpm.getFinalSeed(seed, 1);
-        console.log(final);
+        // console.log(final);
         let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213, 1, encoded_arr, "Author", "hash"); 
         let balance = await dpm.balanceOf(accounts[0]);
         assert.equal(balance, 1, "User should have image he just created");
@@ -74,8 +73,38 @@ contract('DigitalPrintImage', async (accounts) => {
         assert.equal(balance, 1, "User should have image he just created with right price");
     });
 
-    // it("...Should create token and put it on sale", async () => {
+    it("...Should be able to change username multiple times and to use old usernames", async () => {
+        let username;
         
-    // });
+        await dpm.register("Nikola", "0x0");
+        username = await dpm.getUsername(accounts[0]);
+
+        assert.equal(username, "Nikola", "Username should change to Nikola");
+
+        await dpm.register("Jovan", "0x0");
+        username = await dpm.getUsername(accounts[0]);
+
+        assert.equal(username, "Jovan", "Username should be Jovan");
+
+        await dpm.register("Nikola", "0x0");
+        username = await dpm.getUsername(accounts[0]);
+
+        assert.equal(username, "Nikola", "Should be able to use his old username Nikola");
+    });
+
+    it("...Should be able to change only picture", async () => {
+        let username;
+        
+        await dpm.register("Nikola", "0x0");
+        username = await dpm.getUsername(accounts[0]);
+
+        assert.equal(username, "Nikola", "Username should change to Nikola");
+
+        await dpm.register("Nikola", "0x1");
+        let userInfo = await dpm.getUserInfo(accounts[0]);
+
+        assert.equal(userInfo[0], "Nikola", "Username should be Nikola");
+        assert.equal(userInfo[1], "0x1000000000000000000000000000000000000000000000000000000000000000", "Picture has to be 0x1000000000000000000000000000000000000000000000000000000000000000");
+    });
 
 });

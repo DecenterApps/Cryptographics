@@ -1,5 +1,6 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
-const utils = require('scripts/../frontend/src/services/utils');
+const utils = require('../frontend/src/services/utils');
+const advanceToBlock = require('./helpers/advanceToBlock').advanceToBlock;
 
 contract('Functions', async (accounts) => {
 
@@ -8,9 +9,7 @@ contract('Functions', async (accounts) => {
     before(async () => {
         dpm = await DigitalPrintImage.deployed();
     
-        for (let i=0; i<150; i++) {
-            await dpm.getLen();
-        }
+        await advanceToBlock(150);
 
         await dpm.fillWithHashes();
     });

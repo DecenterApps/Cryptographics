@@ -773,6 +773,20 @@
             },
             {
                 "constant": false,
+                "inputs": [],
+                "name": "createImageTest",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
                 "inputs": [
                     {
                         "name": "_randomHashIds",
@@ -928,7 +942,7 @@
                 "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
                 "events": {},
                 "links": {},
-                "address": "0x697465d88726bc644ef96d8fd2d3f15ab35d2d0a"
+                "address": "0x8f010b88c8570d96e271f641851ab34572cd38a2"
             }
         }
     },
@@ -1476,7 +1490,7 @@
                 "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
                 "events": {},
                 "links": {},
-                "address": "0xaf97c141f1e2344c0178b37da855bf78c6395975"
+                "address": "0xc780d8223908d1919679cf681c3514427ff2eed0"
             }
         }
     }

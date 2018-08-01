@@ -123,7 +123,7 @@ contract Functions {
     /// @param _timestamp is timestamp for that hash
     /// @return uint representation of random seed
     function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint){
-        require(_timestamp!=0);
+        require(_timestamp != 0);
         require(_randomHashIds.length == 10);
 
         bytes32 randomSeed = keccak256(

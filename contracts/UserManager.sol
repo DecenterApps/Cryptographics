@@ -17,7 +17,10 @@ contract UserManager {
     mapping(string => address) usernameToAddress;
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
-        require(usernameExists[_username] == false);
+        require(usernameExists[_username] == false || keccak256(abi.encodePacked(getUsername(msg.sender))) == keccak256(abi.encodePacked(_username)));
+
+        // if he already had username, that username is free now
+        usernameExists[getUsername(msg.sender)] = false;
 
         addressToUser[msg.sender] = User({
             username: _username,

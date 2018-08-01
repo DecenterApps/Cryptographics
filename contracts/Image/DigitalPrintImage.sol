@@ -31,9 +31,9 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     }
 
     /// @dev only for testing purposes
-    // function createImageTest() public returns(uint) {
-    //     return createImage(msg.sender);
-    // }
+    function createImageTest() public returns(uint) {
+        return createImage(msg.sender);
+    }
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated, timestamp will be automatically generated
