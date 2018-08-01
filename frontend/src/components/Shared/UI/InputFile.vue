@@ -8,7 +8,7 @@
                 class="input"
                 :id="id"
                 type="file"
-                multiple
+                :multiple="multiple"
                 :size="maxFiles"
                 :accept="accept"
                 v-on="$listeners">
@@ -38,6 +38,10 @@ export default {
         accept: {
             type: String,
             default: 'image/*'
+        },
+        multiple: {
+            type: Boolean,
+            default: true
         }
     }
 }

@@ -3,9 +3,9 @@
         <h3 class="large-title">Edit Profile</h3>
         <form
             class="edit-profile-modal"
-            @submit.prevent="changeUsername(newUsername)">
+            @submit.prevent="editProfile(newUsername)">
             <div class="left">
-            <img class="avatar" src="">
+            <img class="avatar" src="./assets/anon-profile.png">
             <div class="input-group">
                 <span
                     class="info fail"
@@ -14,22 +14,30 @@
                 </span>
                 <span
                     class="info success"
-                    v-if="isChanged">
+                    v-if="isSuccess">
                     You have updated your profile successfully!
+                </span>
+                <span
+                    class="info"
+                    v-if="newUsername.length >= 16">
+                    Username can't be longer than 16 characters
                 </span>
                 <cg-input
                     v-model="newUsername"
                     placeholder="Enter username"/>
                 <input-file
                     id="avatar-image"
-                    button-style="transparent">
+                    button-style="transparent"
+                    :multiple="false"
+                    @change="onFileChanged">
                     <span>Profile images must be 1:1 aspect ratio</span>
                 </input-file>
             </div>
             </div>
             <div class="right">
                 <cg-button
-                    type="submit">
+                    type="submit"
+                    :disabled="newUsername.length >= 16">
                     Submit
                 </cg-button>
             </div>
@@ -38,23 +46,49 @@
 </template>
 
 <script>
+import * as ipfsService from 'services/ipfsService';
 import { mapActions, mapGetters } from 'vuex';
-import { CHANGE_USERNAME, USERNAME_EXISTENCE, CHANGE_USERNAME_RESULT } from 'store/user-config/types';
+import { USERNAME, EDIT_PROFILE, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
 
 export default {
     name: 'EditProfile',
     data: () => ({
-        newUsername: ''
+        newUsername: '',
+        selectedImage: null
     }),
     methods: {
         ...mapActions({
-            changeUsername: CHANGE_USERNAME,
-        })
+            editProfile: EDIT_PROFILE,
+        }),
+        onFileChanged (event) {
+            this.selectedImage = event.target.files[0];
+
+            let canvas = document.createElement('canvas');
+            let context = canvas.getContext('2d');
+            context.canvas.width = 160;
+            context.canvas.height = 160;
+            let url = window.URL || window.webkitURL;
+            
+            let profileImg = new Image();
+            profileImg.src = url.createObjectURL(this.selectedImage);
+
+            profileImg.onload = async () => {
+                context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
+                let pngUrl = canvas.toDataURL();
+
+                let ipfsHash = await ipfsService.uploadFile(pngUrl.substr(22));
+                 //     hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
+                console.log(ipfsHash);
+            }
+            // console.log('FILE SIZE: ', this.selectedImage.size, '\n');
+            // 2000000
+        }
     },
     computed: {
         ...mapGetters({
+            currentUsername: USERNAME,
             isExistingUsername: USERNAME_EXISTENCE,
-            isChanged: CHANGE_USERNAME_RESULT
+            isSuccess: EDIT_PROFILE_RESULT
         })
     }
 }
@@ -80,6 +114,7 @@ export default {
             .info {
                 margin-bottom: 10px;
                 font-size: 12px;
+                color: #949494;
                 &.fail {
                     color: #d82d2d;
                 }

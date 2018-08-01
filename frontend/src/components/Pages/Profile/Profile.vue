@@ -5,13 +5,14 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar">
+        <img class="avatar" src="./assets/anon-profile.png">
         <div class="left">
-          <h1 class="name">Anon</h1>
+          <h1 class="name">{{ username }}</h1>
         </div>
         <div class="right">
           <cg-button 
             button-style="transparent"
+            v-if="metamaskAddress"
             @click="openModal('editProfile')">
             Edit Profile
           </cg-button>
@@ -38,8 +39,9 @@
     getImageIpfs,
   } from 'services/ethereumService';
   import { getData, loadDataForAssets } from 'services/imageService';
-  import { mapActions } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
+  import { USERNAME, METAMASK_ADDRESS } from 'store/user-config/types';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
@@ -66,8 +68,12 @@
       myImagesIpfs: MyImageees,
       AssetPacksPagination
     },
-    // computed: {
-    // },
+    computed: {
+      ...mapGetters({
+        metamaskAddress: METAMASK_ADDRESS,
+        username: USERNAME
+      })
+    },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL

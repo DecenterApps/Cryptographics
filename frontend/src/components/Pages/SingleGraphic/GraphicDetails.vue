@@ -77,7 +77,6 @@ export default {
 .graphic-details {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 .assets-pack {
     margin-bottom: 13px;
@@ -95,7 +94,9 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-bottom: 70px;
+    &:first-of-type {
+        margin-bottom: 185px;
+    }
 }
 .graphic-name {
     margin-bottom: 50px;
