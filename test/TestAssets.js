@@ -1,5 +1,5 @@
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
-const utils = require('../frontend/src/services/utils');
+const utils = require('../client/src/services/utils');
 const Web3 = require('web3');
 
 contract('AssetManager', async (accounts) => {
