@@ -11,7 +11,7 @@ import {
     MUTATE_USERNAME_RESULT
 } from './types';
 
-import { getAccounts } from 'scripts/helpers';
+import { getAccounts } from 'services/helpers';
 import { getUsername, usernameExists, registerUser } from 'services/ethereumService';
 
 export default {

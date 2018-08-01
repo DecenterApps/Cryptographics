@@ -1,6 +1,6 @@
 import { app } from './app';
 import * as ipfsService from 'services/ipfsService';
-import * as helpers from 'scripts/helpers';
+import * as helpers from 'services/helpers';
 
 window.onload = () => {
   helpers.checkProvider();

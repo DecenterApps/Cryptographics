@@ -29,13 +29,13 @@
 </template>
 
 <script>
-  import { getAccounts } from 'scripts/helpers';
-
   import {
     getPaginatedAssetPacks,
     getPackInformation,
     getNumberOfAssetPacks
   } from 'services/ethereumService';
+  import { mapGetters } from 'vuex';
+  import { METAMASK_ADDRESS } from 'store/user-config/types';
 
   const NUM_PER_PAGE = 2;
 
@@ -45,9 +45,13 @@
       assetPacks: [],
       pagination: 1,
     }),
+    computed: {
+      ...mapGetters({
+        userAddress: METAMASK_ADDRESS,
+      })
+    },
     props: ['showAll'],
     async created() {
-      this.metamask_account = await getAccounts();
       if (this.showAll) {
         this.getPacks(this.pagination, NUM_PER_PAGE);
       } else {
@@ -57,8 +61,8 @@
 
     methods: {
       async getMyAssetPacks(page, count) {
-        const assetPacksIds = await getPaginatedAssetPacks(page, count, this.metamask_account);
-        this.assetPacks = await getPackInformation(assetPacksIds, this.metamask_account);
+        const assetPacksIds = await getPaginatedAssetPacks(page, count, this.userAddress);
+        this.assetPacks = await getPackInformation(assetPacksIds, this.userAddress);
       },
 
       async getPacks(page, count) {
@@ -69,7 +73,7 @@
             ids.push(i);
           }
         }
-        this.assetPacks = await getPackInformation(ids, this.metamask_account);
+        this.assetPacks = await getPackInformation(ids, this.userAddress);
       },
 
       nextPage() {

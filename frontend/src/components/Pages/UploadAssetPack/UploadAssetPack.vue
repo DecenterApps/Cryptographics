@@ -61,7 +61,7 @@
 
 <script>
   import * as ipfsService from 'services/ipfsService';
-  import { getAccounts } from 'scripts/helpers';
+  import { getAccounts } from 'services/helpers';
   import { createAssetPack, makeCoverImage } from 'services/imageService';
   import * as utils from 'services/utils';
 

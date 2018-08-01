@@ -7,8 +7,7 @@ import {
 
 import utils from 'services/utils';
 import config from 'config/config.json';
-import * as helpers from 'scripts/helpers';
-
+import * as helpers from 'services/helpers';
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
@@ -207,11 +206,8 @@ export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
   let images = [];
   for (let i = 0; i < image_paths.length; i++) {
     let image = new Image();
-    if (isHome) {
-      image.src = require('../../dist/assets/' + image_paths[i] + '.png');
-    } else {
-      image.src = image_paths[i];
-    }
+
+    image.src = image_paths[i];
     image.width = 90;
     image.height = 90;
     image.crossOrigin = 'Anonymous';

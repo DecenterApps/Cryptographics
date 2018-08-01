@@ -13,7 +13,7 @@
     // const util = require('util');
     // const exec = util.promisify(require('child_process').exec);
     import * as imageService from "services/imageService";
-    const ipfsService = require('scripts/../../../services/ipfsService');
+    const ipfsService = require('services/ipfsService');
 
     export default {
         data:  () => ({
