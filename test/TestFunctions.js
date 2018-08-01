@@ -9,7 +9,7 @@ contract('Functions', async (accounts) => {
     before(async () => {
         dpm = await DigitalPrintImage.deployed();
     
-        await advanceToBlock(150);
+        await advanceToBlock(105);
 
         await dpm.fillWithHashes();
     });
@@ -20,13 +20,11 @@ contract('Functions', async (accounts) => {
 
         let encoded_arr = utils.encode(arr);
         res = await dpm.decodeAssets(encoded_arr);
-        for (let i=0; i<res.length; i++) {
-            res[i] = parseInt([i]);
-        }
 
-        // console.log(arr);
-        // console.log(res);
-        assert.equal(arr, res, "Arrays should be exactly same");
+        for (let i=0; i<res.length; i++) {
+            assert.equal(arr[i], parseInt(res[i]), "Arrays should be exactly same");
+        }
+        
     });
 
     // it("...Should create token and put it on sale", async () => {
