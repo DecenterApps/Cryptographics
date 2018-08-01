@@ -88,7 +88,7 @@ const config = {
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: 'frontend/prod.html',
+      template: 'client/prod.html',
       filename: 'index.html',
       // favicon: 'src/favicon.ico',
       hash: true,

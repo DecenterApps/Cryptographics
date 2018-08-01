@@ -1,5 +1,5 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
-const utils = require('../frontend/src/services/utils');
+const utils = require('../client/src/services/utils');
 const advanceToBlock = require('./helpers/advanceToBlock').advanceToBlock;
 
 contract('Functions', async (accounts) => {
