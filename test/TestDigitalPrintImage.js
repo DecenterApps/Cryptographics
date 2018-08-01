@@ -12,7 +12,7 @@ contract('DigitalPrintImage', async (accounts) => {
         dpm = await DigitalPrintImage.deployed();
         assetManager = await AssetManager.deployed();
     
-        await advanceToBlock(200);
+        await advanceToBlock(105);
 
         await dpm.fillWithHashes();
 

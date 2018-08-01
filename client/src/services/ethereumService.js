@@ -192,7 +192,7 @@ export const calculateFinalSeed = (random_seed, iterations) => {
 //seed - bytes32 ; assetId - integer
 export const getAssetMetadata = (seed, assetId) => {
   seed = seed.toString();
-  let number = parseInt(seed.substr(seed.length - 4), 10);
+  let number = parseInt(seed);
   // If number can be divided by 2 means that asset will be included into image
   if (number % 2 === 0) {
     let id = assetId;
@@ -200,12 +200,14 @@ export const getAssetMetadata = (seed, assetId) => {
     let y_coordinate = number % 3500;
     let zoom = number % 200 + 800;
     let rotation = number % 360;
+    let layer = number % 1234567;
     return {
       id: id,
       x_coordinate: x_coordinate,
       y_coordinate: y_coordinate,
       zoom: zoom,
-      rotation: rotation
+      rotation: rotation,
+      layer: layer
     };
   }
   return null;
@@ -222,10 +224,10 @@ export const getImage = async (random_seed, iterations, potentialAssets) => {
     let arr = [];
     arr.push(potentialAssets[j]);
     // pot_assets.push(utils.decode(arr).reverse());
-    pot_assets = [...pot_assets, ...utils.decode(arr).reverse()];
+    pot_assets = [...pot_assets, ...utils.decode(arr)];
   }
   // var pot_assets = utils.decode(potentialAssets).reverse();
-  console.log(pot_assets);
+  console.log("POTENTIAL", pot_assets);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(pot_assets);
 

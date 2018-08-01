@@ -113,9 +113,24 @@ export const getSize = (width, height, ratio) => {
   }
 };
 
+function layerCompare(a, b) {
+  if (a.layer < b.layer || (a.layer == b.layer && a.id < b.id)) {
+    return -1;
+  }
+
+  if (a.layer > b.layer || (a.layer == b.layer && a.id > b.id)) {
+    return 1;
+  }
+
+  return 0;
+}
+
 export const getData = async (randomSeed, iterations, potentialAssets, allAssets) => {
   console.log(randomSeed);
   let assets = await getImage(randomSeed, iterations, potentialAssets);
+  console.log(JSON.stringify(assets));
+  assets = assets.sort(layerCompare);
+  console.log("assets after", assets);
   let allDataAboutAsset = [];
   for (let i = 0; i < assets.length; i++) {
     let stats = allAssets[assets[i]];
