@@ -267,7 +267,7 @@ export const makeImage = (objs, c, width, height, frame = {
   ratio: '2:3'
 }, delay = DELAY) =>
   new Promise(async (resolve, reject) => {
-    let assets = [...objs];
+    let assets = objs.slice();
     let context = c.getContext('2d');
     const { left, right, bottom, top } = frame;
     const canvasHeight = height;
@@ -298,7 +298,9 @@ export const makeImage = (objs, c, width, height, frame = {
         image,
       };
     }
-    assets = helpers.sortBy(assets, 'background');
+    console.log(JSON.stringify(assets));
+    assets = helpers.moveBackgrounds(assets);
+    console.log(JSON.stringify(assets));
 
     let imagesLoaded = 0;
 

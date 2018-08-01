@@ -23,8 +23,16 @@ export function getAccounts() {
   });
 }
 
-export const sortBy = (arr, p) => {
-  return arr.sort((a, b) => {
-    return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
-  });
+export const moveBackgrounds = (arr) => {
+  const helper = arr.slice();
+  for (let i = helper.length - 1; i > 0; i -= 1) {
+    console.log(helper[i]);
+    if (helper[i].background.substr(0, 1) === '1') {
+      console.log('ADDED');
+      const background = helper[i];
+      helper.splice(i, 1);
+      helper.unshift(background);
+    }
+  }
+  return helper;
 };
