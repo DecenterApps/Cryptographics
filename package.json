@@ -10,9 +10,9 @@
   "scripts": {
     "test": "mocha",
     "start": "node server.js",
-    "prod": "webpack --config frontend/build/webpack.prod.js -p",
-    "build": "webpack --config frontend/build/webpack.prod.js -p",
-    "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host 127.0.0.1 --port 3300 --compress --config ./frontend/build/webpack.config.js"
+    "prod": "webpack --config client/build/webpack.prod.js -p",
+    "build": "webpack --config client/build/webpack.prod.js -p",
+    "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host 127.0.0.1 --port 3300 --compress --config ./client/build/webpack.config.js"
   },
   "dependencies": {
     "add-asset-html-webpack-plugin": "^2.1.3",
