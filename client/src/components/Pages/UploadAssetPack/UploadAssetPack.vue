@@ -101,15 +101,8 @@
         let canvas = document.getElementById('canvas');
         canvas.width = 350;
         canvas.height = 350;
-        // const propComparator = (propName) =>
-        //     (a, b) => a[propName] == b[propName] ? 0 : a[propName] < b[propName] ? -1 : 1;
-        // this.assets.sort(propComparator('attribute'));
         console.log(this.assets);
-        let asset_paths = [];
-        for (let i = 0; i < this.assets.length; i++) {
-          asset_paths.push(this.assets[i].path);
-        }
-        makeCoverImage(false, asset_paths, canvas, 350, 350);
+        makeCoverImage(false, this.assets, canvas, 350, 350);
       },
       async uploadToIpfs() {
         let hashes = [];

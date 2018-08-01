@@ -19,6 +19,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
     "big-integer": "^1.6.27",
+    "bignumber.js": "^7.2.1",
     "bs58": "^4.0.1",
     "config": "^1.30.0",
     "css-loader": "^0.28.7",

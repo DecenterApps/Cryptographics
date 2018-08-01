@@ -24,15 +24,45 @@ export function getAccounts() {
 }
 
 export const moveBackgrounds = (arr) => {
+  let background;
+  let end = 0;
   const helper = arr.slice();
-  for (let i = helper.length - 1; i > 0; i -= 1) {
-    console.log(helper[i]);
-    if (helper[i].background.substr(0, 1) === '1') {
-      console.log('ADDED');
-      const background = helper[i];
+  for (let i = helper.length - 1; i >= end; i -= 1) {
+    if (helper[i].isBackground) {
+      background = helper[i];
       helper.splice(i, 1);
       helper.unshift(background);
+      i++;
+      end++;
     }
   }
+  console.log(JSON.stringify(helper));
   return helper;
+};
+
+export const preloadImages = (arr) => {
+  let loadedImages = 0;
+  let callback = () => {};
+
+  function imageloadpost() {
+    loadedImages++;
+    if (loadedImages === arr.length) {
+      callback(arr); //call postaction and pass in images array as parameter
+    }
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    arr[i].image.onload = function () {
+      imageloadpost();
+    };
+    arr[i].image.onerror = function () {
+      imageloadpost();
+      arr[i].image.failed = true;
+    };
+  }
+  return { //return blank object with done() method
+    done: function (f) {
+      callback = f || callback; //remember user defined callback functions to be called when images load
+    }
+  };
 };

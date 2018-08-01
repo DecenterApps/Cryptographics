@@ -8,6 +8,7 @@ import {
 import utils from 'services/utils';
 import config from 'config/config.json';
 import * as helpers from 'services/helpers';
+import { preloadImages } from './helpers';
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
@@ -128,9 +129,8 @@ function layerCompare(a, b) {
 export const getData = async (randomSeed, iterations, potentialAssets, allAssets) => {
   console.log(randomSeed);
   let assets = await getImage(randomSeed, iterations, potentialAssets);
-  console.log(JSON.stringify(assets));
   assets = assets.sort(layerCompare);
-  console.log("assets after", assets);
+  console.log('assets after', assets);
   let allDataAboutAsset = [];
   for (let i = 0; i < assets.length; i++) {
     let stats = allAssets[assets[i]];
@@ -190,7 +190,7 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
   let y = asset.y_coordinate % canvasHeight;
   let rotation = asset.rotation;
   if (delayTime > 0) {
-    await delay(delayTime * index);
+    await delay(delayTime);
   }
   drawImageRot(
     context,
@@ -203,7 +203,7 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
     { isBackground: asset.isBackground, canvasWidth, canvasHeight });
 };
 
-export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
+export const makeCoverImage = (isHome, assets, c, width, height, frame = {
   left: 0,
   right: 0,
   bottom: 0,
@@ -219,38 +219,37 @@ export const makeCoverImage = (isHome, image_paths, c, width, height, frame = {
   context.fillStyle = '#fff';
   context.fillRect(0, 0, canvasWidth, canvasHeight);
   let images = [];
-  for (let i = 0; i < image_paths.length; i++) {
+  for (let i = 0; i < assets.length; i++) {
     let image = new Image();
 
-    image.src = image_paths[i];
+    image.src = assets[i].path;
     image.width = 90;
     image.height = 90;
     image.crossOrigin = 'Anonymous';
     images.push({
+      id: i,
       image: image,
       x_coordinate: Math.floor(Math.random() * 350),
       y_coordinate: Math.floor(Math.random() * 350),
       rotation: Math.floor(Math.random() * 360),
-      scale: 800 + Math.floor(Math.random() * 200)
+      scale: 800 + Math.floor(Math.random() * 200),
+      isBackground: parseInt(assets[i].attribute) === 122,
     });
   }
 
-  let imagesLoaded = 0;
+  images = helpers.moveBackgrounds(images);
 
-  for (let j = 0; j < images.length; j++) {
-    console.log(images[j].image);
-    images[j].image.onload = function () {
-      imagesLoaded++;
-      let x = images[j].x_coordinate % canvasWidth;
-      let y = images[j].y_coordinate % canvasHeight;
-      let rotation = images[j].rotation;
-      drawImageRot(context, images[j].image, x, y, width / 4, height / 4, rotation);
-      if (imagesLoaded === images.length && frame.shouldDrawFrame) {
-        // WRITE FRAME
-        drawFrame(context, canvasHeight, canvasWidth, frame);
+
+  preloadImages(images)
+    .done(async (loadedImages) => {
+      for (let i = 0; i < images.length; i++) {
+        await drawLoadedImage(context, images[i], canvasWidth, canvasHeight, frame, i, 0);
+        if (i === images.length - 1 && frame.shouldDrawFrame) {
+          // WRITE FRAME
+          drawFrame(context, canvasHeight, canvasWidth, frame);
+        }
       }
-    };
-  }
+    });
 };
 
 const delay = async (delayInms) => {
@@ -283,6 +282,7 @@ export const makeImage = (objs, c, width, height, frame = {
 }, delay = DELAY) =>
   new Promise(async (resolve, reject) => {
     let assets = objs.slice();
+    console.log('DRAW ASSETS', assets);
     let context = c.getContext('2d');
     const { left, right, bottom, top } = frame;
     const canvasHeight = height;
@@ -313,19 +313,14 @@ export const makeImage = (objs, c, width, height, frame = {
         image,
       };
     }
-    console.log(JSON.stringify(assets));
     assets = helpers.moveBackgrounds(assets);
-    console.log(JSON.stringify(assets));
 
-    let imagesLoaded = 0;
-
-    for (let i = 0; i < assets.length; i++) {
-      assets[i].image.onload = async () => {
-        waitForBackgroundLoad(assets, async () => {
+    preloadImages(assets)
+      .done(async (loadedImages) => {
+        for (let i = 0; i < assets.length; i++) {
+          if (loadedImages[i].image.failed) continue;
           await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
-          imagesLoaded++;
-
-          if (imagesLoaded === assets.length) {
+          if (i === assets.length - 1) {
             console.log('All assets loaded.');
             resolve({ message: 'Success' });
 
@@ -336,12 +331,8 @@ export const makeImage = (objs, c, width, height, frame = {
               drawFrame(context, canvasHeight, canvasWidth, frame);
             }
           }
-        });
-      };
-      assets[i].image.onerror = () => {
-        reject('One of the images failed to load.');
-      };
-    }
+        }
+      });
   });
 
 const imgLoaded = (img) => img.complete && img.naturalHeight !== 0;

@@ -1,5 +1,5 @@
+import { BigNumber } from 'bignumber.js';
 import utils from 'services/utils';
-import Web3 from 'web3';
 import leftPad from 'left-pad';
 import config from 'config/config.json';
 import landingAssetPacks from 'config/landingAssetPacks.json';
@@ -34,6 +34,7 @@ export const getAssetIpfs = async (assetId) => {
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id - 1);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
+  console.log(ipfsHashes);
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
@@ -192,15 +193,16 @@ export const calculateFinalSeed = (random_seed, iterations) => {
 //seed - bytes32 ; assetId - integer
 export const getAssetMetadata = (seed, assetId) => {
   seed = seed.toString();
-  let number = parseInt(seed);
+  let number = new BigNumber(seed);
+  console.log(number);
   // If number can be divided by 2 means that asset will be included into image
-  if (number % 2 === 0) {
+  if (parseInt(number.modulo(2), 10) === 0) {
     let id = assetId;
-    let x_coordinate = number % 2450;
-    let y_coordinate = number % 3500;
-    let zoom = number % 200 + 800;
-    let rotation = number % 360;
-    let layer = number % 1234567;
+    let x_coordinate = parseInt(number.modulo(2480), 10);
+    let y_coordinate = parseInt(number.modulo(3508), 10);
+    let zoom = parseInt(number.modulo(200), 10) + 800;
+    let rotation = parseInt(number.modulo(360), 10);
+    let layer = parseInt(number.modulo(1234567), 10);
     return {
       id: id,
       x_coordinate: x_coordinate,
@@ -227,7 +229,7 @@ export const getImage = async (random_seed, iterations, potentialAssets) => {
     pot_assets = [...pot_assets, ...utils.decode(arr)];
   }
   // var pot_assets = utils.decode(potentialAssets).reverse();
-  console.log("POTENTIAL", pot_assets);
+  console.log('POTENTIAL', pot_assets);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(pot_assets);
 
@@ -247,6 +249,7 @@ export const getImage = async (random_seed, iterations, potentialAssets) => {
       });
     }
   }
+  console.log('PICKED ASSETS', pickedAssets);
   return pickedAssets;
 };
 
