@@ -42,12 +42,13 @@
     pickTenRandoms,
     calculateFirstSeed,
     convertSeed,
-    generatePacks,
+    getLandingPacks,
   } from 'services/ethereumService';
-  import { getData, loadDataForAssets } from 'services/imageService';
+  import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import * as utils from 'services/utils';
   import Gallery from 'shared/Gallery/Gallery.vue';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
+
   export default {
     name: 'GraphicPlayground',
     components: {
@@ -93,13 +94,25 @@
         console.log('RANDOM SEED: ' + this.randomSeed);
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
-        this.canvasData.assets = await getData(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        console.log(pot);
+        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
         this.iterations++;
         console.log('iteration: ' + this.iterations);
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {
           picked.push(this.canvasData.assets[i].id);
         }
+      },
+      addSourceItem(data, assets) {
+        const packs = this.assetPacks.reduce((a, b) => a.concat(b.data), []);
+        return assets.map(asset => {
+          const index = packs.findIndex((item) => parseInt(item.id) === parseInt(asset.id));
+          return {
+            ...asset,
+            src: packs[index].src,
+          };
+        });
       },
       openInEditor() {
         console.log(this.randomHashIds);
@@ -117,7 +130,8 @@
       this.allAssets = await loadDataForAssets();
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
-      this.assetPacks = generatePacks();
+      const landingPacks = getLandingPacks();
+      this.assetPacks = landingPacks.packs;
       this.renderCanvas();
     }
   };

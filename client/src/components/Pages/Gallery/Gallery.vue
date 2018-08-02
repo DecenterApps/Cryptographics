@@ -6,15 +6,6 @@
 </template>
 
 <script>
-  import {
-    pickTenRandoms,
-    calculateFirstSeed,
-    convertSeed,
-    generatePacks,
-  } from 'services/ethereumService';
-  import { getData, loadDataForAssets } from 'services/imageService';
-  import * as utils from 'services/utils';
-
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
@@ -23,17 +14,6 @@
       Gallery
     },
     data: () => ({
-      random_seed: 0,
-      iterations: 0,
-      timestamp: new Date().getTime(),
-      random_hash_ids: pickTenRandoms(),
-      all_assets: [],
-      asset_packs: [],
-      canvasData: {
-        assets: [],
-        ratio: '2:3',
-        frame: false,
-      },
       blocks: [
         {
           address: '0x00158a74921620b39e5c3afe4dca79feb2c2c143',
@@ -91,49 +71,10 @@
         },
       ],
     }),
-    methods: {
-      async renderCanvas() {
-        let pot = this.asset_packs.map(assetPack =>
-          assetPack.data.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
-        console.log(pot);
-        console.log('RANDOM SEED: ' + this.random_seed);
-        console.log('ITERATIONS: ' + this.iterations);
-        console.log('TIMESTAMP: ' + this.timestamp);
-        this.canvasData.assets = await getData(this.random_seed, this.iterations, utils.encode(pot), this.all_assets);
-        this.iterations++;
-        console.log('iteration: ' + this.iterations);
-        let picked = [];
-        for (let i = 0; i < this.canvasData.assets.length; i++) {
-          picked.push(this.canvasData.assets[i].id);
-        }
-      },
-      openInEditor() {
-        window.sessionStorage.setItem('random_hash_ids', JSON.stringify(this.random_hash_ids));
-        window.sessionStorage.setItem('iterations', this.iterations - 1);
-        window.sessionStorage.setItem('timestamp', this.timestamp);
-      }
-    },
-    async beforeCreate() {
-      this.random_hash_ids = pickTenRandoms();
-      this.timestamp = new Date().getTime();
-      this.iterations = 0;
-      this.all_assets = await loadDataForAssets();
-      this.random_seed = await calculateFirstSeed(this.timestamp, this.random_hash_ids);
-      this.random_seed = await convertSeed(this.random_seed);
-      this.asset_packs = generatePacks();
-    }
   };
 </script>
 
 <style scoped>
-    canvas {
-        margin-top: 20px;
-        background-color: white;
-        border: 1px solid blue;
-        margin-left: 400px;
-    }
-
     div.test-image {
         height: 561px;
         width: 400px;

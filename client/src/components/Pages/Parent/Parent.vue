@@ -56,13 +56,13 @@
 
 <script>
   import Packs from './Packs.vue';
-  import Canvas from './Canvas.vue';
+  import Canvas from '../CreateGraphic/GraphicBuilder/Canvas.vue';
   import MyImages from './MyImages.vue';
   import CreateAsset from './CreateAsset.vue';
 
-  const methods = require('methods');
+  const methods = require('services/imageService');
   const utils = require('services/utils');
-  const functions = require('src/services/ethereumService');
+  const functions = require('services/ethereumService');
 
   export default {
     data: () => ({
@@ -109,7 +109,7 @@
             pot = this.potential_assets.split(',').map(a => parseInt(a, 10));
           }
         }
-        this.objs = await methods.getData(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
+        this.objs = await methods.getFinalAssets(this.random_seed, this.iterations, utils.encode(pot), this.allAssets);
         this.iterations++;
         let picked = [];
         for (let i = 0; i < this.objs.length; i++) {

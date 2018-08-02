@@ -36,7 +36,6 @@ export const moveBackgrounds = (arr) => {
       end++;
     }
   }
-  console.log(JSON.stringify(helper));
   return helper;
 };
 

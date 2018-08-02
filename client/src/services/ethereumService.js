@@ -32,7 +32,7 @@ export const getAssetIpfs = async (assetId) => {
 };
 
 export const getAssetsIpfs = async (assets) => {
-  const ids = assets.map(asset => asset.id - 1);
+  const ids = assets.map(asset => asset.id);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
   console.log(ipfsHashes);
   for (let i = 0; i < ipfsHashes.length; i++) {
@@ -194,7 +194,6 @@ export const calculateFinalSeed = (random_seed, iterations) => {
 export const getAssetMetadata = (seed, assetId) => {
   seed = seed.toString();
   let number = new BigNumber(seed);
-  console.log(number);
   // If number can be divided by 2 means that asset will be included into image
   if (parseInt(number.modulo(2), 10) === 0) {
     let id = assetId;
@@ -217,9 +216,9 @@ export const getAssetMetadata = (seed, assetId) => {
 
 //INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
-export const getImage = async (random_seed, iterations, potentialAssets) => {
-  random_seed = random_seed.toString(16);
-  let seed = calculateFinalSeed(random_seed, iterations);
+export const getImage = async (randomSeed, iterations, potentialAssets) => {
+  randomSeed = randomSeed.toString(16);
+  let seed = calculateFinalSeed(randomSeed, iterations);
   let pot_assets = [];
   console.log(potentialAssets.length);
   for (let j = 0; j < potentialAssets.length; j++) {
@@ -232,6 +231,7 @@ export const getImage = async (random_seed, iterations, potentialAssets) => {
   console.log('POTENTIAL', pot_assets);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(pot_assets);
+  console.log('ATTRIBUTES', attributes);
 
   for (let i = 0; i < pot_assets.length; i++) {
     // seed = seed.substr(2);
@@ -280,8 +280,12 @@ export const getBoughtAssets = async () => {
   return [];
 };
 
-export const generatePacks = () => {
-  return landingAssetPacks;
+export const getLandingPacks = () => {
+  const ids = landingAssetPacks.map(item => item.id);
+  return {
+    packs: landingAssetPacks,
+    ids,
+  };
 };
 
 async function test() {

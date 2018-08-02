@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 // import Parent from 'pages/Parent/Parent.vue';
 import About from 'pages/About/About.vue';
-import Home from 'pages/Home/Home.vue';
+import Gallery from 'pages/Gallery/Gallery.vue';
 import Landing from 'pages/Landing/Landing.vue';
 import SingleGraphic from 'pages/SingleGraphic/SingleGraphic.vue';
 import AssetPacks from 'pages/AssetPacks/AssetPacks.vue';
@@ -22,7 +22,7 @@ const router = new VueRouter({
     // { path: '/landing', component: Landing },
     { path: '/single-graphic', component: SingleGraphic },
     { path: '/create-graphic', component: CreateGraphic },
-    { path: '/gallery', component: Home }, // Gallery here
+    { path: '/gallery', component: Gallery }, // Gallery here
     { path: '/upload-asset-pack', component: UploadAssetPack},
     { path: '/asset-packs', component: AssetPacks },
     { path: '/profile', component: Profile }

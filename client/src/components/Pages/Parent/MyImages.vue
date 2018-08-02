@@ -21,7 +21,7 @@
     },
     // async beforeCreate() {
     //     let data = await functions.getImageMetadataFromContract(this.image);
-    //     this.objs = await methods.getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
+    //     this.objs = await methods.getFinalAssets(data[0], parseInt(data[1], 10), data[2], this.allAssets);
     //     let c = document.getElementById("myImagesCanvas");
     //     methods.makeImage(objs, c);
     // },

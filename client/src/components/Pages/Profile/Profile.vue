@@ -37,7 +37,7 @@
     getImageMetadataFromContract,
     getImageIpfs,
   } from 'services/ethereumService';
-  import { getData, loadDataForAssets } from 'services/imageService';
+  import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import { mapActions } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
 
@@ -110,7 +110,7 @@
           return;
         }
         let data = await getImageMetadataFromContract(this.id_to_show);
-        this.myobjects = await getData(data[0], parseInt(data[1], 10), data[2], this.allAssets);
+        this.myobjects = await getFinalAssets(data[0], parseInt(data[1], 10), data[2], this.allAssets);
       },
 
       async getImages() {

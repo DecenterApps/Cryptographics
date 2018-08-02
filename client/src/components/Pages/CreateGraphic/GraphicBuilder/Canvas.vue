@@ -26,7 +26,6 @@
         const frame = this.canvasData.frame || false;
         canvas.width = size.canvasWidth;
         canvas.height = size.canvasHeight;
-        console.log(size);
         canvas.style.width = size.width + 'px';
         canvas.style.height = size.height + 'px';
         const FRAME_BOUNDARIES = {
@@ -54,13 +53,13 @@
     watch: {
       canvasData: {
         handler: async function (newData) {
-          this.drawCanvas(newData.assets);
+          this.drawCanvas(newData.assets, newData.delay);
         },
         deep: true,
       }
     },
     mounted: function () {
-      this.drawCanvas(this.canvasData.assets);
+      this.drawCanvas(this.canvasData.assets, this.canvasData.delay);
 
       // window.addEventListener('resize', () => {
       //   // clear the timeout

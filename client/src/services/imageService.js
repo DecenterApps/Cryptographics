@@ -126,7 +126,7 @@ function layerCompare(a, b) {
   return 0;
 }
 
-export const getData = async (randomSeed, iterations, potentialAssets, allAssets) => {
+export const getFinalAssets = async (randomSeed, iterations, potentialAssets, allAssets) => {
   console.log(randomSeed);
   let assets = await getImage(randomSeed, iterations, potentialAssets);
   assets = assets.sort(layerCompare);
@@ -239,7 +239,6 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
 
   images = helpers.moveBackgrounds(images);
 
-
   preloadImages(images)
     .done(async (loadedImages) => {
       for (let i = 0; i < images.length; i++) {
@@ -298,12 +297,12 @@ export const makeImage = (objs, c, width, height, frame = {
     let hashes = await getAssetsIpfs(assets);
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
-      let val = assets[i].id;
-      if (val < 10) {
-        val = '0' + val;
-      }
 
-      image.src = 'http://ipfs.decenter.com/ipfs/' + hashes[i];
+      if (assets[i].src) {
+        image.src = require(`../${assets[i].src}`);
+      } else {
+        image.src = 'https://ipfs.decenter.com/ipfs/' + hashes[i];
+      }
       image.crossOrigin = 'Anonymous';
 
       assets[i] = {
@@ -318,8 +317,9 @@ export const makeImage = (objs, c, width, height, frame = {
     preloadImages(assets)
       .done(async (loadedImages) => {
         for (let i = 0; i < assets.length; i++) {
-          if (loadedImages[i].image.failed) continue;
-          await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
+          if (!loadedImages[i].image.failed) {
+            await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
+          }
           if (i === assets.length - 1) {
             console.log('All assets loaded.');
             resolve({ message: 'Success' });

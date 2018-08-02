@@ -56,7 +56,7 @@
 <script>
   import {
     pickTenRandoms,
-    generatePacks,
+    getLandingPacks,
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
@@ -133,8 +133,8 @@
       },
       async renderCanvas() {
         if (window.sessionStorage.length > 0) {
-          this.selectedPacks = this.selectedPacks.concat(generatePacks());
-          this.selectedPacks = [...new Set([...this.selectedPacks, ...generatePacks()])];
+          const landingPacks = getLandingPacks();
+          this.selectedPacks = [...new Set([...this.selectedPacks, ...landingPacks.packs])];
         }
         this.selectedPacks = [...new Set([...this.selectedPacks, ...this.selectedAssetPacks])];
         console.log(this.selectedPacks);
@@ -142,7 +142,7 @@
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
         console.log(pot);
-        this.canvasData.assets = await imageService.getData(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
         this.iterations++;
         console.log('iteration: ' + this.iterations);
         let picked = [];
@@ -166,7 +166,7 @@
     },
     async created() {
       if (window.sessionStorage.length > 0) {
-        this.canvasData.ratio = "1:1";
+        this.canvasData.ratio = '1:1';
         this.randomHashIds = JSON.parse(sessionStorage.getItem('randomHashIds'));
         this.timestamp = sessionStorage.getItem('timestamp');
         this.iterations = parseInt(sessionStorage.getItem('iterations'), 10);
