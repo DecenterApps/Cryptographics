@@ -163,26 +163,30 @@
                 "constant": true,
                 "inputs": [
                     {
-                        "name": "_random_seed",
+                        "name": "_randomSeed",
                         "type": "uint256"
                     }
                 ],
                 "name": "pickRandomAssetPosition",
                 "outputs": [
                     {
-                        "name": "",
+                        "name": "x",
                         "type": "uint256"
                     },
                     {
-                        "name": "",
+                        "name": "y",
                         "type": "uint256"
                     },
                     {
-                        "name": "",
+                        "name": "zoom",
                         "type": "uint256"
                     },
                     {
-                        "name": "",
+                        "name": "rotation",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "layer",
                         "type": "uint256"
                     }
                 ],
@@ -362,6 +366,25 @@
                 "outputs": [],
                 "payable": false,
                 "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "_address",
+                        "type": "address"
+                    }
+                ],
+                "name": "getProfilePicture",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "bytes32"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
                 "type": "function"
             },
             {
@@ -566,7 +589,7 @@
                 "name": "decodeAssets",
                 "outputs": [
                     {
-                        "name": "",
+                        "name": "assets",
                         "type": "uint256[]"
                     }
                 ],
@@ -673,6 +696,10 @@
                     {
                         "name": "rotation",
                         "type": "uint256[]"
+                    },
+                    {
+                        "name": "layers",
+                        "type": "uint256[]"
                     }
                 ],
                 "payable": false,
@@ -770,20 +797,6 @@
                 ],
                 "name": "OwnershipTransferred",
                 "type": "event"
-            },
-            {
-                "constant": false,
-                "inputs": [],
-                "name": "createImageTest",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
             },
             {
                 "constant": false,
@@ -942,7 +955,7 @@
                 "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
                 "events": {},
                 "links": {},
-                "address": "0x8f010b88c8570d96e271f641851ab34572cd38a2"
+                "address": "0x3aefeccb39d87e7f416bcff43391b229902bfb4b"
             }
         }
     },
@@ -1490,7 +1503,7 @@
                 "transactionHash": "0xe62d5f9d097dabf6e5689329ce39047b9216e2ba4966400f144891dd9a03f536",
                 "events": {},
                 "links": {},
-                "address": "0xc780d8223908d1919679cf681c3514427ff2eed0"
+                "address": "0x183c550d89b1ea78a239cc7631acc55636f4a5a7"
             }
         }
     }
