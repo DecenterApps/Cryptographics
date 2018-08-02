@@ -5,7 +5,7 @@
             class="edit-profile-modal"
             @submit.prevent="editProfile(newUsername)">
             <div class="left">
-            <img class="avatar" src="./assets/anon-profile.png">
+            <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
             <div class="input-group">
                 <span
                     class="info fail"
@@ -47,48 +47,52 @@
 
 <script>
 import * as ipfsService from 'services/ipfsService';
+import * as utils from 'services/utils';
+
 import { mapActions, mapGetters } from 'vuex';
-import { USERNAME, EDIT_PROFILE, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
+import { USERNAME, AVATAR, EDIT_PROFILE, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
 
 export default {
     name: 'EditProfile',
     data: () => ({
         newUsername: '',
-        selectedImage: null
+        newAvatarHash: '',
+        newAvatarBytes32: ''
     }),
     methods: {
         ...mapActions({
             editProfile: EDIT_PROFILE,
         }),
         onFileChanged (event) {
-            this.selectedImage = event.target.files[0];
-
+            let selectedImage = event.target.files[0];
             let canvas = document.createElement('canvas');
             let context = canvas.getContext('2d');
-            context.canvas.width = 160;
-            context.canvas.height = 160;
+                context.canvas.width = 160;
+                context.canvas.height = 160;
             let url = window.URL || window.webkitURL;
-            
             let profileImg = new Image();
-            profileImg.src = url.createObjectURL(this.selectedImage);
+                profileImg.src = url.createObjectURL(selectedImage);
+                profileImg.onload = async () => {
+                    context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
+                    let pngUrl = canvas.toDataURL();
+                    this.newAvatarHash = await ipfsService.uploadFile(pngUrl.substr(22));
+                    this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash)
 
-            profileImg.onload = async () => {
-                context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
-                let pngUrl = canvas.toDataURL();
 
-                let ipfsHash = await ipfsService.uploadFile(pngUrl.substr(22));
-                 //     hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
-                console.log(ipfsHash);
-            }
-            // console.log('FILE SIZE: ', this.selectedImage.size, '\n');
-            // 2000000
+
+                    console.log(this.newAvatarHash, '\n');
+                    console.log(this.newAvatarBytes32, '\n');
+
+
+                }
         }
     },
     computed: {
         ...mapGetters({
             currentUsername: USERNAME,
             isExistingUsername: USERNAME_EXISTENCE,
-            isSuccess: EDIT_PROFILE_RESULT
+            isSuccess: EDIT_PROFILE_RESULT,
+            avatar: AVATAR
         })
     }
 }
@@ -104,7 +108,6 @@ export default {
         .avatar {
             width: 160px;
             height: 160px;
-            display: inline-flex;
             background-color: #d9d9d9;
         }
         .input-group {

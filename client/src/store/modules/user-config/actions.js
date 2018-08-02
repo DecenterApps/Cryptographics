@@ -1,18 +1,21 @@
 import {
-    SET_USER_CONFIG,
-    UPDATE_USER_CONFIG,
     SET_METAMASK_ADDRESS,
     SET_USERNAME,
+    SET_AVATAR,
+    SET_USER_CONFIG,
+    UPDATE_USER_CONFIG,
     CHECK_USERNAME_EXISTENCE,
     EDIT_PROFILE,
     MUTATE_METAMASK_ADDRESS,
     MUTATE_USERNAME,
+    MUTATE_AVATAR,
     MUTATE_USERNAME_EXISTENCE,
     MUTATE_EDIT_PROFILE_RESULT
 } from './types';
 
 import { getAccounts } from 'services/helpers';
-import { getUsername, usernameExists, registerUser } from 'services/ethereumService';
+import * as utils from 'services/utils';
+import { getUsername, getAvatar, usernameExists, registerUser } from 'services/ethereumService';
 
 export default {
     [SET_METAMASK_ADDRESS]: async ({ commit }) => {
@@ -26,6 +29,16 @@ export default {
         } else {
             let username = 'Anon';
             commit(MUTATE_USERNAME, username);
+        }
+    },
+    [SET_AVATAR]: async ({ commit, state }) => {
+        let avatarBytes32 = await getAvatar(state.metamaskAddress);
+        let initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
+        if (avatarBytes32 !== initialAvatarBytes32) {
+
+            let avatar = utils.getBytes32FromIpfsHash(avatarBytes32);
+
+            commit(MUTATE_AVATAR, avatar);
         }
     },
     [SET_USER_CONFIG]: async ({ dispatch }) => {

@@ -1,6 +1,7 @@
 import {
     METAMASK_ADDRESS,
     USERNAME,
+    AVATAR,
     USERNAME_EXISTENCE,
     EDIT_PROFILE_RESULT
 } from './types';
@@ -11,6 +12,9 @@ export default {
     },
     [USERNAME]: state => {
         return state.username;
+    },
+    [AVATAR]: state => {
+        return state.avatar;
     },
     [USERNAME_EXISTENCE]: state => {
         return state.changeUsername.isExisting;

@@ -5,7 +5,7 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar" src="./assets/anon-profile.png">
+        <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
         <div class="left">
           <h1 class="name">{{ username }}</h1>
         </div>
@@ -41,7 +41,7 @@
   import { getData, loadDataForAssets } from 'services/imageService';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
-  import { USERNAME, METAMASK_ADDRESS } from 'store/user-config/types';
+  import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
 
   import MyImages from './MyImages.vue';
   import MyImageees from './MyImageees.vue';
@@ -71,7 +71,8 @@
     computed: {
       ...mapGetters({
         metamaskAddress: METAMASK_ADDRESS,
-        username: USERNAME
+        username: USERNAME,
+        avatar: AVATAR
       })
     },
     methods: {

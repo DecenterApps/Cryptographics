@@ -11,8 +11,12 @@
                     <router-link to="/about" class-active="active">About</router-link>
                 </div>
                 <div class="profile">
-                    <router-link to="/profile">{{ username }}</router-link>
-                    <span class="profile-img"></span>
+                    <router-link class="profile-link" to="/profile">
+                        {{ username }}
+                        <img
+                            class="avatar"
+                            :src="'//ipfs.decenter.com/ipfs/' + avatar">
+                    </router-link>
                     <button-link to="/create-graphic" button-style="positive">Create</button-link>
                 </div>
             </div>
@@ -22,7 +26,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { USERNAME } from 'store/user-config/types';
+import { USERNAME, AVATAR } from 'store/user-config/types';
 
 import Logo from '../UI/Logo.vue';
 
@@ -33,7 +37,8 @@ import Logo from '../UI/Logo.vue';
     },
     computed: {
         ...mapGetters({
-            username: USERNAME
+            username: USERNAME,
+            avatar: AVATAR
         })
     }
   };
@@ -91,8 +96,11 @@ import Logo from '../UI/Logo.vue';
             display: flex;
             margin-left: 100px;
             align-items: center;
-
-            .profile-img {
+            .profile-link {
+                display: flex;
+                align-items: center;                
+            }
+            .avatar {
                 display: inline-block;
                 width: 33px;
                 height: 33px;
