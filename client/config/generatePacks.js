@@ -1,5 +1,4 @@
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const request = require('request');
 const readline = require('readline');
 const config = require('./config.json');
