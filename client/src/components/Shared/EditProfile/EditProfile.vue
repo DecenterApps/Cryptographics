@@ -3,9 +3,16 @@
         <h3 class="large-title">Edit Profile</h3>
         <form
             class="edit-profile-modal"
-            @submit.prevent="changeUsername(newUsername)">
+            @submit.prevent="editProfile({ newUsername, newAvatarBytes32 })">
             <div class="left">
-            <img class="avatar" src="">
+            <img
+                class="avatar"
+                v-if="newAvatarBytes32 === ''"
+                :src="'//ipfs.decenter.com/ipfs/' + avatar">
+            <img
+                class="avatar"
+                v-else
+                :src="'//ipfs.decenter.com/ipfs/' + newAvatarHash">
             <div class="input-group">
                 <span
                     class="info fail"
@@ -14,22 +21,31 @@
                 </span>
                 <span
                     class="info success"
-                    v-if="isChanged">
+                    v-if="isSuccess">
                     You have updated your profile successfully!
+                </span>
+                <span
+                    class="info"
+                    v-if="newUsername.length >= 16">
+                    Username can't be longer than 16 characters
                 </span>
                 <cg-input
                     v-model="newUsername"
                     placeholder="Enter username"/>
                 <input-file
                     id="avatar-image"
-                    button-style="transparent">
-                    <span>Profile images must be 1:1 aspect ratio</span>
+                    button-style="transparent"
+                    :multiple="false"
+                    @change="onFileChanged">
+                    <span v-if="newAvatarBytes32 === ''">Profile images must be 1:1 aspect ratio</span>
+                    <span v-else>You have selected: {{ imageName.slice(0, 22) }}<span v-if="imageName.length > 22">...</span></span>
                 </input-file>
             </div>
             </div>
             <div class="right">
                 <cg-button
-                    type="submit">
+                    type="submit"
+                    :disabled="newUsername.length >= 16">
                     Submit
                 </cg-button>
             </div>
@@ -38,23 +54,48 @@
 </template>
 
 <script>
+import * as ipfsService from 'services/ipfsService';
+import * as utils from 'services/utils';
+
 import { mapActions, mapGetters } from 'vuex';
-import { CHANGE_USERNAME, USERNAME_EXISTENCE, CHANGE_USERNAME_RESULT } from 'store/user-config/types';
+import { USERNAME, AVATAR, EDIT_PROFILE, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
 
 export default {
     name: 'EditProfile',
     data: () => ({
-        newUsername: ''
+        newUsername: '',
+        newAvatarBytes32: '',
+        newAvatarHash: '',
+        imageName: ''
     }),
     methods: {
         ...mapActions({
-            changeUsername: CHANGE_USERNAME,
-        })
+            editProfile: EDIT_PROFILE,
+        }),
+        onFileChanged (event) {
+            let selectedImage = event.target.files[0];
+            let canvas = document.createElement('canvas');
+            let context = canvas.getContext('2d');
+                context.canvas.width = 160;
+                context.canvas.height = 160;
+            let url = window.URL || window.webkitURL;
+            let profileImg = new Image();
+                profileImg.src = url.createObjectURL(selectedImage);
+                profileImg.onload = async () => {
+                    context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
+                    let pngUrl = canvas.toDataURL();
+                    this.newAvatarHash = await ipfsService.uploadFile(pngUrl.substr(22));
+                    this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash);
+                    this.imageName = selectedImage.name;
+                }
+        }
     },
     computed: {
         ...mapGetters({
+            currentUsername: USERNAME,
             isExistingUsername: USERNAME_EXISTENCE,
-            isChanged: CHANGE_USERNAME_RESULT
+            isSuccess: EDIT_PROFILE_RESULT,
+            avatar: AVATAR
         })
     }
 }
@@ -70,16 +111,17 @@ export default {
         .avatar {
             width: 160px;
             height: 160px;
-            display: inline-flex;
             background-color: #d9d9d9;
         }
         .input-group {
             display: inline-flex;
             flex-direction: column;
             margin-left: 20px;
+            min-width: 290px;
             .info {
                 margin-bottom: 10px;
                 font-size: 12px;
+                color: #949494;
                 &.fail {
                     color: #d82d2d;
                 }

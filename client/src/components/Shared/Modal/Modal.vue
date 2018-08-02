@@ -1,6 +1,6 @@
 <template>
     <div class="modal">
-        <div class="overlay"></div>
+        <div class="overlay" @click="closeModal"></div>
         <div class="content">
             <button-icon
                 icon-type="close"

@@ -62,6 +62,13 @@ export default {
         font-size: 32px;
         line-height: 1;
     }
+    .subtitle {
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: .5px;
+        margin-bottom: 16px;
+        color: black;
+    }
     main {
         position: relative;
     }

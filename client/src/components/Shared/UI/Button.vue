@@ -37,9 +37,8 @@ export default {
     text-transform: capitalize;
     white-space: nowrap;
     line-height: 1;
-
     &[disabled=disabled], &:disabled {
-        background: red;
+        cursor: not-allowed;
     }
 }
 .positive {

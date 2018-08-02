@@ -50,6 +50,10 @@ contract UserManager {
         return addressToUser[_address].username;
     } 
 
+    function getProfilePicture(address _address) public view returns(bytes32) {
+        return addressToUser[_address].hashToProfilePicture;
+    }
+
     function isUsernameExists(string _username) public view returns(bool) {
         return usernameExists[_username];
     }

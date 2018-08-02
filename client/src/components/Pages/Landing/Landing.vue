@@ -5,10 +5,9 @@
         <div class="artist-cta">
             <div class="container">
                 <h3 class="large-title">Artist</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut. Lorem
-                    ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                <button-link to="/upload-assets">Upload Assets Pack</button-link>
+                <p>All visual artists are welcome to create and upload their asset packs.</p>
+                <p>Each asset pack can contain up to 50 different graphic elements, one of which always needs to be a background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and receive earnings every time a new Creator uses it.</p>
+                <button-link to="/upload-asset-pack">Upload Assets Pack</button-link>
             </div>
         </div>
         <div class="assets-slider">
