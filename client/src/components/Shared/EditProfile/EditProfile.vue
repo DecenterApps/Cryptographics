@@ -38,7 +38,7 @@
                     :multiple="false"
                     @change="onFileChanged">
                     <span v-if="newAvatarBytes32 === ''">Profile images must be 1:1 aspect ratio</span>
-                    <span v-else>You have selected: {{ imageName }}</span>
+                    <span v-else>You have selected: {{ imageName.slice(0, 22) }}<span v-if="imageName.length > 22">...</span></span>
                 </input-file>
             </div>
             </div>

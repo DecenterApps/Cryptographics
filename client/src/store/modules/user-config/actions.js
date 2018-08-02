@@ -36,6 +36,10 @@ export default {
         const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
         if (avatarBytes32 !== initialAvatarBytes32) {
             let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
+            console.log(avatar);
+            commit(MUTATE_AVATAR, avatar);
+        } else if (state.metamaskAddress === undefined) {
+            let avatar = 'QmfEsoC1hp48RWs2czW28z7Mtgf2qoDRxsbANszgxQFzyy';
             commit(MUTATE_AVATAR, avatar);
         }
     },
@@ -72,7 +76,6 @@ export default {
                 const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
                 newAvatarBytes32 = initialAvatarBytes32;
             }
-            console.log(newUsername, newAvatarBytes32, state.metamaskAddress);
             await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
             let result = true;
             commit(MUTATE_EDIT_PROFILE_RESULT, result);

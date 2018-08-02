@@ -33,9 +33,9 @@
                                 @click="renderCanvas">
                                 Try
                             </cg-button>
-                            <button-link to="/asset-packs" button-style="no-border">
+                            <cg-button @click="$router.go(-1)" button-style="no-border">
                                 Cancel
-                            </button-link>
+                            </cg-button>
                         </div>
                     </div>
                 </div>
