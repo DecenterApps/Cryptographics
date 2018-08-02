@@ -33,17 +33,16 @@ export default {
     },
     [SET_AVATAR]: async ({ commit, state }) => {
         let avatarBytes32 = await getAvatar(state.metamaskAddress);
-        let initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
+        const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
         if (avatarBytes32 !== initialAvatarBytes32) {
-
-            let avatar = utils.getBytes32FromIpfsHash(avatarBytes32);
-
+            let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
             commit(MUTATE_AVATAR, avatar);
         }
     },
     [SET_USER_CONFIG]: async ({ dispatch }) => {
         await dispatch(SET_METAMASK_ADDRESS);
         await dispatch(SET_USERNAME);
+        await dispatch(SET_AVATAR);
     },
     [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
         setInterval(async function() {
@@ -63,14 +62,18 @@ export default {
             commit(MUTATE_USERNAME_EXISTENCE, isExisting)
         }
     },
-    [EDIT_PROFILE]: async ({ commit, dispatch, state }, newUsername, hashToProfilePicture) => {
+    [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
         await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
         if (!state.changeUsername.isExisting) {
             if (newUsername === '') {
                 newUsername = state.username;
             }
-            console.log(newUsername);
-            await registerUser(newUsername, '0x00000000000000000000000000000000', state.metamaskAddress);
+            if (newAvatarBytes32 === '') {
+                const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
+                newAvatarBytes32 = initialAvatarBytes32;
+            }
+            console.log(newUsername, newAvatarBytes32, state.metamaskAddress);
+            await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
             let result = true;
             commit(MUTATE_EDIT_PROFILE_RESULT, result);
             await dispatch(SET_USER_CONFIG);

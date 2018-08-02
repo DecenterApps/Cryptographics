@@ -3,9 +3,16 @@
         <h3 class="large-title">Edit Profile</h3>
         <form
             class="edit-profile-modal"
-            @submit.prevent="editProfile(newUsername)">
+            @submit.prevent="editProfile({ newUsername, newAvatarBytes32 })">
             <div class="left">
-            <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
+            <img
+                class="avatar"
+                v-if="newAvatarBytes32 === ''"
+                :src="'//ipfs.decenter.com/ipfs/' + avatar">
+            <img
+                class="avatar"
+                v-else
+                :src="'//ipfs.decenter.com/ipfs/' + newAvatarHash">
             <div class="input-group">
                 <span
                     class="info fail"
@@ -30,7 +37,8 @@
                     button-style="transparent"
                     :multiple="false"
                     @change="onFileChanged">
-                    <span>Profile images must be 1:1 aspect ratio</span>
+                    <span v-if="newAvatarBytes32 === ''">Profile images must be 1:1 aspect ratio</span>
+                    <span v-else>You have selected: {{ imageName }}</span>
                 </input-file>
             </div>
             </div>
@@ -56,8 +64,9 @@ export default {
     name: 'EditProfile',
     data: () => ({
         newUsername: '',
+        newAvatarBytes32: '',
         newAvatarHash: '',
-        newAvatarBytes32: ''
+        imageName: ''
     }),
     methods: {
         ...mapActions({
@@ -76,14 +85,8 @@ export default {
                     context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
                     let pngUrl = canvas.toDataURL();
                     this.newAvatarHash = await ipfsService.uploadFile(pngUrl.substr(22));
-                    this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash)
-
-
-
-                    console.log(this.newAvatarHash, '\n');
-                    console.log(this.newAvatarBytes32, '\n');
-
-
+                    this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash);
+                    this.imageName = selectedImage.name;
                 }
         }
     },
@@ -114,6 +117,7 @@ export default {
             display: inline-flex;
             flex-direction: column;
             margin-left: 20px;
+            min-width: 290px;
             .info {
                 margin-bottom: 10px;
                 font-size: 12px;

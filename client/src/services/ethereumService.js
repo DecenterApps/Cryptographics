@@ -114,7 +114,7 @@ export const getUsername = async (address) => {
 };
 
 export const getAvatar = async (address) => {
-  return await digitalPrintImageContract().methods.getUsername(address).call();
+  return await digitalPrintImageContract().methods.getProfilePicture(address).call();
 };
 
 export const registerUser = async (username, hashToProfilePicture, account) => {
