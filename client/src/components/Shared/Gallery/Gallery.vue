@@ -13,7 +13,8 @@
                 </div>
             </div>
             <div class="masonry-wrapper"
-                v-masonry transition-duration="0.3s"
+                v-masonry
+                transition-duration="0.3s"
                 item-selector=".item"
                 gutter=".gutter-sizer"
                 fit-width="true">
@@ -63,6 +64,7 @@
     background-color: #EEEEEE;
     padding: 70px 0;
     .masonry-wrapper {
+        width: 1120px !important;
         margin: 0 auto;
     }
     .gutter-sizer {

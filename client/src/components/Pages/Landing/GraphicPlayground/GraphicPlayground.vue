@@ -3,7 +3,7 @@
         <div class="container">
             <div class="left">
                 <h2 class="large-title">Cryptographics</h2>
-                <p>Create, store and trade randomly generated digital artwork on the blockchain.</p>
+                <h3 class="subtitle">Create, store and trade randomly generated digital artwork on the blockchain.</h3>
                 <p>Artists upload their asset packs, making them available for Creators to buy and use. Creators generate random digital artwork with chosen asset packs and store them on the blockchain where they are signed as Creators forever, receiving a kickback for each future sale. Collectors can then pick their favourites and buy and trade Cryptographics in Ether.</p>
                 <p>Cryptographics is a fully decentralized app (DApp) with no back-end server and each Cryptographic is one of a kind ERC721 token containing all image data.</p>
                 <button-link to="/gallery">Gallery</button-link>
