@@ -67,7 +67,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
         uint[] memory pickedAssets;
 
-        (pickedAssets,,,,) = pickRandomAssets(finalSeed, _potentialAssets);
+        (pickedAssets,,,,,) = pickRandomAssets(finalSeed, _potentialAssets);
         address _creator = msg.sender;
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);

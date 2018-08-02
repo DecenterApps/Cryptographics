@@ -17,6 +17,6 @@ website/node_modules
 website/i18n/*
 !website/i18n/en.json
 package-lock.json
-frontend/config/config.json
+client/config/config.json
 build/*
 .vscode

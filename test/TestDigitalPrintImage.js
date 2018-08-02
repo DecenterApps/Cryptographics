@@ -1,6 +1,6 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
-const utils = require('../frontend/src/services/utils');
+const utils = require('../client/src/services/utils');
 const Web3 = require('web3');
 const advanceToBlock = require('./helpers/advanceToBlock').advanceToBlock;
 
@@ -12,7 +12,7 @@ contract('DigitalPrintImage', async (accounts) => {
         dpm = await DigitalPrintImage.deployed();
         assetManager = await AssetManager.deployed();
     
-        await advanceToBlock(200);
+        await advanceToBlock(105);
 
         await dpm.fillWithHashes();
 

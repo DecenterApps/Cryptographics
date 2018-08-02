@@ -23,9 +23,9 @@ contract Functions {
     /// @notice Function which decodes bytes32 to array of integers
     /// @param _potentialAssets are potential assets user would like to have
     /// @return array of assetIds
-    function decodeAssets(bytes32[] _potentialAssets) public pure returns (uint[]) {
+    function decodeAssets(bytes32[] _potentialAssets) public pure returns (uint[] assets) {
         require(_potentialAssets.length > 0);
-        uint[] memory assets = new uint[](_potentialAssets.length*10);
+        uint[] memory assetsCopy = new uint[](_potentialAssets.length*10);
         uint numberOfAssets = 0;
 
         for(uint j = 0; j<_potentialAssets.length; j++){
@@ -36,23 +36,21 @@ contract Functions {
                 input := pot
             }
 
-            for(uint i = 0; i<10; i++){
-                uint mask = (2 << (i * 24)) / 2;
+            for(uint i = 10; i>0; i--){
+                uint mask = (2 << ((i-1) * 24)) / 2;
                 uint b = (input & (mask * 16777215)) / mask;
 
                 if(b!=0) {
-                    assets[numberOfAssets] = b;
+                    assetsCopy[numberOfAssets] = b;
                     numberOfAssets++;
                 }
             }
         }
 
-        uint[] memory ass = new uint[](numberOfAssets);
+        assets = new uint[](numberOfAssets);
         for(i = 0; i<numberOfAssets; i++){
-            ass[i] = assets[i];
+            assets[i] = assetsCopy[i];
         }
-
-        return ass;
     }
 
 
@@ -60,7 +58,8 @@ contract Functions {
     /// @param _finalSeed is final random seed
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @return uint[] array of randomly picked assets
-    function pickRandomAssets(uint _finalSeed, bytes32[] _potentialAssets) public pure returns(uint[] finalPicked,uint[] x,uint[] y,uint[] zoom,uint[] rotation) {
+    function pickRandomAssets(uint _finalSeed, bytes32[] _potentialAssets) public pure 
+    returns(uint[] finalPicked, uint[] x, uint[] y, uint[] zoom, uint[] rotation, uint[] layers) {
         require(_finalSeed != 0);
         require(_potentialAssets.length > 0);
 
@@ -70,6 +69,7 @@ contract Functions {
         y = new uint[](assetIds.length);
         zoom = new uint[](assetIds.length);
         rotation = new uint[](assetIds.length);
+        layers = new uint[](assetIds.length);
 
         uint finalSeedCopy = _finalSeed;
         uint index = 0;
@@ -78,7 +78,7 @@ contract Functions {
             finalSeedCopy = uint(keccak256(abi.encodePacked(finalSeedCopy, assetIds[i])));
             if(finalSeedCopy % 2 == 0){
                 pickedIds[index] = assetIds[i];
-                (x[index],y[index],zoom[index],rotation[index]) = pickRandomAssetPosition(finalSeedCopy);
+                (x[index],y[index],zoom[index],rotation[index],layers[index]) = pickRandomAssetPosition(finalSeedCopy);
                 index++;
             }
         }
@@ -87,34 +87,23 @@ contract Functions {
         for(i = 0; i<index; i++){
             finalPicked[i] = pickedIds[i];
         }
-
-        return (finalPicked,x,y,zoom,rotation);
     }
 
 
     /// @notice Function to pick random position for an asset
     /// @dev based on id and random_seed
-    /// @param _random_seed is random seed for that image
+    /// @param _randomSeed is random seed for that image
     /// @return tuple of uints representing x,y,zoom,and rotation
-    function pickRandomAssetPosition(uint _random_seed) public pure returns (uint,uint,uint,uint) {
-        require(_random_seed!=0);
-        uint rs = _random_seed;
-
-        rs = rs % 10000;
-
-        uint x;
-        uint y;
-        uint zoom;
-        uint rotation;
-
-        if (rs % 2 == 0) {
-            x = rs%2450;
-            y = rs%3500;
-            zoom = rs%200 + 800;
-            rotation = rs%360;
-        }
-
-        return (x,y,zoom,rotation);
+    function pickRandomAssetPosition(uint _randomSeed) public pure 
+    returns (uint x, uint y, uint zoom, uint rotation, uint layer) {
+        
+        x = _randomSeed % 2450;
+        y = _randomSeed % 3500;
+        zoom = _randomSeed % 200 + 800;
+        rotation = _randomSeed % 360;
+        // using random number for now
+        // if two layers are same, sort by (keccak256(layer, assetId))
+        layer = _randomSeed % 1234567; 
     }
 
 
