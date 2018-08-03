@@ -313,6 +313,7 @@ export const makeImage = (objs, c, width, height, frame = {
       };
     }
     assets = helpers.moveBackgrounds(assets);
+    console.log('SORTED ASSETS', assets);
 
     preloadImages(assets)
       .done(async (loadedImages) => {
