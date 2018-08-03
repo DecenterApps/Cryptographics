@@ -1,19 +1,21 @@
 <template>
     <div>
-        <div class="asset-packs-wrapper">
+        <!-- <div class="asset-packs-wrapper">
             <div class="asset-pack" v-for="(assetPack, index) in assetPacks" :key="index">
                 <img class="asset-pack-image" :src="assetPack.src" />
                 <div class="asset-meta">
                     <div class="asset-description">
-                        <span class="asset-thumbnail"></span>
                         <span class="asset-name">{{ assetPack.name }}</span>
                     </div>
-                    <!--<span class="asset-owned"-->
-                    <!--v-if="showAll">{{ stats_owned[key].owned }} / {{ stats_owned[key].total }} </span>-->
                 </div>
             </div>
-        </div>
-        <div class="asset-controls">
+        </div> -->
+
+        <pagination
+          :total="assetPacksID.length"
+          :per-page="2"/>
+
+        <!-- <div class="asset-controls">
             <cg-button
                     button-style="transparent"
                     v-if="pagination > 1"
@@ -24,7 +26,7 @@
                     v-if="assetPacks.length > 1"
                     @click="nextPage">Next
             </cg-button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -32,7 +34,8 @@
   import {
     getPaginatedAssetPacks,
     getPackInformation,
-    getNumberOfAssetPacks
+    getNumberOfAssetPacks,
+    getCreatedAssetPacks
   } from 'services/ethereumService';
   import { mapGetters } from 'vuex';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
@@ -44,6 +47,7 @@
     data: () => ({
       assetPacks: [],
       pagination: 1,
+      assetPacksID: [],
     }),
     computed: {
       ...mapGetters({
@@ -51,6 +55,9 @@
       })
     },
     props: ['showAll'],
+    async beforeCreate() {
+      this.assetPacksID = await getCreatedAssetPacks('0x0793ECe184487277a2A3b110D11bA006d38d7d70');
+    },
     async created() {
       if (this.showAll) {
         this.getPacks(this.pagination, NUM_PER_PAGE);
@@ -58,13 +65,18 @@
         this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
       }
     },
-
+    beforeMount() {
+      console.log('PARENT beforeMount')
+    },
+    mounted() {
+      console.log('PARENT mounted')
+    },
     methods: {
       async getMyAssetPacks(page, count) {
         const assetPacksIds = await getPaginatedAssetPacks(page, count, this.userAddress);
         this.assetPacks = await getPackInformation(assetPacksIds, this.userAddress);
+        
       },
-
       async getPacks(page, count) {
         let ids = [];
         let numberOfPacks = await getNumberOfAssetPacks();
@@ -75,7 +87,6 @@
         }
         this.assetPacks = await getPackInformation(ids, this.userAddress);
       },
-
       nextPage() {
         this.assetPacks = [];
         this.pagination++;
@@ -85,7 +96,6 @@
           this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
         }
       },
-
       prevPage() {
         if (this.pagination === 1) return;
         this.assetPacks = [];
@@ -97,7 +107,6 @@
         }
       }
     }
-
   };
 </script>
 

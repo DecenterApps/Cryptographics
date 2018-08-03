@@ -61,5 +61,11 @@ export default {
     background: none;
     border: 1px solid transparent;
 }
+.pagination {
+    min-width: auto;
+    color: #858585;
+    background: none;
+    border: 1px solid transparent;
+}
 </style>
 
