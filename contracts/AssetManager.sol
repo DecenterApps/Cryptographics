@@ -74,7 +74,7 @@ contract AssetManager is Ownable {
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
     function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public returns(uint) {
-        require(hashExists[_ipfsHash] == false);
+        // require(hashExists[_ipfsHash] == false);
 
         uint id = numberOfAssets;
 
@@ -85,7 +85,7 @@ contract AssetManager is Ownable {
             ipfsHash : _ipfsHash
             }));
 
-        hashExists[_ipfsHash] = true;
+        // hashExists[_ipfsHash] = true;
         numberOfAssets++;
 
         return id;
