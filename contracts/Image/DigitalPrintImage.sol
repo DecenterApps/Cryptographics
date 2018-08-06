@@ -22,7 +22,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     mapping(uint => string) public idToIpfsHash;
 
     address public marketplaceContract;
-    IAssetManager assetManager;
+    IAssetManager public assetManager;
 
 
     modifier onlyMarketplaceContract() {
