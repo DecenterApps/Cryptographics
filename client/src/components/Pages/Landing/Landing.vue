@@ -1,12 +1,14 @@
 <template>
     <div>
         <graphic-playground />
-        <gallery :images="blocks" :display-filters="false" :display-overlay="true" />
+        <gallery :images="images" :display-filters="false" :display-overlay="true" />
         <div class="artist-cta">
             <div class="container">
                 <h3 class="large-title">Artist</h3>
                 <p>All visual artists are welcome to create and upload their asset packs.</p>
-                <p>Each asset pack can contain up to 50 different graphic elements, one of which always needs to be a background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and receive earnings every time a new Creator uses it.</p>
+                <p>Each asset pack can contain up to 50 different graphic elements, one of which always needs to be a
+                    background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
+                    receive earnings every time a new Creator uses it.</p>
                 <button-link to="/upload-asset-pack">Upload Assets Pack</button-link>
             </div>
         </div>
@@ -26,6 +28,7 @@
 <script>
   import Gallery from 'shared/Gallery/Gallery.vue';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
+  import { getImagesMetadata } from 'services/ethereumService';
 
   export default {
     name: 'Landing',
@@ -34,40 +37,12 @@
       Gallery
     },
     data: () => ({
-      blocks: [
-        {
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        }, {
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        },
-        {
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }, {
-          price: 0.45,
-          src: require('./assets/wide.png'),
-        }, {
-          price: 0.45,
-          src: require('./assets/long.png'),
-        }
-      ],
+      images: [],
     }),
+    async created() {
+      this.images = await getImagesMetadata([0, 1]);
+      console.log();
+    }
   };
 </script>
 

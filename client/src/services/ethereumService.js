@@ -148,6 +148,33 @@ export const getNumberOfAssets = async () => {
   return await assetManagerContract().methods.getNumberOfAssets().call();
 };
 
+export const getImagesMetadata = async (imageIds) => {
+  // metadata.finalSeed,
+  //   metadata.potentialAssets,
+  //   metadata.timestamp,
+  //   addressToUser[metadata.creator].username,
+  //   ownerOf(_imageId),
+  //   metadata.ipfsHash
+  const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
+  return Promise.all(promises);
+};
+
+export const getImageMetadata = (imageId) =>
+  new Promise(async (resolve, reject) => {
+    const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
+    if (!image) resolve({});
+
+    resolve({
+      finalSeed: image[0],
+      potentialAssets: image[1],
+      timestamp: image[2],
+      username: image[3],
+      artistAddress: image[4],
+      ipfsHash: image[5],
+      src: `https://ipfs.decenter.com/ipfs/${image[5]}`
+    });
+  });
+
 export const getUserImages = async (address) => {
   if (address.length !== 42) {
     return -1;

@@ -64,7 +64,7 @@
     background-color: #EEEEEE;
     padding: 70px 0;
     .masonry-wrapper {
-        width: 1120px !important;
+        width: 100% !important;
         margin: 0 auto;
     }
     .gutter-sizer {
