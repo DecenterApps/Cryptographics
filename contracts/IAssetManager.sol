@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 contract IAssetManager {
     function createAssetPack(bytes32 _packCover, string _name, uint[] _attributes, bytes32[] _ipfsHashes, uint _packPrice) public;
     function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public;
-    function buyAssetPack(uint _assetPackId) public payable;
+    function buyAssetPack(address _to, uint _assetPackId) public payable;
     function getNumberOfAssets() public view returns (uint);
     function getNumberOfAssetPacks() public view returns(uint);
     function checkHasPermissionForPack(address _address, uint _packId) public view returns (bool);
