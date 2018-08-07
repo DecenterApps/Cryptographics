@@ -3,6 +3,7 @@ import { VueMasonryPlugin } from 'vue-masonry';
 import router from './router';
 import store from './store/store';
 import Vuebar from 'vuebar';
+import AsyncComputed from 'vue-async-computed';
 
 import App from './components/App.vue';
 
@@ -40,6 +41,7 @@ Vue.component('modal', Modal);
 
 Vue.use(VueMasonryPlugin);
 Vue.use(Vuebar);
+Vue.use(AsyncComputed);
 
 const app = new Vue({
   ...App,

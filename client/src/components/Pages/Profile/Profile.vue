@@ -22,8 +22,24 @@
           </button-link>
         </div>
       </div>
-      <h2 class="large-title">Asset Packs</h2>
-      <asset-packs-pagination :show-all="true" />
+      <div>
+        <h2 class="large-title">Asset Packs</h2>
+        <div class="button-group">
+          <cg-button
+            :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+            @click="showYourPacks = true">
+            Your asset packs
+          </cg-button>
+          <cg-button
+            :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+            @click="showYourPacks = false">
+            Other asset packs
+          </cg-button>
+        </div>
+        <created-asset-packs v-if="showYourPacks"/>
+        <bought-asset-packs v-else/>
+      </div>
+      
       <h2 class="large-title">Gallery</h2>
       <gallery :images="images"/>
     </div>
@@ -43,30 +59,31 @@
   import { TOGGLE_MODAL } from 'store/modal/types';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
 
-  import MyImages from './MyImages.vue';
-  import MyImageees from './MyImageees.vue';
-  import AssetPacksPagination from 'shared/AssetPacksPagination/AssetPacksPagination.vue';
+  import CreatedAssetPacks from './template/CreatedAssetPacks.vue';
+  import BoughtAssetPacks from './template/BoughtAssetPacks.vue';
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
-    name: 'profile',
-    data: () => ({
-      asset_packs: [],
-      allAssetPaths: [],
-      id_to_show: -1,
-      metamask_account: 0,
-      allAssets: [],
-      images: [],
-      my_images_on_chain: [],
-      bought_assets: [],
-      created_assets: [],
-      myobjects: [],
-    }),
+    name: 'Profile',
+    data() {
+      return {
+        showYourPacks: true,
+        asset_packs: [],
+        allAssetPaths: [],
+        id_to_show: -1,
+        metamask_account: 0,
+        allAssets: [],
+        images: [],
+        my_images_on_chain: [],
+        bought_assets: [],
+        created_assets: [],
+        myobjects: [],
+      }
+    },
     components: {
       Gallery,
-      canvasMyImages: MyImages,
-      myImagesIpfs: MyImageees,
-      AssetPacksPagination
+      CreatedAssetPacks,
+      BoughtAssetPacks
     },
     computed: {
       ...mapGetters({
@@ -177,7 +194,7 @@
     }
     .right {
       & .button {
-        margin: 0 15px;
+        margin: 0 10px;
         &:first-of-type {
           margin-left: 0;
         }
@@ -185,6 +202,18 @@
           margin-right: 0;
         }
       }
+    }
+  }
+}
+
+.button-group {
+  & .button {
+    margin: 0 10px;
+    &:first-of-type {
+      margin-left: 0;
+    }
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }

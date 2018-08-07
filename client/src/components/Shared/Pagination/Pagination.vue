@@ -34,10 +34,6 @@ export default {
 			type: Number,
 			default: 2
 		},
-		currentPage: {
-			type: Number,
-			default: 1
-		},
 		prevText: {
 			type: String,
 			default: 'Prev'
@@ -57,10 +53,10 @@ export default {
 	methods: {
 		onPageClick(event) {
 			this.newPage = Number(event.target.textContent);
-			this.$emit('page:update', this.newPage);
+			this.$emit('updatePage', this.newPage);
 		},
 		onControls(value) {
-			this.$emit('page:update', value);
+			this.$emit('updatePage', value);
 		}
 	},
 	computed: {
@@ -102,7 +98,7 @@ export default {
 
 			this.showNext = showNext;
 			this.showPrev = showPrev;
-			
+
 			return pagesArray;
 		},
 	}
