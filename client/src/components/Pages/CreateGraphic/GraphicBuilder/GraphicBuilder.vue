@@ -132,6 +132,7 @@
         // this.iterations = 0;
       },
       async renderCanvas() {
+        this.iterations++;
         if (window.sessionStorage.length > 0) {
           const landingPacks = getLandingPacks();
           this.selectedPacks = [...new Set([...this.selectedPacks, ...landingPacks.packs])];
@@ -143,7 +144,6 @@
           .reduce((a, b) => a.concat(b), []);
         console.log(pot);
         this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
-        this.iterations++;
         console.log('iteration: ' + this.iterations);
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {

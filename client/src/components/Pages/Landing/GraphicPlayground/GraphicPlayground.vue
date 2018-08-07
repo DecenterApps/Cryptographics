@@ -4,8 +4,12 @@
             <div class="left">
                 <h2 class="large-title">Cryptographics</h2>
                 <h3 class="subtitle">Create, store and trade randomly generated digital artwork on the blockchain.</h3>
-                <p>Artists upload their asset packs, making them available for Creators to buy and use. Creators generate random digital artwork with chosen asset packs and store them on the blockchain where they are signed as Creators forever, receiving a kickback for each future sale. Collectors can then pick their favourites and buy and trade Cryptographics in Ether.</p>
-                <p>Cryptographics is a fully decentralized app (DApp) with no back-end server and each Cryptographic is one of a kind ERC721 token containing all image data.</p>
+                <p>Artists upload their asset packs, making them available for Creators to buy and use. Creators
+                    generate random digital artwork with chosen asset packs and store them on the blockchain where they
+                    are signed as Creators forever, receiving a kickback for each future sale. Collectors can then pick
+                    their favourites and buy and trade Cryptographics in Ether.</p>
+                <p>Cryptographics is a fully decentralized app (DApp) with no back-end server and each Cryptographic is
+                    one of a kind ERC721 token containing all image data.</p>
                 <button-link to="/gallery">Gallery</button-link>
             </div>
             <div class="right">
@@ -28,9 +32,9 @@
                     </div>
                 </div>
                 <div class="assets">
-                    <img src="../assets/asset.png">
-                    <img src="../assets/asset.png">
-                    <img src="../assets/asset.png">
+                    <div v-for="cover in coverIpfsHashes">
+                        <img class="cover-image" :src="'https://ipfs.decenter.com/ipfs/' + cover">
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,6 +52,7 @@
   import * as utils from 'services/utils';
   import Gallery from 'shared/Gallery/Gallery.vue';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
+  import { getCoversForAssetPacks } from 'services/ethereumService';
 
   export default {
     name: 'GraphicPlayground',
@@ -67,6 +72,7 @@
         ratio: '1:1',
         frame: true,
       },
+      coverIpfsHashes: [],
     }),
     methods: {
       // renderCanvas() {
@@ -133,6 +139,7 @@
       const landingPacks = getLandingPacks();
       this.assetPacks = landingPacks.packs;
       this.renderCanvas();
+      this.coverIpfsHashes = await getCoversForAssetPacks(landingPacks.ids);
     }
   };
 </script>
@@ -241,9 +248,11 @@
     .assets {
         display: flex;
         flex-direction: column;
-        img {
+        .cover-image {
             position: relative;
             margin-bottom: 30px;
+            height: 96px;
+            width: 134px;
         }
     }
 

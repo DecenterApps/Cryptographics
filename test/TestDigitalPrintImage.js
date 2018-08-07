@@ -18,29 +18,33 @@ contract('DigitalPrintImage', async (accounts) => {
 
         let ipfsHashes = [];
         let attributes = [];
-        for(let i = 0; i<20; i++) {
+        for(let i = 0; i<40; i++) {
             ipfsHashes.push(Web3.utils.sha3(i.toString()));
             attributes.push(122);
         }
 
         await assetManager.createAssetPack("0x0", "Pack 1", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<20; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+20+1).toString());
-        }
-        await assetManager.createAssetPack("0x0", "Pack 2", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<20; i++) {
+        for(let i = 0; i<40; i++) {
             ipfsHashes[i] = Web3.utils.sha3((i+40+1).toString());
         }
+        await assetManager.createAssetPack("0x0", "Pack 2", attributes, ipfsHashes, 1000);
+        for(let i = 0; i<40; i++) {
+            ipfsHashes[i] = Web3.utils.sha3((i+80+1).toString());
+        }
         await assetManager.createAssetPack("0x0", "Pack 3", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<20; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+60+1).toString());
+        for(let i = 0; i<40; i++) {
+            ipfsHashes[i] = Web3.utils.sha3((i+120+1).toString());
         }
         await assetManager.createAssetPack("0x0", "Pack 4", attributes, ipfsHashes, 1000);
+        for(let i = 0; i<40; i++) {
+            ipfsHashes[i] = Web3.utils.sha3((i+160+1).toString());
+        }
+        await assetManager.createAssetPack("0x0", "Pack 5", attributes, ipfsHashes, 1000);
     });
 
     
     it("...Should create image if I have access to all packs", async () => {
-        let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+        let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18];
 
         let encoded_arr = utils.encode(arr);
         res = await dpm.decodeAssets(encoded_arr);
@@ -58,16 +62,25 @@ contract('DigitalPrintImage', async (accounts) => {
     });
 
     it("...Should create image if I don't have access to all packs", async () => {
-        let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+        let arr = [ 105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128 ]
 
         let encoded_arr = utils.encode(arr);
+        
         res = await dpm.decodeAssets(encoded_arr);
         for (let i=0; i<res.length; i++) {
-            res[i] = parseInt([i]);
+            res[i] = parseInt(res[i]);
+            assert.equal(arr[i], res[i], "Decoded array should be same as initial array");
         }
-        let price = await dpm.calculatePrice(arr, accounts[1]);
 
-        let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1213, 2, encoded_arr, "New", "ipfsH12ash", {from: accounts[1], value: price}); 
+        let price = await dpm.calculatePrice(arr, accounts[1]);
+        
+        let username = "New";
+        let ipfsHash = "QmZ7PvFbpoePxnSguNHShJU5AF8F9cUuZpUYsxWERPamzy";
+        let iterations = 5;
+        let timestamp = 1533304445002;
+        let randomHashes = [59, 47, 27, 94, 91, 98, 4, 8, 76, 57];
+
+        let new_res = await dpm.createImage(randomHashes, timestamp, iterations, encoded_arr, username, ipfsHash, {from: accounts[1], value: price}); 
         // console.log(new_res);
         let balance = await dpm.balanceOf(accounts[1]);
         assert.equal(balance, 1, "User should have image he just created with right price");

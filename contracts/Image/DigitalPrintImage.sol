@@ -22,7 +22,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     mapping(uint => string) public idToIpfsHash;
 
     address public marketplaceContract;
-    IAssetManager assetManager;
+    IAssetManager public assetManager;
 
 
     modifier onlyMarketplaceContract() {
@@ -71,14 +71,17 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         address _creator = msg.sender;
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
-        uint finalPrice = calculatePrice(pickedAssetPacks, _creator);
-        require(msg.value >= finalPrice);
+        uint finalPrice = 0;
 
         for(uint i = 0; i<pickedAssetPacks.length ;i++) {
             if(assetManager.checkHasPermissionForPack(_creator, pickedAssetPacks[i]) == false){
-                assetManager.givePermission(msg.sender, pickedAssetPacks[i]);
+                finalPrice += assetManager.getAssetPackPrice(pickedAssetPacks[i]);
+
+                assetManager.buyAssetPack.value(assetManager.getAssetPackPrice(pickedAssetPacks[i]))(msg.sender, pickedAssetPacks[i]);
             }
         }
+        
+        require(msg.value >= finalPrice);
 
         uint id = createImage(_creator);
 

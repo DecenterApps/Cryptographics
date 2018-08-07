@@ -148,6 +148,33 @@ export const getNumberOfAssets = async () => {
   return await assetManagerContract().methods.getNumberOfAssets().call();
 };
 
+export const getImagesMetadata = async (imageIds) => {
+  // metadata.finalSeed,
+  //   metadata.potentialAssets,
+  //   metadata.timestamp,
+  //   addressToUser[metadata.creator].username,
+  //   ownerOf(_imageId),
+  //   metadata.ipfsHash
+  const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
+  return Promise.all(promises);
+};
+
+export const getImageMetadata = (imageId) =>
+  new Promise(async (resolve, reject) => {
+    const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
+    if (!image) resolve({});
+
+    resolve({
+      finalSeed: image[0],
+      potentialAssets: image[1],
+      timestamp: image[2],
+      username: image[3],
+      artistAddress: image[4],
+      ipfsHash: image[5],
+      src: `https://ipfs.decenter.com/ipfs/${image[5]}`
+    });
+  });
+
 export const getUserImages = async (address) => {
   if (address.length !== 42) {
     return -1;
@@ -177,18 +204,15 @@ export const calculateFirstSeed = async (timestamp, rands) => {
 // Function to calculate keccak256 when input is (int and int)
 // INTEGRATED WITH CONTRACT
 export const calculateSeed = (random_seed, x) => {
-  return web3.utils.sha3(leftPad((random_seed).toString(16), 64, 0) +
-    leftPad((x).toString(16), 64, 0), { encoding: 'hex' });
+  return web3.utils.soliditySha3(random_seed, x);
 };
 
 // Function to calculate final seed for input (random_seed -int & iterations-int)
 // INTEGRATED WITH CONTRACT
 export const calculateFinalSeed = (random_seed, iterations) => {
-  let seed = calculateSeed(random_seed, iterations);
+  let seed = web3.utils.soliditySha3(random_seed, iterations);
   for (let i = 0; i < iterations; i++) {
-    // seed = seed.toString().substr(2);
-    let x = leftPad((i).toString(16), 64, 0);
-    seed = web3.utils.sha3(seed + x, { encoding: 'hex' });
+    seed = web3.utils.soliditySha3(seed, i);
   }
   return seed;
 };
@@ -221,8 +245,8 @@ export const getAssetMetadata = (seed, assetId) => {
 //INTEGRATED WITH CONTRACT - function to getImage info
 //(bytes32, uint, bytes32)
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
-  randomSeed = randomSeed.toString(16);
   let seed = calculateFinalSeed(randomSeed, iterations);
+  console.log("FINAL SEED: ", seed);
   let pot_assets = [];
   console.log(potentialAssets.length);
   for (let j = 0; j < potentialAssets.length; j++) {
@@ -238,13 +262,8 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
   console.log('ATTRIBUTES', attributes);
 
   for (let i = 0; i < pot_assets.length; i++) {
-    // seed = seed.substr(2);
-    let q = leftPad((pot_assets[i]).toString(16), 64, 0);
-    seed = web3.utils.sha3(seed + q, { encoding: 'hex' });
-
-    let x = utils.hex2dec(seed); //BIGINT representation of seed
-
-    let metadata = getAssetMetadata(x, pot_assets[i]);
+    seed = web3.utils.soliditySha3(seed, parseInt(pot_assets[i], 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), pot_assets[i]);
 
     if (metadata != null) {
       pickedAssets.push({

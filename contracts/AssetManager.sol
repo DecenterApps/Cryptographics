@@ -74,7 +74,7 @@ contract AssetManager is Ownable {
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
     function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public returns(uint) {
-        require(hashExists[_ipfsHash] == false);
+        // require(hashExists[_ipfsHash] == false);
 
         uint id = numberOfAssets;
 
@@ -85,24 +85,24 @@ contract AssetManager is Ownable {
             ipfsHash : _ipfsHash
             }));
 
-        hashExists[_ipfsHash] = true;
+        // hashExists[_ipfsHash] = true;
         numberOfAssets++;
 
         return id;
     }
 
 
-    function buyAssetPack(uint _assetPackId) public payable {
+    function buyAssetPack(address _to, uint _assetPackId) public payable {
         ///validate if user have already bought permission for this pack
-        for(uint i = 0; i<boughtAssetPacks[msg.sender].length; i++) {
-            require(boughtAssetPacks[msg.sender][i] != _assetPackId);
+        for(uint i = 0; i<boughtAssetPacks[_to].length; i++) {
+            require(boughtAssetPacks[_to][i] != _assetPackId);
         }
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
         require(msg.value >= assetPack.price);
         // if someone wants to pay more money for asset pack, we will give all of it to creator
         artistBalance[assetPack.creator] += msg.value;
-        boughtAssetPacks[msg.sender].push(_assetPackId);
+        boughtAssetPacks[_to].push(_assetPackId);
     }
 
 
@@ -139,13 +139,6 @@ contract AssetManager is Ownable {
     /// @param _ipfsHash is bytes32 representation of hash
     function checkHashExists(bytes32 _ipfsHash) public view returns (bool){
         return hashExists[_ipfsHash];
-    }
-
-    /// @notice Function to give you permission for all assets you are buying during image creation
-    /// @param _address is address of buyer
-    /// @param _packId is id of assetpack
-    function givePermission(address _address, uint _packId) public {
-        boughtAssetPacks[_address].push(_packId);
     }
 
     function pickUniquePacks(uint[] assetIds) public view returns (uint[]){

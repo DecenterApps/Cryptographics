@@ -1,44 +1,44 @@
 <template>
     <layout layout-style="pulled-left">
-                <div class="left">
-                    <div class="up">
-                        <h1 class="large-title">Upload asset pack</h1>
-                        <div class="input-group">
-                            <cg-input name="pack_name" placeholder="Asset Pack name"/>
-                            <cg-input name="price" placeholder="Value"/>                    
-                        </div>
-                    </div>
-                    <div class="down">
-                        <input-file
-                            id="files"
-                            button-style="transparent"
-                            @change="uploadAssets">
-                            <span>Upload multiple assets</span>
-                            <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
-                        </input-file>
-                        <div class="graphic-preview">
-                            <canvas id="canvas"></canvas>
-                            <cg-button
-                                button-style="transparent">
-                                Generate
-                            </cg-button>
-                        </div>
-                        <div class="button-group">
-                            <cg-button
-                                @click="uploadToIpfs">
-                                Submit
-                            </cg-button>
-                            <cg-button
-                                button-style="transparent"
-                                @click="renderCanvas">
-                                Try
-                            </cg-button>
-                            <cg-button @click="$router.go(-1)" button-style="no-border">
-                                Cancel
-                            </cg-button>
-                        </div>
-                    </div>
+        <div class="left">
+            <div class="up">
+                <h1 class="large-title">Upload asset pack</h1>
+                <div class="input-group">
+                    <cg-input name="pack_name" placeholder="Asset Pack name" />
+                    <cg-input name="price" placeholder="Value" />
                 </div>
+            </div>
+            <div class="down">
+                <input-file
+                        id="files"
+                        button-style="transparent"
+                        @change="uploadAssets">
+                    <span>Upload multiple assets</span>
+                    <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
+                </input-file>
+                <div class="graphic-preview">
+                    <canvas id="canvas"></canvas>
+                    <cg-button
+                            button-style="transparent">
+                        Generate
+                    </cg-button>
+                </div>
+                <div class="button-group">
+                    <cg-button
+                            @click="uploadToIpfs">
+                        Submit
+                    </cg-button>
+                    <cg-button
+                            button-style="transparent"
+                            @click="renderCanvas">
+                        Try
+                    </cg-button>
+                    <cg-button @click="$router.go(-1)" button-style="no-border">
+                        Cancel
+                    </cg-button>
+                </div>
+            </div>
+        </div>
 
         <div class="right">
             <div v-bar="{ preventParentScroll: true }">
@@ -256,8 +256,8 @@
             }
         }
         img {
-            width: 180px;
-            height: 180px;
+            max-width: calc(100% - 20px);
+            max-height: calc(100% - 20px);
         }
         &:nth-child(3n + 2) {
             margin: 0 20px;
