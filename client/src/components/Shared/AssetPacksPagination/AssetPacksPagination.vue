@@ -11,9 +11,11 @@
             </div>
         </div> -->
 
-        <pagination
+        <pagination :total="23" :per-page="2"/>
+        
+        <!-- <pagination
           :total="assetPacksID.length"
-          :per-page="2"/>
+          :per-page="2"/> -->
 
         <!-- <div class="asset-controls">
             <cg-button
@@ -64,12 +66,6 @@
       } else {
         this.getMyAssetPacks(this.pagination, NUM_PER_PAGE);
       }
-    },
-    beforeMount() {
-      console.log('PARENT beforeMount')
-    },
-    mounted() {
-      console.log('PARENT mounted')
     },
     methods: {
       async getMyAssetPacks(page, count) {

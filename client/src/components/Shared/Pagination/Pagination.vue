@@ -1,10 +1,24 @@
 <template>
-	<div class="pagination-controls">
-		<!-- <cg-button button-style="pagination">{{ prevText }}</cg-button> -->
+	<div class="pagination-controls" v-if="pages.length > 1">
+		<cg-button
+			button-style="pagination"
+			v-if="showPrev"
+			@click="onControls(newPage -= 1)">
+			{{ prevText }}
+		</cg-button>
 		<span
-			v-for="(items, index) in numberOfPages"
-			:key="index">{{ index + 1 }}</span>
-		<!-- <cg-button button-style="pagination">{{ nextText }}</cg-button> -->
+			v-for="(page, index) in pages"
+			:key="index"
+			@click="onPageClick"
+			:class="{ active: page === newPage }">
+			{{ page }}
+		</span>
+		<cg-button
+			button-style="pagination"
+			v-if="showNext"
+			@click="onControls(newPage += 1)">
+			{{ nextText }}
+		</cg-button>
 	</div>
 </template>
 
@@ -20,6 +34,10 @@ export default {
 			type: Number,
 			default: 2
 		},
+		currentPage: {
+			type: Number,
+			default: 1
+		},
 		prevText: {
 			type: String,
 			default: 'Prev'
@@ -29,23 +47,64 @@ export default {
 			default: 'Next'
 		}
 	},
-	beforeCreate() {
-		console.log('CHILD beforeCreate')
+	data() {
+		return {
+			showNext: false,
+			showPrev: false,
+			newPage: 1
+		}
 	},
-	created() {
-		console.log('CHILD created')
-	},
-	beforeMount() {
-		console.log('CHILD beforeMount')
-
-	},
-	mounted() {
-		console.log('CHILD mounted')
+	methods: {
+		onPageClick(event) {
+			this.newPage = Number(event.target.textContent);
+			this.$emit('page:update', this.newPage);
+		},
+		onControls(value) {
+			this.$emit('page:update', value);
+		}
 	},
 	computed: {
-		numberOfPages() {
-			return this.total / this.perPage
-		}
+		pages() {
+			const total = this.total;
+			const perPage = this.perPage;
+			let pages = Math.ceil(total / perPage);
+			const allPages = pages;
+			const newPage = Number(this.newPage);
+			let showNext = true;
+			let showPrev = false;
+
+			let pagesArray = [];
+
+			if (pages > 5) {
+
+				pages = 5;
+
+				if (newPage > pages) {
+					for (let i = 1; i <= newPage; i++) {
+						pagesArray.push(i)
+					}
+					pagesArray = pagesArray.slice(newPage - pages, newPage);
+				} else {
+					for (let i = 1; i <= pages; i++) {
+						pagesArray.push(i);
+					}
+				}
+			
+				newPage > 1 ? showPrev = true : showPrev = false
+				newPage === allPages ? showNext = false : showNext = true
+			} else {
+				for (let i = 1; i <= pages; i++) {
+					pagesArray.push(i);
+				}
+				newPage > 1 ? showPrev = true : showPrev = false
+				newPage === pages ?	showNext = false : showNext = true
+			}
+
+			this.showNext = showNext;
+			this.showPrev = showPrev;
+			
+			return pagesArray;
+		},
 	}
 }
 </script>
@@ -57,6 +116,7 @@ export default {
     padding: 9px;
     font-size: 12px;
     color: #858585;
+	cursor: pointer;
     &.active {
       color: #000000;
     }
