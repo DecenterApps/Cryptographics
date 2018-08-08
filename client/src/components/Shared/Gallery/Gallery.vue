@@ -1,7 +1,7 @@
 <template>
     <div class="gallery">
         <div class="container">
-            <div v-if="displayFilters" class="filters">
+            <!-- <div v-if="displayFilters" class="filters">
                 <div class="filter-group">
                     <span class="active">High</span>
                     <span>Low</span>
@@ -11,7 +11,7 @@
                     <span class="active">All</span>
                     <span>Select Asset Pack</span>
                 </div>
-            </div>
+            </div> -->
             <div class="masonry-wrapper"
                 v-masonry
                 transition-duration="0.3s"

@@ -104,13 +104,8 @@ import Logo from '../UI/Logo.vue';
                 display: inline-block;
                 width: 33px;
                 height: 33px;
-                background-color: #D8D8D8;
                 border-radius: 100%;
                 margin: 0 20px 0 10px;
-            }
-
-            .default-button {
-                color: #000;
             }
         }
     }

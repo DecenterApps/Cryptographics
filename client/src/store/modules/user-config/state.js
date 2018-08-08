@@ -1,7 +1,7 @@
 export default {
     username: 'Anon',
     metamaskAddress: undefined,
-    avatar: 'QmfEsoC1hp48RWs2czW28z7Mtgf2qoDRxsbANszgxQFzyy',
+    avatar: 'QmP8A71rFcz7Y4JUG2tJzYjxsKycxKVu6thY8E7HbrFNkG',
     assets: {
         createdIDs: [],
         boughtIDs: []

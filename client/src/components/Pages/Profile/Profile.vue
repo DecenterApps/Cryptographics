@@ -7,9 +7,9 @@
       <div class="header">
         <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
         <div class="left">
-          <h1 class="name">{{ username }}</h1>
+          <h1 class="large-title name">{{ username }}</h1>
         </div>
-        <div class="right">
+        <div class="right button-group">
           <cg-button 
             button-style="transparent"
             v-if="metamaskAddress"
@@ -22,26 +22,38 @@
           </button-link>
         </div>
       </div>
-      <div>
-        <h2 class="large-title">Asset Packs</h2>
-        <div class="button-group">
-          <cg-button
-            :button-style="showYourPacks === true ? 'negative' : 'transparent'"
-            @click="showYourPacks = true">
-            Your asset packs
-          </cg-button>
-          <cg-button
-            :button-style="showYourPacks === false ? 'negative' : 'transparent'"
-            @click="showYourPacks = false">
-            Other asset packs
-          </cg-button>
+      <div class="main">
+        <template v-if="metamaskAddress">
+        <div class="assets">
+          <h2 class="large-title">Asset Packs</h2>
+          <div class="button-group">
+            <cg-button
+              :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+              @click="showYourPacks = true">
+              Your asset packs
+            </cg-button>
+            <cg-button
+              :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+              @click="showYourPacks = false">
+              Other asset packs
+            </cg-button>
+          </div>
+          <keep-alive>
+            <created-asset-packs v-if="showYourPacks"/>
+            <bought-asset-packs v-else/>
+          </keep-alive>
         </div>
-        <created-asset-packs v-if="showYourPacks"/>
-        <bought-asset-packs v-else/>
+        <div class="gallery">
+          <h2 class="large-title">Gallery</h2>
+          <gallery :images="images"/>
+        </div>
+        </template>
+        <template v-else>
+          <p>Connect to MetaMask.</p>
+        </template>
+        
       </div>
       
-      <h2 class="large-title">Gallery</h2>
-      <gallery :images="images"/>
     </div>
   </layout>
 </template>
@@ -173,14 +185,14 @@
   padding-top: 0 !important;
   flex-direction: column;
   position: relative;
+  min-height: calc(100vh - 419px);
   .header {
     padding-left: 190px;
     padding-top: 47px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     display: flex;
     justify-content: space-between;
     .avatar {
-      background-color: #333;
       width: 160px; height: 160px;
       position: absolute;
       top: -80px;
@@ -188,71 +200,28 @@
     }
     .left {
       .name {
-        font-family: 'YoungSerif-Regular', sans-serif;
-        font-size: 32px;
+        margin-bottom: 0;
       }
     }
-    .right {
-      & .button {
-        margin: 0 10px;
-        &:first-of-type {
-          margin-left: 0;
-        }
-        &:last-of-type {
-          margin-right: 0;
-        }
+  }
+  @media screen and (max-width: 1120px) {
+    .header {
+      padding-left: 0;
+      padding-top: 127px;
+      .avatar {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .header {
+      flex-direction: column;
+      text-align: center;
+      .left {
+        margin-bottom: 20px;
       }
     }
   }
 }
-
-.button-group {
-  & .button {
-    margin: 0 10px;
-    &:first-of-type {
-      margin-left: 0;
-    }
-    &:last-of-type {
-      margin-right: 0;
-    }
-  }
-}
-
-
-
-    .profile-page {
-        background-color: #F9F9F9;
-
-        .profile {
-            position: relative;
-            .thumbnail {
-                position: absolute;
-                top: -96px;
-                width: 160px;
-                height: 160px;
-                background-color: #D4D4D4;
-            }
-
-            .description {
-                display: flex;
-                padding: 32px 0;
-                justify-content: flex-end;
-                font-family: 'YoungSerif-Regular', sans-serif;
-                font-size: 15px;
-                align-items: flex-end;
-                line-height: 15px;
-
-                .creator-name {
-                    font-size: 32px;
-                    line-height: 32px;
-                    margin-left: 15px;
-                }
-            }
-        }
-
-        .home-gallery {
-            background-color: none;
-            margin: 40px 0;
-        }
-    }
 </style>

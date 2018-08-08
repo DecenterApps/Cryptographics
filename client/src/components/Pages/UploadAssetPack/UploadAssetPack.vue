@@ -100,10 +100,10 @@
 
       renderCanvas() {
         let canvas = document.getElementById('canvas');
-        canvas.width = 350;
-        canvas.height = 350;
+        canvas.width = 500;
+        canvas.height = 365;
         console.log(this.assets);
-        makeCoverImage(false, this.assets, canvas, 350, 350);
+        makeCoverImage(false, this.assets, canvas, 500, 365);
       },
       async uploadToIpfs() {
         let hashes = [];
@@ -142,13 +142,13 @@
         this.assets.splice(index, 1);
         let assets = this.assets;
         let canvas = document.getElementById('canvas');
-        canvas.width = 350;
-        canvas.height = 350;
+        canvas.width = 386;
+        canvas.height = 281;
         let asset_paths = [];
         for (let i = 0; i < this.assets.length; i++) {
           asset_paths.push(this.assets[i].path);
         }
-        makeCoverImage(false, asset_paths, canvas, 350, 350);
+        makeCoverImage(false, asset_paths, canvas, 500, 365);
       },
 
       toggleBackground(index) {
@@ -209,8 +209,8 @@
             margin-bottom: 20px;
             canvas {
                 background-color: white;
-                width: 220px;
-                height: 120px;
+                width: 386px;
+                height: 281px;
             }
             .button {
                 margin-left: 10px;

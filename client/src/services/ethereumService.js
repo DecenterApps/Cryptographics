@@ -49,8 +49,19 @@ export const getCreatedAssetPacks = async (address) => {
   return await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
 };
 
+export const getBoughtAssetPacks = async (address) => {
+  return await assetManagerContract().methods.getBoughtAssetPacks(address).call();
+};
+
 export const getPaginatedAssetPacks = async (pagination, count, address) => {
   let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
+  let beginning = (pagination - 1) * count;
+  let end = pagination + count + 1;
+  return assetPacksIds.slice(beginning, end);
+};
+
+export const getPaginatedBoughtAssetPacks = async (pagination, count, address) => {
+  let assetPacksIds = await assetManagerContract().methods.getBoughtAssetPacks(address).call();
   let beginning = (pagination - 1) * count;
   let end = pagination + count + 1;
   return assetPacksIds.slice(beginning, end);
@@ -71,7 +82,8 @@ export const getPackInformation = async (assetPacksIds, account) => {
   for (let i = 0; i < srcs.length; i++) {
     data.push({
       name: names[i],
-      src: 'https://ipfs.decenter.com/ipfs/' + srcs[i],
+      src: srcs[i],
+      id: assetPacksIds[i]
     });
   }
   return data;
