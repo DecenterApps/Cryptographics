@@ -3,6 +3,7 @@ import {
     SET_USERNAME,
     SET_AVATAR,
     SET_USER_CONFIG,
+    SET_CREATED_ASSETS,
     UPDATE_USER_CONFIG,
     CHECK_USERNAME_EXISTENCE,
     EDIT_PROFILE,
@@ -10,12 +11,19 @@ import {
     MUTATE_USERNAME,
     MUTATE_AVATAR,
     MUTATE_USERNAME_EXISTENCE,
-    MUTATE_EDIT_PROFILE_RESULT
+    MUTATE_EDIT_PROFILE_RESULT,
+    MUTATE_CREATED_ASSETS_ID
 } from './types';
 
 import { getAccounts } from 'services/helpers';
 import * as utils from 'services/utils';
-import { getUsername, getAvatar, usernameExists, registerUser } from 'services/ethereumService';
+import {
+    getUsername,
+    getAvatar,
+    usernameExists,
+    registerUser,
+    getCreatedAssetPacks
+} from 'services/ethereumService';
 
 export default {
     [SET_METAMASK_ADDRESS]: async ({ commit }) => {
@@ -36,17 +44,21 @@ export default {
         const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
         if (avatarBytes32 !== initialAvatarBytes32) {
             let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
-            console.log(avatar);
             commit(MUTATE_AVATAR, avatar);
         } else if (state.metamaskAddress === undefined) {
             let avatar = 'QmfEsoC1hp48RWs2czW28z7Mtgf2qoDRxsbANszgxQFzyy';
             commit(MUTATE_AVATAR, avatar);
         }
     },
+    [SET_CREATED_ASSETS]: async ({ commit, state }) => {
+        let createdIDs = await getCreatedAssetPacks(state.metamaskAddress);
+        commit(MUTATE_CREATED_ASSETS_ID, createdIDs);
+    },
     [SET_USER_CONFIG]: async ({ dispatch }) => {
         await dispatch(SET_METAMASK_ADDRESS);
         await dispatch(SET_USERNAME);
         await dispatch(SET_AVATAR);
+        await dispatch(SET_CREATED_ASSETS);
     },
     [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
         setInterval(async function() {

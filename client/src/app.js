@@ -3,6 +3,7 @@ import { VueMasonryPlugin } from 'vue-masonry';
 import router from './router';
 import store from './store/store';
 import Vuebar from 'vuebar';
+import AsyncComputed from 'vue-async-computed';
 
 import App from './components/App.vue';
 
@@ -20,6 +21,7 @@ import Overlay from 'shared/UI/Overlay.vue';
 import ButtonIcon from 'shared/UI/ButtonIcon.vue';
 import Modal from 'shared/Modal/Modal.vue';
 import InputFile from 'shared/UI/InputFile.vue';
+import Pagination from 'shared/Pagination/Pagination.vue';
 
 Vue.component('layout', Layout);
 Vue.component('sliderGallery', SliderGallery);
@@ -34,10 +36,12 @@ Vue.component('userLink', UserLink);
 Vue.component('overlay', Overlay);
 Vue.component('buttonIcon', ButtonIcon);
 Vue.component('inputFile', InputFile);
+Vue.component('pagination', Pagination);
 Vue.component('modal', Modal);
 
 Vue.use(VueMasonryPlugin);
 Vue.use(Vuebar);
+Vue.use(AsyncComputed);
 
 const app = new Vue({
   ...App,

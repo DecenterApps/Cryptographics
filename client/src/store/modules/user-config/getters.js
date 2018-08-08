@@ -3,7 +3,8 @@ import {
     USERNAME,
     AVATAR,
     USERNAME_EXISTENCE,
-    EDIT_PROFILE_RESULT
+    EDIT_PROFILE_RESULT,
+    CREATED_ASSETS_ID
 } from './types';
 
 export default {
@@ -21,5 +22,8 @@ export default {
     },
     [EDIT_PROFILE_RESULT]: state => {
         return state.changeUsername.result;
+    },
+    [CREATED_ASSETS_ID]: state => {
+        return state.assets.createdIDs;
     }
 };

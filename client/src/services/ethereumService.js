@@ -52,7 +52,7 @@ export const getCreatedAssetPacks = async (address) => {
 export const getPaginatedAssetPacks = async (pagination, count, address) => {
   let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
   let beginning = (pagination - 1) * count;
-  let end = pagination + count - 1;
+  let end = pagination + count + 1;
   return assetPacksIds.slice(beginning, end);
 };
 

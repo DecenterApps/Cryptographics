@@ -8,18 +8,16 @@
                     <cg-button button-style="transparent">Create Asset Pack</cg-button>
                 </router-link>
             </div>
-            <asset-packs-pagination :show-all="true" />
+            <!-- <created-asset-packs :show-all="true" /> -->
         </div>
     </div>
 </template>
 
 <script>
-  import AssetPacksPagination from 'shared/AssetPacksPagination/AssetPacksPagination.vue';
 
   export default {
     name: 'AssetPacks',
     components: {
-        AssetPacksPagination, 
     },
     data: () => ({}),
     async created() {
