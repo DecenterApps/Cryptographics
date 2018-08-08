@@ -38,10 +38,8 @@
               Other asset packs
             </cg-button>
           </div>
-          <keep-alive>
-            <created-asset-packs v-if="showYourPacks"/>
-            <bought-asset-packs v-else/>
-          </keep-alive>
+            <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created"/>
+            <assets-pack-pagination v-else assets-pack-type="bought"/>
         </div>
         <div class="gallery">
           <h2 class="large-title">Gallery</h2>
@@ -71,8 +69,7 @@
   import { TOGGLE_MODAL } from 'store/modal/types';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
 
-  import CreatedAssetPacks from './template/CreatedAssetPacks.vue';
-  import BoughtAssetPacks from './template/BoughtAssetPacks.vue';
+  import AssetsPackPagination from './template/AssetsPackPagination.vue';
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
@@ -94,8 +91,7 @@
     },
     components: {
       Gallery,
-      CreatedAssetPacks,
-      BoughtAssetPacks
+      AssetsPackPagination
     },
     computed: {
       ...mapGetters({
@@ -203,6 +199,9 @@
         margin-bottom: 0;
       }
     }
+  }
+  .assets, .gallery {
+    padding-bottom: 30px;
   }
   @media screen and (max-width: 1120px) {
     .header {

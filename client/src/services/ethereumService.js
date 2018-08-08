@@ -53,14 +53,14 @@ export const getBoughtAssetPacks = async (address) => {
   return await assetManagerContract().methods.getBoughtAssetPacks(address).call();
 };
 
-export const getPaginatedAssetPacks = async (pagination, count, address) => {
+export const paginateCreatedAssetPacks = async (pagination, count, address) => {
   let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
   let beginning = (pagination - 1) * count;
   let end = pagination + count + 1;
   return assetPacksIds.slice(beginning, end);
 };
 
-export const getPaginatedBoughtAssetPacks = async (pagination, count, address) => {
+export const paginateBoughtAssetPacks = async (pagination, count, address) => {
   let assetPacksIds = await assetManagerContract().methods.getBoughtAssetPacks(address).call();
   let beginning = (pagination - 1) * count;
   let end = pagination + count + 1;
