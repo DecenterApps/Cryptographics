@@ -123,7 +123,7 @@ const buildConfig = async () => {
   const assetPackData = await Promise.all(promises);
   console.log('Download complete !');
 
-  fs.writeFile('landingAssetPacks.json', JSON.stringify(assetPackData), (err) => {
+  fs.writeFile(`${__dirname}/landingAssetPacks.json`, JSON.stringify(assetPackData), (err) => {
     if (err) throw err;
     console.log('Success!');
   });

@@ -28,7 +28,7 @@
 <script>
   import Gallery from 'shared/Gallery/Gallery.vue';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImagesMetadata } from 'services/ethereumService';
+  import { getImagesMetadata, getImageCount } from 'services/ethereumService';
 
   export default {
     name: 'Landing',
@@ -40,8 +40,13 @@
       images: [],
     }),
     async created() {
-      this.images = await getImagesMetadata([0, 1]);
-      console.log();
+      try {
+        const numOfImages = await getImageCount();
+        const ids = [...Array(parseInt(numOfImages)).keys()];
+        this.images = await getImagesMetadata(ids);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 </script>

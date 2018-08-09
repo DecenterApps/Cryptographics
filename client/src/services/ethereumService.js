@@ -4,8 +4,6 @@ import leftPad from 'left-pad';
 import config from 'config/config.json';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 
-// const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
-
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
@@ -34,7 +32,6 @@ export const getAssetIpfs = async (assetId) => {
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
-  console.log(ipfsHashes);
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
@@ -161,14 +158,12 @@ export const getNumberOfAssets = async () => {
 };
 
 export const getImagesMetadata = async (imageIds) => {
-  // metadata.finalSeed,
-  //   metadata.potentialAssets,
-  //   metadata.timestamp,
-  //   addressToUser[metadata.creator].username,
-  //   ownerOf(_imageId),
-  //   metadata.ipfsHash
   const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
   return Promise.all(promises);
+};
+
+export const getImageCount = async () => {
+  return await digitalPrintImageContract().methods.totalSupply().call();
 };
 
 export const getImageMetadata = (imageId) =>
@@ -258,7 +253,7 @@ export const getAssetMetadata = (seed, assetId) => {
 //(bytes32, uint, bytes32)
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log("FINAL SEED: ", seed);
+  console.log('FINAL SEED: ', seed);
   let pot_assets = [];
   console.log(potentialAssets.length);
   for (let j = 0; j < potentialAssets.length; j++) {
