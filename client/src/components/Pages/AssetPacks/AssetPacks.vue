@@ -1,33 +1,46 @@
 <template>
-    <div class="all-assets-page">
-        <slider-gallery/>
-        <div class="container">
-            <div class="all-assets-header">
-                <h1 class="large-title">Asset Packs</h1>
-                <router-link to="/upload-asset-pack">
-                    <cg-button button-style="transparent">Create Asset Pack</cg-button>
-                </router-link>
-            </div>
-            <!-- <created-asset-packs :show-all="true" /> -->
+  <div class="all-assets-page">
+    <slider-gallery/>
+    <div class="container">
+      <div class="all-assets-header">
+        <h1 class="large-title">Asset Packs</h1>
+        <button-link to="/upload-asset-pack">Create Asset Pack</button-link >
+      </div>
+      <div class="assets">
+        <div class="button-group">
+          <cg-button
+            :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+            @click="showYourPacks = true">
+            Your assets packs
+          </cg-button>
+          <cg-button
+            :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+            @click="showYourPacks = false">
+            Other assets packs
+          </cg-button>
         </div>
+        <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created"/>
+        <assets-pack-pagination v-else assets-pack-type="bought"/>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 
-  export default {
-    name: 'AssetPacks',
-    components: {
-    },
-    data: () => ({}),
-    async created() {
-    },
-    computed: {},
-    methods: {},
-    render() {
+import AssetsPackPagination from '../Profile/template/AssetsPackPagination.vue';
 
-    },
-  };
+export default {
+  name: 'AssetsPacksPage',
+  components: {
+    AssetsPackPagination
+  },
+  data() {
+    return {
+      showYourPacks: true,
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">

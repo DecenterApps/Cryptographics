@@ -31,7 +31,9 @@
                     </div>
                     <div class="artwork-details">
                         <user-link to="/userurl" name="username" avatar="/avatarurl"/>
-                        <span class="price">0.45</span>
+                        <price
+                            value="0.05"
+                            size="small"/>
                     </div>
                 </div>
             </div>
@@ -123,17 +125,6 @@
                 }
                 .username {
                     color: #858585;
-                    font-size: 12px;
-                }
-            }
-            .price {
-                font-size: 12px;
-                font-weight: bold;
-                &:after {
-                    content: "\039E";
-                    display: inline-flex;
-                    margin-left: 8px;
-                    font-family: Roboto, sans-serif;
                     font-size: 12px;
                 }
             }

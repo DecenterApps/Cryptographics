@@ -30,12 +30,12 @@
             <cg-button
               :button-style="showYourPacks === true ? 'negative' : 'transparent'"
               @click="showYourPacks = true">
-              Your asset packs
+              Your assets packs
             </cg-button>
             <cg-button
               :button-style="showYourPacks === false ? 'negative' : 'transparent'"
               @click="showYourPacks = false">
-              Other asset packs
+              Bought assets packs
             </cg-button>
           </div>
             <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created"/>

@@ -22,6 +22,26 @@ export const pickTenRandoms = () => {
   return randoms;
 };
 
+export const assetPacks = async (assetPacksID) => {
+  return await assetManagerContract().methods.assetPacks(assetPacksID).call();
+}
+
+setTimeout(async () => 
+{
+  let numOfAssetsPacks = await getNumberOfAssetPacks();
+  let assetsPack = [];
+  for (let i = 0; i < numOfAssetsPacks; i++) {
+    let data = await assetPacks(i);
+    assetsPack.push(data)
+  }
+
+  console.log( assetsPack );
+  console.log( assetsPack[0]['name'] );
+
+}
+, 2000);
+
+
 export const getAttributesForAssets = async (assetIds) => {
   return await assetManagerContract().methods.getAttributesForAssets(assetIds).call();
 };
@@ -51,20 +71,6 @@ export const getCreatedAssetPacks = async (address) => {
 
 export const getBoughtAssetPacks = async (address) => {
   return await assetManagerContract().methods.getBoughtAssetPacks(address).call();
-};
-
-export const paginateCreatedAssetPacks = async (pagination, count, address) => {
-  let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
-  let beginning = (pagination - 1) * count;
-  let end = pagination + count + 1;
-  return assetPacksIds.slice(beginning, end);
-};
-
-export const paginateBoughtAssetPacks = async (pagination, count, address) => {
-  let assetPacksIds = await assetManagerContract().methods.getBoughtAssetPacks(address).call();
-  let beginning = (pagination - 1) * count;
-  let end = pagination + count + 1;
-  return assetPacksIds.slice(beginning, end);
 };
 
 export const getCoversForAssetPacks = async (assetPackIds) => {

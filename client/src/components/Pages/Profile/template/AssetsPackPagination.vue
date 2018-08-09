@@ -1,26 +1,52 @@
 <template>
     <div>
-        <div v-if="assetPacks !== false" class="asset-packs">
+        <div v-if="assetPacks !== false" class="assets-packs" :class="grid">
             <div
-              class="asset-pack"
+              class="assets-pack"
               v-if="assetPack"
               v-for="(assetPack, index) in assetPacks"
               :key="index">
-                <router-link :to="'/asset-pack/' + assetPack.id">
+                <!-- Without overlay -->
+                <router-link
+                  v-if="!overlay"
+                  :to="'/asset-pack/' + assetPack.id">
                   <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.src"/>
-                  <div class="meta">
-                    <div class="description">
-                        <span class="name">{{ assetPack.name }}</span>
+                  <div class="description">
+                    <div class="meta">
+                      <span class="name">{{ assetPack.name }}</span>
                     </div>
-                  </div>
+                  </div>                  
                 </router-link>
+                <!-- With overlay -->
+                <template
+                  v-if="overlay">
+                  <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.src"/>
+                  <overlay>
+                    <div class="meta">
+                        <div class="top">
+                          <router-link class="name" :to="'/asset-pack/' + assetPack.id">{{ assetPack.name }}</router-link>
+                          <user-link
+                            to="/userurl"
+                            name="username"
+                            avatar="//ipfs.decenter.com/ipfs/QmXpQUQTsBLLLpdN9Bi9udGPC53DFjCr4CAQsvgcdPDjDt"
+                            color="white"/>
+                        </div>
+                        <div class="bottom">
+                          <price
+                            value="0.05"
+                            color="white"
+                            size="small"/>
+                        </div>
+                    </div>
+                  </overlay>
+                </template>
             </div>
             <pagination
               :total="assetsPackType === 'created' ? createdPacksIDs.length : boughtPacksIDs.length"
               :per-page="showPerPage"
               @updatePage="changePage"/>
         </div>
-        <div v-if="assetPacks === false" class="asset-packs">
+        <div v-if="assetPacks === false" class="assets-packs">
               <p v-if="assetsPackType === 'created'">You haven't created any assets pack yet.</p>
               <p v-if="assetsPackType === 'bought'">You haven't bought any assets pack yet. Go to <router-link to="/assets-pack-market">market</router-link>.</p>
         </div>
@@ -29,13 +55,16 @@
 
 <script>
 import {
-  paginateCreatedAssetPacks,
-  paginateBoughtAssetPacks,
   getPackInformation,
   getNumberOfAssetPacks
 } from 'services/ethereumService';
+import { paginateArray } from 'services/helpers';
 import { mapGetters } from 'vuex';
-import { METAMASK_ADDRESS, CREATED_ASSETS_PACKS_IDS, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
+import {
+  METAMASK_ADDRESS,
+  CREATED_ASSETS_PACKS_IDS,
+  BOUGHT_ASSETS_PACKS_IDS
+} from 'store/user-config/types';
 
 export default {
   name: 'AssetsPackPagination',
@@ -47,11 +76,19 @@ export default {
     showPerPage: {
       type: Number,
       default: 2
+    },
+    grid: {
+      type: String,
+      default: 'row-2'
+    },
+    overlay: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
+      metamaskAddress: METAMASK_ADDRESS,
       createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
       boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
     })
@@ -61,11 +98,14 @@ export default {
       async get () {
         let pageAssetPacksIds;
         if (this.assetsPackType === 'created') {
-          pageAssetPacksIds = await paginateCreatedAssetPacks(1, this.showPerPage, this.userAddress);
+          pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
         } else if (this.assetsPackType === 'bought') {
-          pageAssetPacksIds = await paginateBoughtAssetPacks(1, this.showPerPage, this.userAddress);     
+          pageAssetPacksIds = paginateArray(this.boughtPacksIDs, 1, this.showPerPage);
+        } else if (this.assetsPackType === 'all') {
+          pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
         }
-        let packsInfo = await getPackInformation(pageAssetPacksIds, this.userAddress);
+
+        let packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
         let assetPacks = [];
         if (pageAssetPacksIds.length === 0) {
           assetPacks = false;
@@ -77,7 +117,7 @@ export default {
         return assetPacks;
       },
       watch () {
-        this.userAddress
+        this.metamaskAddress
       }
     }
   },
@@ -85,11 +125,13 @@ export default {
     async changePage(currentPage) {
       let pageAssetPacksIds;
       if (this.assetsPackType === 'created') {
-        pageAssetPacksIds = await paginateCreatedAssetPacks(currentPage, this.showPerPage, this.userAddress);
+        pageAssetPacksIds = paginateArray(this.createdPacksIDs, currentPage, this.showPerPage);
       } else if (this.assetsPackType === 'bought') {
-        pageAssetPacksIds = await paginateBoughtAssetPacks(currentPage, this.showPerPage, this.userAddress);
+        pageAssetPacksIds = paginateArray(this.boughtPacksIDs, currentPage, this.showPerPage);
+      } else if (this.assetsPackType === 'all') {
+        pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
       }
-      let packsInfo = await getPackInformation(pageAssetPacksIds, this.userAddress);
+      let packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
       this.assetPacks = [];
       for (let i = 0; i < this.showPerPage; i++) {
         await this.assetPacks.push(packsInfo[i])
@@ -100,27 +142,67 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.asset-packs {
+.assets-packs {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-top: 30px;
-    .asset-pack {
+    &.row-2 {
+      .assets-pack {
         flex: 0 0 45%;
-        font-family: 'YoungSerif-Regular', sans-serif;
-        font-size: 22px;
-        margin-bottom: 20px;
-        a {
-          text-decoration: none;
-          color: #000;
+      }
+    }
+    &.row-4 {
+      .assets-pack {
+        flex: 0 0 23%;
+      }
+    }
+    .assets-pack {
+      position: relative;
+      font-family: 'YoungSerif-Regular', sans-serif;
+      font-size: 22px;
+      margin-bottom: 20px;
+      a {
+        text-decoration: none;
+        color: #000;
+      }
+      .image {
+        width: 100%;
+        height: auto;
+      }
+      .meta {
+          padding: 10px 0;
+      }
+      &:hover {
+        .overlay {
+          opacity: 1;
         }
-        .image {
-          width: 100%;
-          height: auto;
-        }
+      }
+      .overlay {
         .meta {
-            padding: 10px 0;
+          position: relative;
+          z-index: 2;
+          height: 100%;
+          width: 100%;
+          padding: 20px !important;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .top {
+            display: flex;
+            flex-direction: column;
+            .name {
+              color: #fff;
+              font-size: 16px;
+              margin-bottom: 15px;
+            }
+          }
+          .bottom {
+            display: flex;
+            justify-content: flex-end;
+          }
         }
+      }
     }
     .pagination-controls {
       flex: 0 0 100%;

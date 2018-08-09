@@ -42,7 +42,8 @@
                 class="graphic-controls"
                 v-if="isForSale && !isLogged">
                 <cg-button>Buy</cg-button>
-                <span class="price">2.05</span>
+                <price
+                    value="0.05"/>
             </div>
         </div>
     </div>
@@ -134,18 +135,7 @@ export default {
         }
     }
     .price {
-        font-family: 'YoungSerif-Regular', serif;
-        font-size: 32px;
         margin-left: 16px;
-        &:after {
-            content: "\039E";
-            position: relative;
-            bottom: 2px;
-            display: inline-flex;
-            margin-left: 8px;
-            font-family: Roboto, sans-serif;
-            font-size: 18px;
-        }
     }
     .default-input {
         width: 100%;
