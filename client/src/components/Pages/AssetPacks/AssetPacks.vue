@@ -23,13 +23,13 @@
           v-if="showYourPacks"
           assets-pack-type="all"
           grid="row-4"
-          show-per-page="8"
+          :show-per-page="8"
           :overlay="true"/>
         <assets-pack-pagination
           v-else
           assets-pack-type="created"
           grid="row-4"
-          show-per-page="8"
+          :show-per-page="8"
           :overlay="true"/>
       </div>
     </div>

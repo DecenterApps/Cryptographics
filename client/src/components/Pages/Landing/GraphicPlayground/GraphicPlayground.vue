@@ -96,6 +96,7 @@
         let pot = this.assetPacks.map(assetPack =>
           assetPack.data.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
+        this.iterations++;
         console.log(pot);
         console.log('RANDOM SEED: ' + this.randomSeed);
         console.log('ITERATIONS: ' + this.iterations);
@@ -103,7 +104,6 @@
         console.log(pot);
         const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
-        this.iterations++;
         console.log('iteration: ' + this.iterations);
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {

@@ -71,7 +71,6 @@ export const getAssetIpfs = async (assetId) => {
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
-  console.log(ipfsHashes);
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
@@ -174,6 +173,10 @@ export const getImagesMetadata = async (imageIds) => {
   return Promise.all(promises);
 };
 
+export const getImageCount = async () => {
+  return await digitalPrintImageContract().methods.totalSupply().call();
+};
+
 export const getImageMetadata = (imageId) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
@@ -250,7 +253,7 @@ export const getAssetMetadata = (seed, assetId) => {
 
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log("FINAL SEED: ", seed);
+  console.log('FINAL SEED: ', seed);
   let pot_assets = [];
   console.log(potentialAssets.length);
   for (let j = 0; j < potentialAssets.length; j++) {
