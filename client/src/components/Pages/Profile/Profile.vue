@@ -49,9 +49,7 @@
         <template v-else>
           <p>Connect to MetaMask.</p>
         </template>
-        
       </div>
-      
     </div>
   </layout>
 </template>

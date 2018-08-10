@@ -11,16 +11,26 @@
           <cg-button
             :button-style="showYourPacks === true ? 'negative' : 'transparent'"
             @click="showYourPacks = true">
-            Your assets packs
+            All assets packs
           </cg-button>
           <cg-button
             :button-style="showYourPacks === false ? 'negative' : 'transparent'"
             @click="showYourPacks = false">
-            Other assets packs
+            Your assets packs
           </cg-button>
         </div>
-        <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created"/>
-        <assets-pack-pagination v-else assets-pack-type="bought"/>
+        <assets-pack-pagination
+          v-if="showYourPacks"
+          assets-pack-type="all"
+          grid="row-4"
+          show-per-page="8"
+          :overlay="true"/>
+        <assets-pack-pagination
+          v-else
+          assets-pack-type="created"
+          grid="row-4"
+          show-per-page="8"
+          :overlay="true"/>
       </div>
     </div>
   </div>
@@ -51,7 +61,9 @@ export default {
         width: 150px;
         height: 150px;
     }
-
+    .assets {
+      margin-bottom: 30px;
+    }
     .asset-packs-wrapper {
         display: flex;
         flex-wrap: wrap;

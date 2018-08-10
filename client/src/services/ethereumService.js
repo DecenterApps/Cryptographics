@@ -4,16 +4,12 @@ import leftPad from 'left-pad';
 import config from 'config/config.json';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 
-// const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
-
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-// Function to pick ten random integers [0,99]
-// Will be executed during generating initial random seed
 export const pickTenRandoms = () => {
   let randoms = [];
   for (let i = 0; i < 10; i++) {
@@ -22,25 +18,46 @@ export const pickTenRandoms = () => {
   return randoms;
 };
 
-export const assetPacks = async (assetPacksID) => {
+export const getAllAssetsPacks = async (assetPacksID) => {
   return await assetManagerContract().methods.assetPacks(assetPacksID).call();
 }
 
-setTimeout(async () => 
-{
+export const getAllAssetsPacksInfo = async () => {
   let numOfAssetsPacks = await getNumberOfAssetPacks();
-  let assetsPack = [];
+  let assetsPackInfo = [];
   for (let i = 0; i < numOfAssetsPacks; i++) {
-    let data = await assetPacks(i);
-    assetsPack.push(data)
+    let data = await getAllAssetsPacks(i);
+    let object = {
+      id: i,
+      username: await getUsername(data['creator']),
+      userAddress: data['creator'],
+      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
+      name: data['name'],
+      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
+      price: web3.utils.fromWei(data['price'], 'ether')
+    };
+    assetsPackInfo.push(object);
   }
-
-  console.log( assetsPack );
-  console.log( assetsPack[0]['name'] );
-
+  return assetsPackInfo;
 }
-, 2000);
 
+export const getPackInformation = async (assetsPackArray) => {
+  let assetPackInfo = [];
+  for (let value of assetsPackArray) {
+    let data = await getAllAssetsPacks(value);
+    let object = {
+      id: value,
+      username: await getUsername(data['creator']),
+      userAddress: data['creator'],
+      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
+      name: data['name'],
+      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
+      price: web3.utils.fromWei(data['price'], 'ether')
+    }
+    assetPackInfo.push(object);
+  }
+  return assetPackInfo;
+}
 
 export const getAttributesForAssets = async (assetIds) => {
   return await assetManagerContract().methods.getAttributesForAssets(assetIds).call();
@@ -79,20 +96,6 @@ export const getCoversForAssetPacks = async (assetPackIds) => {
     hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
   }
   return hovers;
-};
-
-export const getPackInformation = async (assetPacksIds, account) => {
-  let srcs = await getCoversForAssetPacks(assetPacksIds);
-  let names = await getAssetPacksNames(assetPacksIds);
-  let data = [];
-  for (let i = 0; i < srcs.length; i++) {
-    data.push({
-      name: names[i],
-      src: srcs[i],
-      id: assetPacksIds[i]
-    });
-  }
-  return data;
 };
 
 export const getAssetPacksNames = async (assetPacksIds) => {
@@ -167,12 +170,6 @@ export const getNumberOfAssets = async () => {
 };
 
 export const getImagesMetadata = async (imageIds) => {
-  // metadata.finalSeed,
-  //   metadata.potentialAssets,
-  //   metadata.timestamp,
-  //   addressToUser[metadata.creator].username,
-  //   ownerOf(_imageId),
-  //   metadata.ipfsHash
   const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
   return Promise.all(promises);
 };
@@ -213,20 +210,14 @@ export const convertSeed = async (randomSeed) => {
   return await digitalPrintImageContract().methods.toHex(randomSeed).call();
 };
 
-// Function to calculate first random seed, it will be executed from contract
-
 export const calculateFirstSeed = async (timestamp, rands) => {
   return await digitalPrintImageContract().methods.calculateSeed(rands, timestamp).call();
 };
 
-// Function to calculate keccak256 when input is (int and int)
-// INTEGRATED WITH CONTRACT
 export const calculateSeed = (random_seed, x) => {
   return web3.utils.soliditySha3(random_seed, x);
 };
 
-// Function to calculate final seed for input (random_seed -int & iterations-int)
-// INTEGRATED WITH CONTRACT
 export const calculateFinalSeed = (random_seed, iterations) => {
   let seed = web3.utils.soliditySha3(random_seed, iterations);
   for (let i = 0; i < iterations; i++) {
@@ -235,12 +226,9 @@ export const calculateFinalSeed = (random_seed, iterations) => {
   return seed;
 };
 
-//Function to get metadata for asset based on random seed and assetId
-//seed - bytes32 ; assetId - integer
 export const getAssetMetadata = (seed, assetId) => {
   seed = seed.toString();
   let number = new BigNumber(seed);
-  // If number can be divided by 2 means that asset will be included into image
   if (parseInt(number.modulo(2), 10) === 0) {
     let id = assetId;
     let x_coordinate = parseInt(number.modulo(2480), 10);
@@ -260,8 +248,6 @@ export const getAssetMetadata = (seed, assetId) => {
   return null;
 };
 
-//INTEGRATED WITH CONTRACT - function to getImage info
-//(bytes32, uint, bytes32)
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
   console.log("FINAL SEED: ", seed);
@@ -270,10 +256,8 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
   for (let j = 0; j < potentialAssets.length; j++) {
     let arr = [];
     arr.push(potentialAssets[j]);
-    // pot_assets.push(utils.decode(arr).reverse());
     pot_assets = [...pot_assets, ...utils.decode(arr)];
   }
-  // var pot_assets = utils.decode(potentialAssets).reverse();
   console.log('POTENTIAL', pot_assets);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(pot_assets);
@@ -294,7 +278,6 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
   return pickedAssets;
 };
 
-//Function to get data from contract for every asset (id,creator, ipfsHash, and price) - based on asset id
 export const getAssetStats = async (id) => {
   let numberOfAssets = await assetManagerContract().methods.getNumberOfAssets().call();
   numberOfAssets = parseInt(numberOfAssets, 10);
@@ -317,7 +300,6 @@ export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets) =>
 };
 
 export const getBoughtAssets = async () => {
-  // TODO: Implement missing method
   return [];
 };
 
@@ -354,5 +336,3 @@ function printImageData(assets) {
     let obj = assets[i];
   }
 }
-
-// test();

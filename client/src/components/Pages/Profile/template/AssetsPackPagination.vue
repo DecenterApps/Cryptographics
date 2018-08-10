@@ -10,7 +10,7 @@
                 <router-link
                   v-if="!overlay"
                   :to="'/asset-pack/' + assetPack.id">
-                  <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.src"/>
+                  <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.packCover"/>
                   <div class="description">
                     <div class="meta">
                       <span class="name">{{ assetPack.name }}</span>
@@ -20,20 +20,20 @@
                 <!-- With overlay -->
                 <template
                   v-if="overlay">
-                  <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.src"/>
+                  <img class="image" :src="'https://ipfs.decenter.com/ipfs/' + assetPack.packCover"/>
                   <overlay>
                     <div class="meta">
                         <div class="top">
                           <router-link class="name" :to="'/asset-pack/' + assetPack.id">{{ assetPack.name }}</router-link>
                           <user-link
-                            to="/userurl"
-                            name="username"
-                            avatar="//ipfs.decenter.com/ipfs/QmXpQUQTsBLLLpdN9Bi9udGPC53DFjCr4CAQsvgcdPDjDt"
+                            :to="'/user/' + assetPack.userAddress"
+                            :name="assetPack.username"
+                            :avatar="'//ipfs.decenter.com/ipfs/' + assetPack.userAvatar"
                             color="white"/>
                         </div>
                         <div class="bottom">
                           <price
-                            value="0.05"
+                            :value="assetPack.price"
                             color="white"
                             size="small"/>
                         </div>
@@ -42,7 +42,7 @@
                 </template>
             </div>
             <pagination
-              :total="assetsPackType === 'created' ? createdPacksIDs.length : boughtPacksIDs.length"
+              :total="assetsLength === null ? 0 : assetsLength"
               :per-page="showPerPage"
               @updatePage="changePage"/>
         </div>
@@ -56,7 +56,8 @@
 <script>
 import {
   getPackInformation,
-  getNumberOfAssetPacks
+  getNumberOfAssetPacks,
+  getAllAssetsPacksInfo
 } from 'services/ethereumService';
 import { paginateArray } from 'services/helpers';
 import { mapGetters } from 'vuex';
@@ -83,7 +84,7 @@ export default {
     },
     overlay: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   computed: {
@@ -97,15 +98,17 @@ export default {
     assetPacks: {
       async get () {
         let pageAssetPacksIds;
+        let packsInfo;
         if (this.assetsPackType === 'created') {
           pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
+          packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
         } else if (this.assetsPackType === 'bought') {
           pageAssetPacksIds = paginateArray(this.boughtPacksIDs, 1, this.showPerPage);
+          packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
         } else if (this.assetsPackType === 'all') {
-          pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
+          pageAssetPacksIds = await getAllAssetsPacksInfo();
+          packsInfo = paginateArray(pageAssetPacksIds, 1, this.showPerPage);
         }
-
-        let packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
         let assetPacks = [];
         if (pageAssetPacksIds.length === 0) {
           assetPacks = false;
@@ -119,19 +122,32 @@ export default {
       watch () {
         this.metamaskAddress
       }
+    },
+    async assetsLength() {
+      if (this.assetsPackType === 'created') {
+        return this.createdPacksIDs.length;
+      } else if (this.assetsPackType === 'bought') {
+        return this.boughtPacksIDs.length;
+      } else if (this.assetsPackType === 'all') {
+        let numOfAssetsPacks = Number(await getNumberOfAssetPacks());
+        return numOfAssetsPacks;
+      }
     }
   },
   methods: {
     async changePage(currentPage) {
       let pageAssetPacksIds;
+      let packsInfo;
       if (this.assetsPackType === 'created') {
         pageAssetPacksIds = paginateArray(this.createdPacksIDs, currentPage, this.showPerPage);
+        packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
       } else if (this.assetsPackType === 'bought') {
         pageAssetPacksIds = paginateArray(this.boughtPacksIDs, currentPage, this.showPerPage);
+        packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
       } else if (this.assetsPackType === 'all') {
-        pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
+        pageAssetPacksIds = await getAllAssetsPacksInfo();
+        packsInfo = paginateArray(pageAssetPacksIds, currentPage, this.showPerPage);
       }
-      let packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
       this.assetPacks = [];
       for (let i = 0; i < this.showPerPage; i++) {
         await this.assetPacks.push(packsInfo[i])
@@ -184,7 +200,7 @@ export default {
           z-index: 2;
           height: 100%;
           width: 100%;
-          padding: 20px !important;
+          padding: 15px !important;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
