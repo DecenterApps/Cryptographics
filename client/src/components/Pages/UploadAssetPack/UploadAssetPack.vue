@@ -245,6 +245,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 10px;
         .overlay {
             &.bg-selected {
                 .ico-background {
@@ -256,8 +258,8 @@
             }
         }
         img {
-            max-width: calc(100% - 20px);
-            max-height: calc(100% - 20px);
+            max-width: 100%;
+            max-height: 100%;
         }
         &:nth-child(3n + 2) {
             margin: 0 20px;

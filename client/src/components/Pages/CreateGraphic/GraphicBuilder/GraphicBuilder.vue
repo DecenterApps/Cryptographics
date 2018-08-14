@@ -105,7 +105,7 @@
         let image = canvas.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         let pot = this.selectedPacks.map(assetPack =>
-          assetPack.data.map(asset => parseInt(asset.id)))
+          assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
 
         let img = await imageService.createImage(
@@ -127,7 +127,7 @@
         this.selectedPacks = [...new Set([...this.selectedPacks, ...this.selectedAssetPacks])];
         console.log(this.selectedPacks);
         let pot = this.selectedPacks.map(assetPack =>
-          assetPack.data.map(asset => parseInt(asset.id)))
+          assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
         console.log(pot);
         this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);

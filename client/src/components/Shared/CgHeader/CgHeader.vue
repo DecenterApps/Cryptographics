@@ -2,7 +2,9 @@
     <header class="header">
         <div class="header-container container">
             <div class="logo">
-                <router-link to="/"><logo/></router-link>
+                <router-link to="/">
+                    <logo />
+                </router-link>
             </div>
             <div class="links-section">
                 <div class="links">
@@ -14,8 +16,8 @@
                     <router-link class="profile-link" to="/profile">
                         {{ username }}
                         <img
-                            class="avatar"
-                            :src="'//ipfs.decenter.com/ipfs/' + avatar">
+                                class="avatar"
+                                :src="ipfsNodePath + avatar">
                     </router-link>
                     <button-link to="/create-graphic" button-style="positive">Create</button-link>
                 </div>
@@ -25,21 +27,27 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { USERNAME, AVATAR } from 'store/user-config/types';
+  import { mapGetters } from 'vuex';
+  import { ipfsNodePath } from 'config/constants';
+  import { USERNAME, AVATAR } from 'store/user-config/types';
 
-import Logo from '../UI/Logo.vue';
+  import Logo from '../UI/Logo.vue';
 
   export default {
     name: 'CgHeader',
     components: {
-        Logo
+      Logo
+    },
+    data() {
+      return {
+        ipfsNodePath,
+      };
     },
     computed: {
-        ...mapGetters({
-            username: USERNAME,
-            avatar: AVATAR
-        })
+      ...mapGetters({
+        username: USERNAME,
+        avatar: AVATAR
+      })
     }
   };
 </script>
@@ -98,7 +106,7 @@ import Logo from '../UI/Logo.vue';
             align-items: center;
             .profile-link {
                 display: flex;
-                align-items: center;                
+                align-items: center;
             }
             .avatar {
                 display: inline-block;

@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import utils from 'services/utils';
-import leftPad from 'left-pad';
 import config from 'config/config.json';
+import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
@@ -131,18 +131,20 @@ export const getAssetPacksWithAssetData = () =>
 export const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   let ids = response[1];
-  let data = [];
+  let assets = [];
   for (let i = 0; i < ids.length; i++) {
-    data.push({
-      pack_name: response[0],
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[3][i]);
+    assets.push({
       id: response[1][i],
       attribute: response[2][i],
-      ipfsHash: utils.getIpfsHashFromBytes32(response[3][i]),
+      ipfsHash: ipfsHash,
+      src: `${ipfsNodePath}${ipfsHash}`
     });
   }
   return {
     id: assetPackId,
-    data,
+    packName: response[0],
+    assets,
   };
 };
 
@@ -210,7 +212,7 @@ export const getImageMetadata = (imageId) =>
       username: image[3],
       artistAddress: image[4],
       ipfsHash: image[5],
-      src: `https://ipfs.decenter.com/ipfs/${image[5]}`
+      src: `${ipfsNodePath}${image[5]}`
     });
   });
 

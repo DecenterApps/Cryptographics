@@ -91,7 +91,7 @@
         width: 307px;
         margin-bottom: 30px;
         .artwork {
-            padding: 14px 14px 40px 14px;
+            /*padding: 14px 14px 40px 14px;*/
             background-color: #fff;
             position: relative;
             img {

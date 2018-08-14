@@ -33,7 +33,7 @@
                 </div>
                 <div class="assets">
                     <div v-for="cover in coverIpfsHashes">
-                        <img class="cover-image" :src="'https://ipfs.decenter.com/ipfs/' + cover">
+                        <img class="cover-image" :src="ipfsNodePath + cover">
                     </div>
                 </div>
             </div>
@@ -48,6 +48,7 @@
     convertSeed,
     getLandingPacks,
   } from 'services/ethereumService';
+  import { ipfsNodePath } from 'config/constants';
   import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import * as utils from 'services/utils';
   import Gallery from 'shared/Gallery/Gallery.vue';
@@ -61,6 +62,7 @@
       Gallery
     },
     data: () => ({
+      ipfsNodePath,
       randomSeed: 0,
       iterations: 0,
       timestamp: new Date().getTime(),
@@ -94,7 +96,7 @@
       // }
       async renderCanvas() {
         let pot = this.assetPacks.map(assetPack =>
-          assetPack.data.map(asset => parseInt(asset.id)))
+          assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
         this.iterations++;
         console.log(pot);
@@ -111,7 +113,7 @@
         }
       },
       addSourceItem(data, assets) {
-        const packs = this.assetPacks.reduce((a, b) => a.concat(b.data), []);
+        const packs = this.assetPacks.reduce((a, b) => a.concat(b.assets), []);
         return assets.map(asset => {
           const index = packs.findIndex((item) => parseInt(item.id) === parseInt(asset.id));
           return {

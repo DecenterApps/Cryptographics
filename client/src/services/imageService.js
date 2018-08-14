@@ -7,6 +7,7 @@ import {
 
 import utils from 'services/utils';
 import config from 'config/config.json';
+import { ipfsNodePath } from 'config/constants';
 import * as helpers from 'services/helpers';
 import { preloadImages } from './helpers';
 
@@ -309,7 +310,7 @@ export const makeImage = (objs, c, width, height, frame = {
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
       } else {
-        image.src = 'https://ipfs.decenter.com/ipfs/' + hashes[i];
+        image.src = ipfsNodePath + hashes[i];
       }
       image.crossOrigin = 'Anonymous';
 

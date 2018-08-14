@@ -5,7 +5,7 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
+        <img class="avatar" :src="ipfsNodePath + avatar">
         <div class="left">
           <h1 class="large-title name">{{ username }}</h1>
         </div>
@@ -62,6 +62,7 @@
     getImageMetadataFromContract,
     getImageIpfs,
   } from 'services/ethereumService';
+  import { ipfsNodePath } from 'config/constants';
   import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
@@ -74,6 +75,7 @@
     name: 'Profile',
     data() {
       return {
+        ipfsNodePath,
         showYourPacks: true,
         asset_packs: [],
         allAssetPaths: [],
@@ -145,13 +147,12 @@
 
       async getImages() {
         let images = await getUserImages(this.metamask_account);
-        let prefix = 'https://ipfs.decenter.com/ipfs/';
         let hashes = [];
         for (let i = 0; i < images.length; i++) {
           let hash = await getImageIpfs(images[i]);
           hashes.push({
             address: this.metamask_account,
-            src: prefix + hash,
+            src: ipfsNodePath + hash,
             name: 'The point of',
             price: 0.45,
           });
