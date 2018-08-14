@@ -77,7 +77,7 @@
     },
     data: () => ({
       maxAssets: 50,
-      metamask_account: 0,
+      userAddress: 0,
       assets: [],
       canvasData: {
         assets: [],
@@ -133,7 +133,7 @@
                 console.log(price);
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
-                await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.metamask_account);
+                await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
               }
             }
           });
@@ -161,7 +161,7 @@
     },
 
     async beforeCreate() {
-      this.metamask_account = await getAccounts();
+      this.userAddress = await getAccounts();
     },
 
   };

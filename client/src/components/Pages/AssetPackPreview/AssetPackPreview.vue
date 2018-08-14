@@ -3,10 +3,12 @@
         <slider-gallery />
         <div class="container">
             <div class="asset-pack-header">
-                <h1 class="large-title">{{ assetPack.packName }}</h1>
+                <div class="left-section">
+                    <h1 class="large-title">{{ assetPack.packName }}</h1>
+                    <p class="small-title">Assets in pack - {{ assetPack.assets.length }}</p>
+                </div>
                 <div class="right-section">
-                    <span class="large-title">Assets in pack - {{ assetPack.assets.length }}</span>
-                    <cg-button>Buy</cg-button>
+                    <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
             </div>
             <div class="asset-list">
@@ -19,7 +21,9 @@
 </template>
 
 <script>
-  import { getAssetPackData } from 'services/ethereumService.js';
+  import { buyAssetPack, getAssetPackData, checkAssetPermission } from 'services/ethereumService';
+  import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
+  import { mapGetters } from 'vuex';
   import AssetsPackPagination from '../Profile/template/AssetsPackPagination.vue';
 
   export default {
@@ -29,13 +33,28 @@
     },
     data() {
       return {
-        assetPack: {},
-        showYourPacks: true,
+        assetPack: {
+          packName: '',
+          assets: []
+        },
+        alreadyBought: false
       };
     },
+    computed: {
+      ...mapGetters({
+        userAddress: METAMASK_ADDRESS,
+      })
+    },
+    methods: {
+      async purchaseAssetPack() {
+        const result = await buyAssetPack(this.userAddress, this.$route.params.id);
+        // HANDLE result from result.error
+        console.log(result);
+      }
+    },
     async created() {
-      console.log(this.$route.params.id);
       this.assetPack = await getAssetPackData(this.$route.params.id);
+      this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
     }
   };
 </script>
@@ -43,7 +62,6 @@
 <style scoped lang="scss">
     .large-title {
         margin-top: 29px;
-        margin-bottom: 41px;
     }
 
     .right-section {
@@ -51,9 +69,11 @@
         justify-content: center;
     }
 
-    span.large-title {
-        margin: 0 20px 0 0;
-        font-size: 22px;
+    .small-title {
+        margin: 0 16px 21px 0;
+        font-size: 12px;
+        color: #000;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
     .asset-pack-header {

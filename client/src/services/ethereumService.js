@@ -18,6 +18,29 @@ export const pickTenRandoms = () => {
   return randoms;
 };
 
+export const checkAssetPermission = async (address, assetPackId) => {
+  return await assetManagerContract().methods.checkHasPermissionForPack(address, assetPackId).call();
+};
+
+export const buyAssetPack = async (address, assetPackId, price) => {
+  if (!web3.utils.isAddress(address)) return { error: 'Address is not valid!' };
+  try {
+    const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
+    return await assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
+      from: address,
+      value: price
+    }, (error, res) => {
+      if (error) {
+        return { error: 'Could not buy asset pack' };
+      }
+      console.log(error, res);
+    });
+  } catch (e) {
+    console.log(e);
+    throw { error: 'Could not buy asset pack' };
+  }
+};
+
 export const getAllAssetsPacks = async (assetPacksID) => {
   return await assetManagerContract().methods.assetPacks(assetPacksID).call();
 };
