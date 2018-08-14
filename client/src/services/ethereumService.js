@@ -20,7 +20,7 @@ export const pickTenRandoms = () => {
 
 export const getAllAssetsPacks = async (assetPacksID) => {
   return await assetManagerContract().methods.assetPacks(assetPacksID).call();
-}
+};
 
 export const getAllAssetsPacksInfo = async () => {
   let numOfAssetsPacks = await getNumberOfAssetPacks();
@@ -34,12 +34,13 @@ export const getAllAssetsPacksInfo = async () => {
       userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
       name: data['name'],
       packCover: utils.getIpfsHashFromBytes32(data['packCover']),
-      price: web3.utils.fromWei(data['price'], 'ether')
+      price: web3.utils.fromWei(data['price'], 'ether'),
+      data
     };
     assetsPackInfo.push(object);
   }
   return assetsPackInfo;
-}
+};
 
 export const getPackInformation = async (assetsPackArray) => {
   let assetPackInfo = [];
@@ -53,11 +54,11 @@ export const getPackInformation = async (assetsPackArray) => {
       name: data['name'],
       packCover: utils.getIpfsHashFromBytes32(data['packCover']),
       price: web3.utils.fromWei(data['price'], 'ether')
-    }
+    };
     assetPackInfo.push(object);
   }
   return assetPackInfo;
-}
+};
 
 export const getAttributesForAssets = async (assetIds) => {
   return await assetManagerContract().methods.getAttributesForAssets(assetIds).call();
@@ -110,6 +111,23 @@ export const getNumberOfAssetPacks = async () => {
   return await assetManagerContract().methods.getNumberOfAssetPacks().call();
 };
 
+export const getAssetPacksWithAssetData = () =>
+  new Promise(async (resolve, reject) => {
+    let numOfPacks = await getNumberOfAssetPacks();
+    let assetPackPromises = [];
+    for (let i = 0; i < numOfPacks; i++) {
+      assetPackPromises.push(await getAssetPackData(i));
+    }
+    Promise.all(assetPackPromises)
+      .then(assetPacks => {
+        console.log(assetPacks);
+        resolve(assetPacks);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+
 export const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   let ids = response[1];
@@ -122,7 +140,10 @@ export const getAssetPackData = async (assetPackId) => {
       ipfsHash: utils.getIpfsHashFromBytes32(response[3][i]),
     });
   }
-  return data;
+  return {
+    id: assetPackId,
+    data,
+  };
 };
 
 export const usernameExists = async (username) => {

@@ -117,19 +117,6 @@
           this.userAddress,
           this.imagePrice,
           ipfsHash);
-
-        // console.log('THIS IS IMAGE: ' + image);
-        // console.log(pot);
-        // console.log('RANDOM HASHES: ' + this.randomHashIds);
-        // console.log('TIMESTAMP: ' + this.timestamp);
-        // console.log('ITERATIONS: ' + this.iterations);
-        // console.log('POTENTIAL ASSETS: ' + pot);
-        // console.log('MM ACCOUNT: ' + this.userAddress);
-        // console.log('IMAGE PRICE: ' + this.imagePrice);
-        // console.log(img);
-        // this.timestamp = new Date().getTime();
-        // this.randomSeed = await functions.calculateFirstSeed(this.timestamp, this.randomHashIds);
-        // this.iterations = 0;
       },
       async renderCanvas() {
         this.iterations++;

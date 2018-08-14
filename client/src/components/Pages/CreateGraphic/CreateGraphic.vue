@@ -1,13 +1,13 @@
 <template>
     <layout layout-style="pulled-left" layout-content="no-container">
-        <graphic-builder
-                v-if="activeTab === 'create'"
-                v-on:tabChange="changeTab"
-                :selectedAssetPacks="selectedAssetPacks" />
         <asset-picker
                 v-if="activeTab === 'picker'"
                 v-on:tabChange="changeTab"
                 v-on:pickAsset="toggleAsset"
+                :selectedAssetPacks="selectedAssetPacks" />
+        <graphic-builder
+                v-if="activeTab === 'create'"
+                v-on:tabChange="changeTab"
                 :selectedAssetPacks="selectedAssetPacks" />
     </layout>
 </template>
@@ -23,7 +23,7 @@
       AssetPicker
     },
     data: () => ({
-      activeTab: 'create',
+      activeTab: 'picker',
       selectedAssetPacks: [],
     }),
     methods: {
