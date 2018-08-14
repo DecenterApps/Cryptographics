@@ -4,7 +4,8 @@ import {
     MUTATE_AVATAR,
     MUTATE_USERNAME_EXISTENCE,
     MUTATE_EDIT_PROFILE_RESULT,
-    MUTATE_CREATED_ASSETS_ID
+    MUTATE_CREATED_ASSETS_PACKS_IDS,
+    MUTATE_BOUGHT_ASSETS_PACKS_IDS
 } from './types';
 
 export default {
@@ -23,8 +24,11 @@ export default {
     [MUTATE_EDIT_PROFILE_RESULT]: (state, result) => {
         state.changeUsername.result = result;
     },
-    [MUTATE_CREATED_ASSETS_ID]: (state, createdIDs) => {
+    [MUTATE_CREATED_ASSETS_PACKS_IDS]: (state, createdIDs) => {
         state.assets.createdIDs = createdIDs;
+    },
+    [MUTATE_BOUGHT_ASSETS_PACKS_IDS]: (state, boughtIDs) => {
+        state.assets.boughtIDs = boughtIDs;
     }
 };
 

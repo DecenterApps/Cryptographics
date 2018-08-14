@@ -33,8 +33,7 @@
 <script>
 
   import {
-    getNumberOfAssetPacks,
-    getAssetPackData,
+    getAssetPacksWithAssetData,
   } from 'services/ethereumService';
 
   export default {
@@ -56,17 +55,7 @@
     },
 
     async beforeCreate() {
-      let assetPacksLength = await getNumberOfAssetPacks();
-      console.log('Number Of packs' + assetPacksLength);
-      for (let i = 0; i < assetPacksLength; i++) {
-        let data = await getAssetPackData(i);
-        let obj = {
-          id: i,
-          data: data,
-        };
-        this.assetPacks.push(obj);
-      }
-      console.log(this.assetPacks);
+      this.assetPacks = await getAssetPacksWithAssetData();
     }
   };
 </script>

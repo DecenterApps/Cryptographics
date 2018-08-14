@@ -1,7 +1,7 @@
 <template>
     <div class="gallery">
         <div class="container">
-            <div v-if="displayFilters" class="filters">
+            <!-- <div v-if="displayFilters" class="filters">
                 <div class="filter-group">
                     <span class="active">High</span>
                     <span>Low</span>
@@ -11,7 +11,7 @@
                     <span class="active">All</span>
                     <span>Select Asset Pack</span>
                 </div>
-            </div>
+            </div> -->
             <div class="masonry-wrapper"
                 v-masonry
                 transition-duration="0.3s"
@@ -31,7 +31,9 @@
                     </div>
                     <div class="artwork-details">
                         <user-link to="/userurl" name="username" avatar="/avatarurl"/>
-                        <span class="price">0.45</span>
+                        <price
+                            value="0.05"
+                            size="small"/>
                     </div>
                 </div>
             </div>
@@ -89,7 +91,7 @@
         width: 307px;
         margin-bottom: 30px;
         .artwork {
-            padding: 14px 14px 40px 14px;
+            /*padding: 14px 14px 40px 14px;*/
             background-color: #fff;
             position: relative;
             img {
@@ -123,17 +125,6 @@
                 }
                 .username {
                     color: #858585;
-                    font-size: 12px;
-                }
-            }
-            .price {
-                font-size: 12px;
-                font-weight: bold;
-                &:after {
-                    content: "\039E";
-                    display: inline-flex;
-                    margin-left: 8px;
-                    font-family: Roboto, sans-serif;
                     font-size: 12px;
                 }
             }

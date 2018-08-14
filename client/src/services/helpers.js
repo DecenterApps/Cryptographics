@@ -65,3 +65,9 @@ export const preloadImages = (arr) => {
     }
   };
 };
+
+export function paginateArray(arrayItems, currentPage, showPerPage) {
+  let start = (currentPage - 1) * showPerPage;
+  let end = start + showPerPage;
+  return arrayItems.slice(start, end);
+};

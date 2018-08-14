@@ -77,7 +77,7 @@
     },
     data: () => ({
       maxAssets: 50,
-      metamask_account: 0,
+      userAddress: 0,
       assets: [],
       canvasData: {
         assets: [],
@@ -100,10 +100,10 @@
 
       renderCanvas() {
         let canvas = document.getElementById('canvas');
-        canvas.width = 350;
-        canvas.height = 350;
+        canvas.width = 500;
+        canvas.height = 365;
         console.log(this.assets);
-        makeCoverImage(false, this.assets, canvas, 350, 350);
+        makeCoverImage(false, this.assets, canvas, 500, 365);
       },
       async uploadToIpfs() {
         let hashes = [];
@@ -133,7 +133,7 @@
                 console.log(price);
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
-                await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.metamask_account);
+                await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
               }
             }
           });
@@ -142,13 +142,13 @@
         this.assets.splice(index, 1);
         let assets = this.assets;
         let canvas = document.getElementById('canvas');
-        canvas.width = 350;
-        canvas.height = 350;
+        canvas.width = 386;
+        canvas.height = 281;
         let asset_paths = [];
         for (let i = 0; i < this.assets.length; i++) {
           asset_paths.push(this.assets[i].path);
         }
-        makeCoverImage(false, asset_paths, canvas, 350, 350);
+        makeCoverImage(false, asset_paths, canvas, 500, 365);
       },
 
       toggleBackground(index) {
@@ -161,7 +161,7 @@
     },
 
     async beforeCreate() {
-      this.metamask_account = await getAccounts();
+      this.userAddress = await getAccounts();
     },
 
   };
@@ -209,8 +209,8 @@
             margin-bottom: 20px;
             canvas {
                 background-color: white;
-                width: 220px;
-                height: 120px;
+                width: 386px;
+                height: 281px;
             }
             .button {
                 margin-left: 10px;
@@ -245,6 +245,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 10px;
         .overlay {
             &.bg-selected {
                 .ico-background {
@@ -256,8 +258,8 @@
             }
         }
         img {
-            max-width: calc(100% - 20px);
-            max-height: calc(100% - 20px);
+            max-width: 100%;
+            max-height: 100%;
         }
         &:nth-child(3n + 2) {
             margin: 0 20px;

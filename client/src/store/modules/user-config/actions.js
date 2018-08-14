@@ -3,7 +3,8 @@ import {
     SET_USERNAME,
     SET_AVATAR,
     SET_USER_CONFIG,
-    SET_CREATED_ASSETS,
+    SET_CREATED_ASSETS_PACKS_IDS,
+    SET_BOUGHT_ASSETS_PACKS_IDS,
     UPDATE_USER_CONFIG,
     CHECK_USERNAME_EXISTENCE,
     EDIT_PROFILE,
@@ -12,7 +13,8 @@ import {
     MUTATE_AVATAR,
     MUTATE_USERNAME_EXISTENCE,
     MUTATE_EDIT_PROFILE_RESULT,
-    MUTATE_CREATED_ASSETS_ID
+    MUTATE_CREATED_ASSETS_PACKS_IDS,
+    MUTATE_BOUGHT_ASSETS_PACKS_IDS
 } from './types';
 
 import { getAccounts } from 'services/helpers';
@@ -22,7 +24,8 @@ import {
     getAvatar,
     usernameExists,
     registerUser,
-    getCreatedAssetPacks
+    getCreatedAssetPacks,
+    getBoughtAssetPacks
 } from 'services/ethereumService';
 
 export default {
@@ -50,15 +53,20 @@ export default {
             commit(MUTATE_AVATAR, avatar);
         }
     },
-    [SET_CREATED_ASSETS]: async ({ commit, state }) => {
+    [SET_CREATED_ASSETS_PACKS_IDS]: async ({ commit, state }) => {
         let createdIDs = await getCreatedAssetPacks(state.metamaskAddress);
-        commit(MUTATE_CREATED_ASSETS_ID, createdIDs);
+        commit(MUTATE_CREATED_ASSETS_PACKS_IDS, createdIDs);
+    },
+    [SET_BOUGHT_ASSETS_PACKS_IDS]: async ({ commit, state }) => {
+        let boughtIDs = await getBoughtAssetPacks(state.metamaskAddress);
+        commit(MUTATE_BOUGHT_ASSETS_PACKS_IDS, boughtIDs);
     },
     [SET_USER_CONFIG]: async ({ dispatch }) => {
         await dispatch(SET_METAMASK_ADDRESS);
         await dispatch(SET_USERNAME);
         await dispatch(SET_AVATAR);
-        await dispatch(SET_CREATED_ASSETS);
+        await dispatch(SET_CREATED_ASSETS_PACKS_IDS);
+        await dispatch(SET_BOUGHT_ASSETS_PACKS_IDS);
     },
     [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
         setInterval(async function() {

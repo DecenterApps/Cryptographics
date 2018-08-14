@@ -52,7 +52,8 @@
             </div>
             <div class="graphic-controls">
                 <cg-button type="submit">Order</cg-button>
-                <span class="price">2.05</span>
+                <price
+                    value="0.05"/>
             </div>
         </form>
     </div>
@@ -104,19 +105,9 @@ export default {
     }
 }
 .graphic-controls {
+    display: flex;
     .price {
-        font-family: 'YoungSerif-Regular', serif;
-        font-size: 32px;
         margin-left: 16px;
-        &:after {
-            content: "\039E";
-            position: relative;
-            bottom: 2px;
-            display: inline-flex;
-            margin-left: 8px;
-            font-family: Roboto, sans-serif;
-            font-size: 18px;
-        }
     }
 }
 </style>

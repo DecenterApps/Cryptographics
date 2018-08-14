@@ -30,7 +30,7 @@ export default {
     name: 'SingleGraphic',
     data: () => ({
         orderPrint: false,
-        loggedIn: true, 
+        loggedIn: false, 
         forSale: true
     }),
     components: {

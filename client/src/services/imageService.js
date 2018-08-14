@@ -7,6 +7,7 @@ import {
 
 import utils from 'services/utils';
 import config from 'config/config.json';
+import { ipfsNodePath } from 'config/constants';
 import * as helpers from 'services/helpers';
 import { preloadImages } from './helpers';
 
@@ -280,6 +281,7 @@ export const makeImage = (objs, c, width, height, frame = {
   ratio: '2:3'
 }, delay = DELAY) =>
   new Promise(async (resolve, reject) => {
+    let hashes;
     let assets = objs.slice();
     console.log('DRAW ASSETS', assets);
     let context = c.getContext('2d');
@@ -294,14 +296,21 @@ export const makeImage = (objs, c, width, height, frame = {
 
     if (assets.length === 0) return resolve('No assets provided.');
 
-    let hashes = await getAssetsIpfs(assets);
+    try {
+      hashes = await getAssetsIpfs(assets);
+    } catch (e) {
+      console.info(e);
+      return resolve('Could not get ipfs hashes for assets');
+    }
+    console.log('HASHES');
+    console.log(hashes);
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
 
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
       } else {
-        image.src = 'https://ipfs.decenter.com/ipfs/' + hashes[i];
+        image.src = ipfsNodePath + hashes[i];
       }
       image.crossOrigin = 'Anonymous';
 

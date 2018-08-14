@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { VueMasonryPlugin } from 'vue-masonry';
+import VueCarousel from 'vue-carousel';
 import router from './router';
 import store from './store/store';
 import Vuebar from 'vuebar';
@@ -17,6 +18,7 @@ import Checkbox from 'shared/UI/Checkbox.vue';
 import AssetCircle from 'shared/UI/AssetCircle.vue';
 import AssetCircleLink from 'shared/UI/AssetCircleLink.vue';
 import UserLink from 'shared/UI/UserLink.vue';
+import Price from 'shared/UI/Price.vue';
 import Overlay from 'shared/UI/Overlay.vue';
 import ButtonIcon from 'shared/UI/ButtonIcon.vue';
 import Modal from 'shared/Modal/Modal.vue';
@@ -33,6 +35,7 @@ Vue.component('cgCheckbox', Checkbox);
 Vue.component('assetCircle', AssetCircle);
 Vue.component('assetCircleLink', AssetCircleLink);
 Vue.component('userLink', UserLink);
+Vue.component('price', Price);
 Vue.component('overlay', Overlay);
 Vue.component('buttonIcon', ButtonIcon);
 Vue.component('inputFile', InputFile);
@@ -40,6 +43,7 @@ Vue.component('pagination', Pagination);
 Vue.component('modal', Modal);
 
 Vue.use(VueMasonryPlugin);
+Vue.use(VueCarousel);
 Vue.use(Vuebar);
 Vue.use(AsyncComputed);
 

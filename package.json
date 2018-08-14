@@ -13,7 +13,7 @@
     "prod": "webpack --config client/build/webpack.prod.js -p",
     "build": "webpack --config client/build/webpack.prod.js -p",
     "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host 127.0.0.1 --port 3300 --compress --config ./client/build/webpack.config.js",
-    "generatePacks": "node client/config/generatePacks.js 5"
+    "generatePacks": "node client/config/generatePacks.js 0"
   },
   "dependencies": {
     "add-asset-html-webpack-plugin": "^2.1.3",
@@ -45,6 +45,7 @@
     "url-loader": "^1.0.1",
     "vue": "^2.5.8",
     "vue-async-computed": "^3.4.0",
+    "vue-carousel": "^0.9.0",
     "vue-class": "^2.0.1",
     "vue-class-component": "^6.2.0",
     "vue-loader": "^15.2.4",

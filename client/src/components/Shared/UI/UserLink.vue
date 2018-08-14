@@ -4,8 +4,9 @@
         :to="to">
         <img
             class="avatar"
+            :class="color"
             :src="avatar">
-        <span class="name">
+        <span class="name" :class="color">
             @{{ name }}
         </span>
     </router-link>
@@ -26,6 +27,10 @@ export default {
         avatar: {
             type: String,
             default: ''
+        },
+        color: {
+            type: String,
+            default: 'grey'
         }
     }
 }
@@ -38,16 +43,27 @@ export default {
     text-decoration: none;
     .avatar {
         display: inline-flex;
-        background-color: #9D9D9D;
         border-radius: 50%;
         width: 33px;
         height: 33px;
         margin-right: 10px;
+        &.white {
+            background-color: #fff;
+        }
+        &.grey {
+            background-color: #9D9D9D;
+        }
     }
     .name {
-        color: #858585;
         font-size: 12px;
-        font-family: inherit;
+        font-family: Roboto, sans-serif;
+        color: inherit;
+        &.white {
+            color: #fff;
+        }
+        &.grey {
+            color: #858585;
+        }
     }
 }
 </style>

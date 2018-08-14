@@ -1,10 +1,8 @@
 import { BigNumber } from 'bignumber.js';
 import utils from 'services/utils';
-import leftPad from 'left-pad';
 import config from 'config/config.json';
+import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
-
-// const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
@@ -12,14 +10,77 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-// Function to pick ten random integers [0,99]
-// Will be executed during generating initial random seed
 export const pickTenRandoms = () => {
   let randoms = [];
   for (let i = 0; i < 10; i++) {
     randoms.push(Math.floor(Math.random() * 100));
   }
   return randoms;
+};
+
+export const checkAssetPermission = async (address, assetPackId) => {
+  return await assetManagerContract().methods.checkHasPermissionForPack(address, assetPackId).call();
+};
+
+export const buyAssetPack = async (address, assetPackId, price) => {
+  if (!web3.utils.isAddress(address)) return { error: 'Address is not valid!' };
+  try {
+    const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
+    return await assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
+      from: address,
+      value: price
+    }, (error, res) => {
+      if (error) {
+        return { error: 'Could not buy asset pack' };
+      }
+      console.log(error, res);
+    });
+  } catch (e) {
+    console.log(e);
+    throw { error: 'Could not buy asset pack' };
+  }
+};
+
+export const getAllAssetsPacks = async (assetPacksID) => {
+  return await assetManagerContract().methods.assetPacks(assetPacksID).call();
+};
+
+export const getAllAssetsPacksInfo = async () => {
+  let numOfAssetsPacks = await getNumberOfAssetPacks();
+  let assetsPackInfo = [];
+  for (let i = 0; i < numOfAssetsPacks; i++) {
+    let data = await getAllAssetsPacks(i);
+    let object = {
+      id: i,
+      username: await getUsername(data['creator']),
+      userAddress: data['creator'],
+      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
+      name: data['name'],
+      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
+      price: web3.utils.fromWei(data['price'], 'ether'),
+      data
+    };
+    assetsPackInfo.push(object);
+  }
+  return assetsPackInfo;
+};
+
+export const getPackInformation = async (assetsPackArray) => {
+  let assetPackInfo = [];
+  for (let value of assetsPackArray) {
+    let data = await getAllAssetsPacks(value);
+    let object = {
+      id: value,
+      username: await getUsername(data['creator']),
+      userAddress: data['creator'],
+      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
+      name: data['name'],
+      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
+      price: web3.utils.fromWei(data['price'], 'ether')
+    };
+    assetPackInfo.push(object);
+  }
+  return assetPackInfo;
 };
 
 export const getAttributesForAssets = async (assetIds) => {
@@ -34,7 +95,6 @@ export const getAssetIpfs = async (assetId) => {
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
-  console.log(ipfsHashes);
   for (let i = 0; i < ipfsHashes.length; i++) {
     ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
@@ -49,11 +109,8 @@ export const getCreatedAssetPacks = async (address) => {
   return await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
 };
 
-export const getPaginatedAssetPacks = async (pagination, count, address) => {
-  let assetPacksIds = await assetManagerContract().methods.getAssetPacksUserCreated(address).call();
-  let beginning = (pagination - 1) * count;
-  let end = pagination + count + 1;
-  return assetPacksIds.slice(beginning, end);
+export const getBoughtAssetPacks = async (address) => {
+  return await assetManagerContract().methods.getBoughtAssetPacks(address).call();
 };
 
 export const getCoversForAssetPacks = async (assetPackIds) => {
@@ -62,19 +119,6 @@ export const getCoversForAssetPacks = async (assetPackIds) => {
     hovers[i] = utils.getIpfsHashFromBytes32(hovers[i]);
   }
   return hovers;
-};
-
-export const getPackInformation = async (assetPacksIds, account) => {
-  let srcs = await getCoversForAssetPacks(assetPacksIds);
-  let names = await getAssetPacksNames(assetPacksIds);
-  let data = [];
-  for (let i = 0; i < srcs.length; i++) {
-    data.push({
-      name: names[i],
-      src: 'https://ipfs.decenter.com/ipfs/' + srcs[i],
-    });
-  }
-  return data;
 };
 
 export const getAssetPacksNames = async (assetPacksIds) => {
@@ -90,19 +134,41 @@ export const getNumberOfAssetPacks = async () => {
   return await assetManagerContract().methods.getNumberOfAssetPacks().call();
 };
 
+export const getAssetPacksWithAssetData = () =>
+  new Promise(async (resolve, reject) => {
+    let numOfPacks = await getNumberOfAssetPacks();
+    let assetPackPromises = [];
+    for (let i = 0; i < numOfPacks; i++) {
+      assetPackPromises.push(await getAssetPackData(i));
+    }
+    Promise.all(assetPackPromises)
+      .then(assetPacks => {
+        console.log(assetPacks);
+        resolve(assetPacks);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+
 export const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   let ids = response[1];
-  let data = [];
+  let assets = [];
   for (let i = 0; i < ids.length; i++) {
-    data.push({
-      pack_name: response[0],
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[3][i]);
+    assets.push({
       id: response[1][i],
       attribute: response[2][i],
-      ipfsHash: utils.getIpfsHashFromBytes32(response[3][i]),
+      ipfsHash: ipfsHash,
+      src: `${ipfsNodePath}${ipfsHash}`
     });
   }
-  return data;
+  return {
+    id: assetPackId,
+    packName: response[0],
+    assets,
+  };
 };
 
 export const usernameExists = async (username) => {
@@ -149,14 +215,12 @@ export const getNumberOfAssets = async () => {
 };
 
 export const getImagesMetadata = async (imageIds) => {
-  // metadata.finalSeed,
-  //   metadata.potentialAssets,
-  //   metadata.timestamp,
-  //   addressToUser[metadata.creator].username,
-  //   ownerOf(_imageId),
-  //   metadata.ipfsHash
   const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
   return Promise.all(promises);
+};
+
+export const getImageCount = async () => {
+  return await digitalPrintImageContract().methods.totalSupply().call();
 };
 
 export const getImageMetadata = (imageId) =>
@@ -171,7 +235,7 @@ export const getImageMetadata = (imageId) =>
       username: image[3],
       artistAddress: image[4],
       ipfsHash: image[5],
-      src: `https://ipfs.decenter.com/ipfs/${image[5]}`
+      src: `${ipfsNodePath}${image[5]}`
     });
   });
 
@@ -195,20 +259,14 @@ export const convertSeed = async (randomSeed) => {
   return await digitalPrintImageContract().methods.toHex(randomSeed).call();
 };
 
-// Function to calculate first random seed, it will be executed from contract
-
 export const calculateFirstSeed = async (timestamp, rands) => {
   return await digitalPrintImageContract().methods.calculateSeed(rands, timestamp).call();
 };
 
-// Function to calculate keccak256 when input is (int and int)
-// INTEGRATED WITH CONTRACT
 export const calculateSeed = (random_seed, x) => {
   return web3.utils.soliditySha3(random_seed, x);
 };
 
-// Function to calculate final seed for input (random_seed -int & iterations-int)
-// INTEGRATED WITH CONTRACT
 export const calculateFinalSeed = (random_seed, iterations) => {
   let seed = web3.utils.soliditySha3(random_seed, iterations);
   for (let i = 0; i < iterations; i++) {
@@ -217,12 +275,9 @@ export const calculateFinalSeed = (random_seed, iterations) => {
   return seed;
 };
 
-//Function to get metadata for asset based on random seed and assetId
-//seed - bytes32 ; assetId - integer
 export const getAssetMetadata = (seed, assetId) => {
   seed = seed.toString();
   let number = new BigNumber(seed);
-  // If number can be divided by 2 means that asset will be included into image
   if (parseInt(number.modulo(2), 10) === 0) {
     let id = assetId;
     let x_coordinate = parseInt(number.modulo(2480), 10);
@@ -242,20 +297,16 @@ export const getAssetMetadata = (seed, assetId) => {
   return null;
 };
 
-//INTEGRATED WITH CONTRACT - function to getImage info
-//(bytes32, uint, bytes32)
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log("FINAL SEED: ", seed);
+  console.log('FINAL SEED: ', seed);
   let pot_assets = [];
   console.log(potentialAssets.length);
   for (let j = 0; j < potentialAssets.length; j++) {
     let arr = [];
     arr.push(potentialAssets[j]);
-    // pot_assets.push(utils.decode(arr).reverse());
     pot_assets = [...pot_assets, ...utils.decode(arr)];
   }
-  // var pot_assets = utils.decode(potentialAssets).reverse();
   console.log('POTENTIAL', pot_assets);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(pot_assets);
@@ -276,7 +327,6 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
   return pickedAssets;
 };
 
-//Function to get data from contract for every asset (id,creator, ipfsHash, and price) - based on asset id
 export const getAssetStats = async (id) => {
   let numberOfAssets = await assetManagerContract().methods.getNumberOfAssets().call();
   numberOfAssets = parseInt(numberOfAssets, 10);
@@ -299,7 +349,6 @@ export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets) =>
 };
 
 export const getBoughtAssets = async () => {
-  // TODO: Implement missing method
   return [];
 };
 
@@ -336,5 +385,3 @@ function printImageData(assets) {
     let obj = assets[i];
   }
 }
-
-// test();

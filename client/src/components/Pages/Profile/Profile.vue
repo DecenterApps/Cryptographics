@@ -5,11 +5,11 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar" :src="'//ipfs.decenter.com/ipfs/' + avatar">
+        <img class="avatar" :src="ipfsNodePath + avatar">
         <div class="left">
-          <h1 class="name">{{ username }}</h1>
+          <h1 class="large-title name">{{ username }}</h1>
         </div>
-        <div class="right">
+        <div class="right button-group">
           <cg-button 
             button-style="transparent"
             v-if="metamaskAddress"
@@ -22,26 +22,34 @@
           </button-link>
         </div>
       </div>
-      <div>
-        <h2 class="large-title">Asset Packs</h2>
-        <div class="button-group">
-          <cg-button
-            :button-style="showYourPacks === true ? 'negative' : 'transparent'"
-            @click="showYourPacks = true">
-            Your asset packs
-          </cg-button>
-          <cg-button
-            :button-style="showYourPacks === false ? 'negative' : 'transparent'"
-            @click="showYourPacks = false">
-            Other asset packs
-          </cg-button>
+      <div class="main">
+        <template v-if="metamaskAddress">
+        <div class="assets">
+          <h2 class="large-title">Asset Packs</h2>
+          <div class="button-group">
+            <cg-button
+              :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+              @click="showYourPacks = true">
+              Your assets packs
+            </cg-button>
+            <cg-button
+              :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+              @click="showYourPacks = false">
+              Bought assets packs
+            </cg-button>
+          </div>
+            <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created"/>
+            <assets-pack-pagination v-else assets-pack-type="bought"/>
         </div>
-        <created-asset-packs v-if="showYourPacks"/>
-        <bought-asset-packs v-else/>
+        <div class="gallery">
+          <h2 class="large-title">Gallery</h2>
+          <gallery :images="images"/>
+        </div>
+        </template>
+        <template v-else>
+          <p>Connect to MetaMask.</p>
+        </template>
       </div>
-      
-      <h2 class="large-title">Gallery</h2>
-      <gallery :images="images"/>
     </div>
   </layout>
 </template>
@@ -54,19 +62,20 @@
     getImageMetadataFromContract,
     getImageIpfs,
   } from 'services/ethereumService';
+  import { ipfsNodePath } from 'config/constants';
   import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
 
-  import CreatedAssetPacks from './template/CreatedAssetPacks.vue';
-  import BoughtAssetPacks from './template/BoughtAssetPacks.vue';
+  import AssetsPackPagination from './template/AssetsPackPagination.vue';
   import Gallery from 'shared/Gallery/Gallery.vue';
 
   export default {
     name: 'Profile',
     data() {
       return {
+        ipfsNodePath,
         showYourPacks: true,
         asset_packs: [],
         allAssetPaths: [],
@@ -82,8 +91,7 @@
     },
     components: {
       Gallery,
-      CreatedAssetPacks,
-      BoughtAssetPacks
+      AssetsPackPagination
     },
     computed: {
       ...mapGetters({
@@ -139,13 +147,12 @@
 
       async getImages() {
         let images = await getUserImages(this.metamask_account);
-        let prefix = 'https://ipfs.decenter.com/ipfs/';
         let hashes = [];
         for (let i = 0; i < images.length; i++) {
           let hash = await getImageIpfs(images[i]);
           hashes.push({
             address: this.metamask_account,
-            src: prefix + hash,
+            src: ipfsNodePath + hash,
             name: 'The point of',
             price: 0.45,
           });
@@ -173,14 +180,14 @@
   padding-top: 0 !important;
   flex-direction: column;
   position: relative;
+  min-height: calc(100vh - 419px);
   .header {
     padding-left: 190px;
     padding-top: 47px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     display: flex;
     justify-content: space-between;
     .avatar {
-      background-color: #333;
       width: 160px; height: 160px;
       position: absolute;
       top: -80px;
@@ -188,71 +195,31 @@
     }
     .left {
       .name {
-        font-family: 'YoungSerif-Regular', sans-serif;
-        font-size: 32px;
+        margin-bottom: 0;
       }
     }
-    .right {
-      & .button {
-        margin: 0 10px;
-        &:first-of-type {
-          margin-left: 0;
-        }
-        &:last-of-type {
-          margin-right: 0;
-        }
+  }
+  .assets, .gallery {
+    padding-bottom: 30px;
+  }
+  @media screen and (max-width: 1120px) {
+    .header {
+      padding-left: 0;
+      padding-top: 127px;
+      .avatar {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .header {
+      flex-direction: column;
+      text-align: center;
+      .left {
+        margin-bottom: 20px;
       }
     }
   }
 }
-
-.button-group {
-  & .button {
-    margin: 0 10px;
-    &:first-of-type {
-      margin-left: 0;
-    }
-    &:last-of-type {
-      margin-right: 0;
-    }
-  }
-}
-
-
-
-    .profile-page {
-        background-color: #F9F9F9;
-
-        .profile {
-            position: relative;
-            .thumbnail {
-                position: absolute;
-                top: -96px;
-                width: 160px;
-                height: 160px;
-                background-color: #D4D4D4;
-            }
-
-            .description {
-                display: flex;
-                padding: 32px 0;
-                justify-content: flex-end;
-                font-family: 'YoungSerif-Regular', sans-serif;
-                font-size: 15px;
-                align-items: flex-end;
-                line-height: 15px;
-
-                .creator-name {
-                    font-size: 32px;
-                    line-height: 32px;
-                    margin-left: 15px;
-                }
-            }
-        }
-
-        .home-gallery {
-            background-color: none;
-            margin: 40px 0;
-        }
-    }
 </style>

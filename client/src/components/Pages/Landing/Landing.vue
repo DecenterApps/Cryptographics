@@ -12,27 +12,20 @@
                 <button-link to="/upload-asset-pack">Upload Assets Pack</button-link>
             </div>
         </div>
-        <div class="assets-slider">
-            <div class="container">
-                <div v-for="i in 26" class="asset" :key="i">
-                    <overlay>
-                        <button-icon icon-type="zoom" />
-                    </overlay>
-                    <img src="./assets/asset.png">
-                </div>
-            </div>
-        </div>
+        <asset-carousel />
     </div>
 </template>
 
 <script>
+  import AssetCarousel from './AssetCarousel/AssetCarousel';
   import Gallery from 'shared/Gallery/Gallery.vue';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImagesMetadata } from 'services/ethereumService';
+  import { getImagesMetadata, getImageCount } from 'services/ethereumService';
 
   export default {
     name: 'Landing',
     components: {
+      AssetCarousel,
       GraphicPlayground,
       Gallery
     },
@@ -40,8 +33,13 @@
       images: [],
     }),
     async created() {
-      this.images = await getImagesMetadata([0, 1]);
-      console.log();
+      try {
+        const numOfImages = await getImageCount();
+        const ids = [...Array(parseInt(numOfImages)).keys()];
+        this.images = await getImagesMetadata(ids);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 </script>
@@ -80,25 +78,6 @@
             text-align: center;
             p:last-of-type {
                 margin-bottom: 30px;
-            }
-        }
-    }
-
-    .assets-slider {
-        background-color: #D9D9D9;
-        padding: 0 0 50px;
-        .container {
-            overflow: hidden;
-            width: 100%;
-            display: flex;
-            .asset {
-                position: relative;
-                margin: 0 10px;
-                &:hover {
-                    .overlay {
-                        opacity: 1;
-                    }
-                }
             }
         }
     }
