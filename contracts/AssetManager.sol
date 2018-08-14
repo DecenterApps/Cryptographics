@@ -242,7 +242,10 @@ contract AssetManager is Ownable {
     /// @notice Function to get ipfs hash and id for all assets in one asset pack
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
-    function getAssetPackData(uint _assetPackId) public view returns(string, uint[], uint[], bytes32[]) {
+    function getAssetPackData(uint _assetPackId) 
+        public 
+        view 
+        returns(string, bytes32, address, uint, uint[], uint[], bytes32[]) {
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -253,7 +256,15 @@ contract AssetManager is Ownable {
         }
         uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
-        return(assetPack.name, assetPack.assetIds, attributes, hashes);
+        return(
+            assetPack.name, 
+            assetPack.packCover, 
+            assetPack.creator, 
+            assetPack.price, 
+            assetPack.assetIds, 
+            attributes, 
+            hashes
+        );
     }
 
     /// @notice Function to get name for asset pack
