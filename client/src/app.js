@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { VueMasonryPlugin } from 'vue-masonry';
+import VueCarousel from 'vue-carousel';
 import router from './router';
 import store from './store/store';
 import Vuebar from 'vuebar';
@@ -42,6 +43,7 @@ Vue.component('pagination', Pagination);
 Vue.component('modal', Modal);
 
 Vue.use(VueMasonryPlugin);
+Vue.use(VueCarousel);
 Vue.use(Vuebar);
 Vue.use(AsyncComputed);
 
