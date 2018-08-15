@@ -31,14 +31,16 @@ const deleteFolderRecursive = (path) => {
 
 const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
-  let ids = response[1];
+  const packName = response[0];
+  let ids = response[4];
   let assets = [];
   for (let i = 0; i < ids.length; i++) {
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[6][i]);
     assets.push({
-      packName: response[0],
-      id: response[1][i],
-      attribute: response[2][i],
-      ipfsHash: utils.getIpfsHashFromBytes32(response[3][i]),
+      id: ids[i],
+      packName,
+      attribute: response[5][i],
+      ipfsHash: ipfsHash,
     });
   }
   return assets;
