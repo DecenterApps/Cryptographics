@@ -134,9 +134,23 @@ export const getNumberOfAssetPacks = async () => {
   return await assetManagerContract().methods.getNumberOfAssetPacks().call();
 };
 
-export const getAssetPacksWithAssetData = () =>
+export const getSelectedAssetPacksWithAssetData = (assetPackIds) =>
   new Promise(async (resolve, reject) => {
-    let numOfPacks = await getNumberOfAssetPacks();
+    let assetPackPromises = assetPackIds.map(assetPackId => getAssetPackData(assetPackId));
+
+    Promise.all(assetPackPromises)
+      .then(assetPacks => {
+        console.log(assetPacks);
+        resolve(assetPacks);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+
+export const getAssetPacksWithAssetData = (optionalAssetPacks) =>
+  new Promise(async (resolve, reject) => {
+    let numOfPacks = optionalAssetPacks || await getNumberOfAssetPacks();
     let assetPackPromises = [];
     for (let i = 0; i < numOfPacks; i++) {
       assetPackPromises.push(await getAssetPackData(i));
@@ -153,20 +167,28 @@ export const getAssetPacksWithAssetData = () =>
 
 export const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
-  let ids = response[1];
+  const packName = response[0];
+  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[1]);
+  const creator = response[2];
+  const price = response[3];
+  let ids = response[4];
   let assets = [];
   for (let i = 0; i < ids.length; i++) {
-    let ipfsHash = utils.getIpfsHashFromBytes32(response[3][i]);
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[6][i]);
     assets.push({
-      id: response[1][i],
-      attribute: response[2][i],
+      id: ids[i],
+      attribute: response[5][i],
       ipfsHash: ipfsHash,
       src: `${ipfsNodePath}${ipfsHash}`
     });
   }
   return {
+    packName,
+    packCoverIpfs,
+    packCoverSrc: `${ipfsNodePath}${packCoverIpfs}`,
+    creator,
+    price: web3.utils.fromWei(price, 'ether'),
     id: assetPackId,
-    packName: response[0],
     assets,
   };
 };

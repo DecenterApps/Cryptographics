@@ -3,53 +3,82 @@
         <div class="left">
             <Canvas :canvasData="canvasData"></Canvas>
         </div>
-        <div class="right">
-            <cg-button
-                    :disabled="isCanvasDrawing"
-                    @click="renderCanvas"
-                    button-style="transparent">
-                Recreate
-            </cg-button>
+        <!-- FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
+        <div v-if="!buyScreen" class="right">
+            <div class="selected-asset-packs">
+                <h1 class="small-title">
+                    Selected asset packs
+                </h1>
+                <div class="pack-list">
+                    <asset-box
+                            v-for="(assetPack, index) in selectedAssetPacks"
+                            :key="index"
+                            :assetPack="assetPack"
+                            :small="true"
+                            color="#eee" />
+                    <div @click="changeTab" class="add-more">
+                        +
+                    </div>
+                </div>
+            </div>
+
             <div class="controls">
-                <div class="asset-controls">
+                <div class="top-controls">
+                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="toggleRatio">Aspect ratio 1:1</cg-checkbox>
                     <cg-button
-                            v-on:click="changeTab"
+                            :disabled="isCanvasDrawing"
+                            @click="renderCanvas"
                             button-style="transparent">
-                        Select Asset Packs
+                        Recompose
                     </cg-button>
-                    <div class="selected-asset-packs">
-                        <asset-circle
-                                v-for="(asset, index) in selectedAssetPacks" :key="index"
-                                :name="asset.id"
+                </div>
+                <separator></separator>
+                <div class="bottom-controls">
+                    <!--<cg-button @click="buyImage">Submit</cg-button>-->
+                    <h1 class="large-title">Ξ {{ displayPrice() }}</h1>
+                    <cg-button @click="buyScreen = true">Next</cg-button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
+
+        <!-- SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
+        <div v-if="buyScreen" class="right">
+            <div class="selected-asset-packs">
+                <div class="final-pack-list">
+                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
+                        <div class="asset-pack-meta">
+                            <h1 class="small-title">{{ assetPack.packName }}</h1>
+                            <div class="small-title">Ξ {{ assetPack.price }}</div>
+                        </div>
+                        <asset-box
+                                :key="index"
+                                :assetPack="assetPack"
+                                :small="true"
                                 color="#eee" />
                     </div>
                 </div>
-                <div class="formats">
-                    <div
-                            class="format"
-                            @click="setRatio('1:1')">
-                        <div
-                                class="box"
-                                :class="[ canvasData.ratio === '1:1' ? 'selected' : '' ]">
-                        </div>
-                        1:1
+            </div>
+
+            <div class="controls">
+                <div class="top-controls buy-screen">
+                    <div class="small-title">Art Title</div>
+                    <Input placeholder="0/20"/>
+                </div>
+                <separator></separator>
+                <div class="bottom-controls buy-screen">
+                    <div>
+                        <cg-button :button-style="'transparent'">Download</cg-button>
                     </div>
-                    <div
-                            class="format"
-                            @click="setRatio('2:3')">
-                        <div
-                                class="box"
-                                :class="[ canvasData.ratio === '2:3' ? 'selected' : '' ]">
-                        </div>
-                        2:3
+                    <div class="separate-controls">
+                        <h1 class="large-title">Ξ {{ displayPrice() }}</h1>
+                        <cg-button @click="buyImage">Claim Token</cg-button>
                     </div>
                 </div>
-                <div class="frame">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
-                </div>
-                <cg-button @click="buyImage">Submit</cg-button>
             </div>
         </div>
+        <!-- END OF SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
     </div>
 </template>
 
@@ -68,13 +97,16 @@
   import { mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
+  import Input from '../../../Shared/UI/Input';
 
   export default {
     name: 'GraphicBuilder',
     components: {
+      Input,
       Canvas
     },
     data: () => ({
+      buyScreen: false,
       canvasData: {
         assets: [],
         ratio: '2:3',
@@ -141,14 +173,18 @@
         if (pot.length === 0) {
           this.imagePrice = 0;
         }
-        this.imagePrice = parseInt(price, 10);
+        this.imagePrice = parseFloat(price);
         console.log('PRICE : ' + this.imagePrice);
       },
       changeTab() {
         this.$emit('tabChange', 'picker');
       },
-      setRatio(ratio) {
-        this.canvasData.ratio = ratio;
+      toggleRatio() {
+        if (this.canvasData.ratio === '1:1') return this.canvasData.ratio = '2:3';
+        this.canvasData.ratio = '1:1';
+      },
+      displayPrice() {
+        return web3.utils.fromWei(this.imagePrice.toString(), 'ether');
       }
     },
     async created() {
@@ -165,6 +201,9 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
+      }
+      else {
+        this.renderCanvas();
       }
     },
     async beforeCreate() {
@@ -199,7 +238,7 @@
         }
         .right {
             display: flex;
-            align-items: flex-end;
+            flex-flow: column;
             justify-content: space-between;
             flex-grow: 1;
             margin-left: 50px;
@@ -241,13 +280,65 @@
     }
 
     .selected-asset-packs {
-        display: flex;
-        .asset {
-            margin: 20px 5px 0;
-            border-color: #000;
-            &:last-of-type {
-                margin-right: 0;
+
+        .final-pack-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            max-height: 300px;
+            overflow-y: auto;
+
+            .final-pack-item {
+                display: flex;
+                margin-bottom: 20px;
+
+                .asset-pack-meta {
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: flex-end;
+                    flex-direction: column;
+                    margin-right: 15px;
+
+                    .small-title {
+                        margin-bottom: 10px;
+
+                        &:last-child {
+                            margin: 0;
+                        }
+                    }
+                }
             }
+        }
+
+        .pack-list {
+            display: flex;
+            flex-wrap: wrap;
+
+            .asset-box {
+                margin-right: 20px;
+                margin-bottom: 20px;
+            }
+            .add-more {
+                height: 55px;
+                width: 75px;
+                border: 1px solid #949494;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 30px;
+                color: #949494;
+                cursor: pointer;
+
+                &:hover {
+                    color: #000;
+                    border: 1px solid #000;
+                }
+            }
+        }
+
+        .small-title {
+            margin-bottom: 20px;
         }
     }
 
@@ -285,17 +376,49 @@
     }
 
     .controls {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: flex-end;
         .asset-controls {
             margin-bottom: 100px;
             display: inline-flex;
             flex-direction: column;
             align-items: flex-end;
         }
-        .frame {
+        .top-controls {
             margin-bottom: 20px;
+
+            .button {
+                margin-top: 10px;
+            }
+
+            &.buy-screen {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+
+                input {
+                    width: 185px;
+                    margin-top: 20px;
+                }
+            }
+        }
+        .bottom-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-top: 20px;
+
+
+            &.buy-screen {
+                justify-content: space-between;
+
+                .separate-controls {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+            }
+
+            .large-title {
+                margin: 0 15px 0 0;
+            }
         }
     }
 </style>

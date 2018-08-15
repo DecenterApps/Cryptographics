@@ -4,26 +4,42 @@
             <h2 class="large-title">Select Asset Pack</h2>
             <div>
                 <button-icon icon-type="zoom" color="#000" size="15px" />
+                <!--<cg-button-->
+                <!--@click="changeTab"-->
+                <!--button-style="transparent">-->
+                <!--Back-->
+                <!--</cg-button>-->
+            </div>
+        </div>
+        <div class="filter-section">
+            <div>
                 <cg-button
-                        @click="changeTab"
-                        button-style="transparent">
-                    Back
+                        :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+                        @click="toggleAssetPacks">
+                    All asset packs
                 </cg-button>
+                <cg-button
+                        :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+                        @click="toggleAssetPacks">
+                    Your asset packs
+                </cg-button>
+            </div>
+            <div class="price-section">
+                <h1 class="small-title">Total price - {{ totalPrice() }} Ξ</h1>
             </div>
         </div>
         <div class="content">
             <div class="asset-packs">
-                <asset-circle
-                        :name="asset.id"
-                        color="#eee"
-                        :class="[isSelected(asset), 'asset-pack-circle']"
-                        @click="toggleAsset(asset)"
-                        v-for="(asset, index) in assetPacks" :key="index" />
+                <asset-box
+                        :assetPack="assetPack"
+                        :selected="isSelected(assetPack)"
+                        @click="toggleAsset(assetPack)"
+                        v-for="(assetPack, index) in assetPacks" :key="index" />
             </div>
             <cg-button
                     @click="changeTab"
                     button-style="transparent">
-                Select
+                Next
             </cg-button>
         </div>
 
@@ -31,30 +47,58 @@
 </template>
 
 <script>
-
+  import {
+    METAMASK_ADDRESS,
+    CREATED_ASSETS_PACKS_IDS,
+    BOUGHT_ASSETS_PACKS_IDS
+  } from 'store/user-config/types';
+  import { mapGetters } from 'vuex';
   import {
     getAssetPacksWithAssetData,
+    getSelectedAssetPacksWithAssetData
   } from 'services/ethereumService';
 
   export default {
     name: 'AssetPicker',
     data: () => ({
       assetPacks: [],
+      showYourPacks: false,
     }),
+    computed: {
+      ...mapGetters({
+        createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
+      })
+    },
     props: ['selectedAssetPacks'],
     methods: {
       changeTab() {
         this.$emit('tabChange', 'create');
       },
       isSelected(asset) {
-        return this.selectedAssetPacks.findIndex(item => item.id === asset.id) >= 0 ? ['selected'] : '';
+        return this.selectedAssetPacks.findIndex(item => item.id === asset.id) >= 0;
       },
       toggleAsset(asset) {
         this.$emit('pickAsset', asset);
+      },
+      async toggleAssetPacks() {
+        this.showYourPacks = !this.showYourPacks;
+        if (this.showYourPacks) {
+          this.assetPacks = await getSelectedAssetPacksWithAssetData([...this.createdPacksIDs, ...this.boughtPacksIDs]);
+        } else {
+          this.assetPacks = await getAssetPacksWithAssetData();
+        }
+      },
+      totalPrice() {
+        const filteredPacks = this.selectedAssetPacks.filter(item => {
+          return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
+            this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
+        });
+        return filteredPacks.reduce((acc, item) => acc + parseFloat(item.price), 0);
       }
     },
 
-    async beforeCreate() {
+    async created() {
       this.assetPacks = await getAssetPacksWithAssetData();
     }
   };
@@ -79,12 +123,26 @@
                 margin-right: 22px;
             }
         }
-        .asset-packs {
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            .asset-pack-circle {
+
+            .button {
+                width: 130px;
+
+                &:first-child {
+                    margin-right: 20px;
+                }
+            }
+        }
+        .asset-packs {
+            margin-bottom: 50px;
+            .asset-box {
                 cursor: pointer;
-                margin-right: 10px;
-                margin-bottom: 10px;
+                margin-right: 20px;
+                margin-bottom: 20px;
                 &.selected {
                     border: 1px solid #000;
                 }

@@ -72,8 +72,6 @@
     .small-title {
         margin: 0 16px 21px 0;
         font-size: 12px;
-        color: #000;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
     .asset-pack-header {
