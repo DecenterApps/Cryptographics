@@ -15,6 +15,7 @@
 <script>
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
+  import { getLandingPacks } from 'services/ethereumService';
 
   export default {
     name: 'CreateGraphic',
@@ -41,6 +42,13 @@
         this.selectedAssetPacks.push(asset);
       }
     },
+    created() {
+      if (window.sessionStorage.length > 0) {
+        const landingPacks = getLandingPacks();
+        this.activeTab = 'create';
+        this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
+      }
+    }
   };
 </script>
 

@@ -51,7 +51,15 @@ a {
 .large-title {
   font-family: 'YoungSerif-Regular', serif;
   font-size: 32px;
+  line-height: 32px;
   margin-bottom: 30px;
+}
+
+.small-title {
+  font-family: 'YoungSerif-Regular', serif;
+  font-size: 16px;
+  line-height: 16px;
+  color: #000;
 }
 
 .background-wrapper {

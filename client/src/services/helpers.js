@@ -23,6 +23,31 @@ export function getAccounts() {
   });
 }
 
+export const shuffleArray = (a) => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+export const shuffleBackgrounds = (arr) => {
+  const helper = [...arr];
+  const backgrounds = [];
+  let end = helper.length;
+  for (let i = 0; i < end; i++) {
+    if (helper[i].isBackground) {
+      backgrounds.push(helper[i]);
+      helper.splice(i, 1);
+      i--;
+      end--;
+    }
+  }
+  console.log(helper, backgrounds);
+
+  return [...shuffleArray(backgrounds), ...helper];
+};
+
 export const moveBackgrounds = (arr) => {
   let background;
   let end = 0;

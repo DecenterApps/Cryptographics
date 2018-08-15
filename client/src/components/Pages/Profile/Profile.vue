@@ -12,7 +12,7 @@
         <div class="right button-group">
           <cg-button 
             button-style="transparent"
-            v-if="metamaskAddress"
+            v-if="userAddress"
             @click="openModal('editProfile')">
             Edit Profile
           </cg-button>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="main">
-        <template v-if="metamaskAddress">
+        <template v-if="userAddress">
         <div class="assets">
           <h2 class="large-title">Asset Packs</h2>
           <div class="button-group">
@@ -80,7 +80,6 @@
         asset_packs: [],
         allAssetPaths: [],
         id_to_show: -1,
-        metamask_account: 0,
         allAssets: [],
         images: [],
         my_images_on_chain: [],
@@ -95,7 +94,7 @@
     },
     computed: {
       ...mapGetters({
-        metamaskAddress: METAMASK_ADDRESS,
+        userAddress: METAMASK_ADDRESS,
         username: USERNAME,
         avatar: AVATAR
       })
@@ -111,10 +110,10 @@
       },
 
       async getImages() {
-        this.my_images_on_chain = await getUserImages(this.metamask_account);
+        this.my_images_on_chain = await getUserImages(this.userAddress);
       },
       async getBoughtAssets() {
-        this.bought_assets = await getBoughtAssets(this.metamask_account);
+        this.bought_assets = await getBoughtAssets(this.userAddress);
         this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
       },
 
@@ -123,7 +122,7 @@
       },
 
       async getAssetPacks() {
-        this.asset_packs = await getCreatedAssetPacks(this.metamask_account);
+        this.asset_packs = await getCreatedAssetPacks(this.userAddress);
       },
 
       async renderMyImagesCanvas() {
@@ -146,12 +145,12 @@
       },
 
       async getImages() {
-        let images = await getUserImages(this.metamask_account);
+        let images = await getUserImages(this.userAddress);
         let hashes = [];
         for (let i = 0; i < images.length; i++) {
           let hash = await getImageIpfs(images[i]);
           hashes.push({
-            address: this.metamask_account,
+            address: this.userAddress,
             src: ipfsNodePath + hash,
             name: 'The point of',
             price: 0.45,
@@ -162,12 +161,7 @@
     },
 
     async beforeMount() {
-      web3.eth.getAccounts((err, acc) => {
-        if (err) return console.error(err);
-        this.metamask_account = acc[0];
-        this.generateData();
-      });
-
+      this.generateData();
       await this.getImages();
     }
 

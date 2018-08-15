@@ -64,6 +64,9 @@
   import { getAccounts } from 'services/helpers';
   import { createAssetPack, makeCoverImage } from 'services/imageService';
   import * as utils from 'services/utils';
+  import { METAMASK_ADDRESS } from 'store/user-config/types';
+  import { mapGetters } from 'vuex';
+
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
@@ -77,7 +80,6 @@
     },
     data: () => ({
       maxAssets: 50,
-      userAddress: 0,
       assets: [],
       canvasData: {
         assets: [],
@@ -85,6 +87,12 @@
         frame: false,
       },
     }),
+
+    computed: {
+      ...mapGetters({
+        userAddress: METAMASK_ADDRESS,
+      })
+    },
 
     methods: {
       uploadAssets() {
@@ -158,10 +166,6 @@
         }
         this.assets[index].attribute = 100 + this.assets[index].attribute % 100;
       }
-    },
-
-    async beforeCreate() {
-      this.userAddress = await getAccounts();
     },
 
   };
