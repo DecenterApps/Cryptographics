@@ -85,7 +85,7 @@ contract Marketplace is Ownable {
 
         address _creator;
         address _imageOwner = digitalPrintImageContract.ownerOf(_imageId);
-        (,,_creator,) = digitalPrintImageContract.imageMetadata(_imageId);
+        (,,_creator,,) = digitalPrintImageContract.imageMetadata(_imageId);
 
         balances[_creator] = msg.value * 3 / 100;
         balances[owner] = msg.value * 2 / 100;
