@@ -12,7 +12,7 @@
         <div class="right button-group">
           <cg-button 
             button-style="transparent"
-            v-if="metamaskAddress"
+            v-if="userAddress"
             @click="openModal('editProfile')">
             Edit Profile
           </cg-button>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="main">
-        <template v-if="metamaskAddress">
+        <template v-if="userAddress">
         <div class="assets">
           <h2 class="large-title">Asset Packs</h2>
           <div class="button-group">
