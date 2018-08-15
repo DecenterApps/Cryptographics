@@ -84,7 +84,10 @@
       async toggleAssetPacks() {
         this.showYourPacks = !this.showYourPacks;
         if (this.showYourPacks) {
-          this.assetPacks = await getSelectedAssetPacksWithAssetData([...this.createdPacksIDs, ...this.boughtPacksIDs]);
+          this.assetPacks = await getSelectedAssetPacksWithAssetData([
+            ...this.createdPacksIDs,
+            ...this.boughtPacksIDs
+          ]);
         } else {
           this.assetPacks = await getAssetPacksWithAssetData();
         }

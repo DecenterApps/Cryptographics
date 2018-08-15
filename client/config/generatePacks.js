@@ -32,18 +32,29 @@ const deleteFolderRecursive = (path) => {
 const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   const packName = response[0];
+  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[1]);
+  const creator = response[2];
+  const price = response[3];
   let ids = response[4];
   let assets = [];
   for (let i = 0; i < ids.length; i++) {
     let ipfsHash = utils.getIpfsHashFromBytes32(response[6][i]);
     assets.push({
       id: ids[i],
-      packName,
       attribute: response[5][i],
       ipfsHash: ipfsHash,
+      src: `https://ipfs.decenter.com/ipfs/${ipfsHash}`
     });
   }
-  return assets;
+  return {
+    packName,
+    packCoverIpfs,
+    packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
+    creator,
+    price: web3.utils.fromWei(price, 'ether'),
+    id: assetPackId,
+    assets,
+  };
 };
 
 const getAssetPackIds = () =>
@@ -68,7 +79,8 @@ const download = (uri, filename, callback) => {
 const downloadAssetPack = async (assetId) =>
   new Promise(async (resolve, reject) => {
     let downloaded = 0;
-    let assetPackData = await getAssetPackData(assetId);
+    let fetchData = await getAssetPackData(assetId);
+    let assetPackData = fetchData.assets;
     assetPackData.forEach((item, i) => {
       const path = `${__dirname}/../src/assets/landingart/${assetId}`;
       assetPackData[i].src = `assets/landingart/${assetId}/${item.id}.png`;
@@ -81,10 +93,7 @@ const downloadAssetPack = async (assetId) =>
         (err, data) => {
           downloaded++;
           if (err !== undefined) console.log(err);
-          if (downloaded === assetPackData.length - 1) resolve({
-            id: assetId,
-            assets: assetPackData
-          });
+          if (downloaded === assetPackData.length - 1) resolve(fetchData);
         }
       );
     });

@@ -7,7 +7,7 @@
         <img :src="assetPack.packCoverSrc" alt="">
         <overlay>
             <div v-if="small">
-                lol
+
             </div>
             <div v-if="!small" class="overlay-content">
                 <p class="small-title pack-name">{{ assetPack.packName }}</p>
