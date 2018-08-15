@@ -224,8 +224,9 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     let image = new Image();
 
     image.src = assets[i].path;
-    image.width = 90;
-    image.height = 90;
+    const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, frame.ratio);
+    image.width = sizes.width;
+    image.height = sizes.height;
     image.crossOrigin = 'Anonymous';
     images.push({
       id: i,
@@ -239,6 +240,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
   }
 
   images = helpers.moveBackgrounds(images);
+  images = helpers.shuffleBackgrounds(images);
 
   preloadImages(images)
     .done(async (loadedImages) => {

@@ -80,7 +80,6 @@
     },
     data: () => ({
       maxAssets: 50,
-      userAddress: 0,
       assets: [],
       canvasData: {
         assets: [],
