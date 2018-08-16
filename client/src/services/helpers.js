@@ -1,5 +1,22 @@
 const Web3 = require('web3');
 
+export const resizeCanvas = (oldCanvas, width, height) => {
+
+  //create a new canvas
+  const newCanvas = document.createElement('canvas');
+  const context = newCanvas.getContext('2d');
+
+  //set dimensions
+  newCanvas.width = width;
+  newCanvas.height = height;
+
+  //apply the old canvas to the new one
+  context.drawImage(oldCanvas, 0, 0, width, height);
+
+  //return the new canvas
+  return newCanvas;
+};
+
 export function checkProvider() {
   if (typeof web3 !== 'undefined') {
     window.web3 = new Web3(window.web3.currentProvider);

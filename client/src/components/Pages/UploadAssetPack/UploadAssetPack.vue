@@ -108,10 +108,10 @@
 
       renderCanvas() {
         let canvas = document.getElementById('canvas');
-        canvas.width = 500;
-        canvas.height = 365;
+        canvas.width = 386 * 2;
+        canvas.height = 281 * 2;
         console.log(this.assets);
-        makeCoverImage(false, this.assets, canvas, 500, 365);
+        makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
       async uploadToIpfs() {
         let hashes = [];

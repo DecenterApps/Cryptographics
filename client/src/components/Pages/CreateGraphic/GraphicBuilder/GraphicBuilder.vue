@@ -64,7 +64,12 @@
             <div class="controls">
                 <div class="top-controls buy-screen">
                     <div class="small-title">Art Title</div>
-                    <Input placeholder="0/20"/>
+                    <Input
+                            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
+                            v-on:input="checkName"
+                            v-model="title"
+                            placeholder="0/20"
+                    />
                 </div>
                 <separator></separator>
                 <div class="bottom-controls buy-screen">
@@ -94,6 +99,7 @@
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
+  import { resizeCanvas } from 'services/helpers';
   import { mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
@@ -106,6 +112,8 @@
       Canvas
     },
     data: () => ({
+      title: '',
+      errors: [],
       buyScreen: false,
       canvasData: {
         assets: [],
@@ -132,10 +140,30 @@
     props: ['selectedAssetPacks'],
     methods: {
 
+      checkName() {
+        this.errors = [];
+
+        if (this.title) {
+          return true;
+        }
+
+        if (this.title === '' || this.title.length > 20) {
+          this.errors.push('Title required.');
+        }
+      },
+
       async buyImage() {
+        if (!this.checkName()) return;
+
+        const UPLOAD_WIDTH = 307 * 2;
+        const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
+        console.log(UPLOAD_WIDTH, UPLOAD_HEIGHT);
         let canvas = Canvas.methods.getCanvasElement();
-        let image = canvas.toDataURL('image/png');
+        const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
+
+        let image = canvasClone.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
+        console.log('IMAGE HASH' + ipfsHash);
         let pot = this.selectedPacks.map(assetPack =>
           assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
@@ -148,7 +176,9 @@
           this.username,
           this.userAddress,
           this.imagePrice,
-          ipfsHash);
+          ipfsHash,
+          this.title,
+        );
       },
       async renderCanvas() {
         this.iterations++;
@@ -405,7 +435,6 @@
             align-items: center;
             justify-content: flex-end;
             padding-top: 20px;
-
 
             &.buy-screen {
                 justify-content: space-between;

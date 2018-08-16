@@ -19,14 +19,14 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 
 const DELAY = 150;
 
-export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash) => {
+export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title) => {
   potentialAssets = utils.encode(potentialAssets);
 
   timestamp = parseInt(timestamp, 10);
   iterations = parseInt(iterations, 10);
   try {
     console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash).send({
+    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, title).send({
       value: parseInt(price),
       from: account,
       to: digitalPrintImageContractAddress,
@@ -224,15 +224,15 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     let image = new Image();
 
     image.src = assets[i].path;
-    const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, frame.ratio);
+    const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
     image.width = sizes.width;
     image.height = sizes.height;
     image.crossOrigin = 'Anonymous';
     images.push({
       id: i,
       image: image,
-      x_coordinate: Math.floor(Math.random() * 350),
-      y_coordinate: Math.floor(Math.random() * 350),
+      x_coordinate: Math.floor(Math.random() * canvasWidth),
+      y_coordinate: Math.floor(Math.random() * canvasHeight),
       rotation: Math.floor(Math.random() * 360),
       scale: 800 + Math.floor(Math.random() * 200),
       isBackground: parseInt(assets[i].attribute) === 122,
@@ -263,8 +263,8 @@ const delay = async (delayInms) => {
 };
 
 export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
-  const DEFAULT_WIDTH = 2480;
-  const DEFAULT_HEIGHT = ratio === '2:3' ? 3508 : 2480;
+  const DEFAULT_WIDTH = 3860;
+  const DEFAULT_HEIGHT = 2810;
 
   const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
   const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
@@ -367,7 +367,7 @@ export const drawImageRot = (context, img, x, y, width, height, deg, options) =>
   };
 
   if (options && options.isBackground) {
-    context.drawImage(img, 0, 0, options.canvasWidth, options.canvasHeight);
+    context.drawImage(img, 0, 0, width, height);
     return;
   }
 

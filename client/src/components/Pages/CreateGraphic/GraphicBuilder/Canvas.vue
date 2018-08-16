@@ -41,6 +41,7 @@
           await makeImage(assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES, delay);
         } catch (e) {
           console.error(e);
+          return this.toggleDrawing();
         }
         this.toggleDrawing();
       }

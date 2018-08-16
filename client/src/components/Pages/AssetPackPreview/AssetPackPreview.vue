@@ -84,6 +84,7 @@
         }
 
         button {
+
             width: 140px;
         }
 

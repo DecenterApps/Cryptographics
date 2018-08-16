@@ -1,5 +1,5 @@
 <template>
-    <input 
+    <input
         class="input"
         :class="inputStyle"
         :type="inputType"
@@ -32,7 +32,7 @@ export default {
     },
     methods: {
         handleInput (e) {
-            this.$emit('input', this.content)
+            this.$emit('input', this.content, e)
         }
     }
 }
@@ -48,6 +48,10 @@ export default {
     border: 1px solid #000;
     border-radius: 5px;
     margin-bottom: 10px;
+
+    &.error {
+        border: 1px solid #f00;
+    }
 }
 </style>
 
