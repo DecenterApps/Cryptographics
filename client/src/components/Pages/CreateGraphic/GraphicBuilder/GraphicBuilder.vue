@@ -15,7 +15,9 @@
                             :key="index"
                             :assetPack="assetPack"
                             :small="true"
-                            color="#eee" />
+                            color="#eee"
+                            action="close"
+                    />
                     <div @click="changeTab" class="add-more">
                         +
                     </div>

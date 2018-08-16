@@ -249,15 +249,18 @@ export const getImageMetadata = (imageId) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
     if (!image) resolve({});
+    const usedAssets = image[1].map(assetId => parseInt(assetId, 10));
 
     resolve({
+      id: imageId,
       finalSeed: image[0],
-      potentialAssets: image[1],
       timestamp: image[2],
       username: image[3],
-      artistAddress: image[4],
+      creator: image[4],
       ipfsHash: image[5],
-      src: `${ipfsNodePath}${image[5]}`
+      src: `${ipfsNodePath}${image[5]}`,
+      title: image[6],
+      usedAssets
     });
   });
 
@@ -317,6 +320,13 @@ export const getAssetMetadata = (seed, assetId) => {
     };
   }
   return null;
+};
+
+export const getAssetsOrigins = async (assetIds) => {
+  const assetPacks = await assetManagerContract().methods.pickUniquePacks(assetIds).call();
+  const onlyUnique = [...new Set(assetPacks)];
+
+  return onlyUnique;
 };
 
 export const getImage = async (randomSeed, iterations, potentialAssets) => {

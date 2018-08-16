@@ -23,10 +23,12 @@
                 </div>
                 <div v-masonry-tile class="item" v-for="(item, index) in images" :key="index">
                     <div class="artwork">
-                        <overlay v-if="displayOverlay">
-                            <button-icon icon-type="download"/>
-                            <button-icon icon-type="zoom"/>
-                        </overlay>
+                        <router-link :to="`/single-graphic/${item.id}`">
+                            <overlay v-if="displayOverlay">
+                                <!--<button-icon icon-type="download"/>-->
+                                <button-icon icon-type="zoom"/>
+                            </overlay>
+                        </router-link>
                         <img v-bind:class="item.className" v-bind:src="item.src" alt="">
                     </div>
                     <div class="artwork-details">
@@ -104,6 +106,7 @@
             &:hover {
                 .overlay {
                     opacity: 1;
+                    cursor: pointer;
                 }
             }
         }

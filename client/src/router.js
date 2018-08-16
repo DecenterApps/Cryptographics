@@ -21,7 +21,7 @@ const router = new VueRouter({
     // { path: '/legacy', component: Parent },
     { path: '/about', component: About },
     // { path: '/landing', component: Landing },
-    { path: '/single-graphic', component: SingleGraphic },
+    { path: '/single-graphic/:id', component: SingleGraphic },
     { path: '/create-graphic', component: CreateGraphic },
     { path: '/gallery', component: Gallery }, // Gallery here
     { path: '/upload-asset-pack', component: UploadAssetPack },
