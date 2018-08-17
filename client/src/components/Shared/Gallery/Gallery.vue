@@ -21,20 +21,21 @@
                 <div class="grid">
                     <div class="gutter-sizer"></div>
                 </div>
-                <div v-masonry-tile class="item" v-for="(item, index) in images" :key="index">
+                <div v-masonry-tile class="item" v-for="(image, index) in images" :key="index">
                     <div class="artwork">
-                        <router-link :to="`/single-graphic/${item.id}`">
+                        <router-link :to="`/single-graphic/${image.id}`">
                             <overlay v-if="displayOverlay">
                                 <!--<button-icon icon-type="download"/>-->
                                 <button-icon icon-type="zoom" />
                             </overlay>
                         </router-link>
-                        <img v-bind:class="item.className" v-bind:src="item.src" alt="">
+                        <img v-bind:class="image.className" v-bind:src="image.src" alt="">
                     </div>
                     <div class="artwork-details">
-                        <user-link to="/userurl" name="username" avatar="/avatarurl" />
+                        <user-link :to="'/user/' + image.creator" :name="image.username" :avatar="image.avatar" />
                         <price
-                                value="0.05"
+                                v-if="image.price"
+                                :value="image.price"
                                 size="small" />
                     </div>
                 </div>
