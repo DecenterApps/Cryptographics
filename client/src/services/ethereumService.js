@@ -222,6 +222,34 @@ export const registerUser = async (username, hashToProfilePicture, account) => {
   }
 };
 
+export const isImageForSale = async (imageId) => {
+  return await marketPlaceContract().methods.isImageOnSale(imageId).call();
+};
+
+export const cancelSell = async (address, imageId) => {
+  if (!web3.utils.isAddress(address)) return;
+  return await marketPlaceContract().methods.cancel(imageId).send({
+    from: address
+  });
+};
+
+export const buyImage = async (address, imageId, price) => {
+  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+  const buyPrice = web3.utils.toWei(price, 'ether');
+  return await marketPlaceContract().methods.buy(imageId).send({
+    from: address,
+    value: buyPrice,
+  });
+};
+
+export const sellImage = async (address, imageId, price) => {
+  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+  const sellPrice = web3.utils.toWei(price, 'ether');
+  return await marketPlaceContract().methods.sell(imageId, sellPrice).send({
+    from: address,
+  });
+};
+
 export const calculatePrice = async (pickedAssets, owner) => {
   if (pickedAssets.length === 0) {
     return 0;

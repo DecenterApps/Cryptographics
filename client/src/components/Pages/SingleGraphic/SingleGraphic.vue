@@ -16,6 +16,7 @@
                     :username="username"
                     :isLogged="loggedIn"
                     :isForSale="forSale"
+                    :userAddress="userAddress"
                     @showPrintForm="orderPrint = true"
             />
             <print-form v-else />
@@ -33,7 +34,8 @@
     getAssetsOrigins,
     getImageMetadata,
     getUsername,
-    getSelectedAssetPacksWithAssetData
+    getSelectedAssetPacksWithAssetData,
+    isImageForSale,
   } from 'services/ethereumService';
 
   export default {
@@ -61,11 +63,12 @@
       })
     },
     async created() {
-      this.image = await getImageMetadata(this.$route.params.id);
+      this.image = await getImageMetadata(this.$route.params.id, true);
       const packsUsed = await getAssetsOrigins(this.image.usedAssets);
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.username = await getUsername(this.image.creator);
       this.loggedIn = this.image.creator === this.userAddress;
+      this.forSale = await isImageForSale(this.$route.params.id);
     }
   };
 </script>

@@ -5,7 +5,7 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar" :src="ipfsNodePath + avatar">
+        <img v-if="avatar.length > 0" class="avatar" :src="ipfsNodePath + avatar">
         <div class="left">
           <h1 class="large-title name">{{ username }}</h1>
         </div>
