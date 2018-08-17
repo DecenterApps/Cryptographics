@@ -255,7 +255,7 @@ export const calculatePrice = async (pickedAssets, owner) => {
     return 0;
   }
 
-  if (owner.toString().length !== 42) {
+  if (!web3.utils.isAddress(owner)) {
     return null;
   }
 
