@@ -51,7 +51,7 @@
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
-            .button {
+            .button-wrapper {
                 margin-bottom: 20px;
                 &:last-of-type {
                     margin: 0;

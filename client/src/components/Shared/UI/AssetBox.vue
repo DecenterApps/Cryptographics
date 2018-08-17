@@ -6,8 +6,9 @@
     >
         <img :src="assetPack.packCoverSrc" alt="">
         <overlay>
-            <div v-if="small">
-
+            <div v-if="small" class="overlay-content">
+                <button-icon v-if="action === 'zoom'" size="16px" icon-type="zoom"/>
+                <button-icon v-if="action === 'close'" size="16px" icon-type="close"/>
             </div>
             <div v-if="!small" class="overlay-content">
                 <p class="small-title pack-name">{{ assetPack.packName }}</p>
@@ -39,6 +40,10 @@
       small: {
         type: Boolean,
         default: false,
+      },
+      action: {
+        type: String,
+        default: '',
       }
     }
   };
@@ -62,6 +67,12 @@
         &.small {
             height: 55px;
             width: 75px;
+
+            .overlay-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         .pack-name {

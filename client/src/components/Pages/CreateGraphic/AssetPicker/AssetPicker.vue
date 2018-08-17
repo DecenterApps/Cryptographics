@@ -132,8 +132,10 @@
             align-items: center;
             margin-bottom: 20px;
 
-            .button {
-                width: 130px;
+            .button-wrapper {
+                .button {
+                    width: 130px;
+                }
 
                 &:first-child {
                     margin-right: 20px;

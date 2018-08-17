@@ -197,7 +197,7 @@
         }
         .button-group {
             display: inline-flex;
-            .button {
+            .button-wrapper {
                 margin: 0 5px;
                 &:first-of-type {
                     margin-left: 0;
@@ -216,7 +216,7 @@
                 width: 386px;
                 height: 281px;
             }
-            .button {
+            .button-wrapper {
                 margin-left: 10px;
             }
         }

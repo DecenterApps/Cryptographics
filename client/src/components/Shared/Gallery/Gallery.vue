@@ -13,27 +13,29 @@
                 </div>
             </div> -->
             <div class="masonry-wrapper"
-                v-masonry
-                transition-duration="0.3s"
-                item-selector=".item"
-                gutter=".gutter-sizer"
-                fit-width="true">
+                 v-masonry
+                 transition-duration="0.3s"
+                 item-selector=".item"
+                 gutter=".gutter-sizer"
+                 fit-width="true">
                 <div class="grid">
                     <div class="gutter-sizer"></div>
                 </div>
                 <div v-masonry-tile class="item" v-for="(item, index) in images" :key="index">
                     <div class="artwork">
-                        <overlay v-if="displayOverlay">
-                            <button-icon icon-type="download"/>
-                            <button-icon icon-type="zoom"/>
-                        </overlay>
+                        <router-link :to="`/single-graphic/${item.id}`">
+                            <overlay v-if="displayOverlay">
+                                <!--<button-icon icon-type="download"/>-->
+                                <button-icon icon-type="zoom" />
+                            </overlay>
+                        </router-link>
                         <img v-bind:class="item.className" v-bind:src="item.src" alt="">
                     </div>
                     <div class="artwork-details">
-                        <user-link to="/userurl" name="username" avatar="/avatarurl"/>
+                        <user-link to="/userurl" name="username" avatar="/avatarurl" />
                         <price
-                            value="0.05"
-                            size="small"/>
+                                value="0.05"
+                                size="small" />
                     </div>
                 </div>
             </div>
@@ -42,94 +44,95 @@
 </template>
 
 <script>
-    export default {
-        name: 'Gallery',
-        props: {
-            displayFilters: {
-                type: Boolean,
-                default: true
-            },
-            images: {
-                type: Array,
-                default: []
-            },
-            displayOverlay: {
-                type: Boolean,
-                default: false
-            }
-        }
-    };
+  export default {
+    name: 'Gallery',
+    props: {
+      displayFilters: {
+        type: Boolean,
+        default: true
+      },
+      images: {
+        type: Array,
+        default: []
+      },
+      displayOverlay: {
+        type: Boolean,
+        default: false
+      }
+    },
+  };
 </script>
 
 <style scoped lang="scss">
-.gallery {
-    background-color: #EEEEEE;
-    padding: 70px 0;
-    min-height: 650px;
-    .masonry-wrapper {
-        width: 100% !important;
-        margin: 0 auto;
-    }
-    .gutter-sizer {
-        width: 70px;
-    }
-    .filters {
-        padding: 30px 0 70px 0;
-        font-size: 12px;
-        display: flex;
-        justify-content: space-between;
-        span {
-            margin-right: 14px;
-            &.active {
-                text-decoration: underline;
-            }
-            &:last-child {
-                margin-right: 0;
-            }
+    .gallery {
+        background-color: #EEEEEE;
+        padding: 70px 0;
+        min-height: 650px;
+        .masonry-wrapper {
+            width: 100% !important;
+            margin: 0 auto;
         }
-    }
-    .item {
-        width: 307px;
-        margin-bottom: 30px;
-        .artwork {
-            /*padding: 14px 14px 40px 14px;*/
-            background-color: #fff;
-            position: relative;
-            img {
-                max-width: 100%;
-            }
-            .artwork-description {
-                font-size: 5px;
-            }
-            &:hover {
-                .overlay {
-                    opacity: 1;
-                }
-            }
+        .gutter-sizer {
+            width: 70px;
         }
-        .artwork-details {
+        .filters {
+            padding: 30px 0 70px 0;
+            font-size: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            .author {
-                display: flex;
-                align-items: center;
-                text-decoration: none;
-                .avatar {
-                    display: inline-flex;
-                    background-color: #555;
-                    border-radius: 50%;
-                    width: 33px;
-                    height: 33px;
-                    margin-right: 10px;
+            span {
+                margin-right: 14px;
+                &.active {
+                    text-decoration: underline;
                 }
-                .username {
-                    color: #858585;
-                    font-size: 12px;
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+        .item {
+            width: 307px;
+            margin-bottom: 30px;
+            .artwork {
+                /*padding: 14px 14px 40px 14px;*/
+                background-color: #fff;
+                position: relative;
+                img {
+                    max-width: 100%;
+                }
+                .artwork-description {
+                    font-size: 5px;
+                }
+                &:hover {
+                    .overlay {
+                        opacity: 1;
+                        cursor: pointer;
+                    }
+                }
+            }
+            .artwork-details {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+                .author {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    .avatar {
+                        display: inline-flex;
+                        background-color: #555;
+                        border-radius: 50%;
+                        width: 33px;
+                        height: 33px;
+                        margin-right: 10px;
+                    }
+                    .username {
+                        color: #858585;
+                        font-size: 12px;
+                    }
                 }
             }
         }
     }
-}
 </style>
