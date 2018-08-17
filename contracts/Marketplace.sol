@@ -59,7 +59,7 @@ contract Marketplace is Ownable {
 
         uint[] memory imageIds = new uint[](count);
         uint[] memory prices = new uint[](count);
-        for (i = 0; i<numberOfAds; i++) {
+        for (i = 0; i < numberOfAds; i++) {
             ad = sellAds[allAds[i]];
             // active on sale are only those that exists and its still the same owner
             if (isImageOnSale(allAds[i])) {
