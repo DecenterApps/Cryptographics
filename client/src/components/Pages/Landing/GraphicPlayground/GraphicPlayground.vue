@@ -183,7 +183,7 @@
                             flex-direction: row;
                             align-items: center;
                             margin-bottom: 30px;
-                            .button {
+                            .button-wrapper {
                                 margin: 0 10px 0;
                             }
                         }
@@ -212,7 +212,7 @@
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
-            .button {
+            .button-wrapper {
                 margin-bottom: 20px;
                 &:last-of-type {
                     margin: 0;

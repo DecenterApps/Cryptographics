@@ -106,6 +106,7 @@
 <style lang="scss" scoped>
     .edit-profile-modal {
         display: flex;
+        width: 924px;
         .left {
             flex: 0 0 50%;
             display: inline-flex;

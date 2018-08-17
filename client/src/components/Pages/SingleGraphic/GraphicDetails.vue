@@ -12,7 +12,7 @@
                     ></asset-box>
                 </router-link>
             </div>
-            <p>Assets pack used in this Cryptographic</p>
+            <p>Asset packs used in this Cryptographic</p>
         </div>
         <div class="graphic-meta">
             <div class="graphic-name">
@@ -20,7 +20,7 @@
                 <user-link :to="'/user/' + image.creator" :name="username" avatar="/avatarurl" />
             </div>
             <div v-if="!sellGraphic" class="graphic-address">
-                <strong>cryptographics address:</strong>
+                <strong>Cryptographics address:</strong>
                 <span class="address">{{ image.creator }}</span>
             </div>
             <div
@@ -28,7 +28,6 @@
                     class="graphic-controls"
                     :class="{ sell: sellGraphic }">
                 <template v-if="!sellGraphic">
-                    <button-link to="/gallery">My Gallery</button-link>
                     <cg-button @click="sellGraphic = !sellGraphic">Sell</cg-button>
                     <cg-button @click="$emit('showPrintForm')">Print</cg-button>
                 </template>
@@ -130,7 +129,7 @@
             flex-direction: column;
             margin-top: 0;
         }
-        .button {
+        .button-wrapper {
             margin: 0 10px;
             &:first-of-type {
                 margin-left: 0;

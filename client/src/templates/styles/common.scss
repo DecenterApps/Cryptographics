@@ -160,7 +160,7 @@ a {
     right: 10px;
 }
 .button-group {
-    & .button {
+    & .button-wrapper {
         margin: 0 10px;
         &:first-of-type {
         margin-left: 0;

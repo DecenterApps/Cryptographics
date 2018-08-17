@@ -68,7 +68,7 @@
                     <div class="small-title">Art Title</div>
                     <Input
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
-                            v-on:input="checkName"
+                            v-on:input="checkTitle"
                             v-model="title"
                             placeholder="0/20"
                     />
@@ -80,7 +80,12 @@
                     </div>
                     <div class="separate-controls">
                         <h1 class="large-title">Ξ {{ displayPrice() }}</h1>
-                        <cg-button @click="buyImage">Claim Token</cg-button>
+                        <cg-button
+                                :disabled="isCanvasDrawing"
+                                @click="buyImage"
+                        >
+                            Claim Token
+                        </cg-button>
                     </div>
                 </div>
             </div>
@@ -96,14 +101,17 @@
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
+    usernameExists,
+    registerUser,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
   import { resizeCanvas } from 'services/helpers';
-  import { mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { TOGGLE_MODAL } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import Input from '../../../Shared/UI/Input';
 
@@ -141,8 +149,11 @@
     },
     props: ['selectedAssetPacks'],
     methods: {
+      ...mapActions({
+        openModal: TOGGLE_MODAL
+      }),
 
-      checkName() {
+      checkTitle() {
         this.errors = [];
 
         if (this.title) {
@@ -155,7 +166,12 @@
       },
 
       async buyImage() {
-        if (!this.checkName()) return;
+        if (!this.checkTitle()) return;
+
+        console.log(this.username);
+        if (this.username === '' || this.username === 'Anon') {
+          return this.openModal('setUsername');
+        }
 
         const UPLOAD_WIDTH = 307 * 2;
         const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
@@ -417,7 +433,7 @@
         .top-controls {
             margin-bottom: 20px;
 
-            .button {
+            .button-wrapper {
                 margin-top: 10px;
             }
 

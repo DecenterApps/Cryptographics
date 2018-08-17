@@ -19,7 +19,7 @@
         top: 0; right: 0; bottom: 0; left: 0;
         background-color: fade-out(#000, .3);
     }
-    .button {
+    .button-wrapper {
         margin: 0 20px;
         z-index: 1;
         &:first-of-type {
