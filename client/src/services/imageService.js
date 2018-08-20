@@ -175,8 +175,8 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
   context.stroke();
 
   let image = new Image();
-  image.src = require(`assets/cg-logo.png`);
   image.crossOrigin = 'Anonymous';
+  image.src = require(`assets/cg-logo.png`);
 
   image.onload = () => {
     const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
@@ -203,6 +203,11 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
     asset.image.height,
     rotation,
     { isBackground: asset.isBackground, canvasWidth, canvasHeight });
+  if (frame.shouldDrawFrame) {
+    // WRITE FRAME
+    drawFrame(context, canvasHeight, canvasWidth, frame);
+  }
+  drawBottomFrame(context, canvasHeight, canvasWidth, frame);
 };
 
 export const makeCoverImage = (isHome, assets, c, width, height, frame = {
@@ -247,10 +252,6 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     .done(async (loadedImages) => {
       for (let i = 0; i < images.length; i++) {
         await drawLoadedImage(context, images[i], canvasWidth, canvasHeight, frame, i, 0);
-        if (i === images.length - 1 && frame.shouldDrawFrame) {
-          // WRITE FRAME
-          drawFrame(context, canvasHeight, canvasWidth, frame);
-        }
       }
     });
 };
@@ -309,13 +310,13 @@ export const makeImage = (objs, c, width, height, frame = {
     console.log(hashes);
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
+      image.crossOrigin = 'Anonymous';
 
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
       } else {
         image.src = ipfsNodePath + hashes[i];
       }
-      image.crossOrigin = 'Anonymous';
 
       assets[i] = {
         ...assets[i],

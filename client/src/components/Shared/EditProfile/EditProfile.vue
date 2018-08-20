@@ -82,6 +82,7 @@
         context.canvas.height = 160;
         let url = window.URL || window.webkitURL;
         let profileImg = new Image();
+        profileImg.crossOrigin = 'Anonymous';
         profileImg.src = url.createObjectURL(selectedImage);
         profileImg.onload = async () => {
           context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
