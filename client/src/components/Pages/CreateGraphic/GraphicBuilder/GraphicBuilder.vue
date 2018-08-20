@@ -139,6 +139,7 @@
       potentialAssets: [],
       allAssets: [],
       selectedPacks: [],
+      claimPressed: false,
     }),
     computed: {
       ...mapGetters({
@@ -148,6 +149,20 @@
       })
     },
     props: ['selectedAssetPacks'],
+    watch: {
+      selectedAssetPacks: async function () {
+        this.selectedPacks = this.selectedAssetPacks;
+        this.iterations = 0;
+        this.timestamp = new Date().getTime();
+        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
+        this.randomSeed = await convertSeed(this.randomSeed);
+      },
+      username: function (val) {
+        if (val !== '' && val !== 'Anon' && this.claimPressed) {
+          this.buyImage();
+        }
+      }
+    },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL
@@ -170,6 +185,7 @@
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
+          this.claimPressed = true;
           return this.openModal('setUsername');
         }
 
@@ -260,16 +276,6 @@
         this.renderCanvas();
       }
     },
-
-    watch: {
-      selectedAssetPacks: async function () {
-        this.selectedPacks = this.selectedAssetPacks;
-        this.iterations = 0;
-        this.timestamp = new Date().getTime();
-        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
-        this.randomSeed = await convertSeed(this.randomSeed);
-      }
-    }
   };
 </script>
 
