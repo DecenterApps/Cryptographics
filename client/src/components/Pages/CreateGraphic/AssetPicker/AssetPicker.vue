@@ -79,7 +79,7 @@
         return this.selectedAssetPacks.findIndex(item => item.id === asset.id) >= 0;
       },
       toggleAsset(asset) {
-        this.$emit('pickAsset', asset);
+        this.$emit('pickAssetPack', asset);
       },
       async toggleAssetPacks() {
         this.showYourPacks = !this.showYourPacks;

@@ -3,7 +3,7 @@
         <asset-picker
                 v-if="activeTab === 'picker'"
                 v-on:tabChange="changeTab"
-                v-on:pickAsset="toggleAsset"
+                v-on:pickAssetPack="toggleAssetPack"
                 :selectedAssetPacks="selectedAssetPacks" />
         <graphic-builder
                 v-if="activeTab === 'create'"
@@ -16,6 +16,7 @@
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
   import { getLandingPacks } from 'services/ethereumService';
+  import { preloadAssets } from 'services/helpers';
 
   export default {
     name: 'CreateGraphic',
@@ -31,15 +32,16 @@
       changeTab(tab) {
         this.activeTab = tab;
       },
-      toggleAsset(asset) {
-        const index = this.selectedAssetPacks.findIndex(item => item.id === asset.id);
+      toggleAssetPack(assetPack) {
+        const index = this.selectedAssetPacks.findIndex(item => item.id === assetPack.id);
         if (index >= 0) {
           return this.selectedAssetPacks = [
             ...this.selectedAssetPacks.slice(0, index),
             ...this.selectedAssetPacks.slice(index + 1),
           ];
         }
-        this.selectedAssetPacks.push(asset);
+        preloadAssets(assetPack.assets);
+        this.selectedAssetPacks.push(assetPack);
       }
     },
     created() {
