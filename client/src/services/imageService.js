@@ -176,6 +176,7 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
 
   let image = new Image();
   image.src = require(`assets/cg-logo.png`);
+  image.crossOrigin = 'Anonymous';
 
   image.onload = () => {
     const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
@@ -323,6 +324,7 @@ export const makeImage = (objs, c, width, height, frame = {
         image,
       };
     }
+
     assets = helpers.moveBackgrounds(assets);
     console.log('SORTED ASSETS', assets);
 
