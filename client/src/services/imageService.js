@@ -264,8 +264,8 @@ const delay = async (delayInms) => {
 };
 
 export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
-  const DEFAULT_WIDTH = 3860;
-  const DEFAULT_HEIGHT = 2810;
+  const DEFAULT_WIDTH = 2480;
+  const DEFAULT_HEIGHT = 1805;
 
   const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
   const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
