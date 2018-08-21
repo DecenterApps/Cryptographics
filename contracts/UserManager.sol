@@ -1,5 +1,6 @@
 pragma solidity ^0.4.23;
 
+
 contract UserManager {
 
     struct User {
@@ -8,16 +9,18 @@ contract UserManager {
         bool exists;
     }
 
-    uint numberOfUsers;
+    uint public numberOfUsers;
 
-    mapping(string => bool) usernameExists;
-    mapping(address => User) addressToUser;
+    mapping(string => bool) public usernameExists;
+    mapping(address => User) public addressToUser;
 
-    mapping(bytes32 => bool) profilePictureExists;
-    mapping(string => address) usernameToAddress;
+    mapping(bytes32 => bool) public profilePictureExists;
+    mapping(string => address) public usernameToAddress;
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
-        require(usernameExists[_username] == false || keccak256(abi.encodePacked(getUsername(msg.sender))) == keccak256(abi.encodePacked(_username)));
+        require(usernameExists[_username] == false || 
+                keccak256(abi.encodePacked(getUsername(msg.sender))) == keccak256(abi.encodePacked(_username))
+        );
 
         // if he already had username, that username is free now
         usernameExists[getUsername(msg.sender)] = false;

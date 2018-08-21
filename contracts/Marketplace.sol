@@ -3,6 +3,7 @@ pragma solidity ^0.4.23;
 import "./Utils/Ownable.sol";
 import "./Image/DigitalPrintImage.sol";
 
+
 contract Marketplace is Ownable {
 
     struct Ad {
@@ -21,7 +22,7 @@ contract Marketplace is Ownable {
     mapping(uint => Ad) public sellAds;
     mapping(address => uint) public balances;
 
-    constructor(address _digitalPrintImageContract) public{
+    constructor(address _digitalPrintImageContract) public {
         digitalPrintImageContract = DigitalPrintImage(_digitalPrintImageContract);
         numberOfAds = 0;
     }
@@ -49,7 +50,7 @@ contract Marketplace is Ownable {
 
     function getActiveAds() public view returns (uint[], uint[]) {
         uint count;
-        for (uint i = 0; i<numberOfAds; i++) {
+        for (uint i = 0; i < numberOfAds; i++) {
             Ad memory ad = sellAds[allAds[i]];
             // active on sale are only those that exists and its still the same owner
             if (isImageOnSale(allAds[i])) {
@@ -85,7 +86,7 @@ contract Marketplace is Ownable {
 
         address _creator;
         address _imageOwner = digitalPrintImageContract.ownerOf(_imageId);
-        (,,_creator,,) = digitalPrintImageContract.imageMetadata(_imageId);
+        (, , _creator, ,) = digitalPrintImageContract.imageMetadata(_imageId);
 
         balances[_creator] = msg.value * 3 / 100;
         balances[owner] = msg.value * 2 / 100;
@@ -97,17 +98,11 @@ contract Marketplace is Ownable {
     /// @notice Function to remove image from Marketplace
     /// @dev image can be withdrawed only by its owner
     /// @param _imageId is id of image we would like to get back
-    function cancel(uint _imageId) public  {
+    function cancel(uint _imageId) public {
         require(sellAds[_imageId].exists == true);
         require(sellAds[_imageId].exchanger == msg.sender);
 
         removeOrder(_imageId);
-    }
-
-    /// @notice Removes image from imgagesOnSale list
-    /// @param _imageId is id of image we want to remove
-    function removeOrder(uint _imageId) private {
-        sellAds[_imageId].exists = false;
     }
 
     function withdraw() public {
@@ -116,5 +111,11 @@ contract Marketplace is Ownable {
         balances[msg.sender] = 0;
 
         msg.sender.transfer(amount);
+    }
+
+    /// @notice Removes image from imgagesOnSale list
+    /// @param _imageId is id of image we want to remove
+    function removeOrder(uint _imageId) private {
+        sellAds[_imageId].exists = false;
     }
 }
