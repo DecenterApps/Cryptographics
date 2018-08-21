@@ -35,17 +35,51 @@
                                 class="asset"
                                 v-for="(asset, index) in assets"
                                 :key="index">
-                            <div v-if="isBackground(asset)" class="preview-icons">
-                                <ico-background @click.native="toggleBackground(index)" />
+                            <div class="preview-icons">
+                                <button-icon
+                                        v-if="isAttributeSelected(asset, 2)"
+                                        icon-type="scale"
+                                        :color="'#000'"
+                                        classProp="selected"
+                                />
+                                <button-icon
+                                        v-if="isAttributeSelected(asset, 1)"
+                                        icon-type="rotate"
+                                        :color="'#000'"
+                                        classProp="selected"
+                                />
+                                <ico-background v-if="isAttributeSelected(asset, 0)" />
                             </div>
                             <img :src="asset.path" />
                             <overlay>
-                                <div class="span ico-background">
-                                    <ico-background
-                                            :ico-color="isBackground(asset) ? '#fff' : '#636363'"
-                                            ico-stroke="none"
-                                            @click.native="toggleBackground(index)"
-                                    />
+                                <div class="overlay-icons">
+                                    <span>
+                                        <button-icon
+                                                icon-type="scale"
+                                                :color="'#fff'"
+                                                :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
+                                                @click.native="toggleAttribute(index, 0)"
+                                        />
+                                        <span class="description">Scale asset</span>
+                                    </span>
+                                    <span>
+                                        <button-icon
+                                                icon-type="rotate"
+                                                :color="'#fff'"
+                                                :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
+                                                @click.native="toggleAttribute(index, 1)"
+                                        />
+                                        <span class="description">Rotate asset</span>
+                                    </span>
+                                    <span>
+                                        <ico-background
+                                                :ico-color="'#fff'"
+                                                :classProp="isAttributeSelected(asset, 0) ? 'selected' : ''"
+                                                ico-stroke="none"
+                                                @click.native="toggleAttribute(index, 2)"
+                                        />
+                                        <span class="description">Use as background</span>
+                                    </span>
                                 </div>
                                 <ico-trash @click.native="remove(index)" />
                             </overlay>
@@ -142,8 +176,8 @@
     },
 
     methods: {
-      isBackground(asset) {
-        return asset.attribute.toString().slice(0, 1) === '1';
+      isAttributeSelected(asset, position) {
+        return asset.attribute.toString().charAt(position) === '1';
       },
       uploadAssets() {
         let x = document.getElementById('files');
@@ -151,7 +185,7 @@
           this.assets.push({
             path: URL.createObjectURL(x.files[i]),
             file: x.files[i],
-            attribute: 222,
+            attribute: 211,
           });
         }
       },
@@ -160,7 +194,6 @@
         let canvas = document.getElementById('canvas');
         canvas.width = 2480;
         canvas.height = 1805;
-        console.log(this.assets);
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
       async uploadToIpfs() {
@@ -214,12 +247,13 @@
         makeCoverImage(false, asset_paths, canvas, 500, 365);
       },
 
-      toggleBackground(index) {
-        console.log(index);
-        if (this.assets[index].attribute === 122) {
-          return this.assets[index].attribute = 222;
+      toggleAttribute(index, attributeType) {
+        const attribute = this.assets[index].attribute;
+        const digit = Math.floor((attribute / (10 ** attributeType)) % 10);
+        if (digit === 1) {
+          return this.assets[index].attribute += 10 ** attributeType;
         }
-        this.assets[index].attribute = 100 + this.assets[index].attribute % 100;
+        this.assets[index].attribute -= 10 ** attributeType;
       }
     },
 
@@ -371,24 +405,60 @@
             right: 15px;
         }
 
-        .ico-background {
+        .overlay-icons {
+            display: flex;
+            flex-direction: column;
             position: absolute;
             bottom: 15px;
             left: 15px;
-        }
 
-        svg {
-            cursor: pointer;
-            fill: #636363;
-            path {
-                fill: #636363
+            span {
+                display: inline-flex;
+                align-items: center;
             }
 
-            &.selected {
-                path {
-                    fill: #fff !important;
-                    stroke: none !important;
+
+            .description {
+                display: none;
+                color: #fff;
+                font-family: Roboto, sans-serif;
+                font-size: 12px;
+                padding-left: 10px;
+            }
+
+            button {
+                margin-bottom: 10px;
+            }
+
+            svg, button {
+                opacity: 0.5;
+
+                &.selected {
+                    opacity: 1;
+                    path {
+                        fill: #fff !important;
+                        stroke: none !important;
+                    }
                 }
+
+                &:hover {
+                    opacity: 1;
+                    path {
+                        fill: #fff !important;
+                    }
+
+                    & + span {
+                        display: inline;
+                    }
+                }
+            }
+        }
+
+        svg, button {
+            cursor: pointer;
+            fill: #fff;
+            path {
+                fill: #fff;
             }
         }
 
@@ -396,6 +466,12 @@
             position: absolute;
             bottom: 15px;
             left: 15px;
+            display: flex;
+            flex-direction: column;
+            svg, button {
+                margin-bottom: 10px;
+            }
+
             svg {
                 fill: #000;
                 path {

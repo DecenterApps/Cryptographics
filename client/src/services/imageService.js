@@ -190,7 +190,7 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
 const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame, index, delayTime) => {
   let x = asset.x_coordinate % canvasWidth;
   let y = asset.y_coordinate % canvasHeight;
-  let rotation = asset.rotation;
+  let { rotation, scale, isBackground, shouldScale, shouldRotate } = asset;
   if (delayTime > 0) {
     await delay(delayTime);
   }
@@ -202,7 +202,14 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
     asset.image.width,
     asset.image.height,
     rotation,
-    { isBackground: asset.isBackground, canvasWidth, canvasHeight });
+    scale,
+    {
+      isBackground,
+      shouldScale,
+      shouldRotate,
+      canvasWidth,
+      canvasHeight
+    });
 };
 
 export const makeCoverImage = (isHome, assets, c, width, height, frame = {
@@ -224,9 +231,9 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
   let images = [];
   for (let i = 0; i < assets.length; i++) {
     let image = new Image();
+    let attribute = parseInt(assets[i].attribute);
 
     image.src = assets[i].path;
-    // const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
     image.crossOrigin = 'Anonymous';
     images.push({
       id: i,
@@ -235,7 +242,9 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
       y_coordinate: Math.floor(Math.random() * canvasHeight),
       rotation: Math.floor(Math.random() * 360),
       scale: 800 + Math.floor(Math.random() * 200),
-      isBackground: parseInt(assets[i].attribute) === 122,
+      isBackground: Math.floor((attribute / 100) % 10) === 1,
+      shouldScale: true,
+      shouldRotate: true,
     });
   }
 
@@ -312,10 +321,14 @@ export const makeImage = (objs, c, width, height, frame = {
         image.src = ipfsNodePath + hashes[i];
       }
 
+      let attribute = parseInt(objs[i].attributes, 10);
+
       assets[i] = {
         ...assets[i],
-        background: objs[i].background,
-        isBackground: objs[i].background === '122',
+        attributes: objs[i].attributes,
+        isBackground: Math.floor((attribute / 100) % 10) === 1,
+        shouldScale: Math.floor(attribute % 10) === 1,
+        shouldRotate: Math.floor((attribute / 10) % 10) === 1,
         image,
       };
     }
@@ -357,19 +370,25 @@ const waitForBackgroundLoad = (images, cb) => {
   }, 300);
 };
 
-export const drawImageRot = (context, img, x, y, width, height, deg, options) => {
+export const drawImageRot = (context, img, x, y, width, height, deg, scale, options) => {
+  const { isBackground, shouldScale, shouldRotate } = options;
   const coords = {
     x: width / 2 * (-1),
     y: height / 2 * (-1)
   };
+  const multiplier = shouldScale ? scale / 1000 : 1;
 
-  if (options && options.isBackground) {
+  if (options && isBackground) {
     context.drawImage(img, 0, 0, width, height);
     return;
   }
 
+  const angle = shouldRotate ? deg : 0;
+
+  console.log(isBackground, shouldRotate, shouldScale, angle, multiplier);
+
   //Convert degrees to radian
-  const rad = deg * Math.PI / 180;
+  const rad = angle * Math.PI / 180;
 
   //Set the origin to the center of the image
   context.translate(x, y);
@@ -377,8 +396,9 @@ export const drawImageRot = (context, img, x, y, width, height, deg, options) =>
   //Rotate the canvas around the origin
   context.rotate(rad);
 
+  console.log(multiplier);
   //draw the image
-  context.drawImage(img, coords.x, coords.y, width, height);
+  context.drawImage(img, coords.x, coords.y, width * multiplier, height * multiplier);
 
   //reset the canvas
   context.rotate(rad * (-1));

@@ -347,16 +347,16 @@ export const getAssetMetadata = (seed, assetId) => {
     let id = assetId;
     let x_coordinate = parseInt(number.modulo(2480), 10);
     let y_coordinate = parseInt(number.modulo(3508), 10);
-    let zoom = parseInt(number.modulo(200), 10) + 800;
+    let scale = parseInt(number.modulo(200), 10) + 800;
     let rotation = parseInt(number.modulo(360), 10);
     let layer = parseInt(number.modulo(1234567), 10);
     return {
-      id: id,
-      x_coordinate: x_coordinate,
-      y_coordinate: y_coordinate,
-      zoom: zoom,
-      rotation: rotation,
-      layer: layer
+      id,
+      x_coordinate,
+      y_coordinate,
+      scale,
+      rotation,
+      layer
     };
   }
   return null;
@@ -391,7 +391,7 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
     if (metadata != null) {
       pickedAssets.push({
         ...metadata,
-        background: attributes[i],
+        attributes: attributes[i],
       });
     }
   }

@@ -1,5 +1,6 @@
 <template>
     <svg
+            :class="classProp"
             width="38"
             height="35"
             viewBox="0 0 38 35"
@@ -25,6 +26,10 @@
       icoStroke: {
         type: String,
         default: '#fff',
+      },
+      classProp: {
+        type: String,
+        default: '',
       }
     }
   };
