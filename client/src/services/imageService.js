@@ -241,7 +241,6 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
 
   images = helpers.shuffleArray(images);
   images = helpers.moveBackgrounds(images);
-  images = helpers.shuffleBackgrounds(images);
 
   preloadImages(images)
     .done(async (loadedImages) => {
