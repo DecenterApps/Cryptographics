@@ -27,6 +27,9 @@ contract Marketplace is Ownable {
         numberOfAds = 0;
     }
 
+    event SellingImage(uint indexed imageId, uint price);
+    event ImageBought(uint indexed imageId, address indexed newOwner, uint price);
+
     /// @notice Function to add image on marketplace
     /// @dev only image owner can add image to marketplace
     /// @param _imageId is id of image
@@ -46,6 +49,8 @@ contract Marketplace is Ownable {
             numberOfAds++;
             allAds.push(_imageId);
         }
+
+        SellingImage(_imageId, _price);
     }
 
     function getActiveAds() public view returns (uint[], uint[]) {
@@ -93,6 +98,8 @@ contract Marketplace is Ownable {
         balances[_imageOwner] = msg.value * 95 / 100;
 
         digitalPrintImageContract.transferFromMarketplace(sellAds[_imageId].exchanger, msg.sender, _imageId);
+
+        emit ImageBought(_imageId, msg.sender, msg.value);
     }
 
     /// @notice Function to remove image from Marketplace

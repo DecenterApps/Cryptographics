@@ -29,6 +29,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         _;
     }
 
+    event ImageCreated(uint indexed imageId, address indexed owner);
     /// @dev only for testing purposes
     // function createImageTest() public returns(uint) {
     //     return createImage(msg.sender);
@@ -96,6 +97,9 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
         idToIpfsHash[id] = _ipfsHash;
         seedExists[finalSeed] = true;
+
+        emit ImageCreated(id, msg.sender);
+
         return id;
     }
 
