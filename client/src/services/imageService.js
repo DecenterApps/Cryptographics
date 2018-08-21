@@ -203,11 +203,6 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
     asset.image.height,
     rotation,
     { isBackground: asset.isBackground, canvasWidth, canvasHeight });
-  if (frame.shouldDrawFrame) {
-    // WRITE FRAME
-    drawFrame(context, canvasHeight, canvasWidth, frame);
-  }
-  drawBottomFrame(context, canvasHeight, canvasWidth, frame);
 };
 
 export const makeCoverImage = (isHome, assets, c, width, height, frame = {
@@ -220,6 +215,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
   const canvasWidth = width;
+  console.log(canvasHeight, canvasWidth);
   width = width - left - right;
   height = height - top - bottom;
   context.clearRect(0, 0, width, height);
@@ -230,9 +226,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     let image = new Image();
 
     image.src = assets[i].path;
-    const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
-    image.width = sizes.width;
-    image.height = sizes.height;
+    // const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
     image.crossOrigin = 'Anonymous';
     images.push({
       id: i,
@@ -245,6 +239,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     });
   }
 
+  images = helpers.shuffleArray(images);
   images = helpers.moveBackgrounds(images);
   images = helpers.shuffleBackgrounds(images);
 
@@ -334,10 +329,6 @@ export const makeImage = (objs, c, width, height, frame = {
         for (let i = 0; i < assets.length; i++) {
           if (!loadedImages[i].image.failed) {
             await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
-          }
-          if (i === assets.length - 1) {
-            console.log('All assets loaded.');
-            resolve({ message: 'Success' });
 
             drawBottomFrame(context, canvasHeight, canvasWidth, frame);
 
@@ -345,6 +336,10 @@ export const makeImage = (objs, c, width, height, frame = {
               // DRAW FRAME
               drawFrame(context, canvasHeight, canvasWidth, frame);
             }
+          }
+          if (i === assets.length - 1) {
+            console.log('All assets loaded.');
+            resolve({ message: 'Success' });
           }
         }
       });
