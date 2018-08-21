@@ -14,7 +14,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         uint timestamp;
         address creator;
         string ipfsHash;
-        string title;
+        string extraData;
     }
 
     mapping(uint => bool) public seedExists;
@@ -29,6 +29,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         _;
     }
 
+    event ImageCreated(uint indexed imageId, address indexed owner);
     /// @dev only for testing purposes
     // function createImageTest() public returns(uint) {
     //     return createImage(msg.sender);
@@ -43,7 +44,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
     /// @param _ipfsHash is ipfsHash of the image .png
-    /// @param _title of image user is creating
+    /// @param _extraData string containing (frame,width,height,title)
     /// @return returns id of created image
     function createImage(
         uint[] _randomHashIds,
@@ -52,7 +53,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         bytes32[] _potentialAssets,
         string _author,
         string _ipfsHash,
-        string _title) public payable returns (uint) {
+        string _extraData) public payable returns (uint) {
         require(_potentialAssets.length <= 5);
         // if user exists send his username, if it doesn't check for some username that doesn't exists
         require(msg.sender == usernameToAddress[_author] || !usernameExists[_author]);
@@ -68,7 +69,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
 
         uint[] memory pickedAssets;
 
-        (pickedAssets, , , , , ) = pickRandomAssets(finalSeed, _potentialAssets);
+        pickedAssets = pickRandomAssets(finalSeed, _potentialAssets);
 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
         uint finalPrice = 0;
@@ -91,11 +92,14 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
             timestamp: _timestamp,
             creator: msg.sender,
             ipfsHash: _ipfsHash,
-            title: _title
+            extraData: _extraData
         });
 
         idToIpfsHash[id] = _ipfsHash;
         seedExists[finalSeed] = true;
+
+        emit ImageCreated(id, msg.sender);
+
         return id;
     }
 
@@ -119,7 +123,8 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         return finalPrice;
     }
 
-    function getImageMetadata(uint _imageId) public view returns(uint, bytes32[], uint, string, bytes32, address, string, string) {
+    function getImageMetadata(uint _imageId) public view 
+    returns(uint, bytes32[], uint, string, bytes32, address, string, string) {
         require(_imageId < numOfImages);
 
         ImageMetadata memory metadata = imageMetadata[_imageId];
@@ -132,7 +137,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
             addressToUser[metadata.creator].hashToProfilePicture,
             ownerOf(_imageId),
             metadata.ipfsHash,
-            metadata.title
+            metadata.extraData
         );
 
     }

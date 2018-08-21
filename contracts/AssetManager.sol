@@ -35,6 +35,9 @@ contract AssetManager is Ownable {
     mapping(address => uint[]) public createdAssetPacks;
     mapping(address => uint[]) public boughtAssetPacks;
 
+    event AssetPackCreated(uint indexed id, address indexed owner);
+    event AssetPackBought(uint indexed id, address indexed buyer);
+
     /// @notice Function to create assetpack
     /// @param _packCover is cover image for asset pack
     /// @param _name is name of the asset pack
@@ -69,6 +72,8 @@ contract AssetManager is Ownable {
 
         createdAssetPacks[msg.sender].push(numberOfAssetPacks);
         numberOfAssetPacks++;
+
+        emit AssetPackCreated(numberOfAssetPacks, msg.sender);
     }
 
     /// @notice Function which creates an asset
@@ -106,6 +111,8 @@ contract AssetManager is Ownable {
         // if someone wants to pay more money for asset pack, we will give all of it to creator
         artistBalance[assetPack.creator] += msg.value;
         boughtAssetPacks[_to].push(_assetPackId);
+
+        emit AssetPackCreated(_assetPackId, _to);
     }
 
     /// @notice Function to fetch total number of assets
@@ -242,10 +249,8 @@ contract AssetManager is Ownable {
     /// @notice Function to get ipfs hash and id for all assets in one asset pack
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
-    function getAssetPackData(uint _assetPackId) 
-        public 
-        view 
-        returns(string, bytes32, address, uint, uint[], uint[], bytes32[]) {
+    function getAssetPackData(uint _assetPackId) public view 
+    returns(string, bytes32, address, uint, uint[], uint[], bytes32[]) {
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -254,6 +259,7 @@ contract AssetManager is Ownable {
         for (uint i = 0; i < assetPack.assetIds.length; i++) {
             hashes[i] = getAssetIpfs(assetPack.assetIds[i]);
         }
+
         uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
         return(

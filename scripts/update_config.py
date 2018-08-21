@@ -49,10 +49,8 @@ with open("../client/config/config.json.dist","r+") as jsonFile:
     data["digitalPrintImageContract"]["abi"] = abi["DigitalPrintImage.json"]
     data["digitalPrintImageContract"]["networks"]["42"]["address"] = dict["DigitalPrintImage.json"]
 
-    data["marketplaceContract"] = {}
+    data["marketplaceContract"] = {"networks": {"42": {}}}
     data["marketplaceContract"]["abi"] = abi["Marketplace.json"]
-    data["marketplaceContract"]["networks"] = {}
-    data["marketplaceContract"]["networks"]["42"] = {}
     data["marketplaceContract"]["networks"]["42"]["address"] = dict["Marketplace.json"]
 
     jsonFile.seek(0)

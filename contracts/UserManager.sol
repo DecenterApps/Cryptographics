@@ -1,5 +1,6 @@
 pragma solidity ^0.4.23;
 
+
 contract UserManager {
 
     struct User {
@@ -8,19 +9,28 @@ contract UserManager {
         bool exists;
     }
 
-    uint numberOfUsers;
+    uint public numberOfUsers;
 
-    mapping(string => bool) usernameExists;
-    mapping(address => User) addressToUser;
+    mapping(string => bool) internal usernameExists;
+    mapping(address => User) public addressToUser;
 
-    mapping(bytes32 => bool) profilePictureExists;
-    mapping(string => address) usernameToAddress;
+    mapping(bytes32 => bool) public profilePictureExists;
+    mapping(string => address) internal usernameToAddress;
+
+    event NewUser(address indexed user, string username, bytes32 profilePicture);
 
     function register(string _username, bytes32 _hashToProfilePicture) public {
-        require(usernameExists[_username] == false || keccak256(abi.encodePacked(getUsername(msg.sender))) == keccak256(abi.encodePacked(_username)));
+        require(usernameExists[_username] == false || 
+                keccak256(abi.encodePacked(getUsername(msg.sender))) == keccak256(abi.encodePacked(_username))
+        );
 
-        // if he already had username, that username is free now
-        usernameExists[getUsername(msg.sender)] = false;
+        if (usernameExists[getUsername(msg.sender)]) {
+            // if he already had username, that username is free now
+            usernameExists[getUsername(msg.sender)] = false;
+        } else {
+            numberOfUsers++;
+            emit NewUser(msg.sender, _username, _hashToProfilePicture);
+        }
 
         addressToUser[msg.sender] = User({
             username: _username,
@@ -31,8 +41,6 @@ contract UserManager {
         usernameExists[_username] = true;
         profilePictureExists[_hashToProfilePicture] = true;
         usernameToAddress[_username] = msg.sender;
-
-        numberOfUsers++;
     }
 
     function changeProfilePicture(bytes32 _hashToProfilePicture) public {
