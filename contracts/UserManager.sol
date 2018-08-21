@@ -11,11 +11,11 @@ contract UserManager {
 
     uint public numberOfUsers;
 
-    mapping(string => bool) public usernameExists;
+    mapping(string => bool) internal usernameExists;
     mapping(address => User) public addressToUser;
 
     mapping(bytes32 => bool) public profilePictureExists;
-    mapping(string => address) public usernameToAddress;
+    mapping(string => address) internal usernameToAddress;
 
     event NewUser(address indexed user, string username, bytes32 profilePicture);
 

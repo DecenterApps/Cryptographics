@@ -50,7 +50,7 @@ contract Marketplace is Ownable {
             allAds.push(_imageId);
         }
 
-        SellingImage(_imageId, _price);
+        emit SellingImage(_imageId, _price);
     }
 
     function getActiveAds() public view returns (uint[], uint[]) {
