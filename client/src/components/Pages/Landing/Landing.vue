@@ -36,7 +36,7 @@
       try {
         const numOfImages = await getImageCount();
         const ids = [...Array(parseInt(numOfImages)).keys()];
-        this.images = await getImagesMetadata(ids);
+        this.images = await getImagesMetadata(ids, true);
       } catch (e) {
         console.log(e);
       }

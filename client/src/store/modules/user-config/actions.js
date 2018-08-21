@@ -68,8 +68,8 @@ export default {
     if (avatarBytes32 !== initialAvatarBytes32) {
       let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
       commit(MUTATE_AVATAR, avatar);
-    } else if (state.metamaskAddress === undefined) {
-      let avatar = 'QmfEsoC1hp48RWs2czW28z7Mtgf2qoDRxsbANszgxQFzyy';
+    } else {
+      let avatar = 'QmP8A71rFcz7Y4JUG2tJzYjxsKycxKVu6thY8E7HbrFNkG';
       commit(MUTATE_AVATAR, avatar);
     }
   },

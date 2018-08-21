@@ -17,48 +17,60 @@
         <div class="graphic-meta">
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }}</h3>
-                <user-link :to="'/user/' + image.creator" :name="username" avatar="/avatarurl" />
+                <user-link :to="'/user/' + image.creator" :name="username" :avatar="image.avatar" />
             </div>
             <div v-if="!sellGraphic" class="graphic-address">
                 <strong>Cryptographics address:</strong>
                 <span class="address">{{ image.creator }}</span>
             </div>
             <div
-                    v-if="isLogged"
+                    v-if="isLogged && !isForSale"
                     class="graphic-controls"
                     :class="{ sell: sellGraphic }">
                 <template v-if="!sellGraphic">
                     <cg-button @click="sellGraphic = !sellGraphic">Sell</cg-button>
-                    <cg-button @click="$emit('showPrintForm')">Print</cg-button>
+                    <cg-button button-style="transparent" @click="$emit('showPrintForm')">Print</cg-button>
                 </template>
                 <template v-else>
-                    <cg-input type="text" placeholder="value" />
+                    <cg-input v-model="sellPrice" type="text" placeholder="Price in ether" />
                     <div class="button-group">
                         <cg-button
                                 button-style="transparent"
                                 @click="sellGraphic = !sellGraphic">
                             Cancel
                         </cg-button>
-                        <cg-button>Sell</cg-button>
+                        <cg-button @click="submitImageForSale">Sell</cg-button>
                     </div>
                 </template>
             </div>
             <div
+                    v-if="isLogged && isForSale"
+                    class="graphic-controls"
+            >
+                <cg-button class="remove-button" @click="removeFromMarketPlace">Remove from Marketplace</cg-button>
+                <cg-button button-style="transparent" @click="$emit('showPrintForm')">Print</cg-button>
+                <price
+                        :value="image.price" />
+            </div>
+            <div
                     class="graphic-controls"
                     v-if="isForSale && !isLogged">
-                <cg-button>Buy</cg-button>
+                <cg-button @click="submitBuyImage">Buy</cg-button>
                 <price
-                        value="0.05" />
+                        :value="image.price" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+  import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
+
   export default {
     name: 'GraphicDetails',
     data: () => ({
-      sellGraphic: false
+      sellGraphic: false,
+      sellPrice: '',
     }),
     props: {
       image: {
@@ -76,6 +88,21 @@
       assetPacks: {
         type: Array,
         default: [],
+      },
+      userAddress: {
+        type: String,
+        default: '0x0',
+      }
+    },
+    methods: {
+      async submitImageForSale() {
+        const result = await sellImage(this.userAddress, this.image.id, this.sellPrice);
+      },
+      async removeFromMarketPlace() {
+        const result = await cancelSell(this.userAddress, this.image.id);
+      },
+      async submitBuyImage() {
+        const result = await buyImage(this.userAddress, this.image.id, this.image.price);
       }
     }
   };

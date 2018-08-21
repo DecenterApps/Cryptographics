@@ -38,7 +38,7 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
-                    <h1 class="large-title">Ξ {{ displayPrice() }}</h1>
+                    <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
                     <cg-button @click="buyScreen = true">Next</cg-button>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                         <cg-button :button-style="'transparent'">Download</cg-button>
                     </div>
                     <div class="separate-controls">
-                        <h1 class="large-title">Ξ {{ displayPrice() }}</h1>
+                        <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
                         <cg-button
                                 :disabled="isCanvasDrawing"
                                 @click="buyImage"
@@ -135,10 +135,11 @@
       iterations: 0,
       timestamp: new Date().getTime(),
       randomHashIds: pickTenRandoms(),
-      imagePrice: 0,
+      imagePrice: null,
       potentialAssets: [],
       allAssets: [],
       selectedPacks: [],
+      claimPressed: false,
     }),
     computed: {
       ...mapGetters({
@@ -148,6 +149,20 @@
       })
     },
     props: ['selectedAssetPacks'],
+    watch: {
+      selectedAssetPacks: async function () {
+        this.selectedPacks = this.selectedAssetPacks;
+        this.iterations = 0;
+        this.timestamp = new Date().getTime();
+        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
+        this.randomSeed = await convertSeed(this.randomSeed);
+      },
+      username: function (val) {
+        if (val !== '' && val !== 'Anon' && this.claimPressed) {
+          this.buyImage();
+        }
+      }
+    },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL
@@ -170,6 +185,7 @@
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
+          this.claimPressed = true;
           return this.openModal('setUsername');
         }
 
@@ -232,6 +248,7 @@
         this.canvasData.ratio = '1:1';
       },
       displayPrice() {
+        if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
         return web3.utils.fromWei(this.imagePrice.toString(), 'ether');
       }
     },
@@ -249,32 +266,16 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
-      }
-      else {
-        this.renderCanvas();
-      }
-    },
-    async beforeCreate() {
-      //If session storage is empty then we will generate new params
-      if (window.sessionStorage.length == 0) {
+      } else {
         this.randomHashIds = pickTenRandoms();
-        this.timestamp = new Date().getTime();
         this.iterations = 0;
+        this.timestamp = new Date().getTime();
         this.allAssets = await imageService.loadDataForAssets();
         this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
         this.randomSeed = await convertSeed(this.randomSeed);
+        this.renderCanvas();
       }
     },
-
-    watch: {
-      selectedAssetPacks: async function () {
-        this.selectedPacks = this.selectedAssetPacks;
-        this.iterations = 0;
-        this.timestamp = new Date().getTime();
-        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
-        this.randomSeed = await convertSeed(this.randomSeed);
-      }
-    }
   };
 </script>
 

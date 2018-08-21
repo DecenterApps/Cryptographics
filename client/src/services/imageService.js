@@ -175,6 +175,7 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
   context.stroke();
 
   let image = new Image();
+  image.crossOrigin = 'Anonymous';
   image.src = require(`assets/cg-logo.png`);
 
   image.onload = () => {
@@ -214,6 +215,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
   const { left, right, bottom, top } = frame;
   const canvasHeight = height;
   const canvasWidth = width;
+  console.log(canvasHeight, canvasWidth);
   width = width - left - right;
   height = height - top - bottom;
   context.clearRect(0, 0, width, height);
@@ -224,9 +226,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     let image = new Image();
 
     image.src = assets[i].path;
-    const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
-    image.width = sizes.width;
-    image.height = sizes.height;
+    // const sizes = scaleImage(image.width, image.height, canvasWidth, canvasHeight, '1:1');
     image.crossOrigin = 'Anonymous';
     images.push({
       id: i,
@@ -239,17 +239,13 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
     });
   }
 
+  images = helpers.shuffleArray(images);
   images = helpers.moveBackgrounds(images);
-  images = helpers.shuffleBackgrounds(images);
 
   preloadImages(images)
     .done(async (loadedImages) => {
       for (let i = 0; i < images.length; i++) {
         await drawLoadedImage(context, images[i], canvasWidth, canvasHeight, frame, i, 0);
-        if (i === images.length - 1 && frame.shouldDrawFrame) {
-          // WRITE FRAME
-          drawFrame(context, canvasHeight, canvasWidth, frame);
-        }
       }
     });
 };
@@ -263,8 +259,8 @@ const delay = async (delayInms) => {
 };
 
 export const scaleImage = (width, height, canvasWidth, canvasHeight, ratio) => {
-  const DEFAULT_WIDTH = 3860;
-  const DEFAULT_HEIGHT = 2810;
+  const DEFAULT_WIDTH = 2480;
+  const DEFAULT_HEIGHT = 1805;
 
   const horizontalRatio = DEFAULT_WIDTH / canvasWidth;
   const verticalRatio = DEFAULT_HEIGHT / canvasHeight;
@@ -308,13 +304,13 @@ export const makeImage = (objs, c, width, height, frame = {
     console.log(hashes);
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
+      image.crossOrigin = 'Anonymous';
 
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
       } else {
         image.src = ipfsNodePath + hashes[i];
       }
-      image.crossOrigin = 'Anonymous';
 
       assets[i] = {
         ...assets[i],
@@ -323,6 +319,7 @@ export const makeImage = (objs, c, width, height, frame = {
         image,
       };
     }
+
     assets = helpers.moveBackgrounds(assets);
     console.log('SORTED ASSETS', assets);
 
@@ -331,10 +328,6 @@ export const makeImage = (objs, c, width, height, frame = {
         for (let i = 0; i < assets.length; i++) {
           if (!loadedImages[i].image.failed) {
             await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
-          }
-          if (i === assets.length - 1) {
-            console.log('All assets loaded.');
-            resolve({ message: 'Success' });
 
             drawBottomFrame(context, canvasHeight, canvasWidth, frame);
 
@@ -342,6 +335,10 @@ export const makeImage = (objs, c, width, height, frame = {
               // DRAW FRAME
               drawFrame(context, canvasHeight, canvasWidth, frame);
             }
+          }
+          if (i === assets.length - 1) {
+            console.log('All assets loaded.');
+            resolve({ message: 'Success' });
           }
         }
       });

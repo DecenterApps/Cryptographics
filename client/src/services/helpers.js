@@ -1,3 +1,5 @@
+import { ipfsNodePath } from '../../config/constants';
+
 const Web3 = require('web3');
 
 export const resizeCanvas = (oldCanvas, width, height) => {
@@ -79,6 +81,20 @@ export const moveBackgrounds = (arr) => {
     }
   }
   return helper;
+};
+
+export const preloadAssets = (assets) => {
+  let images = [];
+  for (let i = 0; i < assets.length; i++) {
+    let image = new Image();
+
+    image.src = `${assets[i].src}`;
+    image.crossOrigin = 'Anonymous';
+    images.push({
+      image,
+    });
+  }
+  preloadImages(images);
 };
 
 export const preloadImages = (arr) => {

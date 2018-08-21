@@ -5,7 +5,7 @@
     :slider-gallery="true">
     <div class="container">
       <div class="header">
-        <img class="avatar" :src="ipfsNodePath + avatar">
+        <img v-if="avatar.length > 0" class="avatar" :src="ipfsNodePath + avatar">
         <div class="left">
           <h1 class="large-title name">{{ username }}</h1>
         </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="gallery">
           <h2 class="large-title">Gallery</h2>
-          <gallery :images="images"/>
+          <gallery :images="images" :display-overlay="true" />
         </div>
         </template>
         <template v-else>
@@ -60,6 +60,7 @@
     getBoughtAssets,
     getCreatedAssetPacks,
     getImageMetadataFromContract,
+    getImagesMetadata,
     getImageIpfs,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
@@ -77,15 +78,7 @@
       return {
         ipfsNodePath,
         showYourPacks: true,
-        asset_packs: [],
-        allAssetPaths: [],
-        id_to_show: -1,
-        allAssets: [],
         images: [],
-        my_images_on_chain: [],
-        bought_assets: [],
-        created_assets: [],
-        myobjects: [],
       }
     },
     components: {
@@ -99,70 +92,29 @@
         avatar: AVATAR
       })
     },
+    watch: {
+      userAddress: async function (val) {
+        console.log(val);
+        let ids = await getUserImages(val);
+        this.images = await getImagesMetadata(ids);
+      },
+    },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL
       }),
       async generateData() {
         await this.getImages();
-        await this.getAllAssets();
-        await this.getAssetPacks();
       },
-
       async getImages() {
-        this.my_images_on_chain = await getUserImages(this.userAddress);
-      },
-      async getBoughtAssets() {
-        this.bought_assets = await getBoughtAssets(this.userAddress);
-        this.bought_assets = this.bought_assets.sort(function (a, b) {return a - b;});
-      },
-
-      async getAllAssets() {
-        this.allAssets = await loadDataForAssets();
-      },
-
-      async getAssetPacks() {
-        this.asset_packs = await getCreatedAssetPacks(this.userAddress);
-      },
-
-      async renderMyImagesCanvas() {
-        if (this.id_to_show == -1) {
-          return;
-        }
-        let found = false;
-        for (let i = 0; i < this.my_images_on_chain.length; i++) {
-          if (this.my_images_on_chain[i] == this.id_to_show) {
-            found = true;
-          }
-        }
-
-        if (!found) {
-          this.id_to_show = -1;
-          return;
-        }
-        let data = await getImageMetadataFromContract(this.id_to_show);
-        this.myobjects = await getFinalAssets(data[0], parseInt(data[1], 10), data[2], this.allAssets);
-      },
-
-      async getImages() {
-        let images = await getUserImages(this.userAddress);
-        let hashes = [];
-        for (let i = 0; i < images.length; i++) {
-          let hash = await getImageIpfs(images[i]);
-          hashes.push({
-            address: this.userAddress,
-            src: ipfsNodePath + hash,
-            name: 'The point of',
-            price: 0.45,
-          });
-        }
-        this.images = hashes;
+        if (!this.userAddress) return;
+        let ids = await getUserImages(this.userAddress);
+        this.images = await getImagesMetadata(ids);
       }
     },
 
-    async beforeMount() {
+    async created() {
       this.generateData();
-      await this.getImages();
     }
 
   };

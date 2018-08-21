@@ -10,6 +10,9 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
+const marketPlaceContractAddress = config.marketplaceContract.networks['42'].address;
+const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
+
 export const pickTenRandoms = () => {
   let randoms = [];
   for (let i = 0; i < 10; i++) {
@@ -219,12 +222,40 @@ export const registerUser = async (username, hashToProfilePicture, account) => {
   }
 };
 
+export const isImageForSale = async (imageId) => {
+  return await marketPlaceContract().methods.isImageOnSale(imageId).call();
+};
+
+export const cancelSell = async (address, imageId) => {
+  if (!web3.utils.isAddress(address)) return;
+  return await marketPlaceContract().methods.cancel(imageId).send({
+    from: address
+  });
+};
+
+export const buyImage = async (address, imageId, price) => {
+  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+  const buyPrice = web3.utils.toWei(price, 'ether');
+  return await marketPlaceContract().methods.buy(imageId).send({
+    from: address,
+    value: buyPrice,
+  });
+};
+
+export const sellImage = async (address, imageId, price) => {
+  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+  const sellPrice = web3.utils.toWei(price, 'ether');
+  return await marketPlaceContract().methods.sell(imageId, sellPrice).send({
+    from: address,
+  });
+};
+
 export const calculatePrice = async (pickedAssets, owner) => {
   if (pickedAssets.length === 0) {
     return 0;
   }
 
-  if (owner.toString().length !== 42) {
+  if (!web3.utils.isAddress(owner)) {
     return null;
   }
 
@@ -236,8 +267,8 @@ export const getNumberOfAssets = async () => {
   return await assetManagerContract().methods.getNumberOfAssets().call();
 };
 
-export const getImagesMetadata = async (imageIds) => {
-  const promises = imageIds.map(async imageId => await getImageMetadata(imageId));
+export const getImagesMetadata = async (imageIds, getPrice) => {
+  const promises = imageIds.map(async imageId => await getImageMetadata(imageId, getPrice));
   return Promise.all(promises);
 };
 
@@ -245,21 +276,30 @@ export const getImageCount = async () => {
   return await digitalPrintImageContract().methods.totalSupply().call();
 };
 
-export const getImageMetadata = (imageId) =>
+export const getImagePrice = async (imageId) => {
+  const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
+
+  return web3.utils.fromWei(marketplaceAd.price, 'ether');
+};
+
+export const getImageMetadata = (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
     if (!image) resolve({});
     const usedAssets = image[1].map(assetId => parseInt(assetId, 10));
+    const price = !getPrice ? undefined : await getImagePrice(imageId);
 
     resolve({
       id: imageId,
       finalSeed: image[0],
       timestamp: image[2],
       username: image[3],
-      creator: image[4],
-      ipfsHash: image[5],
-      src: `${ipfsNodePath}${image[5]}`,
-      title: image[6],
+      avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[4])}`,
+      creator: image[5],
+      ipfsHash: image[6],
+      src: `${ipfsNodePath}${image[6]}`,
+      title: image[7],
+      price,
       usedAssets
     });
   });

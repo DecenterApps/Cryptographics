@@ -1,7 +1,7 @@
 <template>
     <div>
         <slider-gallery />
-        <gallery :images="images" />
+        <gallery :images="images" :display-overlay="true" />
     </div>
 </template>
 

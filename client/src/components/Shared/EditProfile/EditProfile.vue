@@ -82,10 +82,11 @@
         context.canvas.height = 160;
         let url = window.URL || window.webkitURL;
         let profileImg = new Image();
+        profileImg.crossOrigin = 'Anonymous';
         profileImg.src = url.createObjectURL(selectedImage);
         profileImg.onload = async () => {
           context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
-          let pngUrl = canvas.toDataURL();
+          let pngUrl = canvas.toDataURL('image/png');
           this.newAvatarHash = await ipfsService.uploadFile(pngUrl.substr(22));
           this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash);
           this.imageName = selectedImage.name;
