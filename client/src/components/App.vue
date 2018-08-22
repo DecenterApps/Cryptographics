@@ -1,46 +1,48 @@
 <template>
     <main>
-        <cg-header/>
-        <router-view/>
-        <cg-footer/>
-        <modal v-if="showModal" :content="content"/>
+        <cg-header />
+        <router-view />
+        <cg-footer />
+        <modal v-if="showModal" :content="content" />
+        <loading-modal v-if="showLoadingModal" />
     </main>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG } from 'store/user-config/types';
-import { TOGGLE_MODAL } from 'store/modal/types';
+  import { mapActions, mapState } from 'vuex';
+  import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG } from 'store/user-config/types';
+  import { TOGGLE_MODAL } from 'store/modal/types';
 
-import CgHeader from 'shared/CgHeader/CgHeader.vue';
-import CgFooter from 'shared/CgFooter/CgFooter.vue';
+  import CgHeader from 'shared/CgHeader/CgHeader.vue';
+  import CgFooter from 'shared/CgFooter/CgFooter.vue';
 
-export default {
+  export default {
     name: 'App',
     components: {
-        CgHeader,
-        CgFooter
+      CgHeader,
+      CgFooter
     },
     beforeMount() {
-        this[SET_USER_CONFIG]();
+      this[SET_USER_CONFIG]();
     },
     mounted() {
-        this[UPDATE_USER_CONFIG]();
+      this[UPDATE_USER_CONFIG]();
     },
     methods: {
-        ...mapActions({
-            SET_USER_CONFIG,
-            UPDATE_USER_CONFIG,
-            openModal: TOGGLE_MODAL
-        })
+      ...mapActions({
+        SET_USER_CONFIG,
+        UPDATE_USER_CONFIG,
+        openModal: TOGGLE_MODAL
+      })
     },
     computed: {
-        ...mapState({
-            showModal: ({ modal }) => modal.showModal,
-            content: ({ modal }) => modal.content
-        })
+      ...mapState({
+        showLoadingModal: ({ modal }) => modal.showLoadingModal,
+        showModal: ({ modal }) => modal.showModal,
+        content: ({ modal }) => modal.content
+      })
     }
-};
+  };
 </script>
 
 <style src="../templates/styles/reset.css"></style>
@@ -50,18 +52,20 @@ export default {
         font-family: 'YoungSerif-Regular';
         src: url('../assets/fonts/YoungSerif-Regular.eot');
         src: url('../assets/fonts/YoungSerif-Regular.woff2') format('woff2'),
-             url('../assets/fonts/YoungSerif-Regular.woff') format('woff'),
-             url('../assets/fonts/YoungSerif-Regular.ttf') format('truetype'),
-             url('../assets/fonts/YoungSerif-Regular.svg#YoungSerif-Regular') format('svg'),
-             url('../assets/fonts/YoungSerif-Regular.eot?#iefix') format('embedded-opentype');
+        url('../assets/fonts/YoungSerif-Regular.woff') format('woff'),
+        url('../assets/fonts/YoungSerif-Regular.ttf') format('truetype'),
+        url('../assets/fonts/YoungSerif-Regular.svg#YoungSerif-Regular') format('svg'),
+        url('../assets/fonts/YoungSerif-Regular.eot?#iefix') format('embedded-opentype');
         font-weight: normal;
         font-style: normal;
     }
+
     .large-title {
         font-family: 'YoungSerif-Regular', sans-serif;
         font-size: 32px;
         line-height: 1;
     }
+
     .subtitle {
         font-size: 16px;
         line-height: 20px;
@@ -69,6 +73,7 @@ export default {
         margin-bottom: 16px;
         color: black;
     }
+
     main {
         position: relative;
     }

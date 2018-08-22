@@ -22,6 +22,7 @@ import Price from 'shared/UI/Price.vue';
 import Overlay from 'shared/UI/Overlay.vue';
 import ButtonIcon from 'shared/UI/ButtonIcon.vue';
 import Modal from 'shared/Modal/Modal.vue';
+import LoadingModal from 'shared/LoadingModal/LoadingModal.vue';
 import InputFile from 'shared/UI/InputFile.vue';
 import Pagination from 'shared/Pagination/Pagination.vue';
 import Separator from 'shared/UI/Separator.vue';
@@ -42,6 +43,7 @@ Vue.component('buttonIcon', ButtonIcon);
 Vue.component('inputFile', InputFile);
 Vue.component('pagination', Pagination);
 Vue.component('modal', Modal);
+Vue.component('loadingModal', LoadingModal);
 Vue.component('separator', Separator);
 
 Vue.use(VueMasonryPlugin);

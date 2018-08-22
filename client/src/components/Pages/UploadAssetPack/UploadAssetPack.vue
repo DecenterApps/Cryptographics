@@ -138,7 +138,8 @@
   import { createAssetPack, makeCoverImage } from 'services/imageService';
   import * as utils from 'services/utils';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
+  import { TOGGLE_LOADING_MODAL } from 'store/modal/types';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
@@ -176,6 +177,9 @@
     },
 
     methods: {
+      ...mapActions({
+        toggleModal: TOGGLE_LOADING_MODAL,
+      }),
       isAttributeSelected(asset, position) {
         return asset.attribute.toString().charAt(position) === '1';
       },
@@ -229,7 +233,12 @@
                 console.log(price);
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
-                await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                this.toggleModal();
+                const result = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                const id = result.events.AssetPackCreated.returnValues.id - 1;
+                this.toggleModal();
+                this.$router.push(`/asset-pack/${id}`);
+                console.log(result, id);
               }
             }
           });
@@ -416,7 +425,6 @@
                 display: inline-flex;
                 align-items: center;
             }
-
 
             .description {
                 display: none;

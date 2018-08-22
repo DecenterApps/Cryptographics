@@ -108,10 +108,10 @@
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
-  import { resizeCanvas } from 'services/helpers';
+  import { resizeCanvas, shuffleArray } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
-  import { TOGGLE_MODAL } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import Input from '../../../Shared/UI/Input';
 
@@ -165,7 +165,8 @@
     },
     methods: {
       ...mapActions({
-        openModal: TOGGLE_MODAL
+        openModal: TOGGLE_MODAL,
+        toggleLoadingModal: TOGGLE_LOADING_MODAL,
       }),
 
       checkTitle() {
@@ -202,7 +203,8 @@
           assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
 
-        let img = await imageService.createImage(
+        this.toggleLoadingModal();
+        let result = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
           this.iterations,
@@ -213,6 +215,9 @@
           ipfsHash,
           this.title,
         );
+        const id = result.events.ImageCreated.returnValues.imageId;
+        this.toggleLoadingModal();
+        this.$router.push(`single-graphic/${id}`);
       },
       async renderCanvas() {
         this.iterations++;
@@ -225,7 +230,8 @@
         let pot = this.selectedPacks.map(assetPack =>
           assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
-        console.log(pot);
+        pot = shuffleArray(pot);
+        pot = pot.slice(0, 30);
         this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
         console.log('iteration: ' + this.iterations);
         let picked = [];

@@ -385,8 +385,6 @@ export const drawImageRot = (context, img, x, y, width, height, deg, scale, opti
 
   const angle = shouldRotate ? deg : 0;
 
-  console.log(isBackground, shouldRotate, shouldScale, angle, multiplier);
-
   //Convert degrees to radian
   const rad = angle * Math.PI / 180;
 
@@ -396,7 +394,6 @@ export const drawImageRot = (context, img, x, y, width, height, deg, scale, opti
   //Rotate the canvas around the origin
   context.rotate(rad);
 
-  console.log(multiplier);
   //draw the image
   context.drawImage(img, coords.x, coords.y, width * multiplier, height * multiplier);
 

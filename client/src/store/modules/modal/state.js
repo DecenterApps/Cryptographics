@@ -1,4 +1,5 @@
 export default {
-    showModal: false,
-    content: ''
-};
+  showModal: false,
+  showLoadingModal: false,
+  content: '',
+}
