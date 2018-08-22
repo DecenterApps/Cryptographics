@@ -36,19 +36,20 @@
                                 v-for="(asset, index) in assets"
                                 :key="index">
                             <div class="preview-icons">
-                                <button-icon
-                                        v-if="isAttributeSelected(asset, 2)"
-                                        icon-type="scale"
-                                        :color="'#000'"
-                                        classProp="selected"
-                                />
-                                <button-icon
-                                        v-if="isAttributeSelected(asset, 1)"
-                                        icon-type="rotate"
-                                        :color="'#000'"
-                                        classProp="selected"
-                                />
-                                <ico-background v-if="isAttributeSelected(asset, 0)" />
+                                {{getAttributes(asset)}}
+                                <!--<button-icon-->
+                                <!--v-if="isAttributeSelected(asset, 2)"-->
+                                <!--icon-type="scale"-->
+                                <!--:color="'#000'"-->
+                                <!--classProp="selected"-->
+                                <!--/>-->
+                                <!--<button-icon-->
+                                <!--v-if="isAttributeSelected(asset, 1)"-->
+                                <!--icon-type="rotate"-->
+                                <!--:color="'#000'"-->
+                                <!--classProp="selected"-->
+                                <!--/>-->
+                                <!--<ico-background v-if="isAttributeSelected(asset, 0)" />-->
                             </div>
                             <img :src="asset.path" />
                             <overlay>
@@ -180,6 +181,17 @@
       ...mapActions({
         toggleModal: TOGGLE_LOADING_MODAL,
       }),
+      getAttributes(asset) {
+        let attribute = asset.attribute.toString();
+        let words = ['BGD', 'ROT', 'SCA'];
+        let attributes = [];
+        for (let i = 0; i < attribute.length; i++) {
+          if (attribute.charAt(i) === '1') {
+            attributes.push(words[i]);
+          }
+        }
+        return attributes.join(' — ');
+      },
       isAttributeSelected(asset, position) {
         return asset.attribute.toString().charAt(position) === '1';
       },
@@ -450,7 +462,7 @@
                 }
 
                 &:hover {
-                    opacity: 1;
+                    opacity: 0.8;
                     path {
                         fill: #fff !important;
                     }
@@ -458,6 +470,9 @@
                     & + span {
                         display: inline;
                     }
+                }
+                &:active {
+                    opacity: 1;
                 }
             }
         }
@@ -472,20 +487,12 @@
 
         .preview-icons {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: -15px;
+            left: 0;
             display: flex;
+            font-size: 12px;
+            line-height: 14px;
             flex-direction: column;
-            svg, button {
-                margin-bottom: 10px;
-            }
-
-            svg {
-                fill: #000;
-                path {
-                    fill: #000;
-                }
-            }
         }
 
         svg:hover {
@@ -499,11 +506,6 @@
             .overlay {
                 opacity: 1;
             }
-
-            .preview-icons {
-                display: none;
-            }
-
             button.delete {
                 display: block;
             }
