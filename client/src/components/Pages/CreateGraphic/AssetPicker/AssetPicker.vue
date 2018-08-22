@@ -145,12 +145,8 @@
         .asset-packs {
             margin-bottom: 50px;
             .asset-box {
-                cursor: pointer;
                 margin-right: 20px;
                 margin-bottom: 20px;
-                &.selected {
-                    border: 1px solid #000;
-                }
             }
         }
     }

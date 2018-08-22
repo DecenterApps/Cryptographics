@@ -63,6 +63,7 @@
         text-decoration: none;
         cursor: pointer;
         box-sizing: border-box;
+        border: 1px solid #D9D9D9;
 
         &.small {
             height: 55px;
@@ -111,15 +112,7 @@
         }
 
         &.selected {
-            border: 1px solid #000;
-
-            .overlay-content {
-                padding: 12px 15px;
-            }
-            .price {
-                right: 15px;
-                bottom: 12px;
-            }
+            border-color: #000;
         }
 
         &:hover {

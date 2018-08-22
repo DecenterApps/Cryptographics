@@ -3,6 +3,7 @@ import utils from 'services/utils';
 import config from 'config/config.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
+import { layerCompare } from './imageService';
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
@@ -285,22 +286,32 @@ export const getImagePrice = async (imageId) => {
 export const getImageMetadata = (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
+    const usedAssets = await digitalPrintImageContract().methods.decodeAssets(image[1]).call();
     if (!image) resolve({});
-    const usedAssets = image[1].map(assetId => parseInt(assetId, 10));
     const price = !getPrice ? undefined : await getImagePrice(imageId);
+    const extraData = image[7].split(',');
+    const hasFrame = extraData[0] === '1';
+    const width = extraData[1];
+    const height = extraData[2];
+    const title = extraData.slice(3).join('');
+    console.log('extraData', extraData);
 
     resolve({
       id: imageId,
       finalSeed: image[0],
+      usedAssetsBytes: image[1],
+      usedAssets,
       timestamp: image[2],
       username: image[3],
       avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[4])}`,
       creator: image[5],
       ipfsHash: image[6],
       src: `${ipfsNodePath}${image[6]}`,
-      title: image[7],
+      hasFrame,
+      width,
+      height,
+      title,
       price,
-      usedAssets
     });
   });
 
@@ -416,8 +427,9 @@ export const getAssetStats = async (id) => {
   }
 };
 
-export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets) => {
-  return await digitalPrintImageContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
+export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets, width, height) => {
+  // Hardcoded width & height because contract always uses 2:3 aspect
+  return await digitalPrintImageContract().methods.getImage(finalSeed, potentialAssets, 2480, 3508).call();
 };
 
 export const getBoughtAssets = async () => {
@@ -431,6 +443,25 @@ export const getLandingPacks = () => {
     ids,
   };
 };
+
+export async function parseContractAssetData(image) {
+  const assets = await getPositionsOfAssetsInImage(image.finalSeed, image.usedAssetsBytes, image.width, image.height);
+  let ids = assets['finalPicked'];
+  let background = await getAttributesForAssets(ids);
+  let parsedAssets = [];
+  for (let i = 0; i < ids.length; i++) {
+    if (!parsedAssets[i]) parsedAssets[i] = {};
+    parsedAssets[i]['x_coordinate'] = parseInt(assets['x'][i], 10);
+    parsedAssets[i]['y_coordinate'] = parseInt(assets['y'][i], 10);
+    parsedAssets[i]['layer'] = parseInt(assets['layers'][i], 10);
+    parsedAssets[i]['scale'] = parseInt(assets['zoom'][i], 10);
+    parsedAssets[i]['rotation'] = parseInt(assets['rotation'][i], 10);
+    parsedAssets[i]['id'] = ids[i];
+    parsedAssets[i]['attributes'] = background[i];
+  }
+  parsedAssets = parsedAssets.sort(layerCompare);
+  return parsedAssets;
+}
 
 async function test() {
   // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
