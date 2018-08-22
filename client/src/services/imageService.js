@@ -19,14 +19,15 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 
 const DELAY = 150;
 
-export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title) => {
+export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title, frame, width, height) => {
   potentialAssets = utils.encode(potentialAssets);
 
   timestamp = parseInt(timestamp, 10);
   iterations = parseInt(iterations, 10);
   try {
     console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, title).send({
+    const extraData = `${frame?1:0},${width},${height},${title}`;
+    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, extraData).send({
       value: parseInt(price),
       from: account,
       to: digitalPrintImageContractAddress,
@@ -115,7 +116,7 @@ export const getSize = (width, height, ratio) => {
   }
 };
 
-function layerCompare(a, b) {
+export function layerCompare(a, b) {
   if (a.layer < b.layer || (a.layer == b.layer && a.id < b.id)) {
     return -1;
   }

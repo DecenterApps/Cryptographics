@@ -56,8 +56,7 @@
                     class="graphic-controls"
                     v-if="isForSale && !isLogged">
                 <cg-button @click="submitBuyImage">Buy</cg-button>
-                <price
-                        :value="image.price" />
+                <price :value="image.price" />
             </div>
         </div>
     </div>

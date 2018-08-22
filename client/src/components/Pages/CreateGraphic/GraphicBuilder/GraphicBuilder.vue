@@ -39,7 +39,12 @@
                 <div class="bottom-controls">
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
                     <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
-                    <cg-button @click="buyScreen = true">Next</cg-button>
+                    <cg-button
+                            :disabled="isCanvasDrawing"
+                            @click="buyScreen = true"
+                    >
+                        Next
+                    </cg-button>
                 </div>
             </div>
         </div>
@@ -76,7 +81,12 @@
                 <separator></separator>
                 <div class="bottom-controls buy-screen">
                     <div>
-                        <cg-button :button-style="'transparent'">Download</cg-button>
+                        <cg-button
+                                @click="download"
+                                :button-style="'transparent'"
+                        >
+                            Download
+                        </cg-button>
                     </div>
                     <div class="separate-controls">
                         <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
@@ -214,6 +224,9 @@
           this.imagePrice,
           ipfsHash,
           this.title,
+          this.canvasData.frame,
+          2480,
+          (this.canvasData.ratio === '2:3' ? 3508 : 2480),
         );
         const id = result.events.ImageCreated.returnValues.imageId;
         this.toggleLoadingModal();
@@ -245,6 +258,15 @@
         }
         this.imagePrice = parseFloat(price);
         console.log('PRICE : ' + this.imagePrice);
+      },
+      download() {
+        const canvas = document.getElementById("canvas");
+        if (!canvas) return;
+        const link = document.createElement('a');
+        const title = this.title || 'cryptographic';
+        link.setAttribute('download', title + '.jpeg');
+        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.click();
       },
       changeTab() {
         this.$emit('tabChange', 'picker');

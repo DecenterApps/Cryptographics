@@ -1,5 +1,8 @@
 <template>
-    <div class="graphic-preview">
+    <div class="graphic-preview" @click="$emit('download')">
+        <overlay>
+            <button-icon icon-type="download"/>
+        </overlay>
         <img
                 class="image"
                 :src="image.src"
@@ -26,8 +29,13 @@
         display: inline-flex;
         flex-direction: column;
         align-items: flex-start;
+        &:hover {
+            .overlay {
+                opacity: 1;
+                cursor: pointer;
+            }
+        }
         .image {
-            max-height: 500px;
             max-width: 500px;
         }
         .details {

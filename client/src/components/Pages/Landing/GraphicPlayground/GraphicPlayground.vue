@@ -24,7 +24,7 @@
                     </div>
                     <div class="canvas-holder">
                         <overlay>
-                            <button-icon icon-type="download" />
+                            <button-icon icon-type="download" @click="download" />
                         </overlay>
                         <div class="canvas-holder-wrapper">
                             <Canvas :canvasData="canvasData"></Canvas>
@@ -129,6 +129,15 @@
         window.sessionStorage.setItem('timestamp', this.timestamp);
         console.log(this);
         this.$router.push('/create-graphic');
+      },
+      download() {
+        const canvas = document.getElementById("canvas");
+        if (!canvas) return;
+        const link = document.createElement('a');
+        const title = 'cryptographics-playground';
+        link.setAttribute('download', title + '.jpeg');
+        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.click();
       },
     },
     async beforeCreate() {
