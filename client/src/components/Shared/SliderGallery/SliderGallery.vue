@@ -1,12 +1,20 @@
 <template>
     <div class="slider-wrapper">
         <div class="slider">
-            <img src="./assets/image.png" alt="">
+            <carousel :per-page="1" :paginationEnabled="false" :scroll-per-page="true" :autoplay-timeout="2000"
+                      :mouse-drag="true" :autoplay="true" :loop="true">
+                <slide><img src="./assets/Slide 01.png" alt=""></slide>
+                <slide><img src="./assets/Slide 02.png" alt=""></slide>
+                <slide><img src="./assets/Slide 03.png" alt=""></slide>
+                <slide><img src="./assets/Slide 04.png" alt=""></slide>
+                <slide><img src="./assets/Slide 05.png" alt=""></slide>
+            </carousel>
         </div>
     </div>
 </template>
 
 <script>
+  import { Carousel, Slide } from 'vue-carousel';
   export default {
     name: 'slider-gallery'
   };
