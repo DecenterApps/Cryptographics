@@ -11,27 +11,31 @@
                             <Canvas :canvasData="canvasData"></Canvas>
                         </div>
                     </div>
-                    <div class="button-group">
-                        <cg-button
-                                button-style="transparent"
-                                @click="openInEditor"
-                        >
-                            Open in editor
-                        </cg-button>
-                        <cg-button
-                                @click="renderCanvas">
-                            Recompose
-                        </cg-button>
-                    </div>
+                    <!--<div class="button-group">-->
+                    <!--<cg-button-->
+                    <!--button-style="transparent"-->
+                    <!--@click="openInEditor"-->
+                    <!--&gt;-->
+                    <!--Open in editor-->
+                    <!--</cg-button>-->
+                    <!--<cg-button-->
+                    <!--@click="renderCanvas">-->
+                    <!--Recompose-->
+                    <!--</cg-button>-->
+                    <!--</div>-->
                 </div>
             </div>
             <div class="right">
+                <h2 class="large-title">This is a Cryptographic</h2>
                 <div class="hero-text-content">
-                    <h2 class="large-title">Cryptographics</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
-                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                        ut.</p>
+                    <p>A graphic created by you. </p>
+                    <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
+                        trade.</p>
+                    <p>Try creating another one.</p>
+                    <cg-button
+                            @click="renderCanvas">
+                        Recompose
+                    </cg-button>
                 </div>
             </div>
         </div>
@@ -170,13 +174,21 @@
             .right {
                 text-align: left;
                 display: flex;
+                flex-direction: column;
                 flex: 1;
-                align-items: center;
                 justify-content: center;
+                padding-left: 20px;
 
                 .hero-text-content {
                     max-width: 300px;
-                    margin: 0 auto;
+
+                    p {
+                        color: #000;
+                        font-family: Roboto, sans-serif;
+                        font-size: 14px;
+                        line-height: 19px;
+                        font-weight: 300;
+                    }
                 }
 
                 p:last-of-type {
