@@ -78,7 +78,7 @@ export default {
             text-decoration: none;
         }
 
-        button {
+        .button-wrapper {
             width: 140px;
         }
 

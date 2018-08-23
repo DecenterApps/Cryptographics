@@ -1,12 +1,13 @@
 <template>
     <div class="modal">
         <div class="overlay" @click="closeModal"></div>
-        <div class="content">
+        <div :class="['content', smallerPadding(content)]">
             <button-icon
                     icon-type="close"
                     @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-if="content === 'setUsername'" />
+            <success-message v-if="content ==='Cryptographic' || content === 'Asset pack'" :content="content" />
             <div v-else>
                 <slot />
             </div>
@@ -20,6 +21,7 @@
 
   import EditProfile from 'shared/EditProfile/EditProfile.vue';
   import SetUsername from 'shared/SetUsername/SetUsername.vue';
+  import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
 
   export default {
     name: 'Modal',
@@ -30,13 +32,17 @@
       }
     },
     components: {
+      SuccessMessage,
       SetUsername,
       EditProfile
     },
     methods: {
       ...mapActions({
         closeModal: TOGGLE_MODAL
-      })
+      }),
+      smallerPadding(content) {
+        return ['Cryptographic', 'Asset pack'].indexOf(content) >= 0 ? 'small-padding' : 0;
+      }
     }
   };
 </script>
@@ -66,6 +72,11 @@
             max-width: 1120px;
             padding: 90px;
             background-color: #C4C4C4;
+
+            &.small-padding {
+                padding: 45px;
+            }
+
             .ico-button {
                 position: absolute;
                 top: 20px;

@@ -26,8 +26,8 @@
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio">Aspect ratio 1:1</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="toggleRatio">Use square format</cg-checkbox>
                     <cg-button
                             :disabled="isCanvasDrawing"
                             @click="renderCanvas"
@@ -94,7 +94,7 @@
                                 :disabled="isCanvasDrawing"
                                 @click="buyImage"
                         >
-                            Claim Token
+                            Save Cryptographic
                         </cg-button>
                     </div>
                 </div>
@@ -232,6 +232,7 @@
         const id = result.events.ImageCreated.returnValues.imageId;
         this.toggleLoadingModal();
         this.$router.push(`single-graphic/${id}`);
+        this.openModal('Cryptographic');
       },
       async renderCanvas() {
         this.iterations++;
@@ -491,6 +492,10 @@
                 .separate-controls {
                     display: flex;
                     justify-content: flex-end;
+
+                    .button-wrapper {
+                        width: 135px;
+                    }
                 }
             }
 

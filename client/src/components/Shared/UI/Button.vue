@@ -36,7 +36,7 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        width: 105px;
+        min-width: 105px;
     }
 
     .button {

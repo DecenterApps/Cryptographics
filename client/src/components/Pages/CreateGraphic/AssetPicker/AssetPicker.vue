@@ -160,7 +160,7 @@
                 margin-right: 20px;
                 margin-bottom: 20px;
 
-                &:nth-child(5) {
+                &:nth-child(5n) {
                     margin-right: 0;
                 }
             }
