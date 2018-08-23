@@ -26,6 +26,7 @@ import LoadingModal from 'shared/LoadingModal/LoadingModal.vue';
 import InputFile from 'shared/UI/InputFile.vue';
 import Pagination from 'shared/Pagination/Pagination.vue';
 import Separator from 'shared/UI/Separator.vue';
+import Loader from 'shared/UI/Loader.vue';
 
 Vue.component('layout', Layout);
 Vue.component('sliderGallery', SliderGallery);
@@ -43,6 +44,7 @@ Vue.component('buttonIcon', ButtonIcon);
 Vue.component('inputFile', InputFile);
 Vue.component('pagination', Pagination);
 Vue.component('modal', Modal);
+Vue.component('loader', Loader);
 Vue.component('loadingModal', LoadingModal);
 Vue.component('separator', Separator);
 

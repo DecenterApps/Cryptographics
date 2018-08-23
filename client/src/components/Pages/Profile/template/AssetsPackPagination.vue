@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div v-if="assetPacks !== false" class="assets-packs" :class="grid">
+        <div v-if="loading" class="loading-section">
+            <loader />
+        </div>
+        <div v-if="assetPacks !== false && this.loading === false" class="assets-packs" :class="grid">
             <div
                     class="assets-pack"
                     v-if="assetPack"
@@ -94,7 +97,8 @@
     },
     data() {
       return {
-        ipfsNodePath
+        ipfsNodePath,
+        loading: false,
       };
     },
     computed: {
@@ -109,6 +113,7 @@
         async get() {
           let pageAssetPacksIds;
           let packsInfo;
+          this.loading = true;
           if (this.assetsPackType === 'created') {
             pageAssetPacksIds = paginateArray(this.createdPacksIDs, 1, this.showPerPage);
             packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
@@ -127,6 +132,7 @@
               assetPacks.push(packsInfo[i]);
             }
           }
+          this.loading = false;
           return assetPacks;
         },
         watch() {
@@ -148,6 +154,7 @@
       async changePage(currentPage) {
         let pageAssetPacksIds;
         let packsInfo;
+        this.loading = true;
         if (this.assetsPackType === 'created') {
           pageAssetPacksIds = paginateArray(this.createdPacksIDs, currentPage, this.showPerPage);
           packsInfo = await getPackInformation(pageAssetPacksIds, this.metamaskAddress);
@@ -160,8 +167,9 @@
         }
         this.assetPacks = [];
         for (let i = 0; i < this.showPerPage; i++) {
-          await this.assetPacks.push(packsInfo[i]);
+          this.assetPacks.push(packsInfo[i]);
         }
+        this.loading = false;
       }
     }
   };
@@ -236,5 +244,15 @@
         @media screen and (max-width: 767px) {
             flex-direction: column;
         }
+    }
+
+    .loading-section {
+        width: 100%;
+        height: 450px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #CECECE;
+        margin-top: 30px;
     }
 </style>
