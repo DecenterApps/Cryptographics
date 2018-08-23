@@ -140,7 +140,7 @@
   import * as utils from 'services/utils';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
   import { mapGetters, mapActions } from 'vuex';
-  import { TOGGLE_LOADING_MODAL } from 'store/modal/types';
+  import { TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
@@ -179,7 +179,8 @@
 
     methods: {
       ...mapActions({
-        toggleModal: TOGGLE_LOADING_MODAL,
+        toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       getAttributes(asset) {
         let attribute = asset.attribute.toString();
@@ -245,10 +246,12 @@
                 console.log(price);
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
-                this.toggleModal();
-                const result = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+                const transactionPromise = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
+                const result = await transactionPromise();
                 const id = result.events.AssetPackCreated.returnValues.id - 1;
-                this.toggleModal();
+                this.toggleLoadingModal();
                 this.$router.push(`/asset-pack/${id}`);
                 console.log(result, id);
               }

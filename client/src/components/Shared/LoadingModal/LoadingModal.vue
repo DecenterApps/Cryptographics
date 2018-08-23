@@ -3,20 +3,24 @@
         <div class="overlay" @click="closeModal"></div>
         <div class="content">
             <loader />
-            <div class="small-title">Waiting for transaction to be mined</div>
+            <div class="small-title">{{ content }}</div>
             <cg-button button-style="transparent">Back to gallery</cg-button>
         </div>
     </div>
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
-  import { TOGGLE_LOADING_MODAL } from 'store/modal/types';
+  import { mapActions, mapGetters } from 'vuex';
+  import { TOGGLE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
 
   export default {
     name: 'LoadingModal',
-    data: () => ({
-    }),
+    data: () => ({}),
+    computed: {
+      ...mapGetters({
+        content: LOADING_CONTENT,
+      })
+    },
     methods: {
       ...mapActions({
         closeModal: TOGGLE_LOADING_MODAL,
@@ -52,9 +56,10 @@
             z-index: 1;
 
             .small-title {
-                max-width: 190px;
+                max-width: 350px;
                 margin-top: 20px;
                 text-align: center;
+                line-height: 26px;
             }
 
             .button-wrapper {

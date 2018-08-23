@@ -121,7 +121,7 @@
   import { resizeCanvas, shuffleArray } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import Input from '../../../Shared/UI/Input';
 
@@ -177,6 +177,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
 
       checkTitle() {
@@ -211,8 +212,8 @@
         console.log('IMAGE HASH' + ipfsHash);
         console.log(this.potentialAssets);
 
-        this.toggleLoadingModal();
-        let result = await imageService.createImage(
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        let transactionPromise = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
           this.iterations,
@@ -226,6 +227,8 @@
           2480,
           (this.canvasData.ratio === '2:3' ? 3508 : 2480),
         );
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
+        const result = await transactionPromise();
         const id = result.events.ImageCreated.returnValues.imageId;
         this.toggleLoadingModal();
         this.$router.push(`single-graphic/${id}`);
