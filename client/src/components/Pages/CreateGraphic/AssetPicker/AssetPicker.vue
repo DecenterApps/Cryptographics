@@ -28,7 +28,7 @@
                 <h1 class="small-title">Total price - {{ totalPrice() }} Ξ</h1>
             </div>
         </div>
-        <div class="content">
+        <div class="content" v-if="loading === false">
             <div class="asset-packs">
                 <asset-box
                         :assetPack="assetPack"
@@ -41,6 +41,11 @@
                     button-style="transparent">
                 Next
             </cg-button>
+        </div>
+        <div class="content" v-if="loading">
+            <div class="loading-section">
+                <loader />
+            </div>
         </div>
 
     </div>
@@ -63,6 +68,7 @@
     data: () => ({
       assetPacks: [],
       showYourPacks: false,
+      loading: true,
     }),
     computed: {
       ...mapGetters({
@@ -102,7 +108,13 @@
     },
 
     async created() {
-      this.assetPacks = await getAssetPacksWithAssetData();
+      try {
+        this.assetPacks = await getAssetPacksWithAssetData();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.loading = false;
+      }
     }
   };
 </script>
@@ -147,7 +159,21 @@
             .asset-box {
                 margin-right: 20px;
                 margin-bottom: 20px;
+
+                &:nth-child(5) {
+                    margin-right: 0;
+                }
             }
         }
+    }
+
+    .loading-section {
+        width: 100%;
+        height: 277px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #CECECE;
+        margin-top: 30px;
     }
 </style>

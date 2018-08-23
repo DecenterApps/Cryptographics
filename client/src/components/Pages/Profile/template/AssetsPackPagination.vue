@@ -248,7 +248,7 @@
 
     .loading-section {
         width: 100%;
-        height: 450px;
+        height: 470px;
         display: flex;
         align-items: center;
         justify-content: center;
