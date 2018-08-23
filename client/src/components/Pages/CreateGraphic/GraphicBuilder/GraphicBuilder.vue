@@ -209,16 +209,14 @@
         let image = canvasClone.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         console.log('IMAGE HASH' + ipfsHash);
-        let pot = this.selectedPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
+        console.log(this.potentialAssets);
 
         this.toggleLoadingModal();
         let result = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
           this.iterations,
-          pot,
+          this.potentialAssets,
           this.username,
           this.userAddress,
           this.imagePrice,
@@ -247,6 +245,7 @@
         pot = pot.slice(0, 30);
         this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
         console.log('iteration: ' + this.iterations);
+        this.potentialAssets = pot;
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {
           picked.push(this.canvasData.assets[i].id);
