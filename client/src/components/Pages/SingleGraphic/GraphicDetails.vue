@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p>This Cryptographic contains {{image.usedAssets.length}} assets from the following asset packs:</p>
+            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following asset packs:</p>
             <div class="asset-packs">
                 <router-link :to="'/asset-pack/' + assetPack.id" v-for="(assetPack, index) in assetPacks">
                     <asset-box

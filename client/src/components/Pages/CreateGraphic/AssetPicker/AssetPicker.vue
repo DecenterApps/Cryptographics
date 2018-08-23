@@ -82,7 +82,7 @@
         this.$emit('tabChange', 'create');
       },
       isSelected(asset) {
-        return this.selectedAssetPacks.findIndex(item => item.id === asset.id) >= 0;
+        return this.selectedAssetPacks.findIndex(item => parseInt(item.id) === parseInt(asset.id)) >= 0;
       },
       toggleAsset(asset) {
         this.$emit('pickAssetPack', asset);

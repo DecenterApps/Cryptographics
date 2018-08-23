@@ -5,7 +5,9 @@
                 <div class="create-art">
                     <div class="canvas-holder">
                         <overlay>
-                            <button-icon icon-type="download" @click="download" />
+                            <cg-button button-style="transparent-inverted" icon-type="download" @click="openInEditor">
+                                Open in editor
+                            </cg-button>
                         </overlay>
                         <div class="canvas-holder-wrapper">
                             <Canvas :canvasData="canvasData"></Canvas>

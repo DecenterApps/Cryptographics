@@ -88,6 +88,12 @@
         border: 1px solid #000;
     }
 
+    .transparent-inverted {
+        color: #fff;
+        background: none;
+        border: 1px solid #fff;
+    }
+
     .no-border {
         color: #000;
         background: none;
