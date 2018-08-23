@@ -36,14 +36,14 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
+        width: 105px;
     }
 
     .button {
         display: inline-flex;
         justify-content: center;
-        min-width: 105px;
-        max-height: 33px;
-        min-height: 33px;
+        width: 100%;
+        height: 33px;
         padding: 9px;
         font-size: 12px;
         border-radius: 5px;

@@ -2,26 +2,7 @@
     <div class="hero">
         <div class="container">
             <div class="left">
-                <h2 class="large-title">Cryptographics</h2>
-                <h3 class="subtitle">Create, store and trade randomly generated digital artwork on the blockchain.</h3>
-                <p>Artists upload their asset packs, making them available for Creators to buy and use. Creators
-                    generate random digital artwork with chosen asset packs and store them on the blockchain where they
-                    are signed as Creators forever, receiving a kickback for each future sale. Collectors can then pick
-                    their favourites and buy and trade Cryptographics in Ether.</p>
-                <p>Cryptographics is a fully decentralized app (DApp) with no back-end server and each Cryptographic is
-                    one of a kind ERC721 token containing all image data.</p>
-                <button-link to="/gallery">Gallery</button-link>
-            </div>
-            <div class="right">
                 <div class="create-art">
-                    <div class="button-group">
-                        <cg-button @click="openInEditor">Open in editor</cg-button>
-                        <cg-button
-                                button-style="transparent"
-                                @click="renderCanvas">
-                            Recompose
-                        </cg-button>
-                    </div>
                     <div class="canvas-holder">
                         <overlay>
                             <button-icon icon-type="download" @click="download" />
@@ -30,11 +11,27 @@
                             <Canvas :canvasData="canvasData"></Canvas>
                         </div>
                     </div>
-                </div>
-                <div class="assets">
-                    <div v-for="cover in coverIpfsHashes">
-                        <img class="cover-image" :src="ipfsNodePath + cover">
+                    <div class="button-group">
+                        <cg-button
+                                button-style="transparent"
+                                @click="openInEditor"
+                        >
+                            Open in editor
+                        </cg-button>
+                        <cg-button
+                                @click="renderCanvas">
+                            Recompose
+                        </cg-button>
                     </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="hero-text-content">
+                    <h2 class="large-title">Cryptographics</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                        ut.</p>
                 </div>
             </div>
         </div>
@@ -131,12 +128,12 @@
         this.$router.push('/create-graphic');
       },
       download() {
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById('canvas');
         if (!canvas) return;
         const link = document.createElement('a');
         const title = 'cryptographics-playground';
         link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
         link.click();
       },
     },
@@ -166,24 +163,29 @@
             display: flex;
             justify-content: space-between;
             .left {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .right {
+                text-align: left;
+                display: flex;
+                flex: 1;
+                align-items: center;
+                justify-content: center;
+
+                .hero-text-content {
+                    max-width: 300px;
+                    margin: 0 auto;
+                }
+
                 p:last-of-type {
                     margin-bottom: 30px;
                 }
             }
-            .right {
-                display: flex;
-                justify-content: flex-end;
-            }
             @media screen and (max-width: 1120px) {
                 flex-direction: column;
                 .left {
-                    margin-bottom: 30px;
-                    text-align: center;
-                    p {
-                        margin: 0 auto 16px;
-                    }
-                }
-                .right {
                     flex-direction: column;
                     .create-art {
                         flex-direction: column-reverse;
@@ -192,26 +194,21 @@
                             flex-direction: row;
                             align-items: center;
                             margin-bottom: 30px;
-                            .button-wrapper {
-                                margin: 0 10px 0;
-                            }
                         }
                         .canvas-wrapper {
                             margin: 20px 0;
                         }
                     }
-                    .assets {
-                        flex-direction: row;
-                        justify-content: center;
-                        img {
-                            margin: 0 10px 0;
-                        }
+
+                }
+                .right {
+                    margin-bottom: 30px;
+                    text-align: center;
+                    p {
+                        margin: 0 auto 16px;
                     }
                 }
             }
-        }
-        p {
-            max-width: 320px;
         }
     }
 
@@ -221,10 +218,15 @@
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
-            .button-wrapper {
+            & > > > .button-wrapper {
+                width: 100px;
                 margin-bottom: 20px;
                 &:last-of-type {
                     margin: 0;
+                }
+
+                .button {
+                    min-width: 120px;
                 }
             }
         }
@@ -253,49 +255,6 @@
         }
         .cg-stamp {
             padding: 20px 0;
-        }
-    }
-
-    .assets {
-        display: flex;
-        flex-direction: column;
-        .cover-image {
-            position: relative;
-            margin-bottom: 30px;
-            height: 96px;
-            width: 134px;
-        }
-    }
-
-    .artist-cta {
-        background-color: #D9D9D9;
-        padding: 70px 0;
-        .container {
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            p:last-of-type {
-                margin-bottom: 30px;
-            }
-        }
-    }
-
-    .assets-slider {
-        background-color: #D9D9D9;
-        padding: 0 0 50px;
-        .container {
-            overflow: hidden;
-            width: 100%;
-            display: flex;
-            .asset {
-                position: relative;
-                margin: 0 10px;
-                &:hover {
-                    .overlay {
-                        opacity: 1;
-                    }
-                }
-            }
         }
     }
 </style>
