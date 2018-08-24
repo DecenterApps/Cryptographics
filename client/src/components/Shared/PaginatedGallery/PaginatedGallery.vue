@@ -109,7 +109,7 @@
         padding: 70px 0;
         min-height: 650px;
         .masonry-wrapper {
-            width: 100% !important;
+            /*width: 100% !important;*/
             margin: 0 auto;
         }
         .gutter-sizer {
