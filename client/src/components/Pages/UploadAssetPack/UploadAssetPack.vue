@@ -12,14 +12,21 @@
                         <span>Upload multiple assets</span>
                         <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
                     </input-file>
-                    <p class="upload-description">
+                    <span v-if="assets.length > 0">
+                        <p class="upload-description">
                         Please upload high resolution files.
-                        The default Cryptographic canvas is a 300DPI A4 (210x297mm)
-                        paper at a resolution of 2480x3508px, with a square format
-                        of 2480x2480px also available (same DPI). Background layers
+                    </p>
+                    <p class="upload-description">
+                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
+                        paper at a resolution of <span>2480x3508px</span>, with a square format
+                        of <span>2480x2480px</span> also available (same DPI).
+                    </p>
+                    <p class="upload-description">
+                        Background layers
                         that aren’t this exact resolution are aligned with the top
                         left corner, regardless if they are larger or smaller than the canvas.
                     </p>
+                    </span>
                 </div>
                 <div class="bottom-content">
                     <div v-if="assets.length > 0" class="button-group">
@@ -37,6 +44,21 @@
                 </div>
             </div>
             <div class="right">
+                <span v-if="assets.length === 0">
+                    <p class="upload-description">
+                        Please upload high resolution files.
+                    </p>
+                    <p class="upload-description">
+                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
+                        paper at a resolution of <span>2480x3508px</span>, with a square format
+                        of <span>2480x2480px</span> also available (same DPI).
+                    </p>
+                    <p class="upload-description">
+                        Background layers
+                        that aren’t this exact resolution are aligned with the top
+                        left corner, regardless if they are larger or smaller than the canvas.
+                    </p>
+                </span>
                 <div v-bar="{ preventParentScroll: true }">
                     <div>
                         <div
@@ -301,16 +323,20 @@
         }
     }
 
+    .upload-description {
+        font-family: Roboto, sans-serif;
+        line-height: 19px;
+        font-weight: 300;
+
+        span {
+            color: #000;
+        }
+    }
+
     .left, .left-content {
         display: flex;
         flex-direction: column;
         justify-content: space-between !important;
-
-        .upload-description {
-            font-family: Roboto, sans-serif;
-            line-height: 19px;
-            font-weight: 300;
-        }
 
         &.first-screen {
             max-height: 432px;
@@ -400,6 +426,14 @@
     }
 
     .right {
+        p.upload-description {
+            font-family: Roboto, sans-serif;
+            line-height: 30px;
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 45px;
+            max-width: none;
+        }
         & > div {
             width: 100% !important;
             max-width: 688px !important;
