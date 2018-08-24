@@ -11,15 +11,16 @@
                 <!--</cg-button>-->
             </div>
         </div>
+        <separator />
         <div class="filter-section">
             <div>
                 <cg-button
-                        :button-style="showYourPacks === false ? 'negative' : 'transparent'"
+                        :button-style="showYourPacks === false ? 'tab-active' : 'tab-inactive'"
                         @click="toggleAssetPacks">
                     All asset packs
                 </cg-button>
                 <cg-button
-                        :button-style="showYourPacks === true ? 'negative' : 'transparent'"
+                        :button-style="showYourPacks === true ? 'tab-active' : 'tab-inactive'"
                         @click="toggleAssetPacks">
                     Your asset packs
                 </cg-button>
@@ -29,18 +30,16 @@
             </div>
         </div>
         <div class="content" v-if="loading === false">
-            <div class="asset-packs">
-                <asset-box
-                        :assetPack="assetPack"
-                        :selected="isSelected(assetPack)"
-                        @click="toggleAsset(assetPack)"
-                        v-for="(assetPack, index) in assetPacks" :key="index" />
-            </div>
-            <cg-button
-                    @click="changeTab"
-                    button-style="transparent">
-                Next
-            </cg-button>
+            <asset-picker-pagination
+                    assets-pack-type="all"
+                    grid="row-5"
+                    :show-per-page="10"
+                    :overlay="true"
+                    :isSelected="isSelected.bind(this)"
+                    :toggleAsset="toggleAsset.bind(this)"
+                    :changeTab="changeTab.bind(this)"
+                    :assetPackIds="assetPacks"
+            />
         </div>
         <div class="content" v-if="loading">
             <div class="loading-section">
@@ -52,6 +51,7 @@
 </template>
 
 <script>
+  import AssetPickerPagination from '../template/AssetPickerPagination.vue';
   import {
     METAMASK_ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
@@ -59,6 +59,7 @@
   } from 'store/user-config/types';
   import { mapGetters } from 'vuex';
   import {
+    getNumberOfAssetPacks,
     getAssetPacksWithAssetData,
     getSelectedAssetPacksWithAssetData
   } from 'services/ethereumService';
@@ -70,6 +71,7 @@
       showYourPacks: false,
       loading: true,
     }),
+    components: { AssetPickerPagination },
     computed: {
       ...mapGetters({
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
@@ -89,14 +91,17 @@
       },
       async toggleAssetPacks() {
         this.showYourPacks = !this.showYourPacks;
+        this.loading = true;
         if (this.showYourPacks) {
-          this.assetPacks = await getSelectedAssetPacksWithAssetData([
+          this.assetPacks = [
             ...this.createdPacksIDs,
             ...this.boughtPacksIDs
-          ]);
+          ];
         } else {
-          this.assetPacks = await getAssetPacksWithAssetData();
+          const numOfAssets = await getNumberOfAssetPacks();
+          this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
         }
+        this.loading = false;
       },
       totalPrice() {
         const filteredPacks = this.selectedAssetPacks.filter(item => {
@@ -109,7 +114,8 @@
 
     async created() {
       try {
-        this.assetPacks = await getAssetPacksWithAssetData();
+        const numOfAssets = await getNumberOfAssetPacks();
+        this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
       } catch (e) {
         console.log(e);
       } finally {
@@ -125,12 +131,15 @@
         flex-direction: column;
         max-width: 760px;
         margin-left: 0;
+
+        .line-separator {
+            margin: 25px 0;
+        }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 50px;
             .large-title {
                 margin-bottom: 0;
             }
@@ -151,17 +160,6 @@
 
                 &:first-child {
                     margin-right: 20px;
-                }
-            }
-        }
-        .asset-packs {
-            margin-bottom: 50px;
-            .asset-box {
-                margin-right: 20px;
-                margin-bottom: 20px;
-
-                &:nth-child(5n) {
-                    margin-right: 0;
                 }
             }
         }

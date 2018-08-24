@@ -1,5 +1,5 @@
 <template>
-    <div class="pagination-controls" v-if="pages.length > 1">
+    <div :class="['pagination-controls', paginationStyle]" v-if="pages.length > 1">
         <cg-button
                 button-style="pagination"
                 v-if="showPrev"
@@ -26,6 +26,10 @@
   export default {
     name: 'Pagination',
     props: {
+      paginationStyle: {
+        type: String,
+        default: '',
+      },
       total: {
         type: Number,
         required: true
@@ -116,6 +120,10 @@
             &.active {
                 color: #000000;
             }
+        }
+
+        &.left {
+            text-align: left;
         }
     }
 </style>

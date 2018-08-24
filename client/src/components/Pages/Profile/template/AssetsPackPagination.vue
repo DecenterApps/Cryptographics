@@ -45,11 +45,11 @@
                     </overlay>
                 </template>
             </div>
-            <pagination
-                    :total="assetsLength === null ? 0 : assetsLength"
-                    :per-page="showPerPage"
-                    @updatePage="changePage" />
         </div>
+        <pagination
+                :total="assetsLength === null ? 0 : assetsLength"
+                :per-page="showPerPage"
+                @updatePage="changePage" />
         <div v-if="assetPacks === false" class="assets-packs">
             <p v-if="assetsPackType === 'created'">You haven't created any assets pack yet.</p>
             <p v-if="assetsPackType === 'bought'">You haven't bought any assets pack yet. Go to

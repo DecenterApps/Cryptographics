@@ -94,6 +94,24 @@
         border: 1px solid #fff;
     }
 
+    .tab-active {
+        color: #000;
+        font-weight: bold;
+        background: none;
+        border: none;
+        font-size: 15px;
+        text-decoration: underline;
+        padding: 0;
+    }
+
+    .tab-inactive {
+        color: #000;
+        background: none;
+        border: none;
+        font-size: 15px;
+        padding: 0;
+    }
+
     .no-border {
         color: #000;
         background: none;
