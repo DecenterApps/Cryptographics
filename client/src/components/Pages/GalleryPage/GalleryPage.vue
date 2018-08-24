@@ -1,27 +1,29 @@
 <template>
     <div>
         <slider-gallery />
-        <gallery :images="images" :display-overlay="true" />
+
+        <div class="container">
+            <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
+        </div>
     </div>
 </template>
 
 <script>
-  import Gallery from 'shared/Gallery/Gallery.vue';
-  import { getImagesMetadata, getImageCount } from 'services/ethereumService';
+  import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery.vue';
+  import { getImageCount } from 'services/ethereumService';
 
   export default {
-    name: 'about',
+    name: 'GalleryPage',
     components: {
-      Gallery
+      PaginatedGallery
     },
     data: () => ({
-      images: [],
+      imageIds: [],
     }),
     async created() {
       try {
         const numOfImages = await getImageCount();
-        const ids = [...Array(parseInt(numOfImages)).keys()];
-        this.images = await getImagesMetadata(ids);
+        this.imageIds = [...Array(parseInt(numOfImages)).keys()];
       } catch (e) {
         console.log(e);
       }
@@ -30,11 +32,5 @@
 </script>
 
 <style scoped>
-    div.test-image {
-        height: 561px;
-        width: 400px;
-        border: 1px solid black;
-    }
-
 
 </style>

@@ -45,7 +45,7 @@
   import { ipfsNodePath } from 'config/constants';
 
   export default {
-    name: 'AssetsPackPagination',
+    name: 'AssetPickerPagination',
     props: {
       showPerPage: {
         type: Number,

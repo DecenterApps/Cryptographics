@@ -38,8 +38,10 @@
     }),
     async created() {
       try {
-        const numOfImages = await getImageCount();
-        const ids = [...Array(parseInt(numOfImages)).keys()].reverse();
+        let numOfImages = await getImageCount();
+        if (numOfImages > 6) numOfImages = 6;
+        const ids = [...Array(numOfImages).keys()].reverse();
+        console.log(ids, numOfImages);
         this.images = await getImagesMetadata(ids, true);
       } catch (e) {
         console.log(e);
