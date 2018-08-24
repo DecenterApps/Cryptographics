@@ -469,7 +469,9 @@
                 font-size: 12px;
                 padding-left: 10px;
             }
+        }
 
+        .overlay {
             svg, button {
                 opacity: 0.5;
 
