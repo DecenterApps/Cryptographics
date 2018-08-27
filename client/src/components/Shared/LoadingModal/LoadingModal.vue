@@ -62,7 +62,7 @@
                 line-height: 26px;
             }
 
-            .button-wrapper {
+            button {
                 margin-top: 20px;
             }
         }

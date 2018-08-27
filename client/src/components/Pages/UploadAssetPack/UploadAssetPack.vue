@@ -354,7 +354,7 @@
             &.submit {
                 justify-content: space-between;
             }
-            .button-wrapper {
+            button {
                 margin: 0 5px;
                 &:first-of-type {
                     margin-left: 0;
@@ -374,7 +374,7 @@
                 width: 386px;
                 height: 281px;
             }
-            .button-wrapper {
+            button {
                 margin-left: 10px;
             }
         }

@@ -86,8 +86,8 @@
             text-decoration: none;
         }
 
-        .button-wrapper {
-            width: 140px;
+        button {
+            min-width: 140px;
         }
 
     }
