@@ -55,30 +55,37 @@
             <div class="selected-asset-packs">
                 <div class="final-pack-list">
                     <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
-                        <div class="asset-pack-meta">
-                            <h1 class="small-title">{{ assetPack.packName }}</h1>
-                            <div class="small-title">Ξ {{ assetPack.price }}</div>
-                        </div>
                         <asset-box
                                 :key="index"
                                 :assetPack="assetPack"
                                 :small="true"
                                 color="#eee" />
+                        <div class="asset-pack-meta">
+                            <h1 class="small-title">{{ assetPack.packName }}</h1>
+                            <div class="small-title">Ξ {{ assetPack.price }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="controls">
                 <div class="top-controls buy-screen">
-                    <div class="small-title">Art Title</div>
-                    <Input
+                    <div class="small-title">Title</div>
+                    <cg-input
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-on:input="checkTitle"
                             v-model="title"
-                            placeholder="0/20"
+                            :max-length="20"
+                    />
+                    <div class="small-title">Description</div>
+                    <cg-textarea
+                            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
+                            v-model="description"
+                            :max-length="20"
+                            placeholder="Describe your Cryptographic."
                     />
                 </div>
-                <separator></separator>
+                <!--<separator></separator>-->
                 <div class="bottom-controls buy-screen">
                     <div>
                         <cg-button
@@ -120,16 +127,15 @@
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
-  import Input from '../../../Shared/UI/Input';
 
   export default {
     name: 'GraphicBuilder',
     components: {
-      Input,
       Canvas
     },
     data: () => ({
       title: '',
+      description: '',
       errors: [],
       buyScreen: false,
       canvasData: {
@@ -367,21 +373,22 @@
         .final-pack-list {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            align-items: flex-end;
+            /*justify-content: flex-end;*/
+            /*align-items: flex-end;*/
             max-height: 300px;
             overflow-y: auto;
 
             .final-pack-item {
                 display: flex;
                 margin-bottom: 20px;
+                min-height: 55px;
 
                 .asset-pack-meta {
                     display: flex;
-                    align-items: flex-end;
+                    /*align-items: flex-end;*/
                     justify-content: flex-end;
                     flex-direction: column;
-                    margin-right: 15px;
+                    margin-left: 15px;
 
                     .small-title {
                         margin-bottom: 10px;
@@ -472,10 +479,16 @@
                 margin-top: 10px;
             }
 
+            .small-title {
+                margin-bottom: 15px;
+                margin-top: 10px;
+            }
+
             &.buy-screen {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
+                /*display: flex;*/
+                /*flex-direction: column;*/
+                /*align-items: flex-end;*/
+                margin-bottom: 0;
 
                 input {
                     width: 185px;

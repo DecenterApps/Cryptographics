@@ -1,22 +1,16 @@
 <template>
-    <span class="input-wrapper">
-        <input
-                class="input"
-                :class="[inputStyle, maxLength > 0 ? 'max-length' : '']"
-                :type="inputType"
+        <textarea
+                class="textarea"
+                :class="[textareaStyle]"
                 v-bind="$attrs"
                 v-model="content"
                 :maxlength="maxLength"
-                @input="handleInput">
-        <span v-if="maxLength > 0">
-            {{ numChars }} / {{ maxLength }}
-        </span>
-    </span>
+                @input="handleInput"></textarea>
 </template>
 
 <script>
   export default {
-    name: 'Input',
+    name: 'Textarea',
     data() {
       return {
         content: this.value,
@@ -28,13 +22,9 @@
         type: String,
         default: ''
       },
-      inputType: {
+      textareaStyle: {
         type: String,
-        default: 'text'
-      },
-      inputStyle: {
-        type: String,
-        default: 'input'
+        default: 'textarea'
       },
       maxLength: {
         type: Number,
@@ -54,8 +44,7 @@
 </script>
 
 <style scoped lang="scss">
-    .input {
-        height: 33px;
+    .textarea {
         box-sizing: border-box;
         outline: 0;
         padding: 9px 13px;
@@ -65,6 +54,8 @@
         border: 1px solid #000;
         border-radius: 5px;
         margin-bottom: 10px;
+        width: 400px;
+        height: 100px;
 
         &.max-length {
             padding-right: 50px;
@@ -72,19 +63,6 @@
 
         &.error {
             border: 1px solid #BE0000;
-        }
-    }
-
-    .input-wrapper {
-        position: relative;
-        display: inline-block;
-        height: 35px;
-        span {
-            position: absolute;
-            right: 10px;
-            top: 11px;
-            font-size: 12px;
-            color: #949494;
         }
     }
 </style>
