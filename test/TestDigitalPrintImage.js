@@ -23,25 +23,12 @@ contract('DigitalPrintImage', async (accounts) => {
             attributes.push(122);
         }
 
-        await assetManager.createAssetPack("0x0", "Pack 1", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<40; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+40+1).toString());
-        }
-        await assetManager.createAssetPack("0x0", "Pack 2", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<40; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+80+1).toString());
-        }
-        await assetManager.createAssetPack("0x0", "Pack 3", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<40; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+120+1).toString());
-        }
-        await assetManager.createAssetPack("0x0", "Pack 4", attributes, ipfsHashes, 1000);
-        for(let i = 0; i<40; i++) {
-            ipfsHashes[i] = Web3.utils.sha3((i+160+1).toString());
-        }
-        await assetManager.createAssetPack("0x0", "Pack 5", attributes, ipfsHashes, 1000);
+        await assetManager.createAssetPack("0x0", attributes, ipfsHashes, 1000, "0x0");
+        await assetManager.createAssetPack("0x0", attributes, ipfsHashes, 1000, "0x0");
+        await assetManager.createAssetPack("0x0", attributes, ipfsHashes, 1000, "0x0");
+        await assetManager.createAssetPack("0x0", attributes, ipfsHashes, 1000, "0x0");
+        await assetManager.createAssetPack("0x0", attributes, ipfsHashes, 1000, "0x0");
     });
-
     
     it("...Should create image if I have access to all packs", async () => {
         let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18];
@@ -56,7 +43,7 @@ contract('DigitalPrintImage', async (accounts) => {
         // console.log(seed);
         let final = await dpm.getFinalSeed(seed, 1);
         // console.log(final);
-        let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213, 1, encoded_arr, "Author", "hash"); 
+        let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213, 1, encoded_arr, "Author", "hash", "hash"); 
         let balance = await dpm.balanceOf(accounts[0]);
         assert.equal(balance, 1, "User should have image he just created");
     });
@@ -80,7 +67,7 @@ contract('DigitalPrintImage', async (accounts) => {
         let timestamp = 1533304445002;
         let randomHashes = [59, 47, 27, 94, 91, 98, 4, 8, 76, 57];
 
-        let new_res = await dpm.createImage(randomHashes, timestamp, iterations, encoded_arr, username, ipfsHash, {from: accounts[1], value: price}); 
+        let new_res = await dpm.createImage(randomHashes, timestamp, iterations, encoded_arr, username, ipfsHash, ipfsHash, {from: accounts[1], value: price}); 
         // console.log(new_res);
         let balance = await dpm.balanceOf(accounts[1]);
         assert.equal(balance, 1, "User should have image he just created with right price");

@@ -12,15 +12,15 @@ contract AssetManager is Ownable {
         /// 2nd digit will tell us if rotation is enabled 1 - true / 2 - false
         /// 3rd digit will tell us if scaling  is enabled 1 - true / 2 - false
         uint attributes;
-        bytes32 ipfsHash;
+        bytes32 ipfsHash; // image
     }
 
     struct AssetPack {
         bytes32 packCover;
-        string name;
         uint[] assetIds;
         address creator;
         uint price;
+        string ipfsHash; // containing title and description
     }
 
     uint public numberOfAssets;
@@ -40,16 +40,16 @@ contract AssetManager is Ownable {
 
     /// @notice Function to create assetpack
     /// @param _packCover is cover image for asset pack
-    /// @param _name is name of the asset pack
     /// @param _attributes is array of attributes
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
+    /// @param _ipfsHash ipfs hash containing title and description in json format
     function createAssetPack(
         bytes32 _packCover, 
-        string _name, 
         uint[] _attributes, 
         bytes32[] _ipfsHashes, 
-        uint _packPrice) public {
+        uint _packPrice,
+        string _ipfsHash) public {
         
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
@@ -64,10 +64,10 @@ contract AssetManager is Ownable {
 
         assetPacks.push(AssetPack({
             packCover: _packCover,
-            name: _name,
             assetIds: ids,
             creator: msg.sender,
-            price: _packPrice
+            price: _packPrice,
+            ipfsHash: _ipfsHash
         }));
 
         createdAssetPacks[msg.sender].push(numberOfAssetPacks);
@@ -250,7 +250,7 @@ contract AssetManager is Ownable {
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
     function getAssetPackData(uint _assetPackId) public view 
-    returns(string, bytes32, address, uint, uint[], uint[], bytes32[]) {
+    returns(bytes32, address, uint, uint[], uint[], bytes32[]) {
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -263,7 +263,6 @@ contract AssetManager is Ownable {
         uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
         return(
-            assetPack.name, 
             assetPack.packCover, 
             assetPack.creator, 
             assetPack.price, 
@@ -271,17 +270,6 @@ contract AssetManager is Ownable {
             attributes, 
             hashes
         );
-    }
-
-    /// @notice Function to get name for asset pack
-    /// @param _assetPackId is id of asset pack
-    /// @return string name of asset pack
-    function getAssetPackName(uint _assetPackId) public view returns (string) {
-        require(_assetPackId < numberOfAssetPacks);
-
-        AssetPack memory assetPack = assetPacks[_assetPackId];
-
-        return assetPack.name;
     }
 
     function getAssetPackPrice(uint _assetPackId) public view returns (uint) {
