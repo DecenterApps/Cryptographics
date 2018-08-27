@@ -23,7 +23,7 @@
     async created() {
       try {
         const numOfImages = await getImageCount();
-        this.imageIds = [...Array(parseInt(numOfImages)).keys()];
+        this.imageIds = [...Array(parseInt(numOfImages)).keys()].reverse();
       } catch (e) {
         console.log(e);
       }
