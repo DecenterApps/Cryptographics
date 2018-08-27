@@ -53,7 +53,7 @@ contract AssetManager is Ownable {
         
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
-        require(_attributes.length < 50);
+        require(_attributes.length == _ipfsHashes.length);
 
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
@@ -73,7 +73,7 @@ contract AssetManager is Ownable {
         createdAssetPacks[msg.sender].push(numberOfAssetPacks);
         numberOfAssetPacks++;
 
-        emit AssetPackCreated(numberOfAssetPacks, msg.sender);
+        emit AssetPackCreated(numberOfAssetPacks-1, msg.sender);
     }
 
     /// @notice Function which creates an asset
@@ -112,7 +112,7 @@ contract AssetManager is Ownable {
         artistBalance[assetPack.creator] += msg.value;
         boughtAssetPacks[_to].push(_assetPackId);
 
-        emit AssetPackCreated(_assetPackId, _to);
+        emit AssetPackBought(_assetPackId, _to);
     }
 
     /// @notice Function to fetch total number of assets

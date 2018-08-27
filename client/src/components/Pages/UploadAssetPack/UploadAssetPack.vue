@@ -235,7 +235,7 @@
                 console.log(attributes);
                 this.toggleModal();
                 const result = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
-                const id = result.events.AssetPackCreated.returnValues.id - 1;
+                const id = result.events.AssetPackCreated.returnValues.id;
                 this.toggleModal();
                 this.$router.push(`/asset-pack/${id}`);
                 console.log(result, id);
