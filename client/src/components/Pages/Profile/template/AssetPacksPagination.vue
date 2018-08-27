@@ -76,7 +76,7 @@
   import { ipfsNodePath } from 'config/constants';
 
   export default {
-    name: 'AssetsPackPagination',
+    name: 'AssetPacksPagination',
     props: {
       assetsPackType: {
         type: String,

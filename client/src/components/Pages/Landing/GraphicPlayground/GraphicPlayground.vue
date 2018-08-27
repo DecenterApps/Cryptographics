@@ -30,7 +30,7 @@
             <div class="right">
                 <h2 class="large-title">This is a Cryptographic</h2>
                 <div class="hero-text-content">
-                    <p>A graphic created by you. </p>
+                    <p>A graphic created by you, with a little help from provably secure randomness. </p>
                     <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
                         trade.</p>
                     <p>Try creating another one.</p>

@@ -44,8 +44,8 @@
                                 Bought assets packs
                             </cg-button>
                         </div>
-                        <assets-pack-pagination v-if="showYourPacks" assets-pack-type="created" />
-                        <assets-pack-pagination v-else assets-pack-type="bought" />
+                        <asset-packs-pagination v-if="showYourPacks" assets-pack-type="created" />
+                        <asset-packs-pagination v-else assets-pack-type="bought" />
                     </div>
                     <div class="gallery" v-if="currentTab === 'gallery'">
                         <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
@@ -68,7 +68,7 @@
   import { TOGGLE_MODAL } from 'store/modal/types';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
 
-  import AssetsPackPagination from './template/AssetsPackPagination.vue';
+  import AssetPacksPagination from './template/AssetPacksPagination.vue';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery.vue';
 
   export default {
@@ -83,7 +83,7 @@
     },
     components: {
       PaginatedGallery,
-      AssetsPackPagination
+      AssetPacksPagination
     },
     computed: {
       ...mapGetters({

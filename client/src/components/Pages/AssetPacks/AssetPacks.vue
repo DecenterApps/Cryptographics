@@ -20,13 +20,13 @@
                         Your assets packs
                     </cg-button>
                 </div>
-                <assets-pack-pagination
+                <asset-packs-pagination
                         v-if="showYourPacks"
                         assets-pack-type="all"
                         grid="row-4"
                         :show-per-page="8"
                         :overlay="true" />
-                <assets-pack-pagination
+                <asset-packs-pagination
                         v-else
                         assets-pack-type="created"
                         grid="row-4"
@@ -39,12 +39,12 @@
 
 <script>
 
-  import AssetsPackPagination from '../Profile/template/AssetsPackPagination.vue';
+  import AssetPacksPagination from '../Profile/template/AssetPacksPagination.vue';
 
   export default {
     name: 'AssetsPacksPage',
     components: {
-      AssetsPackPagination
+      AssetPacksPagination
     },
     data() {
       return {
