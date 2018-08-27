@@ -10,7 +10,7 @@
                             </cg-button>
                         </overlay>
                         <div class="canvas-holder-wrapper">
-                            <Canvas :canvasData="canvasData"></Canvas>
+                            <Canvas :canvasData="canvasData" height="400" width="400" />
                         </div>
                     </div>
                     <!--<div class="button-group">-->
@@ -65,6 +65,7 @@
       Canvas,
       Gallery
     },
+    props: ['width'],
     data: () => ({
       ipfsNodePath,
       randomSeed: 0,

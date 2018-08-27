@@ -33,7 +33,7 @@
         display: flex;
         flex-direction: column;
         position: absolute;
-        right: 20px;
+        right: 10px;
         top: 0;
 
         svg {

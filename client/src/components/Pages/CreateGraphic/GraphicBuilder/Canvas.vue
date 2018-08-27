@@ -1,5 +1,5 @@
 <template>
-    <div class="canvas-wrapper">
+    <div class="canvas-wrapper" :class="{'square': this.canvasData.ratio === '1:1'}">
         <canvas fill="#fff" id="canvas"></canvas>
     </div>
 </template>
@@ -11,7 +11,7 @@
 
   export default {
     data: () => ({}),
-    props: ['canvasData', 'frame'],
+    props: ['canvasData', 'frame', 'width', 'height'],
     methods: {
       ...mapActions({
         toggleDrawing: TOGGLE_CANVAS_DRAWING,
@@ -26,8 +26,8 @@
         const frame = this.canvasData.frame || false;
         canvas.width = size.canvasWidth;
         canvas.height = size.canvasHeight;
-        canvas.style.width = size.width + 'px';
-        canvas.style.height = size.height + 'px';
+        canvas.style.width = this.width + 'px';
+        canvas.style.height = this.height + 'px';
         const FRAME_BOUNDARIES = {
           left: canvas.width / 20,
           bottom: canvas.height / 6.3,
@@ -79,8 +79,22 @@
 <style lang="scss">
     .canvas-wrapper {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         height: 100%;
         width: 100%;
+        canvas {
+            max-width: 100%;
+            height: calc(100vh - 200px);
+            @media screen and (max-width: 940px) {
+                height: auto;
+            }
+        }
+        &.square {
+            canvas {
+                @media screen and (max-width: 1120px) {
+                    height: auto;
+                }
+            }
+        }
     }
 </style>

@@ -36,7 +36,8 @@
             }
         }
         .image {
-            max-width: 500px;
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
         }
         .details {
             width: 100%;

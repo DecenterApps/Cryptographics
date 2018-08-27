@@ -113,11 +113,13 @@
     .left {
         display: flex;
         align-items: center;
-        justify-content: flex-end !important;
         max-width: none !important;
     }
     .right {
         position: relative;
+        max-width: 400px;
+        min-width: 300px;
+        padding-right: 50px;
     }
     .canvas-wrapper {
         display: none;

@@ -332,6 +332,7 @@
             flex-grow: 1;
             margin-left: 50px;
             max-width: 400px;
+            min-width: 300px;
             width: 100%;
         }
         @media screen and (max-width: 767px) {
@@ -348,7 +349,8 @@
             .right {
                 margin: 0;
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
+                max-width: none;
                 .controls {
                     margin: 30px 0;
                     align-items: flex-start;

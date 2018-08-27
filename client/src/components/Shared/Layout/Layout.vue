@@ -99,9 +99,8 @@ export default {
             padding: 80px 0;
             margin-right: 0;
             display: flex;
+            justify-content: center;
             & > .left {
-                max-width: 335px;
-                width: 100%;
                 display: inline-flex;
                 flex-direction: column;
                 justify-content: flex-start;
