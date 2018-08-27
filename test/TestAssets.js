@@ -1,4 +1,5 @@
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
+const DigitalPrintImage = artifacts.require("../contracts/DigitalPrintImage.sol");
 const utils = require('../client/src/services/utils');
 const Web3 = require('web3');
 
@@ -8,6 +9,7 @@ contract('AssetManager', async (accounts) => {
 
     before(async () => {
         assetManager = await AssetManager.deployed();
+        dpm = await DigitalPrintImage.deployed();
     });
 
     it("...Should create assets", async () => {
@@ -28,5 +30,11 @@ contract('AssetManager', async (accounts) => {
         
         assert.equal(numOfAssets, 80, "Number of assets should be 80");
         assert.equal(numOfPacks, 4, "Number of packs should be 4");
+    });
+
+    it("...Should have connection to DigitalPrintImage", async () => {
+        let userManager = await assetManager.userManager();
+
+        assert.equal(userManager, dpm.address, "Addresses should be equal");
     });
 });

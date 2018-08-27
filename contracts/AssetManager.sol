@@ -1,5 +1,7 @@
 pragma solidity ^0.4.23;
+
 import "./Utils/Ownable.sol";
+import "./UserManager.sol";
 
 
 contract AssetManager is Ownable {
@@ -29,6 +31,8 @@ contract AssetManager is Ownable {
     Asset[] public assets;
     AssetPack[] public assetPacks;
 
+    UserManager public userManager;
+
     mapping(address => uint) public artistBalance;
     mapping(bytes32 => bool) public hashExists;
 
@@ -37,6 +41,12 @@ contract AssetManager is Ownable {
 
     event AssetPackCreated(uint indexed id, address indexed owner);
     event AssetPackBought(uint indexed id, address indexed buyer);
+
+    function addUserManager(address _userManager) public onlyOwner {
+        require(userManager == address(0));
+
+        userManager = UserManager(_userManager);
+    }
 
     /// @notice Function to create assetpack
     /// @param _packCover is cover image for asset pack
@@ -250,7 +260,7 @@ contract AssetManager is Ownable {
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
     function getAssetPackData(uint _assetPackId) public view 
-    returns(bytes32, address, uint, uint[], uint[], bytes32[]) {
+    returns(bytes32, address, uint, uint[], uint[], bytes32[], string, string, bytes32) {
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -268,7 +278,10 @@ contract AssetManager is Ownable {
             assetPack.price, 
             assetPack.assetIds, 
             attributes, 
-            hashes
+            hashes,
+            assetPack.ipfsHash,
+            userManager.getUsername(assetPack.creator),
+            userManager.getProfilePicture(assetPack.creator)
         );
     }
 
