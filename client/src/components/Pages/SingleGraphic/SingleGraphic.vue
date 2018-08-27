@@ -21,6 +21,7 @@
                     @showPrintForm="orderPrint = true"
             />
             <print-form v-else />
+            <share-icons />
         </div>
         <div class="canvas-wrapper">
             <Canvas :canvasData="canvasData" ></Canvas>
@@ -43,6 +44,7 @@
     isImageForSale,
     parseContractAssetData,
   } from 'services/ethereumService';
+  import ShareIcons from './ShareIcons';
 
   export default {
     name: 'SingleGraphic',
@@ -65,6 +67,7 @@
       }
     }),
     components: {
+      ShareIcons,
       GraphicPreview,
       GraphicDetails,
       PrintForm,
@@ -112,6 +115,9 @@
         align-items: center;
         justify-content: flex-end !important;
         max-width: none !important;
+    }
+    .right {
+        position: relative;
     }
     .canvas-wrapper {
         display: none;
