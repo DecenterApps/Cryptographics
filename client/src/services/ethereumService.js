@@ -438,9 +438,13 @@ export const getBoughtAssets = async () => {
 
 export const getLandingPacks = () => {
   const ids = landingAssetPacks.map(item => item.id);
+  const assetIds = landingAssetPacks.map(assetPack =>
+    assetPack.assets.map(item => parseInt(item.id)))
+    .reduce((a, b) => a.concat(b), []);
   return {
     packs: landingAssetPacks,
     ids,
+    assetIds,
   };
 };
 

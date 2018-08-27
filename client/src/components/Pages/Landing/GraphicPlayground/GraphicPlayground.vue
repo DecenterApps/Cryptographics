@@ -57,6 +57,7 @@
   import Gallery from 'shared/Gallery/Gallery.vue';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
   import { getCoversForAssetPacks } from 'services/ethereumService';
+  import { shuffleArray } from 'services/helpers';
 
   export default {
     name: 'GraphicPlayground',
@@ -72,6 +73,8 @@
       randomHashIds: pickTenRandoms(),
       allAssets: [],
       assetPacks: [],
+      selectedAssets: [],
+      potentialAssets: [],
       canvasData: {
         assets: [],
         ratio: '1:1',
@@ -80,40 +83,19 @@
       coverIpfsHashes: [],
     }),
     methods: {
-      // renderCanvas() {
-      //   let canvas = document.getElementById('canvas');
-      //   canvas.width = 350;
-      //   canvas.height = 350;
-      //
-      //   let images_paths = [];
-      //   let numberOfImages = Math.floor(Math.random() * 20);
-      //   for (let i = 0; i < numberOfImages; i++) {
-      //     let val = Math.floor(Math.random() * 30);
-      //     if (val == 0) {
-      //       val = 1;
-      //     }
-      //     let path = val < 10 ? '0' + val.toString() : val.toString();
-      //     images_paths.push(path);
-      //   }
-      //   makeCoverImage(true, images_paths, canvas, 350, 350);
-      // }
       async renderCanvas() {
-        let pot = this.assetPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
         this.iterations++;
-        console.log(pot);
+        let potentialAssets = shuffleArray(this.selectedAssets);
+        potentialAssets = potentialAssets.slice(0, 30);
         console.log('RANDOM SEED: ' + this.randomSeed);
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
-        console.log(pot);
-        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        console.log('POTENTIAL ASSETS: ' + potentialAssets);
+        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(potentialAssets), this.allAssets);
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
+        this.potentialAssets = potentialAssets;
         console.log('iteration: ' + this.iterations);
-        let picked = [];
-        for (let i = 0; i < this.canvasData.assets.length; i++) {
-          picked.push(this.canvasData.assets[i].id);
-        }
+
       },
       addSourceItem(data, assets) {
         const packs = this.assetPacks.reduce((a, b) => a.concat(b.assets), []);
@@ -126,11 +108,10 @@
         });
       },
       openInEditor() {
-        console.log(this.randomHashIds);
         window.sessionStorage.setItem('randomHashIds', JSON.stringify(this.randomHashIds));
         window.sessionStorage.setItem('iterations', (this.iterations - 1).toString());
         window.sessionStorage.setItem('timestamp', this.timestamp);
-        console.log(this);
+        window.sessionStorage.setItem('potentialAssets', JSON.stringify(this.potentialAssets));
         this.$router.push('/create-graphic');
       },
       download() {
@@ -152,6 +133,7 @@
       this.randomSeed = await convertSeed(this.randomSeed);
       const landingPacks = getLandingPacks();
       this.assetPacks = landingPacks.packs;
+      this.selectedAssets = landingPacks.assetIds;
       this.renderCanvas();
       this.coverIpfsHashes = await getCoversForAssetPacks(landingPacks.ids);
     }

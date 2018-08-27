@@ -107,18 +107,15 @@
 <script>
   import {
     pickTenRandoms,
-    getLandingPacks,
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
-    usernameExists,
-    registerUser,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
-  import { resizeCanvas, shuffleArray } from 'services/helpers';
+  import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
@@ -148,7 +145,7 @@
       imagePrice: null,
       potentialAssets: [],
       allAssets: [],
-      selectedPacks: [],
+      selectedAssets: [],
       claimPressed: false,
     }),
     computed: {
@@ -161,7 +158,9 @@
     props: ['selectedAssetPacks'],
     watch: {
       selectedAssetPacks: async function () {
-        this.selectedPacks = this.selectedAssetPacks;
+        this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
+          assetPack.assets.map(asset => parseInt(asset.id)))
+          .reduce((a, b) => a.concat(b), []);
         this.iterations = 0;
         this.timestamp = new Date().getTime();
         this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
@@ -236,39 +235,37 @@
       },
       async renderCanvas() {
         this.iterations++;
-        if (window.sessionStorage.length > 0) {
-          const landingPacks = getLandingPacks();
-          this.selectedPacks = [...new Set([...this.selectedPacks, ...landingPacks.packs])];
+        console.log(this.selectedAssets);
+        let selectedAssets = this.selectedAssets;
+
+        // Don't shuffle if user came from home page
+        console.log(window.sessionStorage.length);
+        if (window.sessionStorage.length <= 0) {
+          selectedAssets = shuffleArray(selectedAssets);
         }
-        this.selectedPacks = [...new Set([...this.selectedPacks, ...this.selectedAssetPacks])];
-        console.log(this.selectedPacks);
-        let pot = this.selectedPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
-        pot = shuffleArray(pot);
-        pot = pot.slice(0, 30);
-        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        selectedAssets = selectedAssets.slice(0, 30);
+        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(selectedAssets), this.allAssets);
         console.log('iteration: ' + this.iterations);
-        this.potentialAssets = pot;
+        this.potentialAssets = selectedAssets;
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {
           picked.push(this.canvasData.assets[i].id);
         }
         let price = await calculatePrice(picked, this.userAddress);
 
-        if (pot.length === 0) {
+        if (selectedAssets.length === 0) {
           this.imagePrice = 0;
         }
         this.imagePrice = parseFloat(price);
         console.log('PRICE : ' + this.imagePrice);
       },
       download() {
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById('canvas');
         if (!canvas) return;
         const link = document.createElement('a');
         const title = this.title || 'cryptographic';
         link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
         link.click();
       },
       changeTab() {
@@ -284,7 +281,12 @@
       }
     },
     async created() {
+      this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
+        assetPack.assets.map(asset => parseInt(asset.id)))
+        .reduce((a, b) => a.concat(b), []);
       if (window.sessionStorage.length > 0) {
+        const landingPageAssets = JSON.parse(sessionStorage.getItem('potentialAssets'));
+        this.selectedAssets = [...landingPageAssets];
         this.canvasData.ratio = '1:1';
         this.randomHashIds = JSON.parse(sessionStorage.getItem('randomHashIds'));
         this.timestamp = sessionStorage.getItem('timestamp');
@@ -306,6 +308,7 @@
         this.randomSeed = await convertSeed(this.randomSeed);
         this.renderCanvas();
       }
+      this.selectedAssets = uniq([...this.selectedAssets, ...this.selectedAssetPacks]);
     },
   };
 </script>
