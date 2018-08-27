@@ -24,7 +24,7 @@
   import { buyAssetPack, getAssetPackData, checkAssetPermission } from 'services/ethereumService';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
   import { mapGetters } from 'vuex';
-  import AssetsPackPagination from '../Profile/template/AssetsPackPagination.vue';
+  import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
 
   export default {
     name: 'AssetPackPreview',

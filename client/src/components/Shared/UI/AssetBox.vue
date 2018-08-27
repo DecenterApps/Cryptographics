@@ -56,7 +56,7 @@
         align-items: center;
         justify-content: center;
         height: 100px;
-        width: 140px;
+        width: 136px;
         font-family: inherit;
         background-color: #eee;
         color: #494946;

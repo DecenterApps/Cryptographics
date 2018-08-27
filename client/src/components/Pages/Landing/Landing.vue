@@ -1,6 +1,10 @@
 <template>
     <div>
         <graphic-playground />
+        <div class="title-section">
+            <h1 class="large-title">Gallery</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+        </div>
         <gallery :images="images" :display-filters="false" :display-overlay="true" />
         <div class="artist-cta">
             <div class="container">
@@ -34,8 +38,10 @@
     }),
     async created() {
       try {
-        const numOfImages = await getImageCount();
-        const ids = [...Array(parseInt(numOfImages)).keys()];
+        let numOfImages = await getImageCount();
+        if (numOfImages > 6) numOfImages = 6;
+        const ids = [...Array(numOfImages).keys()].reverse();
+        console.log(ids, numOfImages);
         this.images = await getImagesMetadata(ids, true);
       } catch (e) {
         console.log(e);
@@ -58,6 +64,17 @@
                 }
             }
         }
+    }
+
+    .gallery {
+        padding-top: 50px;
+    }
+
+    .title-section {
+        background-color: #EEEEEE;
+        text-align: center;
+        padding-top: 60px;
+        padding-bottom: 10px;
     }
 
     .assets {

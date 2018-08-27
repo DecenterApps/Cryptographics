@@ -45,15 +45,15 @@ export const buyAssetPack = async (address, assetPackId, price) => {
   }
 };
 
-export const getAllAssetsPacks = async (assetPacksID) => {
-  return await assetManagerContract().methods.assetPacks(assetPacksID).call();
+export const getAllAssetPacks = async (assetPackIDs) => {
+  return await assetManagerContract().methods.assetPacks(assetPackIDs).call();
 };
 
 export const getAllAssetsPacksInfo = async () => {
   let numOfAssetsPacks = await getNumberOfAssetPacks();
   let assetsPackInfo = [];
   for (let i = 0; i < numOfAssetsPacks; i++) {
-    let data = await getAllAssetsPacks(i);
+    let data = await getAllAssetPacks(i);
     let object = {
       id: i,
       username: await getUsername(data['creator']),
@@ -72,7 +72,7 @@ export const getAllAssetsPacksInfo = async () => {
 export const getPackInformation = async (assetsPackArray) => {
   let assetPackInfo = [];
   for (let value of assetsPackArray) {
-    let data = await getAllAssetsPacks(value);
+    let data = await getAllAssetPacks(value);
     let object = {
       id: value,
       username: await getUsername(data['creator']),
@@ -438,9 +438,13 @@ export const getBoughtAssets = async () => {
 
 export const getLandingPacks = () => {
   const ids = landingAssetPacks.map(item => item.id);
+  const assetIds = landingAssetPacks.map(assetPack =>
+    assetPack.assets.map(item => parseInt(item.id)))
+    .reduce((a, b) => a.concat(b), []);
   return {
     packs: landingAssetPacks,
     ids,
+    assetIds,
   };
 };
 
@@ -476,10 +480,10 @@ async function test() {
   // console.log(await getAssetPackData(5));
   // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
   // await getImageMetadataFromContract(0);
-  await getPositionsOfAssetsInImage('0x240610f366b57b4546eeaaa4de0e441613c1412f0b7f6689e1f19e858f056925',
-    ['0x0000000000000001000002000003000004000005000006000007000008000009', '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013',
-      '0x000000001400001500001600001700001800001900001a00001b00001c00001d',
-      '0x000000001e00001f000020000021000022000023000024000025000026000027']);
+  // await getPositionsOfAssetsInImage('0x240610f366b57b4546eeaaa4de0e441613c1412f0b7f6689e1f19e858f056925',
+  //   ['0x0000000000000001000002000003000004000005000006000007000008000009', '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013',
+  //     '0x000000001400001500001600001700001800001900001a00001b00001c00001d',
+  //     '0x000000001e00001f000020000021000022000023000024000025000026000027']);
   // await getAttributesForAssets([1,2,3,4]);
 }
 

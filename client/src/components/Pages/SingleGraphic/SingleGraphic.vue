@@ -57,7 +57,12 @@
         creator: '',
         src: '',
       },
-      canvasData: {}
+      canvasData: {
+        assets: [],
+        ratio: '2:3',
+        frame: false,
+        noBottomFrame: false,
+      }
     }),
     components: {
       GraphicPreview,

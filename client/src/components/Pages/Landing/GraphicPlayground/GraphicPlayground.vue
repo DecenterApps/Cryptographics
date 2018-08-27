@@ -2,39 +2,42 @@
     <div class="hero">
         <div class="container">
             <div class="left">
-                <h2 class="large-title">Cryptographics</h2>
-                <h3 class="subtitle">Create, store and trade randomly generated digital artwork on the blockchain.</h3>
-                <p>Artists upload their asset packs, making them available for Creators to buy and use. Creators
-                    generate random digital artwork with chosen asset packs and store them on the blockchain where they
-                    are signed as Creators forever, receiving a kickback for each future sale. Collectors can then pick
-                    their favourites and buy and trade Cryptographics in Ether.</p>
-                <p>Cryptographics is a fully decentralized app (DApp) with no back-end server and each Cryptographic is
-                    one of a kind ERC721 token containing all image data.</p>
-                <button-link to="/gallery">Gallery</button-link>
-            </div>
-            <div class="right">
                 <div class="create-art">
-                    <div class="button-group">
-                        <cg-button @click="openInEditor">Open in editor</cg-button>
-                        <cg-button
-                                button-style="transparent"
-                                @click="renderCanvas">
-                            Recompose
-                        </cg-button>
-                    </div>
                     <div class="canvas-holder">
                         <overlay>
-                            <button-icon icon-type="download" @click="download" />
+                            <cg-button button-style="transparent-inverted" icon-type="download" @click="openInEditor">
+                                Open in editor
+                            </cg-button>
                         </overlay>
                         <div class="canvas-holder-wrapper">
                             <Canvas :canvasData="canvasData"></Canvas>
                         </div>
                     </div>
+                    <!--<div class="button-group">-->
+                    <!--<cg-button-->
+                    <!--button-style="transparent"-->
+                    <!--@click="openInEditor"-->
+                    <!--&gt;-->
+                    <!--Open in editor-->
+                    <!--</cg-button>-->
+                    <!--<cg-button-->
+                    <!--@click="renderCanvas">-->
+                    <!--Recompose-->
+                    <!--</cg-button>-->
+                    <!--</div>-->
                 </div>
-                <div class="assets">
-                    <div v-for="cover in coverIpfsHashes">
-                        <img class="cover-image" :src="ipfsNodePath + cover">
-                    </div>
+            </div>
+            <div class="right">
+                <h2 class="large-title">This is a Cryptographic</h2>
+                <div class="hero-text-content">
+                    <p>A graphic created by you, with a little help from provably secure randomness. </p>
+                    <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
+                        trade.</p>
+                    <p>Try creating another one.</p>
+                    <cg-button
+                            @click="renderCanvas">
+                        Recompose
+                    </cg-button>
                 </div>
             </div>
         </div>
@@ -54,6 +57,7 @@
   import Gallery from 'shared/Gallery/Gallery.vue';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
   import { getCoversForAssetPacks } from 'services/ethereumService';
+  import { shuffleArray } from 'services/helpers';
 
   export default {
     name: 'GraphicPlayground',
@@ -69,6 +73,8 @@
       randomHashIds: pickTenRandoms(),
       allAssets: [],
       assetPacks: [],
+      selectedAssets: [],
+      potentialAssets: [],
       canvasData: {
         assets: [],
         ratio: '1:1',
@@ -77,40 +83,19 @@
       coverIpfsHashes: [],
     }),
     methods: {
-      // renderCanvas() {
-      //   let canvas = document.getElementById('canvas');
-      //   canvas.width = 350;
-      //   canvas.height = 350;
-      //
-      //   let images_paths = [];
-      //   let numberOfImages = Math.floor(Math.random() * 20);
-      //   for (let i = 0; i < numberOfImages; i++) {
-      //     let val = Math.floor(Math.random() * 30);
-      //     if (val == 0) {
-      //       val = 1;
-      //     }
-      //     let path = val < 10 ? '0' + val.toString() : val.toString();
-      //     images_paths.push(path);
-      //   }
-      //   makeCoverImage(true, images_paths, canvas, 350, 350);
-      // }
       async renderCanvas() {
-        let pot = this.assetPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
         this.iterations++;
-        console.log(pot);
+        let potentialAssets = shuffleArray(this.selectedAssets);
+        potentialAssets = potentialAssets.slice(0, 30);
         console.log('RANDOM SEED: ' + this.randomSeed);
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
-        console.log(pot);
-        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        console.log('POTENTIAL ASSETS: ' + potentialAssets);
+        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(potentialAssets), this.allAssets);
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
+        this.potentialAssets = potentialAssets;
         console.log('iteration: ' + this.iterations);
-        let picked = [];
-        for (let i = 0; i < this.canvasData.assets.length; i++) {
-          picked.push(this.canvasData.assets[i].id);
-        }
+
       },
       addSourceItem(data, assets) {
         const packs = this.assetPacks.reduce((a, b) => a.concat(b.assets), []);
@@ -123,20 +108,19 @@
         });
       },
       openInEditor() {
-        console.log(this.randomHashIds);
         window.sessionStorage.setItem('randomHashIds', JSON.stringify(this.randomHashIds));
         window.sessionStorage.setItem('iterations', (this.iterations - 1).toString());
         window.sessionStorage.setItem('timestamp', this.timestamp);
-        console.log(this);
+        window.sessionStorage.setItem('potentialAssets', JSON.stringify(this.potentialAssets));
         this.$router.push('/create-graphic');
       },
       download() {
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById('canvas');
         if (!canvas) return;
         const link = document.createElement('a');
         const title = 'cryptographics-playground';
         link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
         link.click();
       },
     },
@@ -149,6 +133,7 @@
       this.randomSeed = await convertSeed(this.randomSeed);
       const landingPacks = getLandingPacks();
       this.assetPacks = landingPacks.packs;
+      this.selectedAssets = landingPacks.assetIds;
       this.renderCanvas();
       this.coverIpfsHashes = await getCoversForAssetPacks(landingPacks.ids);
     }
@@ -166,24 +151,37 @@
             display: flex;
             justify-content: space-between;
             .left {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .right {
+                text-align: left;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                justify-content: center;
+                padding-left: 20px;
+
+                .hero-text-content {
+                    max-width: 300px;
+
+                    p {
+                        color: #000;
+                        font-family: Roboto, sans-serif;
+                        font-size: 14px;
+                        line-height: 19px;
+                        font-weight: 300;
+                    }
+                }
+
                 p:last-of-type {
                     margin-bottom: 30px;
                 }
             }
-            .right {
-                display: flex;
-                justify-content: flex-end;
-            }
             @media screen and (max-width: 1120px) {
                 flex-direction: column;
                 .left {
-                    margin-bottom: 30px;
-                    text-align: center;
-                    p {
-                        margin: 0 auto 16px;
-                    }
-                }
-                .right {
                     flex-direction: column;
                     .create-art {
                         flex-direction: column-reverse;
@@ -192,26 +190,21 @@
                             flex-direction: row;
                             align-items: center;
                             margin-bottom: 30px;
-                            .button-wrapper {
-                                margin: 0 10px 0;
-                            }
                         }
                         .canvas-wrapper {
                             margin: 20px 0;
                         }
                     }
-                    .assets {
-                        flex-direction: row;
-                        justify-content: center;
-                        img {
-                            margin: 0 10px 0;
-                        }
+
+                }
+                .right {
+                    margin-bottom: 30px;
+                    text-align: center;
+                    p {
+                        margin: 0 auto 16px;
                     }
                 }
             }
-        }
-        p {
-            max-width: 320px;
         }
     }
 
@@ -221,10 +214,15 @@
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
-            .button-wrapper {
+            & > > > .button-wrapper {
+                width: 100px;
                 margin-bottom: 20px;
                 &:last-of-type {
                     margin: 0;
+                }
+
+                .button {
+                    min-width: 120px;
                 }
             }
         }
@@ -253,49 +251,6 @@
         }
         .cg-stamp {
             padding: 20px 0;
-        }
-    }
-
-    .assets {
-        display: flex;
-        flex-direction: column;
-        .cover-image {
-            position: relative;
-            margin-bottom: 30px;
-            height: 96px;
-            width: 134px;
-        }
-    }
-
-    .artist-cta {
-        background-color: #D9D9D9;
-        padding: 70px 0;
-        .container {
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            p:last-of-type {
-                margin-bottom: 30px;
-            }
-        }
-    }
-
-    .assets-slider {
-        background-color: #D9D9D9;
-        padding: 0 0 50px;
-        .container {
-            overflow: hidden;
-            width: 100%;
-            display: flex;
-            .asset {
-                position: relative;
-                margin: 0 10px;
-                &:hover {
-                    .overlay {
-                        opacity: 1;
-                    }
-                }
-            }
         }
     }
 </style>

@@ -19,26 +19,31 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 
 const DELAY = 150;
 
-export const createImage = async (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title, frame, width, height) => {
-  potentialAssets = utils.encode(potentialAssets);
+export const createImage = (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title, frame, width, height) =>
+  new Promise(async (resolve, reject) => {
+    potentialAssets = utils.encode(potentialAssets);
 
-  timestamp = parseInt(timestamp, 10);
-  iterations = parseInt(iterations, 10);
-  try {
-    console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-    const extraData = `${frame?1:0},${width},${height},${title}`;
-    return await digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, extraData).send({
-      value: parseInt(price),
-      from: account,
-      to: digitalPrintImageContractAddress,
-    }, (a, b) => {
-      console.log(a, b);
-    });
-  } catch (e) {
-    console.log(e);
-    throw new Error('Cannot create image');
-  }
-};
+    timestamp = parseInt(timestamp, 10);
+    iterations = parseInt(iterations, 10);
+    try {
+      console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
+      const extraData = `${frame ? 1 : 0},${width},${height},${title}`;
+      const transactionPromise = digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, extraData).send({
+        value: parseInt(price),
+        from: account,
+        to: digitalPrintImageContractAddress,
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        // Resolve with a promise pointing to the createImage method, so we can
+        // handle both txHash and the finalized transaction
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Cannot create image');
+    }
+  });
 
 export const createAsset = async (attributes, ipfsHash, price, account) => {
   console.log('Price: ' + price);
@@ -58,18 +63,23 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
   }
 };
 
-export const createAssetPack = async (coverImage, name, attributes, ipfsHashes, price, account) => {
-  try {
-    return await assetManagerContract().methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
-      from: account
-    }, (a, b) => {
-      console.log(a, b);
-    });
-  } catch (e) {
-    console.log(e);
-    throw new Error('Cannot create asset pack');
-  }
-};
+export const createAssetPack = (coverImage, name, attributes, ipfsHashes, price, account) =>
+  new Promise((resolve, reject) => {
+    try {
+      const transactionPromise = assetManagerContract().methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
+        from: account
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        // Resolve with a promise pointing to the createImage method, so we can
+        // handle both txHash and the finalized transaction
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Cannot create asset pack');
+    }
+  });
 
 export const loadDataForAssets = async () => {
   return new Promise(async (resolve, reject) => {

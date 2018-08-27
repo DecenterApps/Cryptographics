@@ -40,6 +40,7 @@
                     </div>
                 </div>
             </div>
+            <button-link to="gallery">See more</button-link>
         </div>
     </div>
 </template>
@@ -69,8 +70,9 @@
         background-color: #EEEEEE;
         padding: 70px 0;
         min-height: 650px;
+        text-align: center;
         .masonry-wrapper {
-            width: 100% !important;
+            width: 100%;
             margin: 0 auto;
         }
         .gutter-sizer {

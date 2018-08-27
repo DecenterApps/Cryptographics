@@ -36,14 +36,14 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
+        min-width: 105px;
     }
 
     .button {
         display: inline-flex;
         justify-content: center;
-        min-width: 105px;
-        max-height: 33px;
-        min-height: 33px;
+        width: 100%;
+        height: 33px;
         padding: 9px;
         font-size: 12px;
         border-radius: 5px;
@@ -86,6 +86,30 @@
         color: #000;
         background: none;
         border: 1px solid #000;
+    }
+
+    .transparent-inverted {
+        color: #fff;
+        background: none;
+        border: 1px solid #fff;
+    }
+
+    .tab-active {
+        color: #000;
+        font-weight: bold;
+        background: none;
+        border: none;
+        font-size: 15px;
+        text-decoration: underline;
+        padding: 0;
+    }
+
+    .tab-inactive {
+        color: #000;
+        background: none;
+        border: none;
+        font-size: 15px;
+        padding: 0;
     }
 
     .no-border {

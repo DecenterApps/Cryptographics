@@ -1,6 +1,7 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
+            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following asset packs:</p>
             <div class="asset-packs">
                 <router-link :to="'/asset-pack/' + assetPack.id" v-for="(assetPack, index) in assetPacks">
                     <asset-box
@@ -28,7 +29,7 @@
                     class="graphic-controls"
                     :class="{ sell: sellGraphic }">
                 <template v-if="!sellGraphic">
-                    <cg-button @click="sellGraphic = !sellGraphic">Sell</cg-button>
+                    <cg-button @click="sellGraphic = !sellGraphic">List for sale</cg-button>
                     <cg-button button-style="transparent" @click="$emit('showPrintForm')">Print</cg-button>
                 </template>
                 <template v-else>
@@ -39,7 +40,7 @@
                                 @click="sellGraphic = !sellGraphic">
                             Cancel
                         </cg-button>
-                        <cg-button @click="submitImageForSale">Sell</cg-button>
+                        <cg-button @click="submitImageForSale">List for sale</cg-button>
                     </div>
                 </template>
             </div>
@@ -47,8 +48,8 @@
                     v-if="isLogged && isForSale"
                     class="graphic-controls"
             >
-                <cg-button class="remove-button" @click="removeFromMarketPlace">Remove from Marketplace</cg-button>
-                <cg-button button-style="transparent" @click="$emit('showPrintForm')">Print</cg-button>
+                <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
+                <cg-button button-style="transparent" @click="$emit('showPrintForm')">Order print</cg-button>
                 <price
                         :value="image.price" />
             </div>

@@ -12,15 +12,15 @@
             </div>
             <div class="fieldset">
                 <span class="fieldset-title">Contact information</span>
-                <cg-input type="email" placeholder="email"/>
+                <cg-input type="email" placeholder="Email"/>
             </div>
             <div class="fieldset">
                 <span class="fieldset-title">Shipping address</span>
                 <div class="input-group">
-                    <cg-input placeholder="First name (optional)"/>
+                    <cg-input placeholder="First name"/>
                     <cg-input placeholder="Last name"/>
                 </div>
-                <cg-input placeholder="Address"/>
+                <cg-input placeholder="Street address"/>
                 <cg-input placeholder="Apartment, suite, etc. (optional)"/>
                 <cg-input placeholder="City"/>
                 <div class="input-group">

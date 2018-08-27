@@ -10,15 +10,30 @@
                             button-style="transparent"
                             @change="uploadAssets">
                         <span>Upload multiple assets</span>
-                        <span>Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
+                        <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
                     </input-file>
+                    <span v-if="assets.length > 0">
+                        <p class="upload-description">
+                        Please upload high resolution files.
+                    </p>
+                    <p class="upload-description">
+                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
+                        paper at a resolution of <span>2480x3508px</span>, with a square format
+                        of <span>2480x2480px</span> also available (same DPI).
+                    </p>
+                    <p class="upload-description">
+                        Background layers
+                        that aren’t this exact resolution are aligned with the top
+                        left corner, regardless if they are larger or smaller than the canvas.
+                    </p>
+                    </span>
                 </div>
                 <div class="bottom-content">
-                    <div class="button-group">
+                    <div v-if="assets.length > 0" class="button-group">
                         <cg-button
                                 button-style="transparent"
                         >
-                            Try
+                            Test asset pack
                         </cg-button>
                         <cg-button
                                 @click="stage = 'submit'"
@@ -29,6 +44,21 @@
                 </div>
             </div>
             <div class="right">
+                <span v-if="assets.length === 0">
+                    <p class="upload-description">
+                        Please upload high resolution files.
+                    </p>
+                    <p class="upload-description">
+                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
+                        paper at a resolution of <span>2480x3508px</span>, with a square format
+                        of <span>2480x2480px</span> also available (same DPI).
+                    </p>
+                    <p class="upload-description">
+                        Background layers
+                        that aren’t this exact resolution are aligned with the top
+                        left corner, regardless if they are larger or smaller than the canvas.
+                    </p>
+                </span>
                 <div v-bar="{ preventParentScroll: true }">
                     <div>
                         <div
@@ -36,19 +66,20 @@
                                 v-for="(asset, index) in assets"
                                 :key="index">
                             <div class="preview-icons">
-                                <button-icon
-                                        v-if="isAttributeSelected(asset, 2)"
-                                        icon-type="scale"
-                                        :color="'#000'"
-                                        classProp="selected"
-                                />
-                                <button-icon
-                                        v-if="isAttributeSelected(asset, 1)"
-                                        icon-type="rotate"
-                                        :color="'#000'"
-                                        classProp="selected"
-                                />
-                                <ico-background v-if="isAttributeSelected(asset, 0)" />
+                                {{getAttributes(asset)}}
+                                <!--<button-icon-->
+                                <!--v-if="isAttributeSelected(asset, 2)"-->
+                                <!--icon-type="scale"-->
+                                <!--:color="'#000'"-->
+                                <!--classProp="selected"-->
+                                <!--/>-->
+                                <!--<button-icon-->
+                                <!--v-if="isAttributeSelected(asset, 1)"-->
+                                <!--icon-type="rotate"-->
+                                <!--:color="'#000'"-->
+                                <!--classProp="selected"-->
+                                <!--/>-->
+                                <!--<ico-background v-if="isAttributeSelected(asset, 0)" />-->
                             </div>
                             <img :src="asset.path" />
                             <overlay>
@@ -60,7 +91,7 @@
                                                 :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
                                                 @click.native="toggleAttribute(index, 0)"
                                         />
-                                        <span class="description">Scale asset</span>
+                                        <span class="description">Enable asset scaling</span>
                                     </span>
                                     <span>
                                         <button-icon
@@ -69,7 +100,7 @@
                                                 :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
                                                 @click.native="toggleAttribute(index, 1)"
                                         />
-                                        <span class="description">Rotate asset</span>
+                                        <span class="description">Enable asset rotation</span>
                                     </span>
                                     <span>
                                         <ico-background
@@ -105,7 +136,7 @@
                             button-style="transparent"
                             @click="renderCanvas"
                     >
-                        Generate
+                        Generate thumbnail
                     </cg-button>
                 </div>
             </div>
@@ -139,7 +170,7 @@
   import * as utils from 'services/utils';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
   import { mapGetters, mapActions } from 'vuex';
-  import { TOGGLE_LOADING_MODAL } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
@@ -178,8 +209,21 @@
 
     methods: {
       ...mapActions({
-        toggleModal: TOGGLE_LOADING_MODAL,
+        openModal: TOGGLE_MODAL,
+        toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
+      getAttributes(asset) {
+        let attribute = asset.attribute.toString();
+        let words = ['BGD', 'ROT', 'SCA'];
+        let attributes = [];
+        for (let i = 0; i < attribute.length; i++) {
+          if (attribute.charAt(i) === '1') {
+            attributes.push(words[i]);
+          }
+        }
+        return attributes.join(' — ');
+      },
       isAttributeSelected(asset, position) {
         return asset.attribute.toString().charAt(position) === '1';
       },
@@ -233,11 +277,14 @@
                 console.log(price);
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
-                this.toggleModal();
-                const result = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+                const transactionPromise = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
+                const result = await transactionPromise();
                 const id = result.events.AssetPackCreated.returnValues.id;
-                this.toggleModal();
+                this.toggleLoadingModal();
                 this.$router.push(`/asset-pack/${id}`);
+                this.openModal('Asset pack');
                 console.log(result, id);
               }
             }
@@ -273,6 +320,16 @@
     .content-wrapper {
         .container {
             padding-top: 81px;
+        }
+    }
+
+    .upload-description {
+        font-family: Roboto, sans-serif;
+        line-height: 19px;
+        font-weight: 300;
+
+        span {
+            color: #000;
         }
     }
 
@@ -369,6 +426,14 @@
     }
 
     .right {
+        p.upload-description {
+            font-family: Roboto, sans-serif;
+            line-height: 30px;
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 45px;
+            max-width: none;
+        }
         & > div {
             width: 100% !important;
             max-width: 688px !important;
@@ -421,9 +486,14 @@
             bottom: 15px;
             left: 15px;
 
-            span {
+            & > span {
                 display: inline-flex;
                 align-items: center;
+                margin-bottom: 10px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
             }
 
             .description {
@@ -433,77 +503,47 @@
                 font-size: 12px;
                 padding-left: 10px;
             }
+        }
 
-            button {
-                margin-bottom: 10px;
-            }
-
+        .overlay {
             svg, button {
                 opacity: 0.5;
 
                 &.selected {
                     opacity: 1;
-                    path {
-                        fill: #fff !important;
-                        stroke: none !important;
-                    }
                 }
 
                 &:hover {
-                    opacity: 1;
-                    path {
-                        fill: #fff !important;
-                    }
+                    opacity: 0.8;
 
                     & + span {
                         display: inline;
                     }
+                }
+                &:active {
+                    opacity: 1;
                 }
             }
         }
 
         svg, button {
             cursor: pointer;
-            fill: #fff;
-            path {
-                fill: #fff;
-            }
         }
 
         .preview-icons {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: -15px;
+            left: 0;
             display: flex;
+            font-size: 12px;
+            line-height: 14px;
             flex-direction: column;
-            svg, button {
-                margin-bottom: 10px;
-            }
-
-            svg {
-                fill: #000;
-                path {
-                    fill: #000;
-                }
-            }
-        }
-
-        svg:hover {
-            fill: #fff;
-            path {
-                fill: #fff;
-            }
         }
 
         &:hover {
             .overlay {
                 opacity: 1;
             }
-
-            .preview-icons {
-                display: none;
-            }
-
             button.delete {
                 display: block;
             }

@@ -42,6 +42,13 @@ export function getAccounts() {
   });
 }
 
+export const uniq = (a) => {
+  let seen = {};
+  return a.filter((item) => {
+    return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+  });
+};
+
 export const shuffleArray = (a) => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

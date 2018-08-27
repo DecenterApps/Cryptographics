@@ -26,8 +26,8 @@
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio">Aspect ratio 1:1</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="toggleRatio">Use square format</cg-checkbox>
                     <cg-button
                             :disabled="isCanvasDrawing"
                             @click="renderCanvas"
@@ -55,30 +55,37 @@
             <div class="selected-asset-packs">
                 <div class="final-pack-list">
                     <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
-                        <div class="asset-pack-meta">
-                            <h1 class="small-title">{{ assetPack.packName }}</h1>
-                            <div class="small-title">Ξ {{ assetPack.price }}</div>
-                        </div>
                         <asset-box
                                 :key="index"
                                 :assetPack="assetPack"
                                 :small="true"
                                 color="#eee" />
+                        <div class="asset-pack-meta">
+                            <h1 class="small-title">{{ assetPack.packName }}</h1>
+                            <div class="small-title">Ξ {{ assetPack.price }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="controls">
                 <div class="top-controls buy-screen">
-                    <div class="small-title">Art Title</div>
-                    <Input
+                    <div class="small-title">Title</div>
+                    <cg-input
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-on:input="checkTitle"
                             v-model="title"
-                            placeholder="0/20"
+                            :max-length="20"
+                    />
+                    <div class="small-title">Description</div>
+                    <cg-textarea
+                            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
+                            v-model="description"
+                            :max-length="20"
+                            placeholder="Describe your Cryptographic."
                     />
                 </div>
-                <separator></separator>
+                <!--<separator></separator>-->
                 <div class="bottom-controls buy-screen">
                     <div>
                         <cg-button
@@ -94,7 +101,7 @@
                                 :disabled="isCanvasDrawing"
                                 @click="buyImage"
                         >
-                            Claim Token
+                            Save Cryptographic
                         </cg-button>
                     </div>
                 </div>
@@ -107,32 +114,28 @@
 <script>
   import {
     pickTenRandoms,
-    getLandingPacks,
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
-    usernameExists,
-    registerUser,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
-  import { resizeCanvas, shuffleArray } from 'services/helpers';
+  import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
-  import Input from '../../../Shared/UI/Input';
 
   export default {
     name: 'GraphicBuilder',
     components: {
-      Input,
       Canvas
     },
     data: () => ({
       title: '',
+      description: '',
       errors: [],
       buyScreen: false,
       canvasData: {
@@ -148,7 +151,7 @@
       imagePrice: null,
       potentialAssets: [],
       allAssets: [],
-      selectedPacks: [],
+      selectedAssets: [],
       claimPressed: false,
     }),
     computed: {
@@ -161,7 +164,9 @@
     props: ['selectedAssetPacks'],
     watch: {
       selectedAssetPacks: async function () {
-        this.selectedPacks = this.selectedAssetPacks;
+        this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
+          assetPack.assets.map(asset => parseInt(asset.id)))
+          .reduce((a, b) => a.concat(b), []);
         this.iterations = 0;
         this.timestamp = new Date().getTime();
         this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
@@ -177,6 +182,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
 
       checkTitle() {
@@ -209,16 +215,14 @@
         let image = canvasClone.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         console.log('IMAGE HASH' + ipfsHash);
-        let pot = this.selectedPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
+        console.log(this.potentialAssets);
 
-        this.toggleLoadingModal();
-        let result = await imageService.createImage(
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        let transactionPromise = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
           this.iterations,
-          pot,
+          this.potentialAssets,
           this.username,
           this.userAddress,
           this.imagePrice,
@@ -228,44 +232,46 @@
           2480,
           (this.canvasData.ratio === '2:3' ? 3508 : 2480),
         );
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
+        const result = await transactionPromise();
         const id = result.events.ImageCreated.returnValues.imageId;
         this.toggleLoadingModal();
         this.$router.push(`single-graphic/${id}`);
+        this.openModal('Cryptographic');
       },
       async renderCanvas() {
         this.iterations++;
-        if (window.sessionStorage.length > 0) {
-          const landingPacks = getLandingPacks();
-          this.selectedPacks = [...new Set([...this.selectedPacks, ...landingPacks.packs])];
+        console.log(this.selectedAssets);
+        let selectedAssets = this.selectedAssets;
+
+        // Don't shuffle if user came from home page
+        console.log(window.sessionStorage.length);
+        if (window.sessionStorage.length <= 0) {
+          selectedAssets = shuffleArray(selectedAssets);
         }
-        this.selectedPacks = [...new Set([...this.selectedPacks, ...this.selectedAssetPacks])];
-        console.log(this.selectedPacks);
-        let pot = this.selectedPacks.map(assetPack =>
-          assetPack.assets.map(asset => parseInt(asset.id)))
-          .reduce((a, b) => a.concat(b), []);
-        pot = shuffleArray(pot);
-        pot = pot.slice(0, 30);
-        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(pot), this.allAssets);
+        selectedAssets = selectedAssets.slice(0, 30);
+        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(selectedAssets), this.allAssets);
         console.log('iteration: ' + this.iterations);
+        this.potentialAssets = selectedAssets;
         let picked = [];
         for (let i = 0; i < this.canvasData.assets.length; i++) {
           picked.push(this.canvasData.assets[i].id);
         }
         let price = await calculatePrice(picked, this.userAddress);
 
-        if (pot.length === 0) {
+        if (selectedAssets.length === 0) {
           this.imagePrice = 0;
         }
         this.imagePrice = parseFloat(price);
         console.log('PRICE : ' + this.imagePrice);
       },
       download() {
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById('canvas');
         if (!canvas) return;
         const link = document.createElement('a');
         const title = this.title || 'cryptographic';
         link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
         link.click();
       },
       changeTab() {
@@ -281,7 +287,12 @@
       }
     },
     async created() {
+      this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
+        assetPack.assets.map(asset => parseInt(asset.id)))
+        .reduce((a, b) => a.concat(b), []);
       if (window.sessionStorage.length > 0) {
+        const landingPageAssets = JSON.parse(sessionStorage.getItem('potentialAssets'));
+        this.selectedAssets = [...landingPageAssets];
         this.canvasData.ratio = '1:1';
         this.randomHashIds = JSON.parse(sessionStorage.getItem('randomHashIds'));
         this.timestamp = sessionStorage.getItem('timestamp');
@@ -303,6 +314,7 @@
         this.randomSeed = await convertSeed(this.randomSeed);
         this.renderCanvas();
       }
+      this.selectedAssets = uniq([...this.selectedAssets, ...this.selectedAssetPacks]);
     },
   };
 </script>
@@ -361,21 +373,22 @@
         .final-pack-list {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            align-items: flex-end;
+            /*justify-content: flex-end;*/
+            /*align-items: flex-end;*/
             max-height: 300px;
             overflow-y: auto;
 
             .final-pack-item {
                 display: flex;
                 margin-bottom: 20px;
+                min-height: 55px;
 
                 .asset-pack-meta {
                     display: flex;
-                    align-items: flex-end;
+                    /*align-items: flex-end;*/
                     justify-content: flex-end;
                     flex-direction: column;
-                    margin-right: 15px;
+                    margin-left: 15px;
 
                     .small-title {
                         margin-bottom: 10px;
@@ -466,10 +479,16 @@
                 margin-top: 10px;
             }
 
+            .small-title {
+                margin-bottom: 15px;
+                margin-top: 10px;
+            }
+
             &.buy-screen {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
+                /*display: flex;*/
+                /*flex-direction: column;*/
+                /*align-items: flex-end;*/
+                margin-bottom: 0;
 
                 input {
                     width: 185px;
@@ -489,6 +508,10 @@
                 .separate-controls {
                     display: flex;
                     justify-content: flex-end;
+
+                    .button-wrapper {
+                        width: 135px;
+                    }
                 }
             }
 
