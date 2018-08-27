@@ -281,7 +281,7 @@
                 const transactionPromise = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
                 this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
                 const result = await transactionPromise();
-                const id = result.events.AssetPackCreated.returnValues.id - 1;
+                const id = result.events.AssetPackCreated.returnValues.id;
                 this.toggleLoadingModal();
                 this.$router.push(`/asset-pack/${id}`);
                 this.openModal('Asset pack');

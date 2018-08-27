@@ -11,5 +11,7 @@ module.exports = function (deployer) {
         .then(() => deployer.deploy(Marketplace, DigitalPrintImage.address))
         .then(() => DigitalPrintImage.deployed())
         .then((digitalPrintImage) => digitalPrintImage.addMarketplaceContract(Marketplace.address))
+        .then(() => AssetManager.deployed())
+        .then((assetManager) => assetManager.addUserManager(DigitalPrintImage.address))
         .then(() => true);
 };

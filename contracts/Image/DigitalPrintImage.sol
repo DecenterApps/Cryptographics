@@ -44,7 +44,7 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
     /// @param _potentialAssets is set of all potential assets user selected for an image
     /// @param _author is nickname of image owner
     /// @param _ipfsHash is ipfsHash of the image .png
-    /// @param _extraData string containing (frame,width,height,title)
+    /// @param _extraData string containing ipfsHash that contains (frame,width,height,title,description)
     /// @return returns id of created image
     function createImage(
         uint[] _randomHashIds,

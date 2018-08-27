@@ -1,5 +1,7 @@
 pragma solidity ^0.4.23;
+
 import "./Utils/Ownable.sol";
+import "./UserManager.sol";
 
 
 contract AssetManager is Ownable {
@@ -12,15 +14,15 @@ contract AssetManager is Ownable {
         /// 2nd digit will tell us if rotation is enabled 1 - true / 2 - false
         /// 3rd digit will tell us if scaling  is enabled 1 - true / 2 - false
         uint attributes;
-        bytes32 ipfsHash;
+        bytes32 ipfsHash; // image
     }
 
     struct AssetPack {
         bytes32 packCover;
-        string name;
         uint[] assetIds;
         address creator;
         uint price;
+        string ipfsHash; // containing title and description
     }
 
     uint public numberOfAssets;
@@ -28,6 +30,8 @@ contract AssetManager is Ownable {
 
     Asset[] public assets;
     AssetPack[] public assetPacks;
+
+    UserManager public userManager;
 
     mapping(address => uint) public artistBalance;
     mapping(bytes32 => bool) public hashExists;
@@ -38,22 +42,28 @@ contract AssetManager is Ownable {
     event AssetPackCreated(uint indexed id, address indexed owner);
     event AssetPackBought(uint indexed id, address indexed buyer);
 
+    function addUserManager(address _userManager) public onlyOwner {
+        require(userManager == address(0));
+
+        userManager = UserManager(_userManager);
+    }
+
     /// @notice Function to create assetpack
     /// @param _packCover is cover image for asset pack
-    /// @param _name is name of the asset pack
     /// @param _attributes is array of attributes
     /// @param _ipfsHashes is array containing all ipfsHashes for assets we'd like to put in pack
     /// @param _packPrice is price for total assetPack (every asset will have average price)
+    /// @param _ipfsHash ipfs hash containing title and description in json format
     function createAssetPack(
         bytes32 _packCover, 
-        string _name, 
         uint[] _attributes, 
         bytes32[] _ipfsHashes, 
-        uint _packPrice) public {
+        uint _packPrice,
+        string _ipfsHash) public {
         
         require(_ipfsHashes.length > 0);
         require(_ipfsHashes.length < 50);
-        require(_attributes.length < 50);
+        require(_attributes.length == _ipfsHashes.length);
 
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
@@ -64,16 +74,16 @@ contract AssetManager is Ownable {
 
         assetPacks.push(AssetPack({
             packCover: _packCover,
-            name: _name,
             assetIds: ids,
             creator: msg.sender,
-            price: _packPrice
+            price: _packPrice,
+            ipfsHash: _ipfsHash
         }));
 
         createdAssetPacks[msg.sender].push(numberOfAssetPacks);
         numberOfAssetPacks++;
 
-        emit AssetPackCreated(numberOfAssetPacks, msg.sender);
+        emit AssetPackCreated(numberOfAssetPacks-1, msg.sender);
     }
 
     /// @notice Function which creates an asset
@@ -112,7 +122,7 @@ contract AssetManager is Ownable {
         artistBalance[assetPack.creator] += msg.value;
         boughtAssetPacks[_to].push(_assetPackId);
 
-        emit AssetPackCreated(_assetPackId, _to);
+        emit AssetPackBought(_assetPackId, _to);
     }
 
     /// @notice Function to fetch total number of assets
@@ -250,7 +260,7 @@ contract AssetManager is Ownable {
     /// @param _assetPackId is id of asset pack
     /// @return two arrays with data
     function getAssetPackData(uint _assetPackId) public view 
-    returns(string, bytes32, address, uint, uint[], uint[], bytes32[]) {
+    returns(bytes32, address, uint, uint[], uint[], bytes32[], string, string, bytes32) {
         require(_assetPackId < numberOfAssetPacks);
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
@@ -263,25 +273,16 @@ contract AssetManager is Ownable {
         uint[] memory attributes = getAttributesForAssets(assetPack.assetIds);
 
         return(
-            assetPack.name, 
             assetPack.packCover, 
             assetPack.creator, 
             assetPack.price, 
             assetPack.assetIds, 
             attributes, 
-            hashes
+            hashes,
+            assetPack.ipfsHash,
+            userManager.getUsername(assetPack.creator),
+            userManager.getProfilePicture(assetPack.creator)
         );
-    }
-
-    /// @notice Function to get name for asset pack
-    /// @param _assetPackId is id of asset pack
-    /// @return string name of asset pack
-    function getAssetPackName(uint _assetPackId) public view returns (string) {
-        require(_assetPackId < numberOfAssetPacks);
-
-        AssetPack memory assetPack = assetPacks[_assetPackId];
-
-        return assetPack.name;
     }
 
     function getAssetPackPrice(uint _assetPackId) public view returns (uint) {
