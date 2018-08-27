@@ -94,7 +94,7 @@ const config = {
       inject: true,
       template: path.join(__dirname, '../prod.html'),
       filename: 'index.html',
-      // favicon: 'src/favicon.ico',
+      favicon: 'client/favicon.ico',
       hash: true,
     }),
     new AddAssetHtmlPlugin([

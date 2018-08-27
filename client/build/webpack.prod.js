@@ -12,6 +12,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, '../../public'),
     filename: 'assets/js/[name].js',
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.vue', '.js', '.scss', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.png', '.jpg'],
@@ -90,7 +91,7 @@ const config = {
       inject: true,
       template: 'client/prod.html',
       filename: 'index.html',
-      // favicon: 'src/favicon.ico',
+      favicon: 'client/favicon.ico',
       hash: true,
     }),
     new AddAssetHtmlPlugin([
