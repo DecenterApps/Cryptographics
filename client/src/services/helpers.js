@@ -26,7 +26,7 @@ export function checkProvider() {
       console.log('Succesfully using MetaMask');
     }
   } else {
-    window.web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.decenter.com'));
+    window.web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.infura.io'));
     console.log('Please install MetaMask');
   }
 }
