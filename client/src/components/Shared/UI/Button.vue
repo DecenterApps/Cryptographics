@@ -46,6 +46,10 @@
         text-transform: capitalize;
         white-space: nowrap;
         line-height: 1;
+        transition: opacity .2s;
+        &:hover {
+            opacity: .7;
+        }
     }
 
     .positive {

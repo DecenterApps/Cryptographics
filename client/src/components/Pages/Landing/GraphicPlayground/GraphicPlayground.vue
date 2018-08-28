@@ -166,7 +166,6 @@
 
                 .hero-text-content {
                     max-width: 300px;
-                    margin: 0 auto;
 
                     p {
                         color: #000;
@@ -174,6 +173,7 @@
                         font-size: 14px;
                         line-height: 19px;
                         font-weight: 300;
+                        letter-spacing: 0;
                     }
                 }
 
@@ -203,6 +203,7 @@
 
                     .hero-text-content {
                         max-width: 340px;
+                        margin: 0 auto;
                         p {
                             margin: 0 auto 16px;
                         }
