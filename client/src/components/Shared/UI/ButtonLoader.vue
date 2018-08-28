@@ -22,7 +22,7 @@
     }
     .button-loader div {
         position: absolute;
-        top: 13px;
+        top: 14px;
         width: 4px;
         height: 4px;
         border-radius: 50%;

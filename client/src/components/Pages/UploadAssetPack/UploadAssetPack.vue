@@ -143,15 +143,20 @@
 
             <div class="right-content">
                 <div class="input-content">
-                    <div class="input-group">
-                        <label class="small-title">Asset pack name</label>
-                        <cg-input name="pack_name" placeholder="0 / 20" />
-                        <label class="small-title">Asset pack price</label>
-                        <cg-input name="price" placeholder="Value" />
+                    <div class="inputs-wrapper">
+                        <div class="input-group">
+                            <label class="small-title">Asset pack name</label>
+                            <cg-input v-model="name" :max-length="20" name="packName" />
+                        </div>
+                        <div class="input-group">
+                            <label class="small-title">Asset pack price</label>
+                            <cg-input v-model="price" name="price" placeholder="Value" />
+                        </div>
                     </div>
-                    <p>Each asset pack can contain up to 50 different graphic elements, one of which always needs to be
-                        a
-                        background graphic.</p>
+                    <div class="input-group">
+                        <label class="small-title">Description</label>
+                        <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
+                    </div>
                 </div>
                 <div class="submit-button">
                     <cg-button
@@ -183,6 +188,9 @@
       IcoBackground
     },
     data: () => ({
+      name: '',
+      description: '',
+      price: '',
       stage: 'select',
       maxAssets: 50,
       assets: [],
@@ -254,8 +262,13 @@
 
         let coverImage = canvasClone.toDataURL('image/png');
         let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
-        const price = document.querySelector('input[name=price]').value;
-        const name = document.querySelector('input[name=pack_name').value;
+        let metadata = {
+          name: this.name,
+          description: this.description,
+        };
+        let metadataIpfsHash = await ipfsService.uploadJSON(JSON.stringify(metadata));
+        console.log(metadataIpfsHash);
+        const price = this.price;
         const images = [];
         for (let i = 0; i < this.assets.length; i++) {
           const file = {
@@ -278,7 +291,14 @@
                 const attributes = this.assets.map(item => item.attribute);
                 console.log(attributes);
                 this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-                const transactionPromise = await createAssetPack(utils.getBytes32FromIpfsHash(coverHash), name, attributes, hashes, price, this.userAddress);
+                const transactionPromise = await createAssetPack(
+                  utils.getBytes32FromIpfsHash(coverHash),
+                  attributes,
+                  hashes,
+                  price,
+                  this.userAddress,
+                  metadataIpfsHash,
+                );
                 this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
                 const result = await transactionPromise();
                 const id = result.events.AssetPackCreated.returnValues.id;
@@ -340,6 +360,7 @@
 
         &.first-screen {
             max-height: 432px;
+            min-width: 300px;
         }
 
         &.submit {
@@ -403,24 +424,26 @@
             justify-content: flex-end;
         }
 
-        .input-group {
-            width: 100%;
-            flex-direction: column;
+        .inputs-wrapper {
+            display: flex;
             margin-top: 62px;
+
+        }
+
+        .input-group {
+            flex-direction: column;
+            min-width: 180px;
+
+            &:first-child {
+                margin-right: 20px;
+            }
+
             .small-title {
                 display: inline-block;
                 margin-bottom: 20px;
             }
-            .input {
+            .input-wrapper {
                 margin-bottom: 20px;
-
-                &:first-of-type {
-                    width: 185px;
-                }
-
-                &:last-of-type {
-                    width: 85px;
-                }
             }
         }
     }

@@ -13,24 +13,24 @@
                 <router-link
                         v-if="!overlay"
                         :to="'/asset-pack/' + assetPack.id">
-                    <img class="image" :src="ipfsNodePath + assetPack.packCover" />
+                    <img class="image" :src="assetPack.packCoverSrc" />
                     <div class="description">
                         <div class="meta">
-                            <span class="name">{{ assetPack.name }}</span>
+                            <span class="name">{{ assetPack.packName }}</span>
                         </div>
                     </div>
                 </router-link>
                 <!-- With overlay -->
                 <template
                         v-if="overlay">
-                    <img class="image" :src="ipfsNodePath + assetPack.packCover" />
+                    <img class="image" :src="assetPack.packCoverSrc" />
                     <overlay>
                         <div class="meta">
                             <div class="top">
-                                <router-link class="name" :to="'/asset-pack/' + assetPack.id">{{ assetPack.name }}
+                                <router-link class="name" :to="'/asset-pack/' + assetPack.id">{{ assetPack.packName }}
                                 </router-link>
                                 <user-link
-                                        :to="'/user/' + assetPack.userAddress"
+                                        :to="'/user/' + assetPack.creator"
                                         :name="assetPack.username"
                                         :avatar="ipfsNodePath + assetPack.userAvatar"
                                         color="white" />

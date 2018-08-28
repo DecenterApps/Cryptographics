@@ -29,6 +29,7 @@
             margin: 0 auto;
             position: relative;
             left: -80px;
+            overflow-y: hidden;
 
             @media all and (max-width: 1280px) {
                 width: 100%;

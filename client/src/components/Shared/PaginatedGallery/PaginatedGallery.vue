@@ -18,6 +18,7 @@
                         </overlay>
                     </router-link>
                     <img v-bind:class="image.className" v-bind:src="image.src" alt="">
+                    <p class="artwork-title">{{ image.title }}</p>
                 </div>
                 <div class="artwork-details">
                     <user-link :to="'/user/' + image.creator" :name="image.username" :avatar="image.avatar" />
@@ -142,6 +143,15 @@
                 }
                 .artwork-description {
                     font-size: 5px;
+                }
+                .artwork-title {
+                    position: absolute;
+                    right: -35px;
+                    bottom: -3px;
+                    transform: rotate(-90deg);
+                    color: #858585;
+                    font-size: 14px;
+                    font-family: Roboto, sans-serif;
                 }
                 &:hover {
                     .overlay {

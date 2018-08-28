@@ -4,6 +4,7 @@ import config from 'config/config.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
+import * as ipfsService from './ipfsService';
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
@@ -49,43 +50,47 @@ export const getAllAssetPacks = async (assetPackIDs) => {
   return await assetManagerContract().methods.assetPacks(assetPackIDs).call();
 };
 
-export const getAllAssetsPacksInfo = async () => {
-  let numOfAssetsPacks = await getNumberOfAssetPacks();
-  let assetsPackInfo = [];
-  for (let i = 0; i < numOfAssetsPacks; i++) {
-    let data = await getAllAssetPacks(i);
-    let object = {
-      id: i,
-      username: await getUsername(data['creator']),
-      userAddress: data['creator'],
-      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
-      name: data['name'],
-      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
-      price: web3.utils.fromWei(data['price'], 'ether'),
-      data
-    };
-    assetsPackInfo.push(object);
-  }
-  return assetsPackInfo;
-};
+export const getAllAssetsPacksInfo = async () =>
+  new Promise(async (resolve, reject) => {
+    let numOfAssetsPacks = await getNumberOfAssetPacks();
+    let promises = [];
+    for (let i = 0; i < numOfAssetsPacks; i++) {
+      promises.push(getAssetPackData(i));
+      // let object = {
+      //   id: i,
+      //   username: await getUsername(data['creator']),
+      //   userAddress: data['creator'],
+      //   userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
+      //   name: data['name'],
+      //   packCover: utils.getIpfsHashFromBytes32(data['packCover']),
+      //   price: web3.utils.fromWei(data['price'], 'ether'),
+      //   data
+      // };
+    }
 
-export const getPackInformation = async (assetsPackArray) => {
-  let assetPackInfo = [];
-  for (let value of assetsPackArray) {
-    let data = await getAllAssetPacks(value);
-    let object = {
-      id: value,
-      username: await getUsername(data['creator']),
-      userAddress: data['creator'],
-      userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
-      name: data['name'],
-      packCover: utils.getIpfsHashFromBytes32(data['packCover']),
-      price: web3.utils.fromWei(data['price'], 'ether')
-    };
-    assetPackInfo.push(object);
-  }
-  return assetPackInfo;
-};
+    Promise.all(promises)
+      .then((result) => {
+        console.log(result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+
+export const getPackInformation = (assetPackIds) =>
+  new Promise(async (resolve, reject) => {
+    let promises = assetPackIds.map(id => getAssetPackData(value));
+    Promise.all(promises)
+      .then((result) => {
+        console.log(result);
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 
 export const getAttributesForAssets = async (assetIds) => {
   return await assetManagerContract().methods.getAttributesForAssets(assetIds).call();
@@ -171,29 +176,43 @@ export const getAssetPacksWithAssetData = (optionalAssetPacks) =>
 
 export const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
-  const packName = response[0];
-  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[1]);
-  const creator = response[2];
-  const price = response[3];
-  let ids = response[4];
-  let assets = [];
+  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[0]);
+  const creator = response[1];
+  const price = response[2];
+  const ids = response[3];
+  const username = response[7];
+  const userAvatar = utils.getIpfsHashFromBytes32(response[8]);
+  let metadata;
+  try {
+    const metadataIpfs = await ipfsService.getFileContent(response[6]);
+    metadata = JSON.parse(metadataIpfs);
+  } catch (e) {
+    metadata = {
+      name: '',
+      description: '',
+    };
+  }
+  const assets = [];
   for (let i = 0; i < ids.length; i++) {
-    let ipfsHash = utils.getIpfsHashFromBytes32(response[6][i]);
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[5][i]);
     assets.push({
       id: ids[i],
-      attribute: response[5][i],
+      attribute: response[4][i],
       ipfsHash: ipfsHash,
       src: `${ipfsNodePath}${ipfsHash}`
     });
   }
   return {
-    packName,
+    packName: metadata.name,
+    packDescription: metadata.description,
     packCoverIpfs,
     packCoverSrc: `${ipfsNodePath}${packCoverIpfs}`,
     creator,
     price: web3.utils.fromWei(price, 'ether'),
     id: assetPackId,
     assets,
+    username,
+    userAvatar,
   };
 };
 
@@ -289,12 +308,14 @@ export const getImageMetadata = (imageId, getPrice) =>
     const usedAssets = await digitalPrintImageContract().methods.decodeAssets(image[1]).call();
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
-    const extraData = image[7].split(',');
-    const hasFrame = extraData[0] === '1';
-    const width = extraData[1];
-    const height = extraData[2];
-    const title = extraData.slice(3).join('');
-    console.log('extraData', extraData);
+    let metadata = null;
+    try {
+      const metadataIpfs = await ipfsService.getFileContent(image[7]);
+      metadata = JSON.parse(metadataIpfs);
+    } catch (e) {
+      console.error(e);
+    }
+    const hasFrame = parseInt(metadata.frame) === 1;
 
     resolve({
       id: imageId,
@@ -308,9 +329,10 @@ export const getImageMetadata = (imageId, getPrice) =>
       ipfsHash: image[6],
       src: `${ipfsNodePath}${image[6]}`,
       hasFrame,
-      width,
-      height,
-      title,
+      width: metadata.width,
+      height: metadata.height,
+      title: metadata.title,
+      description: metadata.description,
       price,
     });
   });

@@ -29,7 +29,7 @@
                     <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
                     <cg-checkbox v-on:checked="toggleRatio">Use square format</cg-checkbox>
                     <cg-button
-                            :disabled="true"
+                            :disabled="isCanvasDrawing"
                             @click="renderCanvas"
                             button-style="transparent">
                         Recompose
@@ -216,6 +216,15 @@
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         console.log('IMAGE HASH' + ipfsHash);
         console.log(this.potentialAssets);
+        let imageMetadata = {
+          title: this.title,
+          description: this.description,
+          frame: this.canvasData.frame ? 1 : 0,
+          width: 2480,
+          height: (this.canvasData.ratio === '2:3' ? 3508 : 2480),
+        };
+        let extraData = await ipfsService.uploadJSON(JSON.stringify(imageMetadata));
+        console.log(extraData);
 
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         let transactionPromise = await imageService.createImage(
@@ -227,10 +236,7 @@
           this.userAddress,
           this.imagePrice,
           ipfsHash,
-          this.title,
-          this.canvasData.frame,
-          2480,
-          (this.canvasData.ratio === '2:3' ? 3508 : 2480),
+          extraData,
         );
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
         const result = await transactionPromise();

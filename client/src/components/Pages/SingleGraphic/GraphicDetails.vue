@@ -1,7 +1,8 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following asset packs:</p>
+            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following
+                asset packs:</p>
             <div class="asset-packs">
                 <router-link :to="'/asset-pack/' + assetPack.id" v-for="(assetPack, index) in assetPacks">
                     <asset-box
@@ -13,12 +14,13 @@
                     ></asset-box>
                 </router-link>
             </div>
-            <p>Asset packs used in this Cryptographic</p>
         </div>
         <div class="graphic-meta">
             <div class="graphic-name">
-                <h3 class="large-title">{{ image.title }}</h3>
+                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span></h3>
                 <user-link :to="'/user/' + image.creator" :name="username" :avatar="image.avatar" />
+                <p class="description">{{ image.description }}</p>
+
             </div>
             <div v-if="!sellGraphic" class="graphic-address">
                 <strong>Cryptographics address:</strong>
@@ -95,6 +97,7 @@
       }
     },
     methods: {
+      padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
       async submitImageForSale() {
         const result = await sellImage(this.userAddress, this.image.id, this.sellPrice);
       },
@@ -129,9 +132,24 @@
     }
 
     .graphic-name {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
+        .graphic-id {
+            font-family: Roboto, sans-serif;
+            font-size: 12px;
+            margin-left: 10px;
+            font-weight: bold;
+            color: #858585;
+        }
+        .description {
+            margin-top: 10px;
+            font-family: Roboto, sans-serif;
+            font-weight: 300;
+            line-height: 19px;
+        }
         .large-title {
             margin-bottom: 10px;
+            position: relative;
+            display: flex;
         }
     }
 
