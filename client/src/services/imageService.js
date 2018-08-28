@@ -19,7 +19,7 @@ const assetManagerContract = () => new web3.eth.Contract(config.assetManagerCont
 
 const DELAY = 150;
 
-export const createImage = (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, title, frame, width, height) =>
+export const createImage = (randomHashIds, timestamp, iterations, potentialAssets, author, account, price, ipfsHash, extraData) =>
   new Promise(async (resolve, reject) => {
     potentialAssets = utils.encode(potentialAssets);
 
@@ -27,8 +27,15 @@ export const createImage = (randomHashIds, timestamp, iterations, potentialAsset
     iterations = parseInt(iterations, 10);
     try {
       console.log(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, price);
-      const extraData = `${frame ? 1 : 0},${width},${height},${title}`;
-      const transactionPromise = digitalPrintImageContract().methods.createImage(randomHashIds, timestamp, iterations, potentialAssets, author, ipfsHash, extraData).send({
+      const transactionPromise = digitalPrintImageContract().methods.createImage(
+        randomHashIds,
+        timestamp,
+        iterations,
+        potentialAssets,
+        author,
+        ipfsHash,
+        extraData,
+      ).send({
         value: parseInt(price),
         from: account,
         to: digitalPrintImageContractAddress,
@@ -63,10 +70,16 @@ export const createAsset = async (attributes, ipfsHash, price, account) => {
   }
 };
 
-export const createAssetPack = (coverImage, name, attributes, ipfsHashes, price, account) =>
+export const createAssetPack = (coverImage, attributes, ipfsHashes, price, account, metadataIpfsHash) =>
   new Promise((resolve, reject) => {
     try {
-      const transactionPromise = assetManagerContract().methods.createAssetPack(coverImage, name, attributes, ipfsHashes, web3.utils.toWei(price)).send({
+      const transactionPromise = assetManagerContract().methods.createAssetPack(
+        coverImage,
+        attributes,
+        ipfsHashes,
+        web3.utils.toWei(price),
+        metadataIpfsHash,
+      ).send({
         from: account
       }, (error, txHash) => {
         console.log(error, txHash);

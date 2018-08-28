@@ -6,6 +6,7 @@
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
                     <p class="small-title">Assets in pack - {{ assetPack.assets.length }}</p>
+                    <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
@@ -62,6 +63,7 @@
 <style scoped lang="scss">
     .large-title {
         margin-top: 29px;
+        margin-bottom: 0;
     }
 
     .right-section {
@@ -70,8 +72,16 @@
     }
 
     .small-title {
-        margin: 0 16px 21px 0;
+        margin: 16px 16px 29px 0;
         font-size: 12px;
+        font-family: Roboto, sans-serif;
+    }
+
+    .asset-pack-description {
+        font-weight: 300;
+        line-height: 19px;
+        font-size: 12px;
+        color: #717171;
     }
 
     .asset-pack-header {
@@ -101,7 +111,8 @@
             justify-content: center;
             height: 206px;
             width: 206px;
-            margin: 9px;
+            margin-right: 18px;
+            margin-bottom: 18px;
             background-color: #ECECEC;
             padding: 10px;
             box-sizing: border-box;

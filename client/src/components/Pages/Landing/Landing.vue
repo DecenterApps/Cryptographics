@@ -38,7 +38,7 @@
     }),
     async created() {
       try {
-        let numOfImages = await getImageCount();
+        let numOfImages = parseInt(await getImageCount());
         if (numOfImages > 6) numOfImages = 6;
         const ids = [...Array(numOfImages).keys()].reverse();
         console.log(ids, numOfImages);
