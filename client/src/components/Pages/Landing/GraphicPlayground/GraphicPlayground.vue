@@ -162,10 +162,11 @@
                 flex-direction: column;
                 flex: 1;
                 justify-content: center;
-                padding-left: 20px;
+                padding: 20px;
 
                 .hero-text-content {
                     max-width: 300px;
+                    margin: 0 auto;
 
                     p {
                         color: #000;
@@ -193,16 +194,18 @@
                             margin-bottom: 30px;
                         }
                         .canvas-wrapper {
-                            margin: 20px 0;
                         }
                     }
 
                 }
                 .right {
-                    margin-bottom: 30px;
                     text-align: center;
-                    p {
-                        margin: 0 auto 16px;
+
+                    .hero-text-content {
+                        max-width: 340px;
+                        p {
+                            margin: 0 auto 16px;
+                        }
                     }
                 }
             }

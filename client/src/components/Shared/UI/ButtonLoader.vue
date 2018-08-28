@@ -1,15 +1,23 @@
 <template>
-    <div class="button-loader">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+    <div>
+        <div class="button-loader" :class="buttonStyle">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </div>
 </template>
 
 <script>
   export default {
     name: 'ButtonLoader',
+    props: {
+      buttonStyle: {
+        type: String,
+        default: 'negative'
+      },
+    }
   };
 </script>
 
@@ -28,6 +36,9 @@
         border-radius: 50%;
         background: #d9d9d9;
         animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .button-loader.transparent div {
+        background: black;
     }
     .button-loader div:nth-child(1) {
         left: 3px;
