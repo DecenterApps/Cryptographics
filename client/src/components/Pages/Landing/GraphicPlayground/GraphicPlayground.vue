@@ -215,8 +215,8 @@
             display: flex;
             justify-content: flex-end;
             flex-direction: column;
-            & > > > .button-wrapper {
-                width: 100px;
+            & > > > button {
+                min-width: 100px;
                 margin-bottom: 20px;
                 &:last-of-type {
                     margin: 0;

@@ -1,5 +1,4 @@
 <template>
-    <span class="button-wrapper">
         <button
                 class="button"
                 :class="buttonStyle"
@@ -7,17 +6,16 @@
                 v-bind="$attrs"
                 v-on="$listeners"
         >
-            <slot />
+            <button-loader v-if="disabled" />
+            <slot v-if="!disabled" />
         </button>
-        <svg class="spinner" v-if="disabled" fill="none" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-            <path d="m42 22c0-11.046-8.9543-20-20-20s-20 8.9543-20 20 8.9543 20 20 20" stroke="#000" stroke-width="2" />
-        </svg>
-    </span>
 </template>
 
 <script>
+  import ButtonLoader from './ButtonLoader';
   export default {
     name: 'Button',
+    components: { ButtonLoader },
     props: {
       buttonStyle: {
         type: String,
@@ -32,17 +30,11 @@
 </script>
 
 <style scoped lang="scss">
-    .button-wrapper {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        min-width: 105px;
-    }
-
     .button {
+        position: relative;
         display: inline-flex;
         justify-content: center;
-        width: 100%;
+        min-width: 105px;
         height: 33px;
         padding: 9px;
         font-size: 12px;
@@ -55,19 +47,12 @@
         white-space: nowrap;
         line-height: 1;
         &[disabled=disabled], &:disabled {
-            background: none;
+            padding: 0;
+            background: #AEAEAE;
             cursor: not-allowed;
-            border: 1px solid rgba(0, 0, 0, 0.2);
+            border: none;
             color: rgba(0, 0, 0, 0.2);
         }
-    }
-
-    .spinner {
-        width: 20px;
-        height: 20px;
-
-        animation: rotate 1s linear infinite;
-        margin-left: 15px;
     }
 
     .positive {
@@ -123,15 +108,6 @@
         color: #858585;
         background: none;
         border: 1px solid transparent;
-    }
-
-    @keyframes rotate {
-        0% {
-            transform: rotate(0);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
     }
 </style>
 

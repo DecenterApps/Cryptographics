@@ -29,7 +29,7 @@
                     <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
                     <cg-checkbox v-on:checked="toggleRatio">Use square format</cg-checkbox>
                     <cg-button
-                            :disabled="isCanvasDrawing"
+                            :disabled="true"
                             @click="renderCanvas"
                             button-style="transparent">
                         Recompose
@@ -477,7 +477,7 @@
         .top-controls {
             margin-bottom: 20px;
 
-            .button-wrapper {
+            button {
                 margin-top: 10px;
             }
 
@@ -511,8 +511,8 @@
                     display: flex;
                     justify-content: flex-end;
 
-                    .button-wrapper {
-                        width: 135px;
+                    button {
+                        min-width: 135px;
                     }
                 }
             }

@@ -156,7 +156,7 @@
             flex-direction: column;
             margin-top: 0;
         }
-        .button-wrapper {
+        button {
             margin: 0 10px;
             &:first-of-type {
                 margin-left: 0;

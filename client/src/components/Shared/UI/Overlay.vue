@@ -22,7 +22,7 @@
     > *:not(.background) {
         z-index: 1;
     }
-    .button-wrapper {
+    button {
         margin: 0 20px;
         z-index: 1;
         &:first-of-type {
