@@ -59,10 +59,11 @@
                                 :key="index"
                                 :assetPack="assetPack"
                                 :small="true"
-                                color="#eee" />
+                                color="#eee"
+                        />
                         <div class="asset-pack-meta">
                             <h1 class="small-title">{{ assetPack.packName }}</h1>
-                            <div class="small-title">Ξ {{ assetPack.price }}</div>
+                            <div :class="['small-title', customPrice(assetPack)]">{{ customPrice(assetPack) }}</div>
                         </div>
                     </div>
                 </div>
@@ -89,10 +90,10 @@
                 <div class="bottom-controls buy-screen">
                     <div>
                         <cg-button
-                                @click="download"
+                                @click="buyScreen = false"
                                 :button-style="'transparent'"
                         >
-                            Download
+                            Back
                         </cg-button>
                     </div>
                     <div class="separate-controls">
@@ -124,7 +125,7 @@
   import * as ipfsService from 'services/ipfsService';
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
-  import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
 
@@ -159,6 +160,7 @@
         userAddress: METAMASK_ADDRESS,
         username: USERNAME,
         isCanvasDrawing: CANVAS_DRAWING,
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
       })
     },
     props: ['selectedAssetPacks'],
@@ -184,6 +186,17 @@
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
+
+      customPrice(assetPack) {
+        if (this.userAddress === assetPack.creator) {
+          return 'created';
+        }
+        if (this.boughtPacksIDs.indexOf(assetPack.id.toString()) >= 0) {
+          return 'bought';
+        }
+
+        return `Ξ ${assetPack.price}`;
+      },
 
       checkTitle() {
         this.errors = [];
@@ -400,6 +413,11 @@
 
                     .small-title {
                         margin-bottom: 10px;
+
+                        &.bought, &.creator {
+                            font-size: 16px;
+                            color: #949494;
+                        }
 
                         &:last-child {
                             margin: 0;
