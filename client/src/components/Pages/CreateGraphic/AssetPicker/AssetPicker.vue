@@ -131,6 +131,7 @@
         flex-direction: column;
         max-width: 760px;
         margin-left: 0;
+        justify-content: flex-start !important;
 
         .line-separator {
             margin: 25px 0;

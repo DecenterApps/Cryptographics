@@ -361,6 +361,7 @@
         &.first-screen {
             max-height: 432px;
             min-width: 300px;
+            max-width: 400px;
         }
 
         &.submit {

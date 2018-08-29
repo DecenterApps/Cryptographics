@@ -90,6 +90,7 @@
             display: flex;
             align-items: center;
             .links a {
+                line-height: 40px;
                 font-size: 12px;
                 margin-right: 25px;
                 &:last-of-type {
