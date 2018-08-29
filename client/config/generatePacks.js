@@ -15,6 +15,19 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+const getFileContent = async (hash) => {
+  const ipfsTimeout = setTimeout(() => {
+    throw Error('Couldn\'t fetch data. (TIMEOUT)');
+  }, 20000);
+  try {
+    const file = await window.node.files.cat(hash);
+    clearTimeout(ipfsTimeout);
+    return new TextDecoder('utf-8').decode(file);
+  } catch (e) {
+    throw Error(e.message);
+  }
+};
+
 const deleteFolderRecursive = (path) => {
   if (fs.existsSync(path)) {
     fs.readdirSync(path).forEach((file, index) => {
@@ -31,23 +44,32 @@ const deleteFolderRecursive = (path) => {
 
 const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
-  const packName = response[0];
   const packCoverIpfs = utils.getIpfsHashFromBytes32(response[1]);
-  const creator = response[2];
-  const price = response[3];
-  let ids = response[4];
+  const creator = response[1];
+  const price = response[2];
+  let ids = response[3];
+  let metadata;
+  try {
+    const metadataIpfs = await getFileContent(response[6]);
+    metadata = JSON.parse(metadataIpfs);
+  } catch (e) {
+    metadata = {
+      name: '',
+      description: '',
+    };
+  }
   let assets = [];
   for (let i = 0; i < ids.length; i++) {
-    let ipfsHash = utils.getIpfsHashFromBytes32(response[6][i]);
+    let ipfsHash = utils.getIpfsHashFromBytes32(response[5][i]);
     assets.push({
       id: ids[i],
-      attribute: response[5][i],
+      attribute: response[4][i],
       ipfsHash: ipfsHash,
       src: `https://ipfs.decenter.com/ipfs/${ipfsHash}`
     });
   }
   return {
-    packName,
+    packName: metadata.name,
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     creator,

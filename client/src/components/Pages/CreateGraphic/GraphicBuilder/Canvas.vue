@@ -28,11 +28,12 @@
         canvas.height = size.canvasHeight;
         canvas.style.width = this.width + 'px';
         canvas.style.height = this.height + 'px';
+        const BORDER_WIDTH = 125;
         const FRAME_BOUNDARIES = {
-          left: canvas.width / 20,
-          bottom: canvas.height / 6.3,
-          right: canvas.width / 20,
-          top: canvas.width / 20,
+          left: BORDER_WIDTH,
+          bottom: 460,
+          right: BORDER_WIDTH,
+          top: BORDER_WIDTH,
           ratio: this.canvasData.ratio,
           shouldDrawFrame: frame,
         };
