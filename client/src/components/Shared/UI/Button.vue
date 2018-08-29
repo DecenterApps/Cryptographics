@@ -6,7 +6,7 @@
                 v-bind="$attrs"
                 v-on="$listeners"
         >
-            <button-loader v-if="disabled" />
+            <button-loader v-if="disabled" :buttonStyle="buttonStyle" />
             <slot v-if="!disabled" />
         </button>
 </template>
@@ -46,12 +46,9 @@
         text-transform: capitalize;
         white-space: nowrap;
         line-height: 1;
-        &[disabled=disabled], &:disabled {
-            padding: 0;
-            background: #AEAEAE;
-            cursor: not-allowed;
-            border: none;
-            color: rgba(0, 0, 0, 0.2);
+        transition: opacity .2s;
+        &:hover {
+            opacity: .7;
         }
     }
 
@@ -65,12 +62,23 @@
         color: #fff;
         background-color: #000;
         border: 1px solid #000;
+        &[disabled=disabled], &:disabled {
+            padding: 0;
+            background: #AEAEAE;
+            cursor: not-allowed;
+            border: none;
+            color: rgba(0, 0, 0, 0.2);
+        }
     }
 
     .transparent {
         color: #000;
         background: none;
         border: 1px solid #000;
+        &[disabled=disabled], &:disabled {
+            opacity: .3;
+            padding: 0;
+        }
     }
 
     .transparent-inverted {

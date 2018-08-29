@@ -3,7 +3,7 @@
         <div class="header-container container">
             <div class="logo">
                 <router-link to="/">
-                    <logo />
+                    <logo /> <span>Cryptographics</span>
                 </router-link>
             </div>
             <div class="links-section">
@@ -60,6 +60,21 @@
         a {
             color: #fff;
             text-decoration: none;
+            height: 40px;
+            display: inline-block;
+            span {
+                vertical-align: middle;
+                display: inline-block;
+                height: 40px;
+                font-size: 14px;
+                font-weight: bold;
+                margin-left: 4px;
+                opacity: 0;
+                transition: opacity .2s;
+            }
+            &:hover span {
+                opacity: 1;
+            }
         }
         .header-container {
             padding: 15px 0;

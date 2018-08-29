@@ -162,7 +162,7 @@
                 flex-direction: column;
                 flex: 1;
                 justify-content: center;
-                padding-left: 20px;
+                padding: 20px;
 
                 .hero-text-content {
                     max-width: 300px;
@@ -173,6 +173,7 @@
                         font-size: 14px;
                         line-height: 19px;
                         font-weight: 300;
+                        letter-spacing: 0;
                     }
                 }
 
@@ -193,16 +194,19 @@
                             margin-bottom: 30px;
                         }
                         .canvas-wrapper {
-                            margin: 20px 0;
                         }
                     }
 
                 }
                 .right {
-                    margin-bottom: 30px;
                     text-align: center;
-                    p {
-                        margin: 0 auto 16px;
+
+                    .hero-text-content {
+                        max-width: 340px;
+                        margin: 0 auto;
+                        p {
+                            margin: 0 auto 16px;
+                        }
                     }
                 }
             }
