@@ -333,7 +333,6 @@
         this.randomSeed = await convertSeed(this.randomSeed);
         this.renderCanvas();
       }
-      this.selectedAssets = uniq([...this.selectedAssets, ...this.selectedAssetPacks]);
     },
   };
 </script>
