@@ -1,44 +1,17 @@
 <template>
     <div class="hero">
-        <div class="container">
-            <div class="left">
-                <div class="create-art">
-                    <div class="canvas-holder">
-                        <overlay>
-                            <cg-button button-style="transparent-inverted" icon-type="download" @click="openInEditor">
-                                Open in editor
-                            </cg-button>
-                        </overlay>
-                        <div class="canvas-holder-wrapper">
-                            <Canvas :canvasData="canvasData" height="400" width="400" />
-                        </div>
-                    </div>
-                    <!--<div class="button-group">-->
-                    <!--<cg-button-->
-                    <!--button-style="transparent"-->
-                    <!--@click="openInEditor"-->
-                    <!--&gt;-->
-                    <!--Open in editor-->
-                    <!--</cg-button>-->
-                    <!--<cg-button-->
-                    <!--@click="renderCanvas">-->
-                    <!--Recompose-->
-                    <!--</cg-button>-->
-                    <!--</div>-->
-                </div>
-            </div>
-            <div class="right">
-                <h2 class="large-title">This is a Cryptographic</h2>
-                <div class="hero-text-content">
-                    <p>A graphic created by you, with a little help from provably secure randomness. </p>
-                    <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
-                        trade.</p>
-                    <p>Try creating another one.</p>
-                    <cg-button
-                            @click="renderCanvas">
-                        Recompose
-                    </cg-button>
-                </div>
+        <div class="canvas-holder">
+            <overlay>
+                <cg-button button-style="transparent-inverted" icon-type="download" @click="openInEditor">
+                    Open in editor
+                </cg-button>
+                <cg-button
+                        @click="renderCanvas">
+                    Recompose
+                </cg-button>
+            </overlay>
+            <div class="canvas-holder-wrapper">
+                <Canvas :canvasData="canvasData" />
             </div>
         </div>
     </div>
@@ -141,10 +114,24 @@
   };
 </script>
 
+<style lang="scss">
+    .canvas-holder-wrapper {
+        canvas {
+            height: 2480px !important;
+            width: 2480px !important;
+            max-width: none;
+        }
+    }
+</style>
+
 <style scoped lang="scss">
     .hero {
+        position: relative;
         background-color: #D9D9D9;
+        overflow: hidden;
         padding: 45px 0;
+        height: 568px;
+
         .container {
             width: 100%;
             max-width: 1120px;
@@ -234,25 +221,25 @@
     }
 
     .canvas-holder {
-        position: relative;
+        position: absolute;
+        top: -30%;
+        left: -10%;
         margin: 0 20px;
+        height: 568px;
+        width: 100%;
         background-color: #ffffff;
         display: flex;
         flex-direction: column;
 
         .canvas-holder-wrapper {
-            height: 402px;
-            width: 402px;
+            height: 568px;
+            width: 100%;
         }
 
         &:hover {
             .overlay {
                 opacity: 1;
             }
-        }
-        canvas {
-            background-color: white;
-            width: 100%;
         }
         .cg-stamp {
             padding: 20px 0;
