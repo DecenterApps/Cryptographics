@@ -16,12 +16,12 @@ const rl = readline.createInterface({
 });
 
 const getFileContent = async (hash) => {
-  const ipfsTimeout = setTimeout(() => {
-    throw Error('Couldn\'t fetch data. (TIMEOUT)');
-  }, 20000);
+  // const ipfsTimeout = setTimeout(() => {
+  //   throw Error('Couldn\'t fetch data. (TIMEOUT)');
+  // }, 20000);
   try {
     const file = await window.node.files.cat(hash);
-    clearTimeout(ipfsTimeout);
+    // clearTimeout(ipfsTimeout);
     return new TextDecoder('utf-8').decode(file);
   } catch (e) {
     throw Error(e.message);
