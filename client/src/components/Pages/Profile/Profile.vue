@@ -26,26 +26,32 @@
                 <template v-if="userAddress">
                     <div class="tabs">
                         <div class="current-tabs">
-                            <button @click="changeTab('asset-packs')" :class="['large-title', isActive('asset-packs')]">Asset Packs</button>
-                            <button @click="changeTab('gallery')" :class="['large-title', isActive('gallery')]">Gallery</button>
+                            <button @click="changeTab('gallery')" :class="['large-title', isActive('gallery')]">
+                                Gallery
+                            </button>
+                            <button @click="changeTab('asset-packs')" :class="['large-title', isActive('asset-packs')]">
+                                Asset Packs
+                            </button>
                         </div>
                     </div>
                     <separator />
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
                             <cg-button
-                                    :button-style="showYourPacks === true ? 'negative' : 'transparent'"
-                                    @click="showYourPacks = true">
-                                Your assets packs
+                                    :button-style="showPacks === 'created' ? 'negative' : 'transparent'"
+                                    @click="showPacks = 'created'">
+                                Created assets packs
                             </cg-button>
                             <cg-button
-                                    :button-style="showYourPacks === false ? 'negative' : 'transparent'"
-                                    @click="showYourPacks = false">
+                                    :button-style="showPacks === 'bought' ? 'negative' : 'transparent'"
+                                    @click="showPacks = 'bought'">
                                 Bought assets packs
                             </cg-button>
                         </div>
-                        <asset-packs-pagination v-if="showYourPacks" assets-pack-type="created" />
-                        <asset-packs-pagination v-else assets-pack-type="bought" />
+                        <asset-packs-pagination
+                                :asset-pack-ids="assetPackIds"
+                                :asset-packs-type="showPacks"
+                        />
                     </div>
                     <div class="gallery" v-if="currentTab === 'gallery'">
                         <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
@@ -62,23 +68,44 @@
 <script>
   import {
     getUserImages,
+    getAvatar,
+    getUsername,
+    getCreatedAssetPacks,
+    getBoughtAssetPacks,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
-  import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
+  import {
+    USERNAME,
+    METAMASK_ADDRESS,
+    AVATAR,
+    CREATED_ASSETS_PACKS_IDS,
+    BOUGHT_ASSETS_PACKS_IDS,
+  } from 'store/user-config/types';
+  import utils from 'services/utils';
 
   import AssetPacksPagination from './template/AssetPacksPagination.vue';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery.vue';
 
   export default {
     name: 'Profile',
+    props: {
+      userProfile: {
+        type: Boolean,
+        default: false,
+      }
+    },
     data() {
       return {
         ipfsNodePath,
-        showYourPacks: true,
-        currentTab: 'asset-packs',
+        showPacks: 'created',
+        currentTab: 'gallery',
         imageIds: [],
+        assetPackIds: [],
+        userAddress: '0x0',
+        username: '',
+        avatar: '',
       };
     },
     components: {
@@ -87,16 +114,30 @@
     },
     computed: {
       ...mapGetters({
-        userAddress: METAMASK_ADDRESS,
-        username: USERNAME,
-        avatar: AVATAR
+        currentUserAddress: METAMASK_ADDRESS,
+        currentUserUsername: USERNAME,
+        currentUserAvatar: AVATAR,
+        createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
       })
     },
     watch: {
-      userAddress: async function (val) {
+      currentUserAddress: async function (val) {
         console.log(val);
-        this.imageIds = await getUserImages(val);
+        if (this.userProfile) {
+          this.userAddress = val;
+          this.imageIds = await getUserImages(val);
+        }
       },
+      createdPacksIDs: async function (val) {
+        if (this.showPacks === 'created') this.getAssetPacks();
+      },
+      boughtPacksIDs: async function (val) {
+        if (this.showPacks === 'bought') this.getAssetPacks();
+      },
+      showPacks: async function (val) {
+        this.getAssetPacks();
+      }
     },
     methods: {
       ...mapActions({
@@ -104,10 +145,26 @@
       }),
       async generateData() {
         await this.getImages();
+        await this.getAssetPacks();
       },
       async getImages() {
         if (!this.userAddress) return;
         this.imageIds = await getUserImages(this.userAddress);
+      },
+      async getAssetPacks() {
+        if (this.userProfile) {
+          if (this.showPacks === 'created') {
+            this.assetPackIds = this.createdPacksIDs;
+          } else if (this.showPacks === 'bought') {
+            this.assetPackIds = this.boughtPacksIDs;
+          }
+        } else {
+          if (this.showPacks === 'created') {
+            this.assetPackIds = await getCreatedAssetPacks(this.userAddress);
+          } else if (this.showPacks === 'bought') {
+            this.assetPackIds = await getBoughtAssetPacks(this.userAddress);
+          }
+        }
       },
       isActive(type) {
         return this.currentTab === type ? 'active' : '';
@@ -118,6 +175,15 @@
     },
 
     async created() {
+      if (this.userProfile) {
+        this.userAddress = this.currentUserAddress;
+        this.username = this.currentUserUsername;
+        this.avatar = this.currentUserAvatar;
+      } else {
+        this.userAddress = this.$route.params.userId;
+        this.username = await getUsername(this.userAddress);
+        this.avatar = utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
+      }
       this.generateData();
     }
 

@@ -41,8 +41,8 @@
                     </div>
                 </div>
             </div>
-            <button-link to="gallery">See more</button-link>
         </div>
+        <button-link to="gallery">See more</button-link>
     </div>
 </template>
 

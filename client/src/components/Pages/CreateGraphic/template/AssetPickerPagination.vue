@@ -30,9 +30,6 @@
 
 <script>
   import {
-    getPackInformation,
-    getNumberOfAssetPacks,
-    getAllAssetsPacksInfo,
     getSelectedAssetPacksWithAssetData,
   } from 'services/ethereumService';
   import { paginateArray } from 'services/helpers';

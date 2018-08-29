@@ -27,7 +27,8 @@ const router = new VueRouter({
     { path: '/upload-asset-pack', component: UploadAssetPack },
     { path: '/asset-packs', component: AssetPacks },
     { path: '/asset-pack/:id', component: AssetPackPreview },
-    { path: '/profile', component: Profile }
+    { path: '/profile', component: Profile, props: { userProfile: true } },
+    { path: '/user/:userId', component: Profile }
   ]
 });
 

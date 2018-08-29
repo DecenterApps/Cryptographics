@@ -81,7 +81,7 @@ export const getAllAssetsPacksInfo = async () =>
 
 export const getPackInformation = (assetPackIds) =>
   new Promise(async (resolve, reject) => {
-    let promises = assetPackIds.map(id => getAssetPackData(value));
+    let promises = assetPackIds.map(id => getAssetPackData(id));
     Promise.all(promises)
       .then((result) => {
         console.log(result);

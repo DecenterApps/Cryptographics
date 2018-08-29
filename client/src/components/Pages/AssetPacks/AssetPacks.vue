@@ -10,28 +10,23 @@
             <div class="assets">
                 <div class="button-group">
                     <cg-button
-                            :button-style="showYourPacks === true ? 'tab-active' : 'tab-inactive'"
-                            @click="showYourPacks = true">
+                            :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
+                            @click="showPacks = 'all'">
                         All assets packs
                     </cg-button>
                     <cg-button
-                            :button-style="showYourPacks === false ? 'tab-active' : 'tab-inactive'"
-                            @click="showYourPacks = false">
-                        Your assets packs
+                            :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
+                            @click="showPacks = 'created'">
+                        Asset packs created by you
                     </cg-button>
                 </div>
                 <asset-packs-pagination
-                        v-if="showYourPacks"
-                        assets-pack-type="all"
-                        grid="row-4"
+                        :asset-pack-ids="assetPackIds"
+                        :asset-packs-type="showPacks"
                         :show-per-page="8"
-                        :overlay="true" />
-                <asset-packs-pagination
-                        v-else
-                        assets-pack-type="created"
+                        :overlay="true"
                         grid="row-4"
-                        :show-per-page="8"
-                        :overlay="true" />
+                />
             </div>
         </div>
     </div>
@@ -40,6 +35,13 @@
 <script>
 
   import AssetPacksPagination from '../Profile/template/AssetPacksPagination.vue';
+  import { mapGetters } from 'vuex';
+  import {
+    METAMASK_ADDRESS,
+    CREATED_ASSETS_PACKS_IDS,
+    BOUGHT_ASSETS_PACKS_IDS,
+  } from 'store/user-config/types';
+  import { getNumberOfAssetPacks } from 'services/ethereumService';
 
   export default {
     name: 'AssetsPacksPage',
@@ -48,8 +50,36 @@
     },
     data() {
       return {
-        showYourPacks: true,
+        showPacks: 'all',
+        assetPackIds: [],
       };
+    },
+    computed: {
+      ...mapGetters({
+        metamaskAddress: METAMASK_ADDRESS,
+        createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
+      })
+    },
+    watch: {
+      createdPacksIDs: async function (val) {
+        if (this.showPacks === 'created') this.getAssetPacks();
+      },
+      showPacks: async function (val) {
+        this.getAssetPacks();
+      }
+    },
+    methods: {
+      async getAssetPacks() {
+        if (this.showPacks === 'created') {
+          this.assetPackIds = this.createdPacksIDs;
+        } else if (this.showPacks === 'all') {
+          const numOfAssetPacks = parseInt(await getNumberOfAssetPacks());
+          this.assetPackIds = [...Array(numOfAssetPacks).keys()].reverse();
+        }
+      },
+    },
+    async created() {
+      this.getAssetPacks();
     }
   };
 </script>

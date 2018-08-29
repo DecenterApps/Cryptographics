@@ -43,6 +43,10 @@
         const ids = [...Array(numOfImages).keys()].reverse();
         console.log(ids, numOfImages);
         this.images = await getImagesMetadata(ids, true);
+        console.log(this.$redrawVueMasonry);
+        if (typeof this.$redrawVueMasonry === 'function') {
+          this.$redrawVueMasonry();
+        }
       } catch (e) {
         console.log(e);
       }
