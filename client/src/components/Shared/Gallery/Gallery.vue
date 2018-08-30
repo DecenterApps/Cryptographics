@@ -68,7 +68,6 @@
 
 <style scoped lang="scss">
     .gallery {
-        background-color: #EEEEEE;
         padding: 70px 0;
         min-height: 650px;
         text-align: center;

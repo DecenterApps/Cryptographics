@@ -142,7 +142,7 @@
                 flex: 0 0 23%;
             }
             .asset-pack {
-                margin-right: 29px;
+                margin-right: 28px;
                 &:nth-child(4n) {
                     margin-right: 0;
                 }

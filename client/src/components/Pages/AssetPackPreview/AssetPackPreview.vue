@@ -82,6 +82,7 @@
         line-height: 19px;
         font-size: 12px;
         color: #717171;
+        max-width: 432px;
     }
 
     .asset-pack-header {

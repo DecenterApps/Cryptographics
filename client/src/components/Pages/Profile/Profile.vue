@@ -38,14 +38,19 @@
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
                             <cg-button
-                                    :button-style="showPacks === 'created' ? 'negative' : 'transparent'"
-                                    @click="showPacks = 'created'">
-                                Created assets packs
+                                    :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
+                                    @click="showPacks = 'all'">
+                                All
                             </cg-button>
                             <cg-button
-                                    :button-style="showPacks === 'bought' ? 'negative' : 'transparent'"
+                                    :button-style="showPacks === 'bought' ? 'tab-active' : 'tab-inactive'"
                                     @click="showPacks = 'bought'">
-                                Bought assets packs
+                                Bought
+                            </cg-button>
+                            <cg-button
+                                    :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
+                                    @click="showPacks = 'created'">
+                                Created
                             </cg-button>
                         </div>
                         <asset-packs-pagination
@@ -102,7 +107,7 @@
     data() {
       return {
         ipfsNodePath,
-        showPacks: 'created',
+        showPacks: 'all',
         currentTab: 'gallery',
         imageIds: [],
         assetPackIds: [],
@@ -133,10 +138,10 @@
         }
       },
       createdPacksIDs: async function (val) {
-        if (this.showPacks === 'created') this.getAssetPacks();
+        if (this.showPacks === 'created' || this.showPacks === 'all') this.getAssetPacks();
       },
       boughtPacksIDs: async function (val) {
-        if (this.showPacks === 'bought') this.getAssetPacks();
+        if (this.showPacks === 'bought' || this.showPacks === 'all') this.getAssetPacks();
       },
       showPacks: async function (val) {
         this.getAssetPacks();
@@ -156,13 +161,23 @@
       },
       async getAssetPacks() {
         if (this.userProfile) {
+          if (this.showPacks === 'all') {
+            this.assetPackIds = [...this.createdPacksIDs, ...this.boughtPacksIDs];
+          }
           if (this.showPacks === 'created') {
             this.assetPackIds = this.createdPacksIDs;
           } else if (this.showPacks === 'bought') {
             this.assetPackIds = this.boughtPacksIDs;
           }
         } else {
-          if (this.showPacks === 'created') {
+          if (this.showPacks === 'all') {
+            const promises = [await getCreatedAssetPacks(this.userAddress), await getBoughtAssetPacks(this.userAddress)];
+            Promise.all(promises)
+              .then((created, bought) => {
+                this.assetPackIds = [...created, ...bought];
+              });
+          }
+          else if (this.showPacks === 'created') {
             this.assetPackIds = await getCreatedAssetPacks(this.userAddress);
           } else if (this.showPacks === 'bought') {
             this.assetPackIds = await getBoughtAssetPacks(this.userAddress);
@@ -247,6 +262,11 @@
         }
         .assets, .gallery {
             padding-bottom: 30px;
+            .button-group {
+                .button {
+                    min-width: auto;
+                }
+            }
         }
         @media screen and (max-width: 1120px) {
             .header {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="gallery-page">
         <slider-gallery />
 
         <div class="container">
@@ -32,5 +32,7 @@
 </script>
 
 <style scoped>
-
+    .gallery-page {
+        background-color: #F9F9F9;
+    }
 </style>
