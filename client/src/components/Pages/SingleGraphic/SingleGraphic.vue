@@ -20,11 +20,11 @@
                     :userAddress="userAddress"
                     @showPrintForm="orderPrint = true"
             />
-            <print-form v-else />
+            <print-form @closePrintForm="orderPrint = false" v-else />
             <share-icons />
         </div>
         <div class="canvas-wrapper">
-            <Canvas :canvasData="canvasData" ></Canvas>
+            <Canvas :canvasData="canvasData"></Canvas>
         </div>
     </layout>
 </template>
@@ -80,12 +80,12 @@
     },
     methods: {
       download() {
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById('canvas');
         if (!canvas) return;
         const link = document.createElement('a');
         const title = this.image.title || 'cryptographic';
         link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
         link.click();
       }
     },
@@ -115,12 +115,14 @@
         align-items: center;
         max-width: none !important;
     }
+
     .right {
         position: relative;
         max-width: 400px;
         min-width: 300px;
         padding-right: 50px;
     }
+
     .canvas-wrapper {
         display: none;
     }
