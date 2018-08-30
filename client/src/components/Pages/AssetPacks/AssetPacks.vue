@@ -23,7 +23,7 @@
                 <asset-packs-pagination
                         :asset-pack-ids="assetPackIds"
                         :asset-packs-type="showPacks"
-                        :show-per-page="8"
+                        :show-per-page="16"
                         :overlay="true"
                         grid="row-4"
                 />

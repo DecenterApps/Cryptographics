@@ -29,7 +29,10 @@ const router = new VueRouter({
     { path: '/asset-pack/:id', component: AssetPackPreview },
     { path: '/profile', component: Profile, props: { userProfile: true } },
     { path: '/user/:userId', component: Profile }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 };
+  }
 });
 
 export default router;

@@ -51,6 +51,9 @@
                         <asset-packs-pagination
                                 :asset-pack-ids="assetPackIds"
                                 :asset-packs-type="showPacks"
+                                :show-per-page="16"
+                                :overlay="true"
+                                grid="row-4"
                         />
                     </div>
                     <div class="gallery" v-if="currentTab === 'gallery'">

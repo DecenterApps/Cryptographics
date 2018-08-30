@@ -3,9 +3,9 @@
         <div v-if="loading" class="loading-section">
             <loader />
         </div>
-        <div v-if="assetPacks !== false && this.loading === false" class="assets-packs" :class="grid">
+        <div v-if="assetPacks !== false && this.loading === false" class="asset-packs" :class="grid">
             <div
-                    class="assets-pack"
+                    class="asset-pack"
                     v-if="assetPack"
                     v-for="(assetPack, index) in assetPacks"
                     :key="index">
@@ -29,13 +29,13 @@
                             <div class="meta">
                                 <div class="top">
                                     <p class="name">{{ assetPack.packName }}</p>
+                                </div>
+                                <div class="bottom">
                                     <user-link
                                             :to="'/user/' + assetPack.creator"
                                             :name="assetPack.username"
                                             :avatar="ipfsNodePath + assetPack.userAvatar"
                                             color="white" />
-                                </div>
-                                <div class="bottom">
                                     <price
                                             :value="assetPack.price"
                                             color="white"
@@ -51,10 +51,10 @@
                 :total="assetPackIds === null ? 0 : assetPackIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
-        <div v-if="assetPackIds.length === 0" class="assets-packs">
+        <div v-if="assetPackIds.length === 0" class="asset-packs">
             <p v-if="assetPacksType === 'created'">You haven't created any asset packs yet.</p>
             <p v-if="assetPacksType === 'bought'">You haven't bought any asset packs yet. Go to
-                <router-link to="/assets-pack-market">market</router-link>
+                <router-link to="/asset-packs-market">market</router-link>
                 .
             </p>
         </div>
@@ -126,22 +126,29 @@
 </script>
 
 <style scoped lang="scss">
-    .assets-packs {
+    .asset-packs {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         margin-top: 30px;
         &.row-2 {
-            .assets-pack {
+            .asset-pack {
                 flex: 0 0 45%;
             }
         }
         &.row-4 {
-            .assets-pack {
+            justify-content: normal;
+            .asset-pack {
                 flex: 0 0 23%;
             }
+            .asset-pack {
+                margin-right: 29px;
+                &:nth-child(4n) {
+                    margin-right: 0;
+                }
+            }
         }
-        .assets-pack {
+        .asset-pack {
             position: relative;
             font-family: 'YoungSerif-Regular', sans-serif;
             font-size: 22px;
@@ -179,11 +186,12 @@
                             color: #fff;
                             font-size: 16px;
                             margin-bottom: 15px;
+                            position: absolute;
                         }
                     }
                     .bottom {
                         display: flex;
-                        justify-content: flex-end;
+                        justify-content: space-between;
                     }
                 }
             }

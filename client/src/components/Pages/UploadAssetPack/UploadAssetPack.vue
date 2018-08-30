@@ -423,6 +423,7 @@
         .submit-button {
             display: flex;
             justify-content: flex-end;
+            max-width: 400px;
         }
 
         .inputs-wrapper {
