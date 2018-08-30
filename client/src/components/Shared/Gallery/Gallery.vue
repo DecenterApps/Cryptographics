@@ -109,9 +109,12 @@
                 }
                 .artwork-title {
                     position: absolute;
-                    right: -35px;
-                    bottom: -3px;
+                    left: calc(100% + 18px);
+                    bottom: -16px;
                     transform: rotate(-90deg);
+                    transform-origin: 0 100%;
+                    width: 100%;
+                    text-align: left;
                     color: #858585;
                     font-size: 14px;
                     font-family: Roboto, sans-serif;
