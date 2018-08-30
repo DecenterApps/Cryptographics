@@ -1,6 +1,7 @@
 /**
  * GETTERS
  */
+export const NETWORK = 'NETWORK';
 export const METAMASK_ADDRESS = 'METAMASK_ADDRESS';
 export const USERNAME = 'USERNAME';
 export const AVATAR = 'AVATAR';
@@ -12,6 +13,7 @@ export const BOUGHT_ASSETS_PACKS_IDS = 'BOUGHT_ASSETS_PACKS_IDS';
 /**
  * ACTIONS
  */
+export const SET_NETWORK = 'SET_NETWORK';
 export const SET_METAMASK_ADDRESS = 'SET_METAMASK_ADDRESS';
 export const SET_USERNAME = 'SET_USERNAME';
 export const SET_NEW_USERNAME = 'SET_NEW_USERNAME';
@@ -26,6 +28,7 @@ export const EDIT_PROFILE = 'EDIT_PROFILE';
 // /**
 //  * MUTATION
 //  */
+export const MUTATE_NETWORK = 'MUTATE_NETWORK';
 export const MUTATE_METAMASK_ADDRESS = 'MUTATE_METAMASK_ADDRESS';
 export const MUTATE_USERNAME = 'MUTATE_USERNAME';
 export const MUTATE_AVATAR = 'MUTATE_AVATAR';

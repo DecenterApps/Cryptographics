@@ -129,14 +129,13 @@
       this.randomHashIds = pickTenRandoms();
       this.timestamp = new Date().getTime();
       this.iterations = 0;
-      this.allAssets = await loadDataForAssets();
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
       const landingPacks = getLandingPacks();
       this.assetPacks = landingPacks.packs;
       this.selectedAssets = landingPacks.assetIds;
+      this.allAssets = await loadDataForAssets();
       this.renderCanvas();
-      this.coverIpfsHashes = await getCoversForAssetPacks(landingPacks.ids);
     }
   };
 </script>

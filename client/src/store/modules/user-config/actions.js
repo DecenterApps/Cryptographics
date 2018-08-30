@@ -16,13 +16,14 @@ import {
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
   SET_NEW_USERNAME,
+  SET_NETWORK, MUTATE_NETWORK,
 } from './types';
 
 import {
   TOGGLE_MODAL
 } from '../modal/types';
 
-import { getAccounts } from 'services/helpers';
+import { getAccounts, getNetwork } from 'services/helpers';
 import * as utils from 'services/utils';
 import {
   getUsername,
@@ -34,8 +35,12 @@ import {
 } from 'services/ethereumService';
 
 export default {
+  [SET_NETWORK]: async ({ commit }) => {
+    const network = await getNetwork();
+    commit(MUTATE_NETWORK, network);
+  },
   [SET_METAMASK_ADDRESS]: async ({ commit }) => {
-    let metamaskAddress = await getAccounts();
+    const metamaskAddress = await getAccounts();
     commit(MUTATE_METAMASK_ADDRESS, metamaskAddress);
   },
   [SET_NEW_USERNAME]: async ({ commit, dispatch, state }, newUsername) => {
@@ -83,10 +88,11 @@ export default {
   },
   [SET_USER_CONFIG]: async ({ dispatch }) => {
     await dispatch(SET_METAMASK_ADDRESS);
-    await dispatch(SET_USERNAME);
-    await dispatch(SET_AVATAR);
-    await dispatch(SET_CREATED_ASSETS_PACKS_IDS);
-    await dispatch(SET_BOUGHT_ASSETS_PACKS_IDS);
+    dispatch(SET_NETWORK);
+    dispatch(SET_USERNAME);
+    dispatch(SET_AVATAR);
+    dispatch(SET_CREATED_ASSETS_PACKS_IDS);
+    dispatch(SET_BOUGHT_ASSETS_PACKS_IDS);
   },
   [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
     setInterval(async function () {

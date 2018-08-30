@@ -5,23 +5,34 @@
         <cg-footer />
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
+        <error-bar v-if="network && deployedNetwork !== network"
+                   :error="`Wrong network, please switch to ${testnets[deployedNetwork]} testnet.`"
+        />
     </main>
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex';
-  import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG } from 'store/user-config/types';
+  import { mapActions, mapState, mapGetters } from 'vuex';
+  import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG, NETWORK } from 'store/user-config/types';
   import { TOGGLE_MODAL } from 'store/modal/types';
 
   import CgHeader from 'shared/CgHeader/CgHeader.vue';
   import CgFooter from 'shared/CgFooter/CgFooter.vue';
+  import ErrorBar from './Shared/ErrorBar/ErrorBar';
+  import clientConfig from 'config/clientConfig.json';
+  import { testnets } from 'config/constants';
 
   export default {
     name: 'App',
     components: {
+      ErrorBar,
       CgHeader,
       CgFooter
     },
+    data: () => ({
+      deployedNetwork: clientConfig.network,
+      testnets,
+    }),
     beforeMount() {
       this[SET_USER_CONFIG]();
     },
@@ -36,6 +47,9 @@
       })
     },
     computed: {
+      ...mapGetters({
+        network: NETWORK,
+      }),
       ...mapState({
         showLoadingModal: ({ modal }) => modal.showLoadingModal,
         showModal: ({ modal }) => modal.showModal,

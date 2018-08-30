@@ -18,5 +18,6 @@ website/i18n/*
 !website/i18n/en.json
 package-lock.json
 client/config/config.json
+client/config/clientConfig.json
 build/*
 .vscode

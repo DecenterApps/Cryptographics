@@ -1,0 +1,4 @@
+{
+    network: '42',
+    provider: 'https://kovan.infura.io'
+}

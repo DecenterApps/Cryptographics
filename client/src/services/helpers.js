@@ -1,5 +1,4 @@
-import { ipfsNodePath } from '../../config/constants';
-
+import clientConfig from 'config/clientConfig.json';
 const Web3 = require('web3');
 
 export const resizeCanvas = (oldCanvas, width, height) => {
@@ -26,9 +25,20 @@ export function checkProvider() {
       console.log('Succesfully using MetaMask');
     }
   } else {
-    window.web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.infura.io'));
+    window.web3 = new Web3(new Web3.providers.HttpProvider(clientConfig.provider));
     console.log('Please install MetaMask');
   }
+}
+
+export function getNetwork() {
+  return new Promise((resolve, reject) => {
+    web3.eth.net.getId((err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
 }
 
 export function getAccounts() {
