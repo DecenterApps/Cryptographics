@@ -30,7 +30,6 @@
 
 <style scoped lang="scss">
     .assets-slider {
-        background-color: #D9D9D9;
         padding: 0 0 50px;
         .container {
             overflow: hidden;

@@ -60,8 +60,7 @@
 
     .negative {
         color: #fff;
-        background-color: #000;
-        border: 1px solid #000;
+        background-color: #F55800;
         &[disabled=disabled], &:disabled {
             padding: 0;
             background: #AEAEAE;

@@ -51,8 +51,8 @@ export default {
 }
 .negative {
     color: #fff;
-    background-color: #000;
-    border: 1px solid #000;
+    background-color: #F55800;
+    border: none;
 }
 .transparent {
     color: #000;

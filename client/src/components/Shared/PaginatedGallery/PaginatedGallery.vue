@@ -35,6 +35,7 @@
                     :per-page="showPerPage"
                     @updatePage="changePage" />
         </div>
+        <button-link button-style="negative see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
@@ -66,6 +67,10 @@
         type: Array,
         default: []
       },
+      seeMore: {
+        type: Boolean,
+        default: false,
+      }
     },
     data() {
       return {
@@ -114,6 +119,9 @@
         }
         .gutter-sizer {
             width: 70px;
+        }
+        .see-more {
+            margin: 50px 0 80px 0;
         }
         .filters {
             padding: 30px 0 70px 0;
