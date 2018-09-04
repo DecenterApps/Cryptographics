@@ -118,7 +118,10 @@
             margin: 0 auto;
         }
         .gutter-sizer {
-            width: 70px;
+            width: 97px;
+            @media (max-width: 1280px) {
+                width: 75px;
+            }
         }
         .see-more {
             margin: 50px 0 80px 0;
@@ -153,12 +156,16 @@
                 }
                 .artwork-title {
                     position: absolute;
-                    right: -35px;
-                    bottom: -3px;
+                    left: 330px;
+                    bottom: 0;
+                    width: 100%;
                     transform: rotate(-90deg);
+                    transform-origin: bottom left;
                     color: #858585;
                     font-size: 14px;
                     font-family: Roboto, sans-serif;
+                    margin: 0;
+                    text-align: left;
                 }
                 &:hover {
                     .overlay {

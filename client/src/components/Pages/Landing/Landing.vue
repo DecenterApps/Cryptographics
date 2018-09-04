@@ -189,6 +189,7 @@
             font-family: YoungSerif-Regular, sans-serif;
             left: 50%;
             margin-left: -622px;
+            user-select: none;
         }
 
         p {
