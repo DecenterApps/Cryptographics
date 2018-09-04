@@ -287,11 +287,13 @@
       download() {
         const canvas = document.getElementById('canvas');
         if (!canvas) return;
-        const link = document.createElement('a');
-        const title = this.title || 'cryptographic';
-        link.setAttribute('download', title + '.jpeg');
-        link.setAttribute('href', canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'));
-        link.click();
+        canvas.toBlob((blob) => {
+          const link = document.createElement('a');
+          const title = this.title || 'cryptographic';
+          link.setAttribute('download', title + '.jpeg');
+          link.setAttribute('href', window.URL.createObjectURL(blob));
+          link.click();
+        }, 'image/jpeg');
       },
       changeTab() {
         this.$emit('tabChange', 'picker');
