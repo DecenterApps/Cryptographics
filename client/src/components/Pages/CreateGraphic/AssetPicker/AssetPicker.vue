@@ -129,7 +129,7 @@
     .container {
         display: flex;
         flex-direction: column;
-        max-width: 760px;
+        max-width: 920px;
         margin-left: 0;
         justify-content: flex-start !important;
 

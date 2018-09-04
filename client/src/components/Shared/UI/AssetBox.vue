@@ -63,7 +63,7 @@
         text-decoration: none;
         cursor: pointer;
         box-sizing: border-box;
-        border: 1px solid #D9D9D9;
+        border: 4px solid #D9D9D9;
 
         &.small {
             height: 55px;

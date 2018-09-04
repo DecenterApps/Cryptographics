@@ -105,6 +105,7 @@
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 120px;
+        justify-content: space-between;
 
         .asset {
             display: flex;
@@ -112,8 +113,7 @@
             justify-content: center;
             height: 206px;
             width: 206px;
-            margin-right: 18px;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
             background-color: #ECECEC;
             padding: 10px;
             box-sizing: border-box;

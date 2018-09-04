@@ -114,7 +114,10 @@
         min-width: auto;
         color: #858585;
         background: none;
-        border: 1px solid transparent;
+        border: 0;
+        &.last {
+            padding-right: 0;
+        }
     }
 </style>
 

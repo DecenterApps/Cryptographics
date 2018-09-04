@@ -137,12 +137,11 @@
             }
         }
         &.row-4 {
-            justify-content: normal;
+            justify-content: space-between;
             .asset-pack {
                 flex: 0 0 23%;
             }
             .asset-pack {
-                margin-right: 28px;
                 &:nth-child(4n) {
                     margin-right: 0;
                 }

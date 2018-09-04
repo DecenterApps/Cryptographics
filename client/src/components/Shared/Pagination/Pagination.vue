@@ -14,7 +14,7 @@
 			{{ page }}
 		</span>
         <cg-button
-                button-style="pagination"
+                button-style="pagination last"
                 v-if="showNext"
                 @click="onControls(newPage += 1)">
             {{ nextText }}

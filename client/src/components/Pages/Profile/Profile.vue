@@ -173,7 +173,7 @@
           if (this.showPacks === 'all') {
             const promises = [await getCreatedAssetPacks(this.userAddress), await getBoughtAssetPacks(this.userAddress)];
             Promise.all(promises)
-              .then((created, bought) => {
+              .then(([created, bought]) => {
                 this.assetPackIds = [...created, ...bought];
               });
           }

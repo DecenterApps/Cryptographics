@@ -113,15 +113,18 @@
     .asset-packs {
         min-width: 768px;
         margin-bottom: 50px;
+        display: flex;
+        flex-wrap: wrap;
 
         @media screen and (max-width: 1120px) {
             min-width: 720px;
         }
         .asset-box {
+            /*flex: 0 0 16%;*/
             margin-right: 20px;
             margin-bottom: 20px;
 
-            &:nth-child(5n) {
+            &:nth-child(6n) {
                 margin-right: 0;
             }
         }
