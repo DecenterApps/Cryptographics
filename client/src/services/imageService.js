@@ -188,28 +188,30 @@ const drawFrame = (context, canvasHeight, canvasWidth, frame) => {
   context.stroke();
 };
 
-const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) => {
-  let { bottom, left } = frame;
+const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) =>
+  new Promise((resolve) => {
+    let { bottom, left } = frame;
 
-  context.strokeStyle = '#FFF';
-  context.beginPath();
-  context.moveTo(0, canvasHeight - bottom / 2);
-  context.lineWidth = bottom;
-  context.lineTo(canvasWidth, canvasHeight - bottom / 2);
-  context.stroke();
+    context.strokeStyle = '#FFF';
+    context.beginPath();
+    context.moveTo(0, canvasHeight - bottom / 2);
+    context.lineWidth = bottom;
+    context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+    context.stroke();
 
-  let image = new Image();
-  image.crossOrigin = 'Anonymous';
-  image.src = require(`assets/cg-logo.png`);
+    let image = new Image();
+    image.crossOrigin = 'Anonymous';
+    image.src = require(`assets/cg-logo.png`);
 
-  image.onload = () => {
-    const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
-    const leftAlign = left;
+    image.onload = () => {
+      const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
+      const leftAlign = left;
 
-    context.drawImage(image, leftAlign, verticalAlign, image.width, image.height);
-  };
-  image.onerror = (err) => console.error(err);
-};
+      context.drawImage(image, leftAlign, verticalAlign, image.width, image.height);
+      resolve();
+    };
+    image.onerror = (err) => console.error(err);
+  });
 
 const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame, index, delayTime) => {
   let x = asset.x_coordinate % canvasWidth;
@@ -366,7 +368,7 @@ export const makeImage = (objs, c, width, height, frame = {
           if (!loadedImages[i].image.failed) {
             await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
 
-            drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+            await drawBottomFrame(context, canvasHeight, canvasWidth, frame);
 
             if (frame.shouldDrawFrame) {
               // DRAW FRAME

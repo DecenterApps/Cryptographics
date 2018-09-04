@@ -31,6 +31,7 @@
 
 <script>
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { CANVAS_DRAWING } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
   import GraphicPreview from './GraphicPreview.vue';
   import GraphicDetails from './GraphicDetails.vue';
@@ -64,7 +65,8 @@
         ratio: '2:3',
         frame: false,
         noBottomFrame: false,
-      }
+      },
+      canvasDataLoaded: false,
     }),
     components: {
       ShareIcons,
@@ -76,11 +78,16 @@
     computed: {
       ...mapGetters({
         userAddress: METAMASK_ADDRESS,
+        isCanvasDrawing: CANVAS_DRAWING,
       })
     },
     methods: {
-      download() {
+      async download() {
         const canvas = document.getElementById('canvas');
+        while (!(this.canvasDataLoaded && !this.isCanvasDrawing)) {
+          await new Promise((res) => setTimeout(res, 200));
+          // Display notification if this is taking too long?
+        }
         if (!canvas) return;
         canvas.toBlob((blob) => {
             const link = document.createElement('a');
@@ -107,6 +114,7 @@
         assets: assetsForCanvas,
         delay: 0,
       };
+      this.canvasDataLoaded = true;
     }
   };
 </script>
