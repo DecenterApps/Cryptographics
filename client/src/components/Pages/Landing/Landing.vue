@@ -40,10 +40,45 @@
             <h1 class="section-title">Create</h1>
             <div class="title-section">
                 <h1 class="large-title">Asset Pack</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+                <p class="wider">All visual artists are welcome to create and upload their asset packs.</p>
+            </div>
+            <div class="steps asset-packs">
+                <div class="step">
+                    <div class="image-wrapper">
+                        <img src="./assets/asset-pack-1.png" alt="">
+                    </div>
+                    <p class="small-title">Assets</p>
+                    <p>created by Artists</p>
+                </div>
+                <ico-arrow-long></ico-arrow-long>
+                <div class="step">
+                    <div class="image-wrapper">
+                        <img src="./assets/asset-pack-2.png" alt="">
+                    </div>
+                    <p class="small-title">Asset Pack</p>
+                    <p>All assets in one <br> Asset Pack</p>
+                </div>
+                <ico-arrow-long></ico-arrow-long>
+                <div class="step">
+                    <div class="image-wrapper">
+                        <img src="./assets/asset-pack-3.png" alt="">
+                    </div>
+                    <p class="small-title">Cryptographic</p>
+                    <p>created with users <br> Asset packs</p>
+                </div>
+            </div>
+            <div class="steps-bottom-section">
+                <svg width="322" height="101" viewBox="0 0 322 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M322 100.5H1V0.5H26" stroke="black"/>
+                </svg>
+
+                <p>Artists take <b>90%</b> of Cryptographic price</p>
+                <svg width="338" height="102" viewBox="0 0 338 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M314 1H337V101.5H0" stroke="black"/>
+                </svg>
+
             </div>
             <div class="container">
-                <p class="wider">All visual artists are welcome to create and upload their asset packs.</p>
                 <br>
                 <br>
                 <p class="wider">Each asset pack can contain up to 50 different graphic elements, one of which always
@@ -63,10 +98,12 @@
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
   import { getImagesMetadata, getImageCount } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
+  import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 
   export default {
     name: 'Landing',
     components: {
+      IcoArrowLong,
       PaginatedGallery,
       AssetCarousel,
       GraphicPlayground,
@@ -127,38 +164,64 @@
         padding-top: 70px;
         padding-bottom: 200px;
         text-align: center;
+    }
 
-        .steps {
-            display: flex;
-            justify-content: center;
+    .steps {
+        display: flex;
+        justify-content: center;
 
-            p {
-                font-size: 15px;
-                line-height: 19px;
-                color: #000;
-                margin-top: 15px;
+        p {
+            font-size: 15px;
+            line-height: 19px;
+            color: #000;
+            margin-top: 15px;
+        }
+
+        .step {
+            .image-wrapper {
+                display: flex;
+                align-items: center;
+                height: 160px;
             }
+        }
 
-            .step {
-                .image-wrapper {
-                    display: flex;
-                    align-items: center;
-                    height: 160px;
-                }
+        &.asset-packs {
+            .image-wrapper {
+                height: 204px;
             }
 
             svg {
-                margin: 60px 50px;
+                position: relative;
+                top: 170px;
             }
+        }
 
-            .step::after {
-                display: block;
-                content: ' ';
-                background: url("./assets/arrow.svg");
-                background-size: 18px 34px;
-                height: 34px;
-                width: 18px;
-            }
+        svg {
+            margin: 60px 50px;
+        }
+
+        .step::after {
+            display: block;
+            content: ' ';
+            background: url("./assets/arrow.svg");
+            background-size: 18px 34px;
+            height: 34px;
+            width: 18px;
+        }
+    }
+
+    .steps-bottom-section {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        position: relative;
+        top: -110px;
+
+        p {
+            margin: 0 22px !important;
+        }
+        svg {
+            margin-bottom: 11px;
         }
     }
 
@@ -203,6 +266,15 @@
 
             &.wider {
                 max-width: 590px;
+            }
+
+            &.small-title {
+                color: #000;
+                font-weight: bold;
+                font-family: YoungSerif-Regular;
+                font-size: 21px;
+                margin-top: 25px;
+                margin-bottom: 10px;
             }
         }
 

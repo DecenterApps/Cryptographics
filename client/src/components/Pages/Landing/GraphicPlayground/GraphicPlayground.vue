@@ -156,8 +156,8 @@
         bottom: 0;
         top: 0;
         margin: auto auto;
-        height: 295px;
-        width: 210px;
+        height: 351px;
+        width: 250px;
         canvas {
             height: 100%;
             width: 100%;

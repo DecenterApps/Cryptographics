@@ -1,29 +1,31 @@
 <template>
-    <header class="header">
-        <div class="header-container container">
-            <div class="logo">
-                <router-link to="/">
-                    <logo /> <span>Cryptographics</span>
-                </router-link>
-            </div>
-            <div class="links-section">
-                <div class="links">
-                    <router-link to="/gallery" class-active="active">Gallery</router-link>
-                    <router-link to="/asset-packs" class-active="active">Asset Packs</router-link>
-                    <router-link to="/about" class-active="active">About</router-link>
-                </div>
-                <div class="profile">
-                    <router-link class="profile-link" to="/profile">
-                        {{ username }}
-                        <img
-                                class="avatar"
-                                :src="ipfsNodePath + avatar">
+    <div class="header-wrapper">
+        <header class="header">
+            <div class="header-container container">
+                <div class="logo">
+                    <router-link to="/">
+                        <logo /> <span>Cryptographics</span>
                     </router-link>
-                    <button-link to="/create-graphic" button-style="negative">Compose</button-link>
+                </div>
+                <div class="links-section">
+                    <div class="links">
+                        <router-link to="/gallery" class-active="active">Gallery</router-link>
+                        <router-link to="/asset-packs" class-active="active">Asset Packs</router-link>
+                        <router-link to="/about" class-active="active">About</router-link>
+                    </div>
+                    <div class="profile">
+                        <router-link class="profile-link" to="/profile">
+                            {{ username }}
+                            <img
+                                    class="avatar"
+                                    :src="ipfsNodePath + avatar">
+                        </router-link>
+                        <button-link to="/create-graphic" button-style="negative">Compose</button-link>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
 </template>
 
 <script>
@@ -53,7 +55,16 @@
 </script>
 
 <style scoped lang="scss">
+
+    .header-wrapper {
+        height: 70px;
+    }
     .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 70px;
+        z-index: 4;
         background-color: #000;
         font-family: Roboto, sans-serif;
         font-size: 12px;
