@@ -26,11 +26,12 @@
         display: inline-block;
         position: relative;
         width: 32px;
-        height: 32px;
+        height: 28px;
+        vertical-align: top;
     }
     .button-loader div {
         position: absolute;
-        top: 14px;
+        top: 12px;
         width: 4px;
         height: 4px;
         border-radius: 50%;

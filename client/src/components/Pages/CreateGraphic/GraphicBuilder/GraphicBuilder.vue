@@ -17,6 +17,7 @@
                             :small="true"
                             color="#eee"
                             action="close"
+                            @click="changeTab"
                     />
                     <div @click="changeTab" class="add-more">
                         +
@@ -27,7 +28,7 @@
             <div class="controls">
                 <div class="top-controls">
                     <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio">Use square format</cg-checkbox>
+                    <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
                             :disabled="isCanvasDrawing"
                             @click="renderCanvas"
@@ -127,7 +128,7 @@
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
-  import { CANVAS_DRAWING } from 'store/canvas/types';
+  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -160,10 +161,10 @@
         userAddress: METAMASK_ADDRESS,
         username: USERNAME,
         isCanvasDrawing: CANVAS_DRAWING,
-        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
+        selectedAssetPacks: SELECTED_ASSET_PACKS,
       })
     },
-    props: ['selectedAssetPacks'],
     watch: {
       selectedAssetPacks: async function () {
         this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
@@ -265,7 +266,7 @@
 
         // Don't shuffle if user came from home page
         console.log(window.sessionStorage.length);
-        if (window.sessionStorage.length <= 0) {
+        if (window.sessionStorage.length <= 0) { // TODO remove because selectedAssetPacks is in store now
           selectedAssets = shuffleArray(selectedAssets);
         }
         selectedAssets = selectedAssets.slice(0, 30);
@@ -298,9 +299,8 @@
       changeTab() {
         this.$emit('tabChange', 'picker');
       },
-      toggleRatio() {
-        if (this.canvasData.ratio === '1:1') return this.canvasData.ratio = '2:3';
-        this.canvasData.ratio = '1:1';
+      toggleRatio(square) {
+        this.canvasData.ratio = square ? '1:1' : '2:3';
       },
       displayPrice() {
         if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
@@ -314,7 +314,7 @@
       if (window.sessionStorage.length > 0) {
         const landingPageAssets = JSON.parse(sessionStorage.getItem('potentialAssets'));
         this.selectedAssets = [...landingPageAssets];
-        this.canvasData.ratio = '1:1';
+        // this.canvasData.ratio = '1:1';2
         this.randomHashIds = JSON.parse(sessionStorage.getItem('randomHashIds'));
         this.timestamp = sessionStorage.getItem('timestamp');
         this.iterations = parseInt(sessionStorage.getItem('iterations'), 10);

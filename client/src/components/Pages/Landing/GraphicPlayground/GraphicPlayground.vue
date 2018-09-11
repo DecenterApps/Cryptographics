@@ -65,6 +65,8 @@
   import * as utils from 'services/utils';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
   import { shuffleArray } from 'services/helpers';
+  import { SELECTED_ASSET_PACKS } from 'store/canvas/types';
+  import { mapGetters } from 'vuex';
 
   export default {
     name: 'GraphicPlayground',
@@ -79,7 +81,6 @@
       timestamp: new Date().getTime(),
       randomHashIds: pickTenRandoms(),
       allAssets: [],
-      assetPacks: [],
       selectedAssets: [],
       potentialAssets: [],
       canvasData: {
@@ -89,6 +90,11 @@
       },
       coverIpfsHashes: [],
     }),
+    computed: {
+      ...mapGetters({
+        assetPacks: SELECTED_ASSET_PACKS,
+      })
+    },
     methods: {
       async renderCanvas() {
         this.iterations++;
@@ -140,8 +146,10 @@
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
       const landingPacks = getLandingPacks();
-      this.assetPacks = landingPacks.packs;
-      this.selectedAssets = landingPacks.assetIds;
+      // this.assetPacks = landingPacks.packs;
+      this.selectedAssets = this.assetPacks.map(assetPack =>
+        assetPack.assets.map(item => parseInt(item.id)))
+        .reduce((a, b) => a.concat(b), []);
       this.allAssets = await loadDataForAssets();
       this.renderCanvas();
     }

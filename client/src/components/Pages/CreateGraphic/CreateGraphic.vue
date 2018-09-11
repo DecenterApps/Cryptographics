@@ -2,21 +2,18 @@
     <layout layout-style="pulled-left" layout-content="no-container">
         <asset-picker
                 v-if="activeTab === 'picker'"
-                v-on:tabChange="changeTab"
-                v-on:pickAssetPack="toggleAssetPack"
-                :selectedAssetPacks="selectedAssetPacks" />
+                v-on:tabChange="changeTab" />
         <graphic-builder
                 v-if="activeTab === 'create'"
-                v-on:tabChange="changeTab"
-                :selectedAssetPacks="selectedAssetPacks" />
+                v-on:tabChange="changeTab" />
     </layout>
 </template>
 
 <script>
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
-  import { getLandingPacks } from 'services/ethereumService';
-  import { preloadAssets } from 'services/helpers';
+  import { SELECTED_ASSET_PACKS } from 'store/canvas/types';
+  import { mapGetters } from 'vuex';
 
   export default {
     name: 'CreateGraphic',
@@ -26,30 +23,27 @@
     },
     data: () => ({
       activeTab: 'picker',
-      selectedAssetPacks: [],
     }),
+    computed: {
+      ...mapGetters({
+        selectedAssetPacks: SELECTED_ASSET_PACKS,
+      })
+    },
     methods: {
       changeTab(tab) {
         this.activeTab = tab;
       },
-      toggleAssetPack(assetPack) {
-        const index = this.selectedAssetPacks.findIndex(item => item.id === assetPack.id);
-        if (index >= 0) {
-          return this.selectedAssetPacks = [
-            ...this.selectedAssetPacks.slice(0, index),
-            ...this.selectedAssetPacks.slice(index + 1),
-          ];
-        }
-        preloadAssets(assetPack.assets);
-        this.selectedAssetPacks.push(assetPack);
-      }
     },
     created() {
-      if (window.sessionStorage.length > 0) {
-        const landingPacks = getLandingPacks();
+      if (this.selectedAssetPacks.length > 0)
         this.activeTab = 'create';
-        this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
-      }
+
+      // TODO delete sessionStorage check now because selectedAssetPacks is in store?
+      // if (window.sessionStorage.length > 0) {
+      //   this.activeTab = 'create';
+      //   const landingPacks = getLandingPacks();
+      //   this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
+      // }
     }
   };
 </script>

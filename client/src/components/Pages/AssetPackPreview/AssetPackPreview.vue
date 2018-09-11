@@ -9,6 +9,7 @@
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
+                    <cg-button @click="composeWithAP" buttonStyle="transparent">Compose with this Asset Pack</cg-button>
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
             </div>
@@ -24,7 +25,8 @@
 <script>
   import { buyAssetPack, getAssetPackData, checkAssetPermission } from 'services/ethereumService';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
-  import { mapGetters } from 'vuex';
+  import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
+  import { mapGetters, mapActions } from 'vuex';
   import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
 
   export default {
@@ -47,6 +49,13 @@
       })
     },
     methods: {
+      ...mapActions({
+        selectSingleAssetPack: SELECT_SINGLE_ASSET_PACK,
+      }),
+      composeWithAP () {
+        this.selectSingleAssetPack(this.assetPack);
+        this.$router.push('/create-graphic')
+      },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
         // HANDLE result from result.error
@@ -95,8 +104,7 @@
         }
 
         button {
-
-            width: 140px;
+            margin-left: 20px;
         }
 
     }

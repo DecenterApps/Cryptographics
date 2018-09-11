@@ -44,7 +44,7 @@ const deleteFolderRecursive = (path) => {
 
 const getAssetPackData = async (assetPackId) => {
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
-  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[1]);
+  const packCoverIpfs = utils.getIpfsHashFromBytes32(response[0]);
   const creator = response[1];
   const price = response[2];
   let ids = response[3];

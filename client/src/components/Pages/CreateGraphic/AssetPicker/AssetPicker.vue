@@ -33,7 +33,7 @@
             <asset-picker-pagination
                     assets-pack-type="all"
                     grid="row-5"
-                    :show-per-page="10"
+                    :show-per-page="12"
                     :overlay="true"
                     :isSelected="isSelected.bind(this)"
                     :toggleAsset="toggleAsset.bind(this)"
@@ -57,7 +57,11 @@
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS
   } from 'store/user-config/types';
-  import { mapGetters } from 'vuex';
+  import {
+    TOGGLE_ASSET_PACK,
+    SELECTED_ASSET_PACKS,
+  } from 'store/canvas/types';
+  import { mapGetters, mapActions } from 'vuex';
   import {
     getNumberOfAssetPacks,
     getAssetPacksWithAssetData,
@@ -75,19 +79,19 @@
     computed: {
       ...mapGetters({
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
-        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
+        selectedAssetPacks: SELECTED_ASSET_PACKS,
       })
     },
-    props: ['selectedAssetPacks'],
     methods: {
+      ...mapActions({
+        toggleAsset: TOGGLE_ASSET_PACK,
+      }),
       changeTab() {
         this.$emit('tabChange', 'create');
       },
       isSelected(asset) {
         return this.selectedAssetPacks.findIndex(item => parseInt(item.id) === parseInt(asset.id)) >= 0;
-      },
-      toggleAsset(asset) {
-        this.$emit('pickAssetPack', asset);
       },
       async toggleAssetPacks() {
         this.showYourPacks = !this.showYourPacks;
