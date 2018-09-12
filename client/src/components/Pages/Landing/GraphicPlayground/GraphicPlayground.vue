@@ -78,7 +78,7 @@
       randomSeed: 0,
       iterations: 0,
       timestamp: new Date().getTime(),
-      randomHashIds: pickTenRandoms(),
+      randomHashIds: [],
       allAssets: [],
       selectedAssets: [],
       potentialAssets: [],
@@ -138,14 +138,13 @@
         }, 'image/jpeg');
       },
     },
-    async beforeCreate() {
+    async created() {
       this.randomHashIds = pickTenRandoms();
+      console.log('RANDOM HASH IDS', this.randomHashIds);
       this.timestamp = new Date().getTime();
       this.iterations = 0;
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
-      const landingPacks = getLandingPacks();
-      // this.assetPacks = landingPacks.packs;
       this.selectedAssets = this.assetPacks.map(assetPack =>
         assetPack.assets.map(item => parseInt(item.id)))
         .reduce((a, b) => a.concat(b), []);
