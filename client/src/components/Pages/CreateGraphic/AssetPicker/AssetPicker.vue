@@ -3,12 +3,7 @@
         <div class="header">
             <h2 class="large-title">Select Asset Pack</h2>
             <div>
-                <button-icon icon-type="zoom" color="#000" size="15px" />
-                <!--<cg-button-->
-                <!--@click="changeTab"-->
-                <!--button-style="transparent">-->
-                <!--Back-->
-                <!--</cg-button>-->
+                <!--<button-icon icon-type="zoom" color="#000" size="15px" />-->
             </div>
         </div>
         <separator />
@@ -25,9 +20,6 @@
                     Your asset packs
                 </cg-button>
             </div>
-            <div class="price-section">
-                <h1 class="small-title">Total price - {{ totalPrice() }} Ξ</h1>
-            </div>
         </div>
         <div class="content" v-if="loading === false">
             <asset-picker-pagination
@@ -39,6 +31,7 @@
                     :toggleAsset="toggleAsset.bind(this)"
                     :changeTab="changeTab.bind(this)"
                     :assetPackIds="assetPacks"
+                    :totalPrice="totalPrice"
             />
         </div>
         <div class="content" v-if="loading">
@@ -81,7 +74,14 @@
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
         boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
         selectedAssetPacks: SELECTED_ASSET_PACKS,
-      })
+      }),
+      totalPrice() {
+        const filteredPacks = this.selectedAssetPacks.filter(item => {
+          return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
+            this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
+        });
+        return filteredPacks.reduce((acc, item) => acc + parseFloat(item.price), 0);
+      }
     },
     methods: {
       ...mapActions({
@@ -107,13 +107,6 @@
         }
         this.loading = false;
       },
-      totalPrice() {
-        const filteredPacks = this.selectedAssetPacks.filter(item => {
-          return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
-            this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
-        });
-        return filteredPacks.reduce((acc, item) => acc + parseFloat(item.price), 0);
-      }
     },
 
     async created() {

@@ -30,9 +30,9 @@
                     <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
                     <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
-                            :disabled="isCanvasDrawing"
+                            :loading="isCanvasDrawing"
                             @click="renderCanvas"
-                            button-style="transparent">
+                            button-style="secondary">
                         Recompose
                     </cg-button>
                 </div>
@@ -41,7 +41,7 @@
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
                     <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
                     <cg-button
-                            :disabled="isCanvasDrawing"
+                            :loading="isCanvasDrawing"
                             @click="buyScreen = true"
                     >
                         Next
@@ -100,7 +100,7 @@
                     <div class="separate-controls">
                         <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
                         <cg-button
-                                :disabled="isCanvasDrawing"
+                                :loading="isCanvasDrawing"
                                 @click="buyImage"
                         >
                             Save Cryptographic

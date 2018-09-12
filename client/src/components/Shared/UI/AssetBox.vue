@@ -1,6 +1,6 @@
 <template>
     <div class="asset-box"
-         :class="[selected ? 'selected' : '', small ? 'small' : '']"
+         :class="[selected ? 'selected' : '', small ? 'small' : '', hover ? 'has-hover' : '']"
          :style="{backgroundColor: color}"
          v-on="$listeners"
     >
@@ -38,6 +38,10 @@
         default: false
       },
       small: {
+        type: Boolean,
+        default: false,
+      },
+      hover: {
         type: Boolean,
         default: false,
       },
@@ -115,7 +119,7 @@
             border-color: #000;
         }
 
-        &:hover {
+        &.has-hover:hover {
             .overlay {
                 opacity: 1;
             }

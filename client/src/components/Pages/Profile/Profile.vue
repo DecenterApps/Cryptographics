@@ -1,8 +1,5 @@
 <template>
-    <layout
-            layout-style="full-width"
-            layout-content="no-container"
-            :slider-gallery="true">
+    <layout layout-style="full-width" layout-content="no-container">
         <div class="container">
             <div class="header">
                 <img v-if="avatar.length > 0" class="avatar" :src="ipfsNodePath + avatar">
@@ -11,7 +8,7 @@
                 </div>
                 <div class="right button-group">
                     <cg-button
-                            button-style="transparent"
+                            button-style="secondary"
                             v-if="userAddress"
                             @click="openModal('editProfile')">
                         Edit Profile
@@ -34,7 +31,13 @@
                             </button>
                         </div>
                     </div>
+
                     <separator />
+
+                    <div class="gallery" v-if="currentTab === 'gallery'">
+                        <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
+                    </div>
+
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
                             <cg-button
@@ -60,9 +63,6 @@
                                 :overlay="true"
                                 grid="row-4"
                         />
-                    </div>
-                    <div class="gallery" v-if="currentTab === 'gallery'">
-                        <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
                     </div>
                 </template>
                 <template v-else>
@@ -145,12 +145,27 @@
       },
       showPacks: async function (val) {
         this.getAssetPacks();
+      },
+      '$route.path': function (id) {
+        this.onCreated()
       }
     },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL
       }),
+      async onCreated() {
+        if (this.userProfile) {
+          this.userAddress = this.currentUserAddress;
+          this.username = this.currentUserUsername;
+          this.avatar = this.currentUserAvatar;
+        } else {
+          this.userAddress = this.$route.params.userId;
+          this.username = await getUsername(this.userAddress);
+          this.avatar = utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
+        }
+        this.generateData();
+      },
       async generateData() {
         await this.getImages();
         await this.getAssetPacks();
@@ -191,20 +206,9 @@
         this.currentTab = type;
       }
     },
-
-    async created() {
-      if (this.userProfile) {
-        this.userAddress = this.currentUserAddress;
-        this.username = this.currentUserUsername;
-        this.avatar = this.currentUserAvatar;
-      } else {
-        this.userAddress = this.$route.params.userId;
-        this.username = await getUsername(this.userAddress);
-        this.avatar = utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
-      }
-      this.generateData();
-    }
-
+    created() {
+      this.onCreated()
+    },
   };
 
 </script>
@@ -253,6 +257,8 @@
                 position: absolute;
                 top: -80px;
                 left: 0;
+                background: white;
+                border-radius: 4px;
             }
             .left {
                 .name {
@@ -262,6 +268,7 @@
         }
         .assets, .gallery {
             padding-bottom: 30px;
+            min-height: 650px;
             .button-group {
                 .button {
                     min-width: auto;

@@ -170,18 +170,16 @@
         display: flex;
         justify-content: center;
 
-        p {
-            font-size: 15px;
-            line-height: 19px;
-            color: #000;
-            margin-top: 15px;
-        }
-
         .step {
             .image-wrapper {
                 display: flex;
                 align-items: center;
                 height: 160px;
+            }
+            p {
+                font-size: 15px;
+                line-height: 19px;
+                margin-top: 15px;
             }
         }
 
@@ -215,10 +213,11 @@
         align-items: flex-end;
         justify-content: center;
         position: relative;
-        top: -110px;
+        top: -92px;
 
         p {
             margin: 0 22px !important;
+            color: black !important;
         }
         svg {
             margin-bottom: 11px;
@@ -265,7 +264,7 @@
             margin: 0 auto;
 
             &.wider {
-                max-width: 590px;
+                max-width: 610px;
             }
 
             &.small-title {

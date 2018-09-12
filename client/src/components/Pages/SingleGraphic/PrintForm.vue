@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="graphic-controls">
-                <cg-button button-style="transparent" @click="$emit('closePrintForm')">Back</cg-button>
+                <cg-button button-style="secondary" @click="$emit('closePrintForm')">Back</cg-button>
                 <cg-button type="submit">Order</cg-button>
                 <price
                         value="0.05" />

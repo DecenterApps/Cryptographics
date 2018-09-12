@@ -4,7 +4,7 @@
         <div class="content">
             <loader />
             <div class="small-title">{{ content }}</div>
-            <cg-button button-style="transparent">Back to gallery</cg-button>
+            <cg-button button-style="secondary">Back to gallery</cg-button>
         </div>
     </div>
 </template>

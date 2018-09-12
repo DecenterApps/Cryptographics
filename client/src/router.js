@@ -11,6 +11,7 @@ import Profile from 'pages/Profile/Profile.vue';
 import CreateGraphic from 'pages/CreateGraphic/CreateGraphic.vue';
 import UploadAssetPack from 'pages/UploadAssetPack/UploadAssetPack.vue';
 import AssetPackPreview from 'pages/AssetPackPreview/AssetPackPreview.vue';
+import UIShowcase from 'shared/UI/UIShowcase.vue';
 
 Vue.use(VueRouter);
 
@@ -28,7 +29,8 @@ const router = new VueRouter({
     { path: '/asset-packs', component: AssetPacks },
     { path: '/asset-pack/:id', component: AssetPackPreview },
     { path: '/profile', component: Profile, props: { userProfile: true } },
-    { path: '/user/:userId', component: Profile }
+    { path: '/user/:userId', component: Profile, props: { userProfile: false } },
+    { path: '/ui-test', component: UIShowcase },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };

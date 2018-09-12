@@ -1,6 +1,5 @@
 <template>
     <div>
-        <slider-gallery/>
         <div class="container">
             <p class="large-title">
                 About Cryptographics</p>

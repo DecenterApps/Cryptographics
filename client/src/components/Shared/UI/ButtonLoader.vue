@@ -1,5 +1,6 @@
 <template>
     <div>
+        <span class="text-for-width"><slot /></span>
         <div class="button-loader" :class="buttonStyle">
             <div></div>
             <div></div>
@@ -15,7 +16,7 @@
     props: {
       buttonStyle: {
         type: String,
-        default: 'negative'
+        default: 'primary'
       },
     }
   };
@@ -23,23 +24,30 @@
 
 <style scoped lang="scss">
     .button-loader {
-        display: inline-block;
-        position: relative;
-        width: 32px;
-        height: 28px;
-        vertical-align: top;
+        position: absolute;
+        width: 28px;
+        height: 32px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        top: 0;
     }
     .button-loader div {
         position: absolute;
-        top: 12px;
+        top: 14px;
         width: 4px;
         height: 4px;
         border-radius: 50%;
-        background: #d9d9d9;
+        background: white;
         animation-timing-function: cubic-bezier(0, 1, 1, 0);
     }
-    .button-loader.transparent div {
+    .button-loader.secondary div,
+    .button-loader.tertiary div {
         background: black;
+    }
+    .button-loader.inverted.secondary div,
+    .button-loader.inverted.tertiary div {
+        background: white;
     }
     .button-loader div:nth-child(1) {
         left: 3px;
@@ -80,6 +88,10 @@
         100% {
             transform: translate(9px, 0);
         }
+    }
+    .text-for-width {
+        opacity: 0;
+        pointer-events: none;
     }
 
 </style>

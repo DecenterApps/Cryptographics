@@ -20,7 +20,14 @@ time, mark, audio, video {
     padding: 0;
     border: 0;
     font-size: 100%;
-    font: inherit;
+    font-style: inherit;
+    font-variant-ligatures: inherit;
+    font-variant-caps: inherit;
+    font-variant-numeric: inherit;
+    font-variant-east-asian: inherit;
+    font-stretch: inherit;
+    line-height: inherit;
+    font-family: inherit;
     vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */

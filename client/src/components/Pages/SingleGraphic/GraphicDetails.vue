@@ -9,6 +9,7 @@
                             :key="index"
                             :assetPack="assetPack"
                             :small="true"
+                            :hover="true"
                             color="#eee"
                             action="zoom"
                     ></asset-box>
@@ -32,14 +33,12 @@
                     :class="{ sell: sellGraphic }">
                 <template v-if="!sellGraphic">
                     <cg-button @click="sellGraphic = !sellGraphic">List for sale</cg-button>
-                    <cg-button button-style="transparent" @click="$emit('showPrintForm')">Print</cg-button>
+                    <cg-button button-style="secondary" @click="$emit('showPrintForm')">Print</cg-button>
                 </template>
                 <template v-else>
                     <cg-input v-model="sellPrice" type="text" placeholder="Price in ether" />
                     <div class="button-group">
-                        <cg-button
-                                button-style="transparent"
-                                @click="sellGraphic = !sellGraphic">
+                        <cg-button button-style="secondary" @click="sellGraphic = !sellGraphic">
                             Cancel
                         </cg-button>
                         <cg-button @click="submitImageForSale">List for sale</cg-button>
@@ -51,7 +50,7 @@
                     class="graphic-controls"
             >
                 <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
-                <cg-button button-style="transparent" @click="$emit('showPrintForm')">Order print</cg-button>
+                <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
                 <price
                         :value="image.price" />
             </div>

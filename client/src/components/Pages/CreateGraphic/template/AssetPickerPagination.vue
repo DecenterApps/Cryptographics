@@ -8,20 +8,30 @@
                     :assetPack="assetPack"
                     :selected="isSelected(assetPack)"
                     @click="toggleAsset(assetPack)"
-                    v-for="(assetPack, index) in assetPacks" :key="index" />
-            <keep-alive>
-
-            </keep-alive>
+                    v-for="(assetPack, index) in assetPacks" :key="index"
+                    @mouseenter="setHover(assetPack)"
+                    @mouseleave="setHover(false)"
+            />
         </div>
+
+        <div class="meta-info">
+            <div class="hover-info">
+                <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} - Ξ {{this.hovered.price}}</h1>
+            </div>
+            <div class="price-section">
+                <h1 class="small-title">Total price - {{ totalPrice }} Ξ</h1>
+            </div>
+        </div>
+
         <div class="bottom-controls">
             <pagination
                     :total="assetPackIds === null ? 0 : assetPackIds.length"
                     :per-page="showPerPage"
                     pagination-style="left"
                     @updatePage="changePage" />
-            <cg-button
-                    @click="changeTab"
-                    button-style="negative">
+
+
+            <cg-button @click="changeTab" button-style="primary">
                 Done
             </cg-button>
         </div>
@@ -71,12 +81,17 @@
       changeTab: {
         type: Function,
         default: () => {},
+      },
+      totalPrice: {
+        type: Number, // TODO Change to String when float precision is fixed
+        default: 0,
       }
     },
     data() {
       return {
         ipfsNodePath,
         loading: false,
+        hovered: false,
       };
     },
     computed: {
@@ -104,6 +119,10 @@
         const selectedPacks = paginateArray(this.assetPackIds, currentPage, this.showPerPage);
         this.assetPacks = await getSelectedAssetPacksWithAssetData(selectedPacks);
         this.loading = false;
+      },
+      setHover(assetPack) {
+        console.log(assetPack);
+        this.$set(this, 'hovered', assetPack);
       }
     }
   };
@@ -112,7 +131,6 @@
 <style scoped lang="scss">
     .asset-packs {
         min-width: 768px;
-        margin-bottom: 50px;
         display: flex;
         flex-wrap: wrap;
 
@@ -130,14 +148,16 @@
         }
     }
 
+    .meta-info,
     .bottom-controls {
         display: flex;
         justify-content: space-between;
+        margin: 20px 0;
     }
 
     .loading-section {
         width: 100%;
-        height: 470px;
+        height: 220px;
         display: flex;
         align-items: center;
         justify-content: center;

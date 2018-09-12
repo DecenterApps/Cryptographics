@@ -1,7 +1,5 @@
 <template>
     <div class="gallery-page">
-        <slider-gallery />
-
         <div class="container">
             <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
         </div>

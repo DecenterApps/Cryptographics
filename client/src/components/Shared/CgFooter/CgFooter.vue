@@ -6,9 +6,9 @@
                 <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
             </router-link>
             <div class="links-section">
-                <router-link to="/gallery" class-active="active">Gallery</router-link>
-                <router-link to="/asset-packs" class-active="active">Asset Packs</router-link>
-                <router-link to="/about" class-active="active">About</router-link>
+                <router-link to="/gallery" active-class="active">Gallery</router-link>
+                <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
+                <router-link to="/about" active-class="active">About</router-link>
             </div>
             <div class="social">
                 <ico-social
@@ -93,6 +93,9 @@ import IcoSocial from './IcoSocial.vue';
                 a {
                     font-size: 12px;
                     margin-right: 25px;
+                    &:hover {
+                        opacity: .8;
+                    }
                     &:last-of-type {
                         margin-right: 0;
                     }

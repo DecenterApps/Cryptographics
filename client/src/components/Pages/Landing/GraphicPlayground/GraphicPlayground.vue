@@ -12,11 +12,10 @@
                 <p>Try creating another one.</p>
             </div>
             <div class="button-group">
-                <cg-button
-                        @click="renderCanvas">
+                <cg-button button-style="primary" @click="renderCanvas">
                     Recompose
                 </cg-button>
-                <cg-button button-style="tab-active" icon-type="download" @click="openInEditor">
+                <cg-button button-style="tertiary" icon-type="download" @click="openInEditor">
                     continue in editor
                 </cg-button>
             </div>
@@ -26,7 +25,7 @@
         <!--<div class="create-art">-->
         <!--<div class="canvas-holder">-->
         <!--<overlay>-->
-        <!--<cg-button button-style="transparent-inverted" icon-type="download" @click="openInEditor">-->
+        <!--<cg-button button-style="tertiary" icon-type="download" @click="openInEditor">-->
         <!--Open in editor-->
         <!--</cg-button>-->
         <!--</overlay>-->
@@ -190,6 +189,8 @@
             flex: 1;
             justify-content: center;
             padding: 20px;
+            top: 0;
+            bottom: 0;
 
             .large-title {
                 line-height: 39px;
@@ -210,6 +211,11 @@
 
             p:last-of-type {
                 margin-bottom: 30px;
+            }
+
+
+            .button-group button {
+                margin: 0;
             }
         }
     }

@@ -35,7 +35,7 @@
                     :per-page="showPerPage"
                     @updatePage="changePage" />
         </div>
-        <button-link button-style="negative see-more" v-if="seeMore" to="gallery">See more</button-link>
+        <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
@@ -112,7 +112,6 @@
 <style scoped lang="scss">
     .gallery {
         padding: 70px 0;
-        min-height: 650px;
         .masonry-wrapper {
             /*width: 100% !important;*/
             margin: 0 auto;

@@ -7,7 +7,7 @@
                     <h1 class="large-title">Select assets</h1>
                     <input-file
                             id="files"
-                            button-style="transparent"
+                            button-style="secondary"
                             @change="uploadAssets">
                         <span>Upload multiple assets</span>
                         <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
@@ -30,14 +30,10 @@
                 </div>
                 <div class="bottom-content">
                     <div v-if="assets.length > 0" class="button-group">
-                        <cg-button
-                                button-style="transparent"
-                        >
+                        <cg-button button-style="secondary">
                             Test asset pack
                         </cg-button>
-                        <cg-button
-                                @click="stage = 'submit'"
-                        >
+                        <cg-button @click="stage = 'submit'">
                             Next
                         </cg-button>
                     </div>
@@ -126,16 +122,10 @@
                     <canvas id="canvas"></canvas>
                 </div>
                 <div class="button-group submit">
-                    <cg-button
-                            @click="stage = 'select'"
-                            button-style="transparent"
-                    >
+                    <cg-button button-style="secondary" @click="stage = 'select'" >
                         Back
                     </cg-button>
-                    <cg-button
-                            button-style="transparent"
-                            @click="renderCanvas"
-                    >
+                    <cg-button button-style="secondary" @click="renderCanvas">
                         Generate thumbnail
                     </cg-button>
                 </div>

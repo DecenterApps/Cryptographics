@@ -1,6 +1,17 @@
 <template>
     <main>
         <cg-header />
+        <keep-alive>
+            <!-- Keep slider alive between routes -->
+            <slider-gallery v-if="[
+                                '/gallery',
+                                '/asset-packs',
+                                '/about',
+                                '/profile',
+                                '/asset-pack/:id',
+                                '/user/:userId',
+                            ].indexOf($route.matched[0].path) >= 0" />
+        </keep-alive>
         <router-view />
         <cg-footer />
         <modal v-if="showModal" :content="content" />

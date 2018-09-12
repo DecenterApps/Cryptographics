@@ -1,6 +1,5 @@
 <template>
     <div class="all-assets-page">
-        <slider-gallery />
         <div class="container">
             <div class="asset-pack-header">
                 <div class="left-section">

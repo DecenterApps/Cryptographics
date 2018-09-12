@@ -2,12 +2,12 @@
         <button
                 class="button"
                 :class="buttonStyle"
-                :disabled="disabled"
+                :disabled="disabled || loading"
                 v-bind="$attrs"
                 v-on="$listeners"
         >
-            <button-loader v-if="disabled" :buttonStyle="buttonStyle" />
-            <slot v-if="!disabled" />
+            <button-loader v-if="loading" :buttonStyle="buttonStyle"><slot /></button-loader>
+            <slot v-if="!loading" />
         </button>
 </template>
 
@@ -19,9 +19,13 @@
     props: {
       buttonStyle: {
         type: String,
-        default: 'negative'
+        default: 'primary'
       },
       disabled: {
+        type: Boolean,
+        default: false,
+      },
+      loading: {
         type: Boolean,
         default: false,
       }
@@ -30,94 +34,6 @@
 </script>
 
 <style scoped lang="scss">
-    .button {
-        position: relative;
-        display: inline-flex;
-        justify-content: center;
-        min-width: 105px;
-        height: 33px;
-        padding: 9px;
-        font-size: 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        outline: 0;
-        text-decoration: none;
-        text-align: center;
-        text-transform: capitalize;
-        white-space: nowrap;
-        line-height: 1;
-        transition: opacity .2s;
-        &:hover {
-            opacity: .7;
-        }
-    }
-
-    .positive {
-        color: #000;
-        background-color: #fff;
-        border: 1px solid #fff;
-    }
-
-    .negative {
-        color: #fff;
-        background-color: #F55800;
-        &[disabled=disabled], &:disabled {
-            padding: 0;
-            background: #AEAEAE;
-            cursor: not-allowed;
-            border: none;
-            color: rgba(0, 0, 0, 0.2);
-        }
-    }
-
-    .transparent {
-        color: #000;
-        background: none;
-        border: 1px solid #000;
-        &[disabled=disabled], &:disabled {
-            opacity: .3;
-            padding: 0;
-        }
-    }
-
-    .transparent-inverted {
-        color: #fff;
-        background: none;
-        border: 1px solid #fff;
-    }
-
-    .tab-active {
-        color: #000;
-        font-weight: bold;
-        background: none;
-        border: none;
-        font-size: 15px;
-        text-decoration: underline;
-        padding: 0;
-    }
-
-    .tab-inactive {
-        color: #000;
-        background: none;
-        border: none;
-        font-size: 15px;
-        padding: 0;
-    }
-
-    .no-border {
-        color: #000;
-        background: none;
-        border: 1px solid transparent;
-    }
-
-    .pagination {
-        min-width: auto;
-        color: #858585;
-        background: none;
-        border: 0;
-        &.last {
-            padding-right: 0;
-        }
-    }
+    @import "./button-styles";
 </style>
 

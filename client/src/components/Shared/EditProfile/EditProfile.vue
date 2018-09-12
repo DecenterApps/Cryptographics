@@ -34,7 +34,7 @@
                             placeholder="Enter username" />
                     <input-file
                             id="avatar-image"
-                            button-style="transparent"
+                            button-style="secondary"
                             :multiple="false"
                             @change="onFileChanged">
                         <span v-if="newAvatarBytes32 === ''">Profile images must be 1:1 aspect ratio</span>
