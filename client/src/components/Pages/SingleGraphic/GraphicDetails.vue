@@ -18,7 +18,8 @@
         </div>
         <div class="graphic-meta">
             <div class="graphic-name">
-                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span></h3>
+                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
+                </h3>
                 <user-link :to="'/user/' + image.creator" :name="username" :avatar="image.avatar" />
                 <p class="description">{{ image.description }}</p>
 
@@ -66,6 +67,8 @@
 
 <script>
   import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
+  import { mapActions, mapGetters } from 'vuex';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
 
   export default {
     name: 'GraphicDetails',
@@ -93,18 +96,54 @@
       userAddress: {
         type: String,
         default: '0x0',
+      },
+      getData: {
+        type: Function,
+        default: () => {},
       }
     },
     methods: {
+      ...mapActions({
+        openModal: TOGGLE_MODAL,
+        toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
+      }),
       padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
       async submitImageForSale() {
-        const result = await sellImage(this.userAddress, this.image.id, this.sellPrice);
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
+          'Your Cryptographic will be listed shortly.');
+        const result = await transactionPromise();
+        const id = result.events.SellingImage.returnValues.imageId;
+        this.toggleLoadingModal();
+        // this.$router.push(`/single-graphic/${id}`);
+        this.getData();
+        this.openModal('Cryptographic successfully submitted for sale.');
       },
       async removeFromMarketPlace() {
-        const result = await cancelSell(this.userAddress, this.image.id);
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        const transactionPromise = await cancelSell(this.userAddress, this.image.id);
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
+          'Your Cryptographic\'s sale will be canceled shortly.');
+        const result = await transactionPromise();
+        console.log(result);
+        this.toggleLoadingModal();
+        this.getData();
+        // this.$router.push(this.$router.currentRoute);
+        this.openModal('Cryptographic successfully removed from the marketplace.');
       },
       async submitBuyImage() {
-        const result = await buyImage(this.userAddress, this.image.id, this.image.price);
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
+          'Your will receive this Cryptographic shortly.');
+        const result = await transactionPromise();
+        const id = result.events.ImageBought.returnValues.imageId;
+        this.toggleLoadingModal();
+        this.getData();
+        // this.$router.push(`/single-graphic/${id}`);
+        this.openModal('Cryptographic successfully bought.');
       }
     }
   };

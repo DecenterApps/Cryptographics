@@ -246,29 +246,65 @@ export const isImageForSale = async (imageId) => {
   return await marketPlaceContract().methods.isImageOnSale(imageId).call();
 };
 
-export const cancelSell = async (address, imageId) => {
-  if (!web3.utils.isAddress(address)) return;
-  return await marketPlaceContract().methods.cancel(imageId).send({
-    from: address
+export const cancelSell = (address, imageId) =>
+  new Promise(async (resolve, reject) => {
+    if (!web3.utils.isAddress(address)) return;
+    try {
+      const transactionPromise = marketPlaceContract().methods.cancel(imageId).send({
+        from: address
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        // Resolve with a promise pointing to the sellImage method, so we can
+        // handle both txHash and the finalized transaction
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Could not cancel image sale.');
+    }
   });
-};
 
-export const buyImage = async (address, imageId, price) => {
-  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
-  const buyPrice = web3.utils.toWei(price, 'ether');
-  return await marketPlaceContract().methods.buy(imageId).send({
-    from: address,
-    value: buyPrice,
+export const buyImage = (address, imageId, price) =>
+  new Promise(async (resolve, reject) => {
+    if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+    const buyPrice = web3.utils.toWei(price, 'ether');
+    try {
+      const transactionPromise = marketPlaceContract().methods.buy(imageId).send({
+        from: address,
+        value: buyPrice,
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        // Resolve with a promise pointing to the sellImage method, so we can
+        // handle both txHash and the finalized transaction
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Could not buy image.');
+    }
   });
-};
 
-export const sellImage = async (address, imageId, price) => {
-  if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
-  const sellPrice = web3.utils.toWei(price, 'ether');
-  return await marketPlaceContract().methods.sell(imageId, sellPrice).send({
-    from: address,
+export const sellImage = (address, imageId, price) =>
+  new Promise(async (resolve, reject) => {
+    if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+    const sellPrice = web3.utils.toWei(price, 'ether');
+    try {
+      const transactionPromise = marketPlaceContract().methods.sell(imageId, sellPrice).send({
+        from: address,
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        // Resolve with a promise pointing to the sellImage method, so we can
+        // handle both txHash and the finalized transaction
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Could not sell image.');
+    }
   });
-};
 
 export const calculatePrice = async (pickedAssets, owner) => {
   if (pickedAssets.length === 0) {

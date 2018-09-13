@@ -19,6 +19,7 @@
                     :isForSale="forSale"
                     :userAddress="userAddress"
                     @showPrintForm="orderPrint = true"
+                    :getData="getData"
             />
             <print-form @closePrintForm="orderPrint = false" v-else />
             <share-icons />
@@ -90,21 +91,24 @@
         }
         if (!canvas) return;
         canvas.toBlob((blob) => {
-            const link = document.createElement('a');
-            const title = this.image.title || 'cryptographic';
-            link.setAttribute('download', title + '.jpeg');
-            link.setAttribute('href', window.URL.createObjectURL(blob));
-            link.click();
+          const link = document.createElement('a');
+          const title = this.image.title || 'cryptographic';
+          link.setAttribute('download', title + '.jpeg');
+          link.setAttribute('href', window.URL.createObjectURL(blob));
+          link.click();
         }, 'image/jpeg');
+      },
+      async getData() {
+        this.username = await getUsername(this.image.creator);
+        this.loggedIn = this.image.creator === this.userAddress;
+        this.forSale = await isImageForSale(this.$route.params.id);
       }
     },
     async created() {
       this.image = await getImageMetadata(this.$route.params.id, true);
       const packsUsed = await getAssetsOrigins(this.image.usedAssets);
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
-      this.username = await getUsername(this.image.creator);
-      this.loggedIn = this.image.creator === this.userAddress;
-      this.forSale = await isImageForSale(this.$route.params.id);
+      this.getData();
       const assetsForCanvas = await parseContractAssetData(this.image);
       console.log('assetsForCanvas', assetsForCanvas);
       this.canvasData = {

@@ -1,7 +1,7 @@
 <template>
     <div class="success-message">
         <h1 class="large-title">
-            {{ content }} successfully saved to the blockchain forever
+            {{ content }}
         </h1>
 
         <img class="round-logo" :src="roundLogo" alt="">

@@ -294,7 +294,7 @@
                 const id = result.events.AssetPackCreated.returnValues.id;
                 this.toggleLoadingModal();
                 this.$router.push(`/asset-pack/${id}`);
-                this.openModal('Asset pack');
+                this.openModal('Asset pack successfully saved to the blockchain forever.');
                 console.log(result, id);
               }
             }

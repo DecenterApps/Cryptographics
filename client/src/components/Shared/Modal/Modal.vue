@@ -6,8 +6,8 @@
                     icon-type="close"
                     @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
-            <set-username v-if="content === 'setUsername'" />
-            <success-message v-if="content ==='Cryptographic' || content === 'Asset pack'" :content="content" />
+            <set-username v-else-if="content === 'setUsername'" />
+            <success-message v-else :content="content" />
             <div v-else>
                 <slot />
             </div>

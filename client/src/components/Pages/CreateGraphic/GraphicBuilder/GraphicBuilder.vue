@@ -257,7 +257,7 @@
         const id = result.events.ImageCreated.returnValues.imageId;
         this.toggleLoadingModal();
         this.$router.push(`single-graphic/${id}`);
-        this.openModal('Cryptographic');
+        this.openModal('Cryptographic successfully saved to the blockchain forever.');
       },
       async renderCanvas() {
         this.iterations++;
