@@ -1,22 +1,35 @@
 <template>
     <div class="slider-wrapper">
         <div class="slider">
-            <carousel :per-page="1" :paginationEnabled="false" :scroll-per-page="true" :autoplay-timeout="2000"
-                      :mouse-drag="true" :autoplay="true" :loop="true">
-                <slide><img src="./assets/Slide 01.png" alt=""></slide>
-                <slide><img src="./assets/Slide 02.png" alt=""></slide>
-                <slide><img src="./assets/Slide 03.png" alt=""></slide>
-                <slide><img src="./assets/Slide 04.png" alt=""></slide>
-                <slide><img src="./assets/Slide 05.png" alt=""></slide>
-            </carousel>
+            <slick ref="slick" :options="slickOptions">
+                <div><img src="./assets/Slide 01.png" alt=""></div>
+                <div><img src="./assets/Slide 02.png" alt=""></div>
+                <div><img src="./assets/Slide 03.png" alt=""></div>
+                <div><img src="./assets/Slide 04.png" alt=""></div>
+                <div><img src="./assets/Slide 05.png" alt=""></div>
+            </slick>
         </div>
     </div>
 </template>
 
 <script>
-  import { Carousel, Slide } from 'vue-carousel';
+  import Slick from 'vue-slick';
+
   export default {
-    name: 'slider-gallery'
+    name: 'slider-gallery',
+    components: {
+      Slick,
+    },
+    data: () => ({
+      slickOptions: {
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        swipeToSlide: true,
+        autoplay: true,
+        autoplaySpeed: 2000,
+      },
+    })
   };
 </script>
 
@@ -25,7 +38,7 @@
         background-color: #000;
         .slider {
             width: 1280px;
-            height: 350px;
+            height: 349px;
             margin: 0 auto;
             position: relative;
             left: -80px;

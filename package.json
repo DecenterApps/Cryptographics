@@ -34,6 +34,7 @@
     "html-webpack-plugin": "^3.2.0",
     "ipfs": "^0.29.3",
     "ipfs-api": "^22.1.0",
+    "jquery": "^3.3.1",
     "js-sha3": "^0.7.0",
     "left-pad": "^1.3.0",
     "node-sass": "^4.7.2",
@@ -46,12 +47,12 @@
     "url-loader": "^1.0.1",
     "vue": "^2.5.8",
     "vue-async-computed": "^3.4.0",
-    "vue-carousel": "^0.9.0",
     "vue-class": "^2.0.1",
     "vue-class-component": "^6.2.0",
     "vue-loader": "^15.2.4",
     "vue-masonry": "^0.11.4",
     "vue-router": "^3.0.1",
+    "vue-slick": "^1.1.13",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.8",
     "vuebar": "0.0.18",
@@ -63,13 +64,13 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^3.1.3",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1"
+    "babel-preset-stage-0": "^6.24.1",
+    "webpack-dev-server": "^3.1.3"
   },
   "repository": {
     "type": "git",
