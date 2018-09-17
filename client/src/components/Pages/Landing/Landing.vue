@@ -1,6 +1,9 @@
 <template>
     <div>
         <graphic-playground />
+        <div class="fab">
+            <button-link to="/create-graphic" button-style="primary">Compose</button-link>
+        </div>
         <div class="how-it-works">
             <p class="large-title">How it Works</p>
             <div class="steps">
@@ -34,7 +37,7 @@
                 <h1 class="large-title">Gallery</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
             </div>
-            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" />
+            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" />
         </div>
         <div class="landing-section inverted">
             <h1 class="section-title">Create</h1>
@@ -100,6 +103,14 @@
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 
+  const toggleFab = (e) => {
+    const scrollPos = window.pageYOffset;
+    if (scrollPos > 0)
+      document.querySelector('.fab').classList.add('shown');
+    else
+      document.querySelector('.fab').classList.remove('shown');
+  };
+
   export default {
     name: 'Landing',
     components: {
@@ -115,14 +126,19 @@
     async created() {
       try {
         let numOfImages = parseInt(await getImageCount());
-        if (numOfImages > 6) numOfImages = 6;
-        this.imageIds = [...Array(numOfImages).keys()].reverse();
+        let imageIds = [...Array(numOfImages).keys()].reverse();
+        if (numOfImages > 12) imageIds = imageIds.slice(0, 12);
+        this.imageIds = imageIds;
         if (typeof this.$redrawVueMasonry === 'function') {
           this.$redrawVueMasonry();
         }
       } catch (e) {
         console.log(e);
       }
+      window.addEventListener('scroll', toggleFab);
+    },
+    beforeDestroy() {
+      window.removeEventListener('scroll', toggleFab);
     }
   };
 </script>
@@ -302,6 +318,30 @@
             p:last-of-type {
                 margin-bottom: 30px;
             }
+        }
+    }
+
+    .fab {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        transform: translateX(200%);
+        transition: all .2s;
+        z-index: 200;
+        @media screen and (max-width: 1200px) {
+            bottom: 20px;
+            right: 20px;
+        }
+        &.shown {
+            transform: translateX(0%);
+        }
+        button {
+            width: 64px;
+            height: 64px;
+            border-radius: 32px;
+            display: block;
+            padding: 0;
+            font-size: 11px;
         }
     }
 </style>
