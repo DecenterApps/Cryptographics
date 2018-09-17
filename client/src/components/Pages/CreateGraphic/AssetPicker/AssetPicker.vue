@@ -44,6 +44,7 @@
 </template>
 
 <script>
+  import Decimal from 'decimal.js'
   import AssetPickerPagination from '../template/AssetPickerPagination.vue';
   import {
     METAMASK_ADDRESS,
@@ -80,7 +81,7 @@
           return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
             this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
         });
-        return filteredPacks.reduce((acc, item) => acc + parseFloat(item.price), 0);
+        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), 0);
       }
     },
     methods: {
