@@ -175,7 +175,7 @@
     .hero {
         /*background-color: #D9D9D9;*/
         position: relative;
-        background: url('../assets/home-header.png') center center;
+        background: url('../assets/home-header.png') center center no-repeat;
         height: 566px;
         padding: 45px 0;
 

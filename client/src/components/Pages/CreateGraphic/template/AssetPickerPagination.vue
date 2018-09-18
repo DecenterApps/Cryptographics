@@ -24,12 +24,13 @@
         </div>
 
         <div class="bottom-controls">
-            <pagination
+            <div>
+                <pagination
                     :total="assetPackIds === null ? 0 : assetPackIds.length"
                     :per-page="showPerPage"
                     pagination-style="left"
                     @updatePage="changePage" />
-
+            </div>
 
             <cg-button @click="changeTab" button-style="primary">
                 Done
@@ -83,7 +84,7 @@
         default: () => {},
       },
       totalPrice: {
-        type: Number, // TODO Change to String when float precision is fixed
+        type: String,
         default: 0,
       }
     },

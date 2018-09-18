@@ -17,7 +17,7 @@
                             <button-icon icon-type="zoom" />
                         </overlay>
                     </router-link>
-                    <img v-bind:class="image.className" v-bind:src="image.src" alt="">
+                    <img v-bind:class="image.className" v-bind:src="image.src" alt="" width="307" :height="image.width === image.height ? '307':'434'">
                     <p class="artwork-title">{{ image.title }}</p>
                 </div>
                 <div class="artwork-details">
