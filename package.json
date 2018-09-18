@@ -13,7 +13,7 @@
     "prod": "webpack --config client/build/webpack.prod.js -p",
     "build": "webpack --config client/build/webpack.prod.js -p",
     "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host 0.0.0.0 --port 3300 --compress --config ./client/build/webpack.config.js",
-    "generatePacks": "node client/config/generatePacks.js 1 10",
+    "generatePacks": "node client/config/generatePacks.js",
     "copyConfig": "cp client/config/config.json.dist client/config/config.json"
   },
   "dependencies": {
@@ -58,7 +58,7 @@
     "vue-template-compiler": "^2.5.8",
     "vuebar": "0.0.18",
     "vuex": "^3.0.1",
-    "web3": "^1.0.0-beta.34",
+    "web3": "^1.0.0-beta.30",
     "webpack": "^4.15.1",
     "webpack-cli": "^2.0.14",
     "webpack-dev-middleware": "^1.12.2",
