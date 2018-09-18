@@ -218,7 +218,8 @@
         padding-top: 0 !important;
         flex-direction: column;
         position: relative;
-        min-height: calc(100vh - 419px);
+        /*min-height: calc(100vh - 419px);*/
+        justify-content: flex-start !important;
 
         .line-separator {
             margin: 21px 0;
@@ -268,7 +269,7 @@
         }
         .assets, .gallery {
             padding-bottom: 30px;
-            min-height: 650px;
+            /*min-height: 650px;*/
             .button-group {
                 .button {
                     min-width: auto;

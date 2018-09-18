@@ -20,7 +20,7 @@
                                     class="avatar"
                                     :src="ipfsNodePath + avatar">
                         </router-link>
-                        <button-link to="/create-graphic" button-style="primary">Compose</button-link>
+                        <button-link to="/create-graphic" button-style="secondary inverted">Compose</button-link>
                     </div>
                 </div>
             </div>
