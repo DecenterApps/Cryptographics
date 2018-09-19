@@ -81,7 +81,7 @@
           return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
             this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
         });
-        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), 0);
+        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), '0');
       }
     },
     methods: {

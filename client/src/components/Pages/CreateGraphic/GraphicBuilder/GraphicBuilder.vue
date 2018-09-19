@@ -119,6 +119,7 @@
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
+    getImage,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
@@ -152,7 +153,6 @@
       randomHashIds: pickTenRandoms(),
       imagePrice: null,
       potentialAssets: [],
-      allAssets: [],
       selectedAssets: [],
       claimPressed: false,
     }),
@@ -270,7 +270,7 @@
           selectedAssets = shuffleArray(selectedAssets);
         }
         selectedAssets = selectedAssets.slice(0, 30);
-        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(selectedAssets), this.allAssets);
+        this.canvasData.assets = await getImage(this.randomSeed, this.iterations, utils.encode(selectedAssets));
         console.log('iteration: ' + this.iterations);
         this.potentialAssets = selectedAssets;
         let picked = [];
@@ -330,7 +330,6 @@
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
         this.timestamp = new Date().getTime();
-        this.allAssets = await imageService.loadDataForAssets();
         this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
         this.randomSeed = await convertSeed(this.randomSeed);
         this.renderCanvas();

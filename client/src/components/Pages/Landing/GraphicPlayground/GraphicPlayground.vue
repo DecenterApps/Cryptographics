@@ -58,9 +58,9 @@
     calculateFirstSeed,
     convertSeed,
     getLandingPacks,
+    getImage,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
-  import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import * as utils from 'services/utils';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
   import { shuffleArray } from 'services/helpers';
@@ -79,7 +79,6 @@
       iterations: 0,
       timestamp: new Date().getTime(),
       randomHashIds: [],
-      allAssets: [],
       selectedAssets: [],
       potentialAssets: [],
       canvasData: {
@@ -103,7 +102,7 @@
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
         console.log('POTENTIAL ASSETS: ' + potentialAssets);
-        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(potentialAssets), this.allAssets);
+        const finalAssets = await getImage(this.randomSeed, this.iterations, utils.encode(potentialAssets));
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
         this.potentialAssets = potentialAssets;
         console.log('iteration: ' + this.iterations);
@@ -148,7 +147,6 @@
       this.selectedAssets = this.assetPacks.map(assetPack =>
         assetPack.assets.map(item => parseInt(item.id)))
         .reduce((a, b) => a.concat(b), []);
-      this.allAssets = await loadDataForAssets();
       this.renderCanvas();
     }
   };
