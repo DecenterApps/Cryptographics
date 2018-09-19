@@ -4,6 +4,11 @@ const readline = require('readline');
 const config = require('./config.json');
 const utils = require('../src/services/utils');
 const Web3 = require('web3');
+const sharp = require('sharp');
+const sizeOf = require('image-size');
+const imagemin = require('imagemin');
+const imageminPngquant = require('imagemin-pngquant');
+
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://kovan.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
@@ -111,11 +116,17 @@ const downloadAssetPack = async (assetId) =>
       }
       download(
         `https://ipfs.decenter.com/ipfs/${item.ipfsHash}`,
-        `${path}/${item.id}.png`,
-        (err, data) => {
-          downloaded++;
+        `${path}/big-${item.id}.png`,
+        async (err, data) => {
           if (err !== undefined) console.log(err);
-          if (downloaded === assetPackData.length - 1) resolve(fetchData);
+          const dimensions = sizeOf(`${path}/big-${item.id}.png`);
+          sharp(`${path}/big-${item.id}.png`)
+          .resize(Math.floor(dimensions.width / 10), Math.floor(dimensions.height / 10))
+          .toFile(`${path}/${item.id}.png`, (err, info) => {
+            if (err) throw err;
+            downloaded++;
+            if (downloaded === assetPackData.length - 1) resolve(fetchData);
+          });
         }
       );
     });
@@ -154,7 +165,17 @@ const buildConfig = async () => {
   console.log('Downloading images...');
   const promises = assetPackIds.map(async assetPackId => await downloadAssetPack(assetPackId));
   const assetPackData = await Promise.all(promises);
-  console.log('Download complete !');
+  console.log('Download complete!');
+
+  console.log('Compressing...');
+  const compressPromises = assetPackIds.map(async assetPackId => {
+    imagemin([`${__dirname}/../src/assets/landingart/${assetPackId}/*.{jpg,png}`],
+      `${__dirname}/../src/assets/landingart/${assetPackId}/`, {
+      plugins: [imageminPngquant({quality: '90'})]
+    });
+  });
+  await Promise.all(compressPromises);
+  console.log('Done!');
 
   fs.writeFile(`${__dirname}/landingAssetPacks.json`, JSON.stringify(assetPackData), (err) => {
     if (err) throw err;
