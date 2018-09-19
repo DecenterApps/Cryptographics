@@ -2,7 +2,8 @@
     <div class="gallery">
         <div class="masonry-wrapper"
              v-masonry
-             transition-duration="0.3s"
+             transition-duration="0s"
+             stutter="0"
              item-selector=".item"
              gutter=".gutter-sizer"
              fit-width="true">
