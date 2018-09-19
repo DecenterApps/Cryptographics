@@ -73,6 +73,8 @@ contract Marketplace is Ownable {
                 prices[i] = ad.price;
             }
         }
+
+        return (imageIds, prices);
     }
 
     function isImageOnSale(uint _imageId) public view returns(bool) {
