@@ -24,10 +24,10 @@
                 <p class="description">{{ image.description }}</p>
 
             </div>
-            <div v-if="!sellGraphic" class="graphic-address">
-                <strong>Cryptographics address:</strong>
-                <span class="address">{{ image.creator }}</span>
-            </div>
+            <!--<div v-if="!sellGraphic" class="graphic-address">-->
+                <!--<strong>Cryptographics address:</strong>-->
+                <!--<span class="address">{{ image.creator }}</span>-->
+            <!--</div>-->
             <div
                     v-if="isLogged && !isForSale"
                     class="graphic-controls"
