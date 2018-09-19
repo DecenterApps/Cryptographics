@@ -1,12 +1,14 @@
 <template>
     <div>
         <div class="container">
-            <p class="large-title">
-                About Cryptographics</p>
-            <p class="about-text">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum
+            <h1 class="large-title">About Cryptographics</h1>
+            <p class="about-text">
+                Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis
+                egestas. Vestibulum
                 feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.
                 quis, accumsan porttitor,
-                facilisis luctus, metus</p>
+                facilisis luctus, metus
+            </p>
         </div>
     </div>
 </template>

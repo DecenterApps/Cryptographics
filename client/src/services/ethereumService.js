@@ -332,6 +332,8 @@ export const getImageCount = async () => {
   return await digitalPrintImageContract().methods.totalSupply().call();
 };
 
+export const getImagesOnSale = () => marketPlaceContract().methods.getActiveAds().call();
+
 export const getImagePrice = async (imageId) => {
   const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
 

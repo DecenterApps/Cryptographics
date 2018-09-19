@@ -11,12 +11,12 @@
                     <cg-button
                             :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
                             @click="showPacks = 'all'">
-                        All assets packs
+                        All
                     </cg-button>
                     <cg-button
                             :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
                             @click="showPacks = 'created'">
-                        Asset packs created by you
+                        Created by you
                     </cg-button>
                 </div>
                 <asset-packs-pagination
@@ -105,28 +105,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 30px 0;
+        padding: 30px 0;
 
         .large-title {
             margin: 0;
         }
-
-        a {
-            text-decoration: none;
-        }
-
-        button {
-            min-width: 140px;
-        }
-
     }
 
     .line-separator {
         margin-bottom: 30px;
-    }
-
-    .large-title {
-        margin-top: 29px;
-        margin-bottom: 41px;
     }
 </style>
