@@ -56,15 +56,16 @@ export const replicate = async (hash, type) => {
     );
 };
 
-export const getFileContent = async (hash) => {
-  const ipfsTimeout = setTimeout(() => {
-    throw Error('Couldn\'t fetch data. (TIMEOUT)');
-  }, 20000);
-  try {
-    const file = await window.node.files.cat(hash);
-    clearTimeout(ipfsTimeout);
-    return new TextDecoder('utf-8').decode(file);
-  } catch (e) {
-    throw Error(e.message);
-  }
-};
+export const getFileContent = (hash) =>
+  new Promise(async (resolve, reject) => {
+    const ipfsTimeout = setTimeout(() => {
+      reject('Couldn\'t fetch data. (TIMEOUT)');
+    }, 5000);
+    try {
+      const file = await window.node.files.cat(hash);
+      clearTimeout(ipfsTimeout);
+      resolve(new TextDecoder('utf-8').decode(file));
+    } catch (e) {
+      reject(e.message);
+    }
+  });

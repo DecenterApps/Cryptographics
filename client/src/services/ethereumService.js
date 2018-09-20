@@ -346,11 +346,18 @@ export const getImageMetadata = (imageId, getPrice) =>
     const usedAssets = await digitalPrintImageContract().methods.decodeAssets(image[1]).call();
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
-    let metadata = null;
+    let metadata = {
+      'title': 'Failed fetching metadata',
+      'description': 'Failed fetching metadata',
+      'frame': 0,
+      'width': 2480,
+      'height': 3508
+    };
     try {
       const metadataIpfs = await ipfsService.getFileContent(image[7]);
       metadata = JSON.parse(metadataIpfs);
     } catch (e) {
+      console.error('Error getting ipfs metadata for image with ID: ', imageId);
       console.error(e);
     }
     const hasFrame = parseInt(metadata.frame) === 1;
