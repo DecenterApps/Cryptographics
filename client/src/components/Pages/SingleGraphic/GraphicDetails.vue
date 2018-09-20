@@ -68,7 +68,7 @@
 <script>
   import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
   import { mapActions, mapGetters } from 'vuex';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
   export default {
     name: 'GraphicDetails',
@@ -106,6 +106,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
