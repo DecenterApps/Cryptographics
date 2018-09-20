@@ -53,7 +53,7 @@
                             <cg-button
                                     :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
                                     @click="showPacks = 'created'">
-                                Created
+                                Created by You
                             </cg-button>
                         </div>
                         <asset-packs-pagination

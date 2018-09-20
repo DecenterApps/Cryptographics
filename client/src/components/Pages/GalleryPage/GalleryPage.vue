@@ -16,7 +16,7 @@
                     <cg-button
                             :button-style="showGraphics === 'sale' ? 'tab-active' : 'tab-inactive'"
                             @click="showGraphics = 'sale'">
-                        On sale
+                        For sale
                     </cg-button>
                 </div>
                 <paginated-gallery :imageIds="showGraphics === 'all' ? imageIds : imagesOnSale" :display-overlay="true" />
