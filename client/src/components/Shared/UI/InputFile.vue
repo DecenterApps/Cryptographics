@@ -3,7 +3,7 @@
         <label
             class="button"
             :class="buttonStyle">
-        <span>Browse</span>
+        <span>Upload image</span>
             <input
                 class="input"
                 :id="id"
