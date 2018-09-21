@@ -137,6 +137,16 @@
           this.imageIds = await getUserImages(val);
         }
       },
+      currentUserUsername: function(val) {
+        if (this.userProfile) {
+          this.username = val;
+        }
+      },
+      currentUserAvatar: function(val) {
+        if (this.userProfile) {
+          this.avatar = val;
+        }
+      },
       createdPacksIDs: async function (val) {
         if (this.showPacks === 'created' || this.showPacks === 'all') this.getAssetPacks();
       },
@@ -156,9 +166,11 @@
       }),
       async onCreated() {
         if (this.userProfile) {
+            console.log('onCreated userProfile');
           this.userAddress = this.currentUserAddress;
           this.username = this.currentUserUsername;
           this.avatar = this.currentUserAvatar;
+          console.log(this.userAddress, this.username);
         } else {
           this.userAddress = this.$route.params.userId;
           this.username = await getUsername(this.userAddress);
@@ -206,8 +218,8 @@
         this.currentTab = type;
       }
     },
-    created() {
-      this.onCreated()
+    async created() {
+      await this.onCreated()
     },
   };
 

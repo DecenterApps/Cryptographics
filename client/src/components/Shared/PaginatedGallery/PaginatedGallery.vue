@@ -5,12 +5,12 @@
         </div>
         <div class="masonry-wrapper"
             v-if="!loading"
-             v-masonry
-             transition-duration="0s"
-             stutter="0"
-             item-selector=".item"
-             gutter=".gutter-sizer"
-             fit-width="true">
+            v-masonry
+            transition-duration="0s"
+            stutter="0"
+            item-selector=".item"
+            gutter=".gutter-sizer"
+            fit-width="true">
             <div class="grid">
                 <div class="gutter-sizer"></div>
             </div>
@@ -210,6 +210,6 @@
             justify-content: center;
             background-color: #CECECE;
             margin-top: 30px;
-            }
+        }
     }
 </style>
