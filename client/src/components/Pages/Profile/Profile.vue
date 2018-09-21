@@ -13,10 +13,6 @@
                             @click="openModal('editProfile')">
                         Edit Profile
                     </cg-button>
-                    <!--<button-link-->
-                    <!--to="/upload-asset-pack">-->
-                    <!--Create Asset Pack-->
-                    <!--</button-link>-->
                 </div>
             </div>
             <div class="main">
@@ -31,13 +27,10 @@
                             </button>
                         </div>
                     </div>
-
                     <separator />
-
                     <div class="gallery" v-if="currentTab === 'gallery'">
                         <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
                     </div>
-
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
                             <cg-button
@@ -131,7 +124,6 @@
     },
     watch: {
       currentUserAddress: async function (val) {
-        console.log(val);
         if (this.userProfile) {
           this.userAddress = val;
           this.imageIds = await getUserImages(val);
@@ -166,11 +158,9 @@
       }),
       async onCreated() {
         if (this.userProfile) {
-            console.log('onCreated userProfile');
           this.userAddress = this.currentUserAddress;
           this.username = this.currentUserUsername;
           this.avatar = this.currentUserAvatar;
-          console.log(this.userAddress, this.username);
         } else {
           this.userAddress = this.$route.params.userId;
           this.username = await getUsername(this.userAddress);
@@ -230,7 +220,6 @@
         padding-top: 0 !important;
         flex-direction: column;
         position: relative;
-        /*min-height: calc(100vh - 419px);*/
         justify-content: flex-start !important;
 
         .line-separator {
@@ -281,7 +270,6 @@
         }
         .assets, .gallery {
             padding-bottom: 30px;
-            /*min-height: 650px;*/
             .button-group {
                 .button {
                     min-width: auto;
