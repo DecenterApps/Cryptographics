@@ -343,7 +343,8 @@ export const getImagePrice = async (imageId) => {
 export const getImageMetadata = (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
-    const usedAssets = await digitalPrintImageContract().methods.decodeAssets(image[1]).call();
+    const pickedAssets = await digitalPrintImageContract().methods.pickRandomAssets(image[0], image[1]).call();
+
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
     let metadata = {
@@ -366,7 +367,7 @@ export const getImageMetadata = (imageId, getPrice) =>
       id: imageId,
       finalSeed: image[0],
       usedAssetsBytes: image[1],
-      usedAssets,
+      usedAssets: pickedAssets,
       timestamp: image[2],
       username: image[3],
       avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[4])}`,

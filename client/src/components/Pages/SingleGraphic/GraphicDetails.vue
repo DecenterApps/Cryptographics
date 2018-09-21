@@ -4,7 +4,10 @@
             <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following
                 asset packs:</p>
             <div class="asset-packs">
-                <router-link :to="'/asset-pack/' + assetPack.id" v-for="(assetPack, index) in assetPacks">
+                <router-link
+                    :to="'/asset-pack/' + assetPack.id"
+                    v-for="(assetPack, index) in assetPacks"
+                    :key="index">
                     <asset-box
                             :key="index"
                             :assetPack="assetPack"
