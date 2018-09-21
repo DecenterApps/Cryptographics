@@ -9,7 +9,7 @@
                 <div class="right button-group">
                     <cg-button
                             button-style="secondary"
-                            v-if="userAddress"
+                            v-if="userAddress && userProfile"
                             @click="openModal('editProfile')">
                         Edit Profile
                     </cg-button>
