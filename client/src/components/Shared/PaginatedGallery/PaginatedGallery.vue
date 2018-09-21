@@ -1,6 +1,10 @@
 <template>
     <div class="gallery">
+        <div v-if="loading" class="loading-section">
+            <loader />
+        </div>
         <div class="masonry-wrapper"
+            v-if="!loading"
              v-masonry
              transition-duration="0s"
              stutter="0"
@@ -198,5 +202,14 @@
                 }
             }
         }
+        .loading-section {
+            width: 100%;
+            height: 470px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #CECECE;
+            margin-top: 30px;
+            }
     }
 </style>
