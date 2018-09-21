@@ -18,7 +18,7 @@ import {
   SET_NEW_USERNAME,
   SET_NETWORK, MUTATE_NETWORK,
 } from './types';
-
+import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
 import {
   TOGGLE_MODAL
 } from '../modal/types';
@@ -63,7 +63,7 @@ export default {
     if (username !== '') {
       commit(MUTATE_USERNAME, username);
     } else {
-      let username = 'Anon';
+      let username = DEFAULT_USERNAME;
       commit(MUTATE_USERNAME, username);
     }
   },
@@ -74,7 +74,7 @@ export default {
       let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
       commit(MUTATE_AVATAR, avatar);
     } else {
-      let avatar = 'QmP8A71rFcz7Y4JUG2tJzYjxsKycxKVu6thY8E7HbrFNkG';
+      let avatar = DEFAULT_AVATAR_IPFS_HASH;
       commit(MUTATE_AVATAR, avatar);
     }
   },

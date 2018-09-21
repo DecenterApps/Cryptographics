@@ -7,6 +7,7 @@
                     @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-else-if="content === 'setUsername'" />
+            <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
             <success-message v-else :content="content" />
             <div v-else>
                 <slot />
@@ -22,19 +23,20 @@
   import EditProfile from 'shared/EditProfile/EditProfile.vue';
   import SetUsername from 'shared/SetUsername/SetUsername.vue';
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
+  import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
 
   export default {
     name: 'Modal',
     props: {
       content: {
-        type: String,
         default: ''
       }
     },
     components: {
       SuccessMessage,
       SetUsername,
-      EditProfile
+      EditProfile,
+      TransferHistory,
     },
     methods: {
       ...mapActions({

@@ -4,6 +4,7 @@ import config from 'config/config.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
+import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
 const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
@@ -560,3 +561,47 @@ function printImageData(assets) {
     let obj = assets[i];
   }
 }
+
+const mapUserInfo = userInfoTx => {
+  const username = userInfoTx[0] || DEFAULT_USERNAME;
+
+  const isImageEmptyBytes = utils.isEmptyBytes(userInfoTx[1]);
+  const avatarIpfsHash = isImageEmptyBytes ? DEFAULT_AVATAR_IPFS_HASH : utils.getIpfsHashFromBytes32(userInfoTx[1]);
+  const avatar = `${ipfsNodePath}${utils.getIpfsHashFromBytes32(avatarIpfsHash)}`;
+
+  return { username, avatar };
+};
+
+export const getImageTransferHistory = imageId =>
+  new Promise(async(resolve, reject) => {
+    try {
+      const contract = await marketPlaceContract();
+      const userContract = await digitalPrintImageContract();
+
+      const events = await contract.getPastEvents('ImageBought', { filter: { imageId }, fromBlock: 0 });
+
+      const prices = events.map(event => web3.utils.fromWei(event.returnValues[2], 'ether'));
+
+      // get time from the events tx block numbers
+      const eventTimestampsPromise = events.map(event => web3.eth.getBlock(event.blockNumber));
+      const eventsBlocks = await Promise.all(eventTimestampsPromise);
+      const eventsTimes = eventsBlocks.map(block =>  utils.timeConverter(block.timestamp));
+
+      // get users name and images from the events
+      const usersAddresses = events.map(event => event.returnValues[1]);
+      const usersPromise = usersAddresses.map(address => userContract.methods.getUserInfo(address).call());
+      const usersInfoTxs = await Promise.all(usersPromise);
+      const usersInfo = usersInfoTxs.map(mapUserInfo);
+
+      const data = usersInfo.map((userInfo, index) => ({
+        ...userInfo,
+        buyerAddress: usersAddresses[index],
+        time: eventsTimes[index],
+        price: prices[index],
+      }));
+
+      resolve(data);
+    } catch (err) {
+      reject(err);
+    }
+  });

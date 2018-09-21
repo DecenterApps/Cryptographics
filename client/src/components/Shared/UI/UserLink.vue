@@ -6,7 +6,7 @@
             class="avatar"
             :class="color"
             :src="avatar">
-        <span class="name" :class="color">
+        <span class="name" :class="`${additionalClass} ${color}`">
             @{{ name }}
         </span>
     </router-link>
@@ -31,6 +31,10 @@ export default {
         color: {
             type: String,
             default: 'grey'
+        },
+        additionalClass: {
+          type: String,
+          default: ''
         }
     }
 }
@@ -50,7 +54,7 @@ export default {
         &.white {
             background-color: #fff;
         }
-        &.grey {
+        &.grey, &.black {
             background-color: #9D9D9D;
         }
     }
@@ -58,11 +62,21 @@ export default {
         font-size: 12px;
         font-family: Roboto, sans-serif;
         color: inherit;
+
+        &.ellipsis {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
         &.white {
             color: #fff;
         }
         &.grey {
             color: #858585;
+        }
+        &.black {
+            color: black;
         }
     }
 }

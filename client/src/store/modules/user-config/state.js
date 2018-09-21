@@ -1,8 +1,10 @@
+import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
+
 export default {
-  username: 'Anon',
+  username: DEFAULT_USERNAME,
   network: undefined,
   metamaskAddress: undefined,
-  avatar: 'QmP8A71rFcz7Y4JUG2tJzYjxsKycxKVu6thY8E7HbrFNkG',
+  avatar: DEFAULT_AVATAR_IPFS_HASH,
   changeUsername: {
     isExisting: undefined,
     result: undefined

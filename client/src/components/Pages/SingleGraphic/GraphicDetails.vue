@@ -59,10 +59,19 @@
                         :value="image.price" />
             </div>
             <div
-                    class="graphic-controls"
+                    class="graphic-controls buy"
                     v-if="isForSale && !isLogged">
                 <cg-button @click="submitBuyImage">Buy</cg-button>
-                <price :value="image.price" />
+
+                <div class="price-wrapper">
+                    <price :value="image.price" />
+                    <div
+                            class="history"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        transfer-history
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -148,8 +157,8 @@
         this.getData();
         // this.$router.push(`/single-graphic/${id}`);
         this.openModal('Cryptographic successfully bought.');
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -216,6 +225,14 @@
             flex-direction: column;
             margin-top: 0;
         }
+        &.buy {
+            align-items: center;
+
+            .button {
+                padding: 9px 34px;
+                margin-top: 8px;
+            }
+        }
         button {
             margin: 0 10px;
             &:first-of-type {
@@ -231,6 +248,26 @@
         .default-input {
             width: 100%;
             margin-bottom: 10px;
+        }
+
+        .price-wrapper {
+            margin-left: 16px;
+
+            .price {
+                margin-left: 0;
+            }
+
+            .history {
+                cursor: pointer;
+                color: #717171;
+                font-size: 12px;
+                margin-top: 5px;
+                transition: color 0.2s ease-in-out;
+
+                &:hover {
+                    color: lighten(#717171, 20);
+                }
+            }
         }
     }
 </style>
