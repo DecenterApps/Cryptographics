@@ -4,6 +4,10 @@
             <div class="all-assets-header">
                 <h1 class="large-title">Asset Packs</h1>
                 <button-link to="/upload-asset-pack">Create Asset Pack</button-link>
+                <p>
+                    Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
+                    asset pack has its price, but you only need to pay for each asset pack once.
+                </p>
             </div>
             <separator />
             <div class="assets">
@@ -34,9 +38,11 @@
 <script>
 
   import AssetPacksPagination from '../Profile/template/AssetPacksPagination.vue';
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import {
     METAMASK_ADDRESS,
+    SET_CREATED_ASSETS_PACKS_IDS,
+    SET_BOUGHT_ASSETS_PACKS_IDS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
   } from 'store/user-config/types';
@@ -53,6 +59,10 @@
         assetPackIds: [],
       };
     },
+    beforeMount() {
+      this[SET_CREATED_ASSETS_PACKS_IDS]();
+      this[SET_BOUGHT_ASSETS_PACKS_IDS]();
+    },
     computed: {
       ...mapGetters({
         metamaskAddress: METAMASK_ADDRESS,
@@ -68,6 +78,10 @@
       }
     },
     methods: {
+      ...mapActions({
+        SET_CREATED_ASSETS_PACKS_IDS,
+        SET_BOUGHT_ASSETS_PACKS_IDS
+      }),
       async getAssetPacks() {
         if (this.showPacks === 'created') {
           this.assetPackIds = this.createdPacksIDs;

@@ -60,12 +60,32 @@ contract('Marketplace', async (accounts) => {
         //get ad
         let ad = await marketplace.sellAds(tokenId);
 
-        assert.equal(ad[2], false, "After buy it shouldn't be on sale anymore");
+        assert.equal(ad[3], false, "After buy it shouldn't be on sale anymore");
         assert.equal(newOwner, accounts[1], "New owner is not set");
     });
 
-    // it("...Should create token and put it on sale", async () => {
+    it("...Should get all active ads", async () => {
+        let res = await marketplace.getActiveAds();
+        assert.equal(res.length, 2, "Length should be equal to 2");
+    });
+
+    it("...Should get all active ads after buy and sell", async () => {
+        let res = await marketplace.getActiveAds();
+        let price = 1000;
+
         
-    // });
+        res = await dpm.createImageTest();
+        let tokenId = res.logs[0].args._tokenId.toString();
+        await marketplace.sell(tokenId, price);
+        await marketplace.buy(tokenId, {from: accounts[1], value:price});
+        
+        res = await dpm.createImageTest();
+        tokenId = res.logs[0].args._tokenId.toString();
+        await marketplace.sell(tokenId, price);
+ 
+        res = await marketplace.getActiveAds();
+    
+        assert.equal(res.length, 2, "Length should be equal to 2");    
+    });
 
 });
