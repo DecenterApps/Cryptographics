@@ -86,16 +86,16 @@
         canvas {
             /*max-width: 100%;*/
             height: calc(100vh - 200px);
-            @media screen and (max-width: 940px) {
-                height: auto;
-            }
+            /*@media screen and (max-width: 940px) {*/
+                /*height: auto;*/
+            /*}*/
         }
         &.square {
             canvas {
                 max-height: 670px;
-                @media screen and (max-width: 1120px) {
-                    height: auto;
-                }
+                /*@media screen and (max-width: 1120px) {*/
+                    /*height: auto;*/
+                /*}*/
             }
         }
     }

@@ -24,8 +24,8 @@
 <script>
   import AssetPicker from './AssetPicker/AssetPicker.vue';
   import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
-  import { SELECTED_ASSET_PACKS } from 'store/canvas/types';
-  import { mapGetters } from 'vuex';
+  import { TOGGLE_ASSET_PACK } from 'store/canvas/types';
+  import { mapActions } from 'vuex';
   import { getLandingPacks } from 'services/ethereumService';
   import StepHeader from '../../Shared/StepHeader/StepHeader';
 
@@ -40,12 +40,10 @@
       steps: [],
       currentStep: 0,
     }),
-    computed: {
-      ...mapGetters({
-        selectedAssetPacks: SELECTED_ASSET_PACKS,
-      })
-    },
     methods: {
+      ...mapActions({
+        toggleAsset: TOGGLE_ASSET_PACK,
+      }),
       changeStep(step) {
         this.currentStep = step;
       },
@@ -55,7 +53,8 @@
       if (window.sessionStorage.length > 0) {
         this.currentStep = 1;
         const landingPacks = getLandingPacks();
-        this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
+        const packs = landingPacks.packs;
+        packs.map(pack => this.toggleAsset(pack));
       }
     }
   };
@@ -65,6 +64,7 @@
     .full-width {
         background-color: #D9D9D9;
     }
+
     .create-art-wrapper {
         background-color: #D9D9D9;
         min-height: 100vh;
