@@ -16,7 +16,9 @@ import {
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
   SET_NEW_USERNAME,
-  SET_NETWORK, MUTATE_NETWORK,
+  SET_NETWORK,
+  MUTATE_NETWORK,
+  FETCH_BALANCES, MUTATE_BALANCES,
 } from './types';
 import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
@@ -32,7 +34,8 @@ import {
   usernameExists,
   registerUser,
   getCreatedAssetPacks,
-  getBoughtAssetPacks
+  getBoughtAssetPacks,
+  userBalances,
 } from 'services/ethereumService';
 
 export default {
@@ -132,5 +135,9 @@ export default {
       let result = false;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
     }
+  },
+  [FETCH_BALANCES]: async ({commit, state}) => {
+    const balances = await userBalances(state.metamaskAddress);
+    commit(MUTATE_BALANCES, balances)
   }
 };
