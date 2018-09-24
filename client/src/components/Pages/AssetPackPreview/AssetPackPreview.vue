@@ -17,12 +17,12 @@
                     class="asset"
                     v-for="(asset, index) in assetPack.assets"
                     :key="index">
-                    <div
+                    <span
                         v-if="Math.floor((asset.attribute / 100) % 10) === 1"
-                        class="asset-type is-bg"><span>Static Background</span></div>
-                    <div
+                        class="asset-type">Static Background</span>
+                    <span
                         v-else
-                        class="asset-type"><span>Asset</span></div>
+                        class="asset-type">Asset</span>
                     <img :src="asset.src" alt="">
                 </div>
             </div>
@@ -132,13 +132,11 @@
             width: 206px;
             margin-bottom: 22px;
             background-color: #ECECEC;
-            padding: 10px;
+            padding: 30px 10px;
             box-sizing: border-box;
             &:hover {
                 .asset-type {
-                    & span {
-                        display: block;
-                    }
+                    opacity: 1;
                 }
             }
             .asset-type {
@@ -152,9 +150,8 @@
                 min-height: 22px;
                 min-width: 22px;
                 pointer-events: none;
-                & span {
-                    display: none;
-                }
+                transition: opacity .2s ease-in-out;
+                opacity: .4;
                 &.is-bg {
                     background-color: #F55800;
                 }
