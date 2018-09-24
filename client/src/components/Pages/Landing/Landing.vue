@@ -2,7 +2,7 @@
     <div>
         <graphic-playground />
         <div class="fab">
-            <button-link to="/create-graphic" button-style="primary">Compose</button-link>
+            <button-link to="/create-cryptographic" button-style="primary">Compose</button-link>
         </div>
         <div class="how-it-works">
             <h1 class="large-title">How it Works</h1>
@@ -93,7 +93,7 @@
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
                     receive earnings every time a new Creator uses it.
                 </p>
-                <button-link to="/upload-asset-pack">Create asset pack</button-link>
+                <button-link to="/create-asset-pack">Create asset pack</button-link>
             </div>
         </div>
         <asset-carousel />

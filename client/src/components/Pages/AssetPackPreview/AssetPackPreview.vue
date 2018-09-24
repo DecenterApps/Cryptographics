@@ -62,7 +62,7 @@
       }),
       composeWithAP () {
         this.selectSingleAssetPack(this.assetPack);
-        this.$router.push('/create-graphic')
+        this.$router.push('/create-cryptographic')
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);

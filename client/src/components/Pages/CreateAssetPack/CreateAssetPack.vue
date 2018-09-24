@@ -172,7 +172,7 @@
   import { preloadImages, resizeCanvas } from 'services/helpers';
 
   export default {
-    name: 'UploadAssetPack',
+    name: 'CreateAssetPack',
     components: {
       IcoTrash,
       IcoBackground

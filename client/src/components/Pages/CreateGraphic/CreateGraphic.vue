@@ -1,12 +1,24 @@
 <template>
-    <layout layout-style="pulled-left" layout-content="no-container">
-        <asset-picker
-                v-if="activeTab === 'picker'"
-                v-on:tabChange="changeTab" />
-        <graphic-builder
-                v-if="activeTab === 'create'"
-                v-on:tabChange="changeTab" />
-    </layout>
+    <div class="create-art-wrapper">
+        <step-header
+                :currentStep="currentStep"
+                :steps="['Select Asset Pack', 'Generate Cryptographic', 'Claim Cryptographic']"
+                v-on:stepChange="changeStep"
+        />
+        <layout layout-style="full-width gray-bg" layout-content="no-container">
+            <asset-picker
+                    v-if="currentStep === 0"
+                    :currentStep="currentStep"
+                    v-on:stepChange="changeStep"
+            />
+            <graphic-builder
+                    v-if="currentStep > 0"
+                    :currentStep="currentStep"
+                    v-on:stepChange="changeStep"
+            />
+        </layout>
+
+    </div>
 </template>
 
 <script>
@@ -14,15 +26,19 @@
   import GraphicBuilder from './GraphicBuilder/GraphicBuilder.vue';
   import { SELECTED_ASSET_PACKS } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
+  import { getLandingPacks } from 'services/ethereumService';
+  import StepHeader from '../../Shared/StepHeader/StepHeader';
 
   export default {
     name: 'CreateGraphic',
     components: {
+      StepHeader,
       GraphicBuilder,
       AssetPicker
     },
     data: () => ({
-      activeTab: 'picker',
+      steps: [],
+      currentStep: 0,
     }),
     computed: {
       ...mapGetters({
@@ -30,50 +46,27 @@
       })
     },
     methods: {
-      changeTab(tab) {
-        this.activeTab = tab;
+      changeStep(step) {
+        this.currentStep = step;
       },
     },
     created() {
-      if (this.selectedAssetPacks.length > 0)
-        this.activeTab = 'create';
 
-      // TODO delete sessionStorage check now because selectedAssetPacks is in store?
-      // if (window.sessionStorage.length > 0) {
-      //   this.activeTab = 'create';
-      //   const landingPacks = getLandingPacks();
-      //   this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
-      // }
+      if (window.sessionStorage.length > 0) {
+        this.activeTab = 'create';
+        const landingPacks = getLandingPacks();
+        this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
+      }
     }
   };
 </script>
 
 <style scoped lang="scss">
+    .full-width {
+        background-color: #D9D9D9;
+    }
     .create-art-wrapper {
         background-color: #D9D9D9;
-        min-height: calc(100vh - 70px);
-        position: relative;
-        width: 1280px;
-        margin: 0 auto;
-        left: -80px;
-
-        &.create {
-            display: flex;
-        }
-
-        .create-container {
-            padding: 40px 0;
-            box-sizing: border-box;
-            margin-right: 0;
-            overflow: hidden;
-        }
-
-        @media all and (max-width: 1280px) {
-            width: 100%;
-            left: 0;
-            .create-container {
-                margin-right: auto;
-            }
-        }
+        min-height: 100vh;
     }
 </style>

@@ -84,7 +84,7 @@
         height: 100%;
         width: 100%;
         canvas {
-            max-width: 100%;
+            /*max-width: 100%;*/
             height: calc(100vh - 200px);
             @media screen and (max-width: 940px) {
                 height: auto;

@@ -16,10 +16,10 @@
 
         <div class="meta-info">
             <div class="hover-info">
-                <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} - Ξ {{this.hovered.price}}</h1>
+                <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} — <price size="inherit" :value="this.hovered.price" /></h1>
             </div>
             <div class="price-section">
-                <h1 class="small-title">Total price - {{ totalPrice }} Ξ</h1>
+                <h1 class="small-title">Total price — <price size="inherit" :value="totalPrice"/></h1>
             </div>
         </div>
 
@@ -32,8 +32,8 @@
                     @updatePage="changePage" />
             </div>
 
-            <cg-button @click="changeTab" button-style="primary">
-                Done
+            <cg-button @click="changeStep" button-style="primary">
+                Next
             </cg-button>
         </div>
     </div>
@@ -79,7 +79,7 @@
         type: Function,
         default: () => {},
       },
-      changeTab: {
+      changeStep: {
         type: Function,
         default: () => {},
       },
@@ -140,11 +140,24 @@
         }
         .asset-box {
             /*flex: 0 0 16%;*/
-            margin-right: 20px;
+            margin-right: 26px;
             margin-bottom: 20px;
 
             &:nth-child(6n) {
                 margin-right: 0;
+            }
+        }
+    }
+
+    button {
+        width: 85px;
+    }
+
+    .meta-info {
+        .price-section, .hover-info {
+            span {
+                font-weight: normal;
+                font-size: 16px;
             }
         }
     }

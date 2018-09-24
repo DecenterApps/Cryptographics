@@ -123,7 +123,7 @@
         window.sessionStorage.setItem('iterations', (this.iterations - 1).toString());
         window.sessionStorage.setItem('timestamp', this.timestamp);
         window.sessionStorage.setItem('potentialAssets', JSON.stringify(this.potentialAssets));
-        this.$router.push('/create-graphic');
+        this.$router.push('/create-cryptographic');
       },
       download() {
         const canvas = document.getElementById('canvas');
