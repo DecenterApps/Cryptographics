@@ -21,7 +21,7 @@
                 Cryptographics is powered by the Ethereum blockchain and each Cryptographic is stored as a unique ERC721 token.
             </p>
             <p class="about-text">
-                Made with passion by Decenter.
+                Made with passion by <a href="https://decenter.com" target="_blank" rel="noopener">Decenter</a>.
             </p>
 
         </div>
@@ -53,6 +53,17 @@
         margin-bottom: 15px;
         font-size: 14px;
         max-width: 600px;
+
+        a {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-left: 2px;
+            transition: opacity .2s ease-in-out;
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
     }
 
     .logo-container {
