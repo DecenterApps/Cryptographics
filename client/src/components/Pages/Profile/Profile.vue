@@ -168,11 +168,11 @@
         if (this.userProfile) {
           this.userAddress = this.currentUserAddress;
           this.username = this.currentUserUsername;
-          this.avatar = this.currentUserAvatar;
+          this.avatar =  this.currentUserAvatar;
         } else {
           this.userAddress = this.$route.params.userId;
           this.username = await getUsername(this.userAddress);
-          this.avatar = utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
+          this.avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
         }
         this.generateData();
       },
