@@ -7,7 +7,8 @@
                 </router-link>
             </div>
             <div class="steps">
-                <div @click="changeStep(index)" :class="['step', currentStep >= index ? 'active' : '']" v-for="(step, index) in steps">
+                <div @click="changeStep(index)" :class="['step', currentStep >= index ? 'active' : '']"
+                     v-for="(step, index) in steps">
                     {{ step }}
                     <ico-small-arrow v-if="index !== steps.length - 1" />
                 </div>
@@ -32,6 +33,8 @@
     components: { IcoSmallArrow, Logo },
     methods: {
       changeStep(step) {
+        console.log(this.currentStep, step);
+        if (this.currentStep <= step) return;
         this.$emit('stepChange', step);
       },
     }
