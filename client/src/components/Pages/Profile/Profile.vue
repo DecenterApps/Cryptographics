@@ -29,7 +29,7 @@
                     </div>
                     <separator />
                     <div class="gallery" v-if="currentTab === 'gallery'">
-                        <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
+                        <paginated-gallery :imageIds="imageIds.slice().reverse()" :display-overlay="true" />
                     </div>
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
@@ -81,6 +81,8 @@
     USERNAME,
     METAMASK_ADDRESS,
     AVATAR,
+    SET_CREATED_ASSETS_PACKS_IDS,
+    SET_BOUGHT_ASSETS_PACKS_IDS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
   } from 'store/user-config/types';
@@ -111,7 +113,11 @@
     },
     components: {
       PaginatedGallery,
-      AssetPacksPagination
+      AssetPacksPagination  
+    },
+    beforeMount() {
+      this[SET_CREATED_ASSETS_PACKS_IDS]();
+      this[SET_BOUGHT_ASSETS_PACKS_IDS]();
     },
     computed: {
       ...mapGetters({
@@ -154,6 +160,8 @@
     },
     methods: {
       ...mapActions({
+        SET_CREATED_ASSETS_PACKS_IDS,
+        SET_BOUGHT_ASSETS_PACKS_IDS,
         openModal: TOGGLE_MODAL
       }),
       async onCreated() {

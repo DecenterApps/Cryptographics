@@ -34,9 +34,11 @@
 <script>
 
   import AssetPacksPagination from '../Profile/template/AssetPacksPagination.vue';
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import {
     METAMASK_ADDRESS,
+    SET_CREATED_ASSETS_PACKS_IDS,
+    SET_BOUGHT_ASSETS_PACKS_IDS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
   } from 'store/user-config/types';
@@ -53,6 +55,10 @@
         assetPackIds: [],
       };
     },
+    beforeMount() {
+      this[SET_CREATED_ASSETS_PACKS_IDS]();
+      this[SET_BOUGHT_ASSETS_PACKS_IDS]();
+    },
     computed: {
       ...mapGetters({
         metamaskAddress: METAMASK_ADDRESS,
@@ -68,6 +74,10 @@
       }
     },
     methods: {
+      ...mapActions({
+        SET_CREATED_ASSETS_PACKS_IDS,
+        SET_BOUGHT_ASSETS_PACKS_IDS
+      }),
       async getAssetPacks() {
         if (this.showPacks === 'created') {
           this.assetPackIds = this.createdPacksIDs;
