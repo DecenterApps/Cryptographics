@@ -53,7 +53,7 @@
     created() {
 
       if (window.sessionStorage.length > 0) {
-        this.activeTab = 'create';
+        this.currentStep = 1;
         const landingPacks = getLandingPacks();
         this.selectedAssetPacks = [...new Set([...this.selectedAssetPacks, ...landingPacks.packs])];
       }

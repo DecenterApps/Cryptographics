@@ -20,35 +20,6 @@
                 </cg-button>
             </div>
         </div>
-        <!--<div class="container">-->
-        <!--<div class="left">-->
-        <!--<div class="create-art">-->
-        <!--<div class="canvas-holder">-->
-        <!--<overlay>-->
-        <!--<cg-button button-style="tertiary" icon-type="download" @click="openInEditor">-->
-        <!--Open in editor-->
-        <!--</cg-button>-->
-        <!--</overlay>-->
-        <!--<div class="canvas-holder-wrapper">-->
-        <!--<Canvas :canvasData="canvasData" height="400" width="400" />-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="right">-->
-        <!--<h2 class="large-title">This is a Cryptographic</h2>-->
-        <!--<div class="hero-text-content">-->
-        <!--<p>A graphic created by you, with a little help from provably secure randomness. </p>-->
-        <!--<p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and-->
-        <!--trade.</p>-->
-        <!--<p>Try creating another one.</p>-->
-        <!--<cg-button-->
-        <!--@click="renderCanvas">-->
-        <!--Recompose-->
-        <!--</cg-button>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
     </div>
 </template>
 
@@ -88,11 +59,6 @@
       },
       coverIpfsHashes: [],
     }),
-    computed: {
-      ...mapGetters({
-        assetPacks: SELECTED_ASSET_PACKS,
-      })
-    },
     methods: {
       async renderCanvas() {
         this.iterations++;
@@ -144,6 +110,8 @@
       this.iterations = 0;
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
+      const landingPacks = getLandingPacks();
+      this.assetPacks = landingPacks.packs;
       this.selectedAssets = this.assetPacks.map(assetPack =>
         assetPack.assets.map(item => parseInt(item.id)))
         .reduce((a, b) => a.concat(b), []);
