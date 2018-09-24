@@ -21,7 +21,7 @@
                 </div>
                 <asset-packs-pagination
                         :asset-pack-ids="assetPackIds"
-                        :asset-packs-type="showPacks"
+                        :asset-packs-type="`asset-packs-${showPacks}`"
                         :show-per-page="16"
                         :overlay="true"
                         grid="row-4"

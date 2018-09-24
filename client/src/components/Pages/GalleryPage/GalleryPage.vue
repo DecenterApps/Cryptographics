@@ -19,7 +19,7 @@
                         For sale
                     </cg-button>
                 </div>
-                <paginated-gallery :emptyStateType="showGraphics" :imageIds="showGraphics === 'all' ? imageIds : imagesOnSale" :display-overlay="true" />
+                <paginated-gallery :emptyStateType="`gallery-${showGraphics}`" :imageIds="showGraphics === 'all' ? imageIds : imagesOnSale" :display-overlay="true" />
             </div>
         </div>
     </div>

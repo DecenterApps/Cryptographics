@@ -29,7 +29,7 @@
                     </div>
                     <separator />
                     <div class="gallery" v-if="currentTab === 'gallery'">
-                        <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
+                        <paginated-gallery :emptyStateType="'profile-gallery'" :imageIds="imageIds" :display-overlay="true" />
                     </div>
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
@@ -51,7 +51,7 @@
                         </div>
                         <asset-packs-pagination
                                 :asset-pack-ids="assetPackIds"
-                                :asset-packs-type="showPacks"
+                                :asset-packs-type="`profile-asset-packs-${showPacks}`"
                                 :show-per-page="16"
                                 :overlay="true"
                                 grid="row-4"
