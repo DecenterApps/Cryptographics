@@ -366,6 +366,11 @@ export const makeImage = (objs, c, width, height, frame = {
       .done(async (loadedImages) => {
         for (let i = 0; i < assets.length; i++) {
           if (!loadedImages[i].image.failed) {
+            if (assets[i].src) { // landing page assets are resized 10x
+              assets[i].image.width = assets[i].image.width * 10;
+              assets[i].image.height = assets[i].image.height * 10;
+            }
+
             await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
 
             await drawBottomFrame(context, canvasHeight, canvasWidth, frame);

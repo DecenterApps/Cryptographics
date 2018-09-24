@@ -1,11 +1,16 @@
 <template>
     <div class="gallery">
+        <div v-if="loading" class="loading-section">
+            <loader />
+        </div>
         <div class="masonry-wrapper"
-             v-masonry
-             transition-duration="0.3s"
-             item-selector=".item"
-             gutter=".gutter-sizer"
-             fit-width="true">
+            v-if="!loading"
+            v-masonry
+            transition-duration="0s"
+            stutter="0"
+            item-selector=".item"
+            gutter=".gutter-sizer"
+            fit-width="true">
             <div class="grid">
                 <div class="gutter-sizer"></div>
             </div>
@@ -89,7 +94,7 @@
         async get() {
           this.loading = true;
           const selectedImages = paginateArray(this.imageIds, 1, this.showPerPage);
-          const images = await getImagesMetadata(selectedImages);
+          const images = await getImagesMetadata(selectedImages, true);
           this.loading = false;
           return images;
         },
@@ -102,7 +107,7 @@
       async changePage(currentPage) {
         this.loading = true;
         const selectedImages = paginateArray(this.imageIds, currentPage, this.showPerPage);
-        this.images = await getImagesMetadata(selectedImages);
+        this.images = await getImagesMetadata(selectedImages, true);
         this.loading = false;
       }
     }
@@ -196,6 +201,15 @@
                     }
                 }
             }
+        }
+        .loading-section {
+            width: 100%;
+            height: 470px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #CECECE;
+            margin-top: 30px;
         }
     }
 </style>

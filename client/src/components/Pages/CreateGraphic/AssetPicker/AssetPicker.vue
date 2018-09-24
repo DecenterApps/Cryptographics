@@ -10,14 +10,19 @@
         <div class="filter-section">
             <div>
                 <cg-button
-                        :button-style="showYourPacks === false ? 'tab-active' : 'tab-inactive'"
-                        @click="toggleAssetPacks">
-                    All asset packs
+                        :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('all')">
+                    All
                 </cg-button>
                 <cg-button
-                        :button-style="showYourPacks === true ? 'tab-active' : 'tab-inactive'"
-                        @click="toggleAssetPacks">
-                    Your asset packs
+                        :button-style="showPacks === 'bought' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('bought')">
+                    Bought
+                </cg-button>
+                <cg-button
+                        :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('created')">
+                    Created by You
                 </cg-button>
             </div>
         </div>
@@ -65,8 +70,8 @@
   export default {
     name: 'AssetPicker',
     data: () => ({
-      assetPacks: [],
-      showYourPacks: false,
+      allAssetPacks: [],
+      showPacks: 'all',
       loading: true,
     }),
     components: { AssetPickerPagination },
@@ -81,7 +86,12 @@
           return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
             this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
         });
-        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), 0);
+        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), '0');
+      },
+      assetPacks() {
+        if (this.showPacks === 'created') return this.createdPacksIDs;
+        if (this.showPacks === 'bought') return this.boughtPacksIDs;
+        return this.allAssetPacks;
       }
     },
     methods: {
@@ -94,26 +104,15 @@
       isSelected(asset) {
         return this.selectedAssetPacks.findIndex(item => parseInt(item.id) === parseInt(asset.id)) >= 0;
       },
-      async toggleAssetPacks() {
-        this.showYourPacks = !this.showYourPacks;
-        this.loading = true;
-        if (this.showYourPacks) {
-          this.assetPacks = [
-            ...this.createdPacksIDs,
-            ...this.boughtPacksIDs
-          ];
-        } else {
-          const numOfAssets = await getNumberOfAssetPacks();
-          this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
-        }
-        this.loading = false;
+      toggleAssetPacks(toShow) {
+        this.showPacks = toShow;
       },
     },
 
     async created() {
       try {
         const numOfAssets = await getNumberOfAssetPacks();
-        this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
+        this.allAssetPacks = [...Array(parseInt(numOfAssets)).keys()];
       } catch (e) {
         console.log(e);
       } finally {
@@ -153,11 +152,7 @@
             margin-bottom: 20px;
 
             button {
-                min-width: 130px;
-
-                &:first-child {
-                    margin-right: 20px;
-                }
+                margin-right: 20px;
             }
         }
     }

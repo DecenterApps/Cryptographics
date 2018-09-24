@@ -127,21 +127,22 @@
 
 <style scoped lang="scss">
     .asset-packs {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
         margin-top: 30px;
         &.row-2 {
             .asset-pack {
-                flex: 0 0 45%;
+                width: 45%;
+                margin-right: 5%;
+                margin-bottom: 5%;
+                &:nth-child(2n) {
+                    margin-right: 0;
+                }
             }
         }
         &.row-4 {
-            justify-content: space-between;
             .asset-pack {
-                flex: 0 0 23%;
-            }
-            .asset-pack {
+                width: 23%;
+                margin-right: 2.6%;
+                margin-bottom: 2.6%;
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
@@ -152,6 +153,7 @@
             font-family: 'YoungSerif-Regular', sans-serif;
             font-size: 22px;
             margin-bottom: 20px;
+            display: inline-block;
             a {
                 text-decoration: none;
                 color: #000;

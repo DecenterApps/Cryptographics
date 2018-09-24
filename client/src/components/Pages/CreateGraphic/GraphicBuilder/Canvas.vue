@@ -92,6 +92,7 @@
         }
         &.square {
             canvas {
+                max-height: 670px;
                 @media screen and (max-width: 1120px) {
                     height: auto;
                 }

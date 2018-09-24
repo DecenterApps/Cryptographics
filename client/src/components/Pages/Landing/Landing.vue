@@ -11,22 +11,34 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-1.png" alt="">
                     </div>
-                    <p>1. Select <br> Asset pack</p>
+                    <p>1. Select Asset packs</p>
+                    <p class="secondary">
+                        Random assets from the chosen packs will make it to your Cryptographic.
+                    </p>
                 </div>
                 <ico-arrow></ico-arrow>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p>2. Generate <br> Cryptographic</p>
+                    <p>2. Generate Cryptographics</p>
+                    <p class="secondary">
+                        A provably random composition process creates your Cryptographic.
+                    </p>
                 </div>
                 <ico-arrow></ico-arrow>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
                     </div>
-                    <p>3. Sell it on <br> market</p>
+                    <p>3. Showcase it or sell it</p>
+                    <p class="secondary">
+                        Store your Cryptographic permanently and showcase it or sell it in the Gallery.
+                    </p>
                 </div>
+            </div>
+            <div class="container">
+                <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC721 token.</p>
             </div>
         </div>
         <div class="landing-section">
@@ -35,7 +47,10 @@
             </h1>
             <div class="title-section">
                 <h1 class="large-title">Gallery</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+                <p>
+                    The Gallery showcases all Cryptographics that have been stored on the blockchain.
+                    It’s the place where you can discover, buy and sell Cryptographics.
+                </p>
             </div>
             <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" />
         </div>
@@ -50,44 +65,34 @@
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-1.png" alt="">
                     </div>
-                    <p class="small-title">Assets</p>
-                    <p>created by Artists</p>
+                    <p class="small-title">Design Assets</p>
+                    <p class="secondary">Create unique graphical elements.</p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-2.png" alt="">
                     </div>
-                    <p class="small-title">Asset Pack</p>
-                    <p>All assets in one <br> Asset Pack</p>
+                    <p class="small-title">Create Asset Packs</p>
+                    <p class="secondary">Group elements and upload them as Asset Packs.</p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-3.png" alt="">
                     </div>
-                    <p class="small-title">Cryptographic</p>
-                    <p>created with users <br> Asset packs</p>
+                    <p class="small-title">Sell to Creators</p>
+                    <p class="secondary">Offer your Asset Packs to Creators at your own price.</p>
                 </div>
-            </div>
-            <div class="steps-bottom-section">
-                <svg width="322" height="101" viewBox="0 0 322 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M322 100.5H1V0.5H26" stroke="black"/>
-                </svg>
-
-                <p>Artists take <b>90%</b> of Cryptographic price</p>
-                <svg width="338" height="102" viewBox="0 0 338 102" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M314 1H337V101.5H0" stroke="black"/>
-                </svg>
-
             </div>
             <div class="container">
                 <br>
                 <br>
-                <p class="wider">Each asset pack can contain up to 50 different graphic elements, one of which always
-                    needs to be a
+                <p class="wider">
+                    Each asset pack can contain up to 50 different elements, at least one of which should be a
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
-                    receive earnings every time a new Creator uses it.</p>
+                    receive earnings every time a new Creator uses it.
+                </p>
                 <button-link to="/upload-asset-pack">Create asset pack</button-link>
             </div>
         </div>
@@ -181,21 +186,30 @@
         padding-bottom: 200px;
         text-align: center;
     }
-
     .steps {
         display: flex;
         justify-content: center;
+
 
         .step {
             .image-wrapper {
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 height: 160px;
             }
             p {
-                font-size: 15px;
-                line-height: 19px;
-                margin-top: 15px;
+                line-height: 1.4em;
+                margin: 15px auto 0;
+                max-width: 210px;
+                color: black;
+                font-size: 16px;
+                &.secondary {
+                    /*margin: 10px auto 0;*/
+                    color: #717171;
+                    font-size: 13px;
+                    max-width: 180px;
+                }
             }
         }
 
@@ -222,6 +236,12 @@
             height: 34px;
             width: 18px;
         }
+    }
+
+
+    .steps-bottom {
+        font-size: 15px;
+        margin-top: 30px;
     }
 
     .steps-bottom-section {

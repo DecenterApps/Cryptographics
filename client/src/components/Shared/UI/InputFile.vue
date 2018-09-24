@@ -3,7 +3,7 @@
         <label
             class="button"
             :class="buttonStyle">
-        <span>Browse</span>
+        <span>Upload image</span>
             <input
                 class="input"
                 :id="id"
@@ -61,39 +61,11 @@ export default {
         }
     }
 }
+@import '../../Shared/UI/button-styles';
 .button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 105px;
-    max-height: 33px;
-    min-height: 33px;
-    padding: 9px;
-    font-size: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    outline: 0;
-    text-decoration: none;
-    text-align: center;
-    text-transform: capitalize;
-    white-space: nowrap;
+    min-width: 100px;
     .input {
         display: none;
     }
-}
-.positive {
-    color: #000;
-    background-color: #fff;
-    border: 1px solid #fff;
-}
-.negative {
-    color: #fff;
-    background-color: #000;
-    border: 1px solid #000;
-}
-.transparent {
-    color: #000;
-    background: none;
-    border: 1px solid #000;
 }
 </style>

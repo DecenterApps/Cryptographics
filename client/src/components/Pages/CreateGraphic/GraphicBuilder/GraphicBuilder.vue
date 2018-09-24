@@ -119,6 +119,7 @@
     calculatePrice,
     calculateFirstSeed,
     convertSeed,
+    getImage,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
@@ -127,7 +128,7 @@
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
   import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
 
   export default {
@@ -152,7 +153,6 @@
       randomHashIds: pickTenRandoms(),
       imagePrice: null,
       potentialAssets: [],
-      allAssets: [],
       selectedAssets: [],
       claimPressed: false,
     }),
@@ -185,6 +185,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
 
@@ -255,7 +256,7 @@
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
         const result = await transactionPromise();
         const id = result.events.ImageCreated.returnValues.imageId;
-        this.toggleLoadingModal();
+        this.closeLoadingModal();
         this.$router.push(`single-graphic/${id}`);
         this.openModal('Cryptographic successfully saved to the blockchain forever.');
       },
@@ -270,7 +271,7 @@
           selectedAssets = shuffleArray(selectedAssets);
         }
         selectedAssets = selectedAssets.slice(0, 30);
-        this.canvasData.assets = await imageService.getFinalAssets(this.randomSeed, this.iterations, utils.encode(selectedAssets), this.allAssets);
+        this.canvasData.assets = await getImage(this.randomSeed, this.iterations, utils.encode(selectedAssets));
         console.log('iteration: ' + this.iterations);
         this.potentialAssets = selectedAssets;
         let picked = [];
@@ -330,7 +331,6 @@
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
         this.timestamp = new Date().getTime();
-        this.allAssets = await imageService.loadDataForAssets();
         this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
         this.randomSeed = await convertSeed(this.randomSeed);
         this.renderCanvas();

@@ -9,14 +9,10 @@
                 <div class="right button-group">
                     <cg-button
                             button-style="secondary"
-                            v-if="userAddress"
+                            v-if="userAddress && userProfile"
                             @click="openModal('editProfile')">
                         Edit Profile
                     </cg-button>
-                    <!--<button-link-->
-                    <!--to="/upload-asset-pack">-->
-                    <!--Create Asset Pack-->
-                    <!--</button-link>-->
                 </div>
             </div>
             <div class="main">
@@ -31,13 +27,10 @@
                             </button>
                         </div>
                     </div>
-
                     <separator />
-
                     <div class="gallery" v-if="currentTab === 'gallery'">
                         <paginated-gallery :imageIds="imageIds" :display-overlay="true" />
                     </div>
-
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
                             <cg-button
@@ -53,7 +46,7 @@
                             <cg-button
                                     :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
                                     @click="showPacks = 'created'">
-                                Created
+                                Created by You
                             </cg-button>
                         </div>
                         <asset-packs-pagination
@@ -131,10 +124,19 @@
     },
     watch: {
       currentUserAddress: async function (val) {
-        console.log(val);
         if (this.userProfile) {
           this.userAddress = val;
           this.imageIds = await getUserImages(val);
+        }
+      },
+      currentUserUsername: function(val) {
+        if (this.userProfile) {
+          this.username = val;
+        }
+      },
+      currentUserAvatar: function(val) {
+        if (this.userProfile) {
+          this.avatar = val;
         }
       },
       createdPacksIDs: async function (val) {
@@ -206,8 +208,8 @@
         this.currentTab = type;
       }
     },
-    created() {
-      this.onCreated()
+    async created() {
+      await this.onCreated()
     },
   };
 
@@ -218,7 +220,6 @@
         padding-top: 0 !important;
         flex-direction: column;
         position: relative;
-        /*min-height: calc(100vh - 419px);*/
         justify-content: flex-start !important;
 
         .line-separator {
@@ -269,7 +270,6 @@
         }
         .assets, .gallery {
             padding-bottom: 30px;
-            /*min-height: 650px;*/
             .button-group {
                 .button {
                     min-width: auto;

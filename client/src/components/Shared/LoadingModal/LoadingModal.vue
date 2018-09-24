@@ -11,7 +11,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
-  import { TOGGLE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
+  import { HIDE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
 
   export default {
     name: 'LoadingModal',
@@ -23,7 +23,7 @@
     },
     methods: {
       ...mapActions({
-        closeModal: TOGGLE_LOADING_MODAL,
+        closeModal: HIDE_LOADING_MODAL,
       }),
       backToGallery() {
         this.closeModal();
