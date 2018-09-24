@@ -18,7 +18,8 @@ import {
   SET_NEW_USERNAME,
   SET_NETWORK, MUTATE_NETWORK,
 } from './types';
-import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
+import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
+
 import {
   TOGGLE_MODAL
 } from '../modal/types';
@@ -71,7 +72,7 @@ export default {
     let avatarBytes32 = await getAvatar(state.metamaskAddress);
     const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
     if (avatarBytes32 !== initialAvatarBytes32) {
-      let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
+      let avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(avatarBytes32);
       commit(MUTATE_AVATAR, avatar);
     } else {
       let avatar = DEFAULT_AVATAR_IPFS_HASH;

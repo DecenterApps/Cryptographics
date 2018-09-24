@@ -2,7 +2,7 @@
     <layout layout-style="full-width" layout-content="no-container">
         <div class="container">
             <div class="header">
-                <img v-if="avatar.length > 0" class="avatar" :src="ipfsNodePath + avatar">
+                <img v-if="avatar.length > 0" class="avatar" :src="avatar">
                 <div class="left">
                     <h1 class="large-title name">{{ username }}</h1>
                 </div>

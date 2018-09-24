@@ -18,7 +18,7 @@
                             {{ username }}
                             <img
                                     class="avatar"
-                                    :src="ipfsNodePath + avatar">
+                                    :src="avatar">
                         </router-link>
                         <button-link to="/create-graphic" button-style="secondary inverted">Compose</button-link>
                     </div>
