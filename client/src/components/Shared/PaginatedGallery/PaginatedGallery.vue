@@ -2,6 +2,7 @@
     <div class="gallery">
         <div v-if="loading" class="loading-section">
             <loader />
+            <h3>Please wait, loading Cryptographics from the blockchain.</h3>
         </div>
         <div v-if="!loading">
             <div v-if="images && images.length > 0">
@@ -19,7 +20,6 @@
                         <div class="artwork">
                             <router-link :to="`/cryptographic/${image.id}`">
                                 <overlay v-if="displayOverlay">
-                                    <!--<button-icon icon-type="download"/>-->
                                     <button-icon icon-type="zoom" />
                                 </overlay>
                             </router-link>
@@ -217,10 +217,14 @@
             width: 100%;
             height: 470px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: #CECECE;
             margin-top: 30px;
+            & .loader-content {
+                margin-bottom: 20px;
+            }
         }
     }
 </style>
