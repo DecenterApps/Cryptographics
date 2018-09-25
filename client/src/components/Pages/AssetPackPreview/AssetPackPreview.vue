@@ -118,22 +118,23 @@
     }
 
     .asset-list {
-        display: flex;
-        flex-wrap: wrap;
         margin-bottom: 120px;
-        justify-content: space-between;
 
         .asset {
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 206px;
-            width: 206px;
-            margin-bottom: 22px;
+            display: inline-block;
+            text-align: center;
             background-color: #ECECEC;
             padding: 30px 10px;
             box-sizing: border-box;
+            width: 19%;
+            max-height: 19%;
+            height: 213px;
+            margin: 0 1.25% 1.25% 0;
+            vertical-align: top;
+            &:nth-child(5n) {
+                margin-right: 0;
+            }
             &:hover {
                 .asset-type {
                     opacity: 1;
@@ -157,6 +158,7 @@
                 }
             }
             img {
+                position: relative;
                 max-height: 100%;
                 max-width: 100%;
             }
