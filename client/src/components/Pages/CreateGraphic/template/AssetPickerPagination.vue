@@ -19,7 +19,7 @@
                 <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} — <price size="inherit" :value="this.hovered.price" /></h1>
             </div>
             <div class="price-section">
-                <h1 class="small-title">Total price — <price size="inherit" :value="totalPrice"/></h1>
+                <h1 v-if="totalPrice > 0" class="small-title">Total price — <price size="inherit" :value="totalPrice"/></h1>
             </div>
         </div>
 

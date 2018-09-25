@@ -27,7 +27,7 @@
                             <p class="artwork-title">{{ image.title }}</p>
                         </div>
                         <div class="artwork-details">
-                            <user-link :to="'/user/' + image.creator" :name="image.username" :avatar="image.avatar" />
+                            <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
                             <price
                                     v-if="image.price"
                                     :value="image.price"
@@ -51,7 +51,7 @@
 
 <script>
   import {
-    getImagesMetadata,
+    getGalleryImages,
   } from 'services/ethereumService';
   import { paginateArray } from 'services/helpers';
   import { mapGetters } from 'vuex';
@@ -105,7 +105,7 @@
         async get() {
           this.loading = true;
           const selectedImages = paginateArray(this.imageIds, 1, this.showPerPage);
-          const images = await getImagesMetadata(selectedImages, true);
+          const images = await getGalleryImages(selectedImages, true);
           this.loading = false;
           return images;
         },

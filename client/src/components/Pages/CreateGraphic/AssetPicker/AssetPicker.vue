@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="asset-picker">
         <div class="header">
             <h2 class="large-title">Select Asset Pack</h2>
             <div>
@@ -129,6 +129,10 @@
 </script>
 
 <style scoped lang="scss">
+
+    .asset-picker {
+        width: 100%;
+    }
 
     .line-separator {
         margin: 30px 0;

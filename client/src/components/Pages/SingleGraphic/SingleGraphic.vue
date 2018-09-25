@@ -14,7 +14,6 @@
                     v-if="!orderPrint"
                     :image="image"
                     :assetPacks="assetPacksUsed"
-                    :username="username"
                     :isLogged="loggedIn"
                     :isForSale="forSale"
                     :userAddress="userAddress"
@@ -45,6 +44,7 @@
     getSelectedAssetPacksWithAssetData,
     isImageForSale,
     parseContractAssetData,
+    getGalleryImage,
   } from 'services/ethereumService';
   import ShareIcons from './ShareIcons';
 
@@ -59,6 +59,8 @@
       username: '',
       image: {
         creator: '',
+        owner: '',
+        username: '',
         src: '',
       },
       canvasData: {
@@ -99,16 +101,21 @@
         }, 'image/jpeg');
       },
       async getData() {
-        this.username = await getUsername(this.image.creator);
-        this.loggedIn = this.image.creator === this.userAddress;
+        console.log(this.image.owner, this.userAddress);
+        this.loggedIn = this.image.owner.toLowerCase() === this.userAddress.toLowerCase();
         this.forSale = await isImageForSale(this.$route.params.id);
       }
     },
     async created() {
-      this.image = await getImageMetadata(this.$route.params.id, true);
-      const packsUsed = await getAssetsOrigins(this.image.usedAssets);
-      this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
+      const metadata = await getImageMetadata(this.$route.params.id);
+      const image = await getGalleryImage(this.$route.params.id, true);
+      this.image = {
+        ...metadata,
+        ...image,
+      };
       this.getData();
+      const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
+      this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       const assetsForCanvas = await parseContractAssetData(this.image);
       console.log('assetsForCanvas', assetsForCanvas);
       this.canvasData = {

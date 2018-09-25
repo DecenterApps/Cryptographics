@@ -104,7 +104,7 @@
   import IcoArrow from 'shared/UI/Icons/IcoArrow';
   import AssetCarousel from './AssetCarousel/AssetCarousel';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImagesMetadata, getImageCount } from 'services/ethereumService';
+  import { getImageCount } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 

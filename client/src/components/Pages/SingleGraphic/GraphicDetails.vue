@@ -23,14 +23,10 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
                 </h3>
-                <user-link :to="'/user/' + image.creator" :name="username" :avatar="image.avatar" />
+                <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
                 <p class="description">{{ image.description }}</p>
 
             </div>
-            <!--<div v-if="!sellGraphic" class="graphic-address">-->
-                <!--<strong>Cryptographics address:</strong>-->
-                <!--<span class="address">{{ image.creator }}</span>-->
-            <!--</div>-->
             <div
                     v-if="isLogged && !isForSale"
                     class="graphic-controls"
