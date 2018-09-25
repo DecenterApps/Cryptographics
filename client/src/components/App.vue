@@ -12,7 +12,7 @@
                                 '/user/:userId',
                             ].indexOf($route.matched[0].path) >= 0" />
         </keep-alive>
-        <router-view />
+        <router-view :key="$route.fullPath" />
         <cg-footer v-if="['create-cryptographic'].indexOf($route.name) === -1" />
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
