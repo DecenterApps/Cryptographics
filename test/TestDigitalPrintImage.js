@@ -1,20 +1,22 @@
 const DigitalPrintImage = artifacts.require("../contracts/Image/DigitalPrintImage.sol");
 const AssetManager = artifacts.require("../contracts/AssetManager.sol");
+const Functions = artifacts.require("../contracts/Utils/Functions.sol");
 const utils = require('../client/src/services/utils');
 const Web3 = require('web3');
 const advanceToBlock = require('./helpers/advanceToBlock').advanceToBlock;
 
 contract('DigitalPrintImage', async (accounts) => {
 
-    let dpm, assetManager;
+    let dpm, assetManager, functions;
 
     before(async () => {
         dpm = await DigitalPrintImage.deployed();
         assetManager = await AssetManager.deployed();
-    
-        await advanceToBlock(105);
+        functions = await Functions.deployed();
 
-        await dpm.fillWithHashes();
+        await advanceToBlock(web3.eth.blockNumber + 105);
+
+        await functions.fillWithHashes();
 
         let ipfsHashes = [];
         let attributes = [];
@@ -34,14 +36,14 @@ contract('DigitalPrintImage', async (accounts) => {
         let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18];
 
         let encoded_arr = utils.encode(arr);
-        res = await dpm.decodeAssets(encoded_arr);
+        res = await functions.decodeAssets(encoded_arr);
         for (let i=0; i<res.length; i++) {
             res[i] = parseInt([i]);
         }
         // console.log("start");
-        let seed = await dpm.calculateSeed([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213);
+        let seed = await functions.calculateSeed([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213);
         // console.log(seed);
-        let final = await dpm.getFinalSeed(seed, 1);
+        let final = await functions.getFinalSeed(seed, 1);
         // console.log(final);
         let new_res = await dpm.createImage([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 123213, 1, encoded_arr, "Author", "hash", "hash"); 
         let balance = await dpm.balanceOf(accounts[0]);
@@ -53,7 +55,7 @@ contract('DigitalPrintImage', async (accounts) => {
 
         let encoded_arr = utils.encode(arr);
         
-        res = await dpm.decodeAssets(encoded_arr);
+        res = await functions.decodeAssets(encoded_arr);
         for (let i=0; i<res.length; i++) {
             res[i] = parseInt(res[i]);
             assert.equal(arr[i], res[i], "Decoded array should be same as initial array");
