@@ -240,24 +240,24 @@
         for (let i = 0; i < x.files.length; i++) {
           const file = x.files[i];
 
-          if (file.size > 2500000) return;
+          if (file.size <= 2500000) {
+            const img = new Image();
+            const path = URL.createObjectURL(file);
+            img.src = path;
 
-          const img = new Image();
-          const path = URL.createObjectURL(file);
-          img.src = path;
+            img.onload = () => {
+              const width = img.naturalWidth;
+              const height = img.naturalHeight;
 
-          img.onload = () => {
-            const width = img.naturalWidth;
-            const height = img.naturalHeight;
+              if (width > 2480 || height > 3598) return;
 
-            if (width > 2480 || height > 3598) return;
-
-            this.assets.push({
-              path,
-              file: x.files[i],
-              attribute: 211,
-            });
-          };
+              this.assets.push({
+                path,
+                file: x.files[i],
+                attribute: 211,
+              });
+            };
+          }
         }
       },
 
