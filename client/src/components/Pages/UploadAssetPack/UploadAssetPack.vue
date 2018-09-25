@@ -17,6 +17,10 @@
                         Please upload high resolution files.
                     </p>
                     <p class="upload-description">
+                        Max file resolution: <span>2480x3508px</span>,
+                        Max file size: <span>2.5MB.</span>
+                    </p>
+                    <p class="upload-description">
                         The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
                         paper at a resolution of <span>2480x3508px</span>, with a square format
                         of <span>2480x2480px</span> also available (same DPI).
@@ -43,6 +47,11 @@
                 <span v-if="assets.length === 0">
                     <p class="upload-description">
                         Please upload high resolution files.
+                    </p>
+                    <p class="upload-description">
+                        Max file resolution: <span>2480x3508px.</span>
+                        <br>
+                        Max file size: <span>2.5MB.</span>
                     </p>
                     <p class="upload-description">
                         The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
@@ -140,7 +149,7 @@
                         </div>
                         <div class="input-group">
                             <label class="small-title">Asset pack price</label>
-                            <cg-input v-model="price" name="price" placeholder="Value" />
+                            <cg-input v-model="price" inputType="number" name="price" placeholder="Value" />
                         </div>
                     </div>
                     <div class="input-group">
@@ -229,11 +238,26 @@
       uploadAssets() {
         let x = document.getElementById('files');
         for (let i = 0; i < x.files.length; i++) {
-          this.assets.push({
-            path: URL.createObjectURL(x.files[i]),
-            file: x.files[i],
-            attribute: 211,
-          });
+          const file = x.files[i];
+
+          if (file.size > 2500000) return;
+
+          const img = new Image();
+          const path = URL.createObjectURL(file);
+          img.src = path;
+
+          img.onload = () => {
+            const width = img.naturalWidth;
+            const height = img.naturalHeight;
+
+            if (width > 2480 || height > 3598) return;
+
+            this.assets.push({
+              path,
+              file: x.files[i],
+              attribute: 211,
+            });
+          };
         }
       },
 
