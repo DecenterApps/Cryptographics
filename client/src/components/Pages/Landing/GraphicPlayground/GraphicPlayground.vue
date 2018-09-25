@@ -68,7 +68,7 @@
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
         console.log('POTENTIAL ASSETS: ' + potentialAssets);
-        const finalAssets = await getImage(this.randomSeed, this.iterations, utils.encode(potentialAssets));
+        const finalAssets = await getImage(this.randomSeed, this.iterations, potentialAssets);
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
         this.potentialAssets = potentialAssets;
         console.log('iteration: ' + this.iterations);
