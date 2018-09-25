@@ -452,27 +452,39 @@ export const getAssetsOrigins = async (assetIds) => {
 
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log('FINAL SEED: ', seed);
-  let pot_assets = [];
-  console.log(potentialAssets.length);
-  for (let j = 0; j < potentialAssets.length; j++) {
-    let arr = [];
-    arr.push(potentialAssets[j]);
-    pot_assets = [...pot_assets, ...utils.decode(arr)];
-  }
-  console.log('POTENTIAL', pot_assets);
+  console.log('POTENTIAL', potentialAssets);
   let pickedAssets = [];
-  let attributes = await getAttributesForAssets(pot_assets);
+  let attributes = await getAttributesForAssets(potentialAssets);
   console.log('ATTRIBUTES', attributes);
 
-  for (let i = 0; i < pot_assets.length; i++) {
-    seed = web3.utils.soliditySha3(seed, parseInt(pot_assets[i], 10));
-    let metadata = getAssetMetadata(utils.hex2dec(seed), pot_assets[i]);
+  for (let i = 0; i < potentialAssets.length; i++) {
+    seed = web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), potentialAssets[i]);
 
-    if (metadata != null) {
+    if (metadata !== null) {
       pickedAssets.push({
         ...metadata,
         attributes: attributes[i],
+      });
+    }
+  }
+  console.log('PICKED ASSETS', pickedAssets);
+  return pickedAssets;
+};
+
+export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
+  let seed = calculateFinalSeed(randomSeed, iterations);
+  console.log('POTENTIAL', potentialAssets);
+  let pickedAssets = [];
+
+  for (let i = 0; i < potentialAssets.length; i++) {
+    seed = web3.utils.soliditySha3(seed, parseInt(i, 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), i);
+
+    if (metadata !== null) {
+      pickedAssets.push({
+        ...metadata,
+        attributes: potentialAssets[i].attribute,
       });
     }
   }
@@ -574,19 +586,22 @@ const mapUserInfo = userInfoTx => {
 };
 
 export const getImageTransferHistory = imageId =>
-  new Promise(async(resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     try {
       const contract = await marketPlaceContract();
       const userContract = await digitalPrintImageContract();
 
-      const events = await contract.getPastEvents('ImageBought', { filter: { imageId }, fromBlock: 0 });
+      const events = await contract.getPastEvents('ImageBought', {
+        filter: { imageId },
+        fromBlock: 0
+      });
 
       const prices = events.map(event => web3.utils.fromWei(event.returnValues[2], 'ether'));
 
       // get time from the events tx block numbers
       const eventTimestampsPromise = events.map(event => web3.eth.getBlock(event.blockNumber));
       const eventsBlocks = await Promise.all(eventTimestampsPromise);
-      const eventsTimes = eventsBlocks.map(block =>  utils.timeConverter(block.timestamp));
+      const eventsTimes = eventsBlocks.map(block => utils.timeConverter(block.timestamp));
 
       // get users name and images from the events
       const usersAddresses = events.map(event => event.returnValues[1]);

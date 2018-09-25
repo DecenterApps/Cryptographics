@@ -4,11 +4,11 @@
             <div class="all-assets-header">
                 <h1 class="large-title">Asset Packs</h1>
                 <button-link to="/create-asset-pack">Create Asset Pack</button-link>
-                <p>
-                    Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
-                    asset pack has its price, but you only need to pay for each asset pack once.
-                </p>
             </div>
+            <p>
+                Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
+                asset pack has its price, but you only need to pay for each asset pack once.
+            </p>
             <separator />
             <div class="assets">
                 <div class="button-group">

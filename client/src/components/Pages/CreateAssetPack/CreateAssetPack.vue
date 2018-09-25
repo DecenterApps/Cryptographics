@@ -1,162 +1,94 @@
 <template>
     <!-- FIRST STEP -->
-    <div>
-        <layout layout-style="pulled-left" v-show="stage === 'select'">
-            <div class="left first-screen">
-                <div class="top-content">
-                    <h1 class="large-title">Select assets</h1>
-                    <input-file
-                            id="files"
-                            button-style="secondary"
-                            @change="uploadAssets">
-                        <span>Upload multiple assets</span>
-                        <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
-                    </input-file>
-                    <span v-if="assets.length > 0">
-                        <p class="upload-description">
-                        Please upload high resolution files.
-                    </p>
-                    <p class="upload-description">
-                        Max file resolution: <span>2480x3508px</span>,
-                        Max file size: <span>2.5MB.</span>
-                    </p>
-                    <p class="upload-description">
-                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
-                        paper at a resolution of <span>2480x3508px</span>, with a square format
-                        of <span>2480x2480px</span> also available (same DPI).
-                    </p>
-                    <p class="upload-description">
-                        Background layers
-                        that aren’t this exact resolution are aligned with the top
-                        left corner, regardless if they are larger or smaller than the canvas.
-                    </p>
-                    </span>
+    <div class="create-asset-pack">
+        <step-header
+                :currentStep="currentStep"
+                :steps="['Upload Assets', 'Test Asset Pack', 'Submit Asset Pack']"
+                v-on:stepChange="changeStep"
+        />
+        <div class="page-wrapper" v-show="currentStep === 0">
+            <layout layout-style="full-screen">
+                <div class="left first-screen">
+                    <div class="top-content">
+                        <h1 class="large-title">Select assets</h1>
+                        <input-file
+                                id="files"
+                                button-style="secondary"
+                                @change="uploadAssets">
+                            <span>Upload multiple assets</span>
+                            <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
+                        </input-file>
+                        <upload-description v-if="assets.length > 0" />
+                    </div>
                 </div>
+                <div class="right">
+                    <upload-description v-if="assets.length === 0" />
+                    <div v-bar="{ preventParentScroll: true }">
+                        <div>
+                            <single-asset
+                                    v-for="(asset, index) in assets"
+                                    :remove="remove.bind(this, index)"
+                                    :index="index"
+                                    :toggleAttribute="toggleAttribute.bind(this)"
+                                    :asset="asset"
+                                    :key="index"
+                            ></single-asset>
+                        </div>
+                    </div>
+                </div>
+            </layout>
+            <div class="container">
+                <separator></separator>
                 <div class="bottom-content">
-                    <div v-if="assets.length > 0" class="button-group">
-                        <cg-button button-style="secondary">
-                            Test asset pack
-                        </cg-button>
-                        <cg-button @click="stage = 'submit'">
-                            Next
-                        </cg-button>
-                    </div>
-                </div>
-            </div>
-            <div class="right">
-                <span v-if="assets.length === 0">
-                    <p class="upload-description">
-                        Please upload high resolution files.
-                    </p>
-                    <p class="upload-description">
-                        Max file resolution: <span>2480x3508px.</span>
-                        <br>
-                        Max file size: <span>2.5MB.</span>
-                    </p>
-                    <p class="upload-description">
-                        The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
-                        paper at a resolution of <span>2480x3508px</span>, with a square format
-                        of <span>2480x2480px</span> also available (same DPI).
-                    </p>
-                    <p class="upload-description">
-                        Background layers
-                        that aren’t this exact resolution are aligned with the top
-                        left corner, regardless if they are larger or smaller than the canvas.
-                    </p>
-                </span>
-                <div v-bar="{ preventParentScroll: true }">
-                    <div>
-                        <div
-                                class="asset"
-                                v-for="(asset, index) in assets"
-                                :key="index">
-                            <div class="preview-icons">
-                                {{getAttributes(asset)}}
-                                <!--<button-icon-->
-                                <!--v-if="isAttributeSelected(asset, 2)"-->
-                                <!--icon-type="scale"-->
-                                <!--:color="'#000'"-->
-                                <!--classProp="selected"-->
-                                <!--/>-->
-                                <!--<button-icon-->
-                                <!--v-if="isAttributeSelected(asset, 1)"-->
-                                <!--icon-type="rotate"-->
-                                <!--:color="'#000'"-->
-                                <!--classProp="selected"-->
-                                <!--/>-->
-                                <!--<ico-background v-if="isAttributeSelected(asset, 0)" />-->
-                            </div>
-                            <img :src="asset.path" />
-                            <overlay>
-                                <div class="overlay-icons">
-                                    <span>
-                                        <button-icon
-                                                icon-type="scale"
-                                                :color="'#fff'"
-                                                :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
-                                                @click.native="toggleAttribute(index, 0)"
-                                        />
-                                        <span class="description">Enable asset scaling</span>
-                                    </span>
-                                    <span>
-                                        <button-icon
-                                                icon-type="rotate"
-                                                :color="'#fff'"
-                                                :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
-                                                @click.native="toggleAttribute(index, 1)"
-                                        />
-                                        <span class="description">Enable asset rotation</span>
-                                    </span>
-                                    <span>
-                                        <ico-background
-                                                :ico-color="'#fff'"
-                                                :classProp="isAttributeSelected(asset, 0) ? 'selected' : ''"
-                                                ico-stroke="none"
-                                                @click.native="toggleAttribute(index, 2)"
-                                        />
-                                        <span class="description">Use as background</span>
-                                    </span>
-                                </div>
-                                <ico-trash @click.native="remove(index)" />
-                            </overlay>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </layout>
-        <layout layout-style="pulled-left" v-show="stage === 'submit'">
-            <div class="left-content">
-                <h1 class="large-title">Submit asset pack</h1>
-                <div class="graphic-preview">
-                    <canvas id="canvas"></canvas>
-                </div>
-                <div class="button-group submit">
-                    <cg-button button-style="secondary" @click="stage = 'select'" >
-                        Back
-                    </cg-button>
-                    <cg-button button-style="secondary" @click="renderCanvas">
-                        Generate thumbnail
+                    <cg-button @click="changeStep(1)">
+                        Next
                     </cg-button>
                 </div>
             </div>
+        </div>
+        <div class="page-wrapper" v-if="currentStep === 1">
+            <layout layout-style="full-screen">
+                <test-asset-pack
+                        :selected-assets="assets"
+                        :changeStep="changeStep"
+                ></test-asset-pack>
+            </layout>
+        </div>
+        <div class="page-wrapper" v-show="currentStep === 2">
+            <layout layout-style="full-screen">
+                <div class="left-content">
+                    <h1 class="large-title">Submit asset pack</h1>
+                    <div class="graphic-preview">
+                        <canvas id="thumbnail-canvas"></canvas>
+                    </div>
+                    <div class="button-group submit">
+                        <cg-button button-style="secondary" @click="renderCanvas">
+                            Generate thumbnail
+                        </cg-button>
+                    </div>
+                </div>
 
-            <div class="right-content">
-                <div class="input-content">
-                    <div class="inputs-wrapper">
-                        <div class="input-group">
-                            <label class="small-title">Asset pack name</label>
-                            <cg-input v-model="name" :max-length="20" name="packName" />
+                <div class="right-content">
+                    <div class="input-content">
+                        <div class="inputs-wrapper">
+                            <div class="input-group">
+                                <label class="small-title">Asset pack name</label>
+                                <cg-input v-model="name" :max-length="20" name="packName" />
+                            </div>
+                            <div class="input-group">
+                                <label class="small-title">Asset pack price</label>
+                                <cg-input v-model="price" inputType="number" name="price" placeholder="Value" />
+                            </div>
                         </div>
                         <div class="input-group">
-                            <label class="small-title">Asset pack price</label>
-                            <cg-input v-model="price" inputType="number" name="price" placeholder="Value" />
+                            <label class="small-title">Description</label>
+                            <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
                         </div>
-                    </div>
-                    <div class="input-group">
-                        <label class="small-title">Description</label>
-                        <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
                     </div>
                 </div>
+            </layout>
+            <div class="container">
+                <separator></separator>
                 <div class="submit-button">
                     <cg-button
                             @click="uploadToIpfs">
@@ -164,7 +96,7 @@
                     </cg-button>
                 </div>
             </div>
-        </layout>
+        </div>
     </div>
 </template>
 
@@ -176,17 +108,23 @@
   import { mapGetters, mapActions } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
-  import IcoTrash from './template/IcoTrash.vue';
-  import IcoBackground from './template/IcoBackground.vue';
+  import StepHeader from 'shared/StepHeader/StepHeader';
   import { preloadImages, resizeCanvas } from 'services/helpers';
+  import SingleAsset from './SingleAsset/SingleAsset';
+  import UploadDescription from './UploadDescription/UploadDescription';
+  import TestAssetPack from './TestAssetPack/TestAssetPack';
 
   export default {
     name: 'CreateAssetPack',
     components: {
-      IcoTrash,
-      IcoBackground
+      TestAssetPack,
+      UploadDescription,
+      SingleAsset,
+      StepHeader
     },
     data: () => ({
+      steps: [],
+      currentStep: 0,
       name: '',
       description: '',
       price: '',
@@ -206,14 +144,6 @@
       })
     },
 
-    watch: {
-      stage: function (val) {
-        if (val === 'submit') {
-          this.renderCanvas();
-        }
-      }
-    },
-
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL,
@@ -221,55 +151,46 @@
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
-      getAttributes(asset) {
-        let attribute = asset.attribute.toString();
-        let words = ['BGD', 'ROT', 'SCA'];
-        let attributes = [];
-        for (let i = 0; i < attribute.length; i++) {
-          if (attribute.charAt(i) === '1') {
-            attributes.push(words[i]);
-          }
-        }
-        return attributes.join(' — ');
-      },
-      isAttributeSelected(asset, position) {
-        return asset.attribute.toString().charAt(position) === '1';
+      changeStep(step) {
+        console.log(step);
+        if (step === 2) this.renderCanvas();
+        this.currentStep = step;
       },
       uploadAssets() {
         let x = document.getElementById('files');
         for (let i = 0; i < x.files.length; i++) {
           const file = x.files[i];
 
-          if (file.size > 2500000) return;
+          if (file.size <= 2500000) {
+            const img = new Image();
+            const path = URL.createObjectURL(file);
+            img.src = path;
 
-          const img = new Image();
-          const path = URL.createObjectURL(file);
-          img.src = path;
+            img.onload = () => {
+              const width = img.naturalWidth;
+              const height = img.naturalHeight;
 
-          img.onload = () => {
-            const width = img.naturalWidth;
-            const height = img.naturalHeight;
+              if (width > 2480 || height > 3508) return;
 
-            if (width > 2480 || height > 3598) return;
-
-            this.assets.push({
-              path,
-              file: x.files[i],
-              attribute: 211,
-            });
-          };
+              this.assets.push({
+                path,
+                file: x.files[i],
+                attribute: 211,
+              });
+            };
+          }
         }
       },
 
       renderCanvas() {
-        let canvas = document.getElementById('canvas');
+        let canvas = document.getElementById('thumbnail-canvas');
         canvas.width = 2480;
         canvas.height = 1805;
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
       async uploadToIpfs() {
         let hashes = [];
-        let canvas = document.getElementById('canvas');
+        let canvas = document.getElementById('thumbnail-canvas');
 
         const UPLOAD_WIDTH = 386 * 2;
         const UPLOAD_HEIGHT = 281 * 2;
@@ -327,15 +248,6 @@
       },
       remove(index) {
         this.assets.splice(index, 1);
-        let assets = this.assets;
-        let canvas = document.getElementById('canvas');
-        canvas.width = 386;
-        canvas.height = 281;
-        let asset_paths = [];
-        for (let i = 0; i < this.assets.length; i++) {
-          asset_paths.push(this.assets[i].path);
-        }
-        makeCoverImage(false, asset_paths, canvas, 500, 365);
       },
 
       toggleAttribute(index, attributeType) {
@@ -352,20 +264,29 @@
 </script>
 
 <style scoped lang="scss">
+    .create-asset-pack {
+        min-height: 100vh;
+        .page-wrapper {
+            min-height: calc(100vh - 66px);
+            background-color: #D9D9D9;
+        }
+    }
+
     .content-wrapper {
         .container {
             padding-top: 81px;
         }
     }
 
-    .upload-description {
-        font-family: Roboto, sans-serif;
-        line-height: 19px;
-        font-weight: 300;
+    .line-separator {
+        margin-top: 35px;
+        margin-bottom: 20px;
+    }
 
-        span {
-            color: #000;
-        }
+    .bottom-content {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
     }
 
     .left, .left-content {
@@ -393,11 +314,11 @@
             }
             button {
                 margin: 0 5px;
+                width: 155px;
                 &:first-of-type {
                     margin-left: 0;
                 }
                 &:last-of-type {
-                    margin-left: 15px;
                     margin-right: 0;
                 }
             }
@@ -430,15 +351,14 @@
             margin-bottom: 20px;
         }
 
+        textarea {
+            width: 100%;
+            height: 155px;
+        }
+
         p {
             max-width: 240px;
             line-height: 19px;
-        }
-
-        .submit-button {
-            display: flex;
-            justify-content: flex-end;
-            max-width: 400px;
         }
 
         .inputs-wrapper {
@@ -466,20 +386,17 @@
     }
 
     .right {
-        p.upload-description {
-            font-family: Roboto, sans-serif;
-            line-height: 30px;
-            font-size: 16px;
-            font-weight: 300;
-            margin-bottom: 45px;
-            max-width: none;
-        }
         & > div {
             width: 100% !important;
             max-width: 688px !important;
             max-height: 432px !important;
             overflow: hidden !important;
         }
+    }
+
+    .submit-button {
+        display: flex;
+        justify-content: flex-end;
     }
 
     .pack-name {
@@ -489,110 +406,5 @@
 
     .pack-price {
         width: 92px;
-    }
-
-    .asset {
-        position: relative;
-        background: #ECECEC;
-        margin-bottom: 20px;
-        width: 206px;
-        height: 206px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        padding: 10px;
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-        &:nth-child(3n + 2) {
-            margin: 0 20px;
-        }
-        &:nth-last-child(-n+3) {
-            margin-bottom: 0;
-        }
-
-        .ico-trash {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-
-        .overlay-icons {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-
-            & > span {
-                display: inline-flex;
-                align-items: center;
-                margin-bottom: 10px;
-
-                &:last-child {
-                    margin-bottom: 0;
-                }
-            }
-
-            .description {
-                display: none;
-                color: #fff;
-                font-family: Roboto, sans-serif;
-                font-size: 12px;
-                padding-left: 10px;
-            }
-        }
-
-        .overlay {
-            svg, button {
-                opacity: 0.5;
-
-                &.selected {
-                    opacity: 1;
-                }
-
-                &:hover {
-                    opacity: 0.8;
-
-                    & + span {
-                        display: inline;
-                    }
-                }
-                &:active {
-                    opacity: 1;
-                }
-            }
-        }
-
-        svg, button {
-            cursor: pointer;
-        }
-
-        .preview-icons {
-            position: absolute;
-            bottom: -15px;
-            left: 0;
-            display: flex;
-            font-size: 12px;
-            line-height: 14px;
-            flex-direction: column;
-        }
-
-        &:hover {
-            .overlay {
-                opacity: 1;
-            }
-            button.delete {
-                display: block;
-            }
-            button.background {
-                display: block;
-            }
-        }
-        button.background, button.delete {
-            display: none;
-        }
     }
 </style>

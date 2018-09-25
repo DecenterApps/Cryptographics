@@ -50,6 +50,7 @@
         padding: 9px 13px;
         font-size: 12px;
         background-color: transparent;
+        font-family: Roboto, sans-serif;
         color: #000;
         border: 1px solid #000;
         border-radius: 5px;

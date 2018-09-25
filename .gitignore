@@ -21,3 +21,4 @@ client/config/config.json
 client/config/clientConfig.json
 build/*
 .vscode
+public/
