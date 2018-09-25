@@ -123,21 +123,17 @@ contract DigitalPrintImage is ImageToken, Functions, UserManager {
         return finalPrice;
     }
 
-    function getImageMetadata(uint _imageId) public view 
-    returns(uint, bytes32[], uint, string, bytes32, address, string, string) {
+    function getGalleryData(uint _imageId) public view 
+    returns(address, address, string, bytes32, string, string) {
         require(_imageId < numOfImages);
 
-        ImageMetadata memory metadata = imageMetadata[_imageId];
-
         return(
-            metadata.finalSeed,
-            metadata.potentialAssets,
-            metadata.timestamp,
-            addressToUser[metadata.creator].username,
-            addressToUser[metadata.creator].hashToProfilePicture,
+            imageMetadata[_imageId].creator,
             ownerOf(_imageId),
-            metadata.ipfsHash,
-            metadata.extraData
+            addressToUser[ownerOf(_imageId)].username,
+            addressToUser[ownerOf(_imageId)].hashToProfilePicture,
+            imageMetadata[_imageId].ipfsHash,
+            imageMetadata[_imageId].extraData
         );
 
     }
