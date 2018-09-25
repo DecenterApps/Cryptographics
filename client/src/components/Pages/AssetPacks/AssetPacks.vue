@@ -3,7 +3,11 @@
         <div class="container">
             <div class="all-assets-header">
                 <h1 class="large-title">Asset Packs</h1>
-                <button-link to="/upload-asset-pack">Create Asset Pack</button-link>
+                <button-link to="/create-asset-pack">Create Asset Pack</button-link>
+                <p>
+                    Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
+                    asset pack has its price, but you only need to pay for each asset pack once.
+                </p>
             </div>
             <separator />
             <div class="assets">
@@ -11,17 +15,17 @@
                     <cg-button
                             :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
                             @click="showPacks = 'all'">
-                        All assets packs
+                        All
                     </cg-button>
                     <cg-button
                             :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
                             @click="showPacks = 'created'">
-                        Asset packs created by you
+                        Created by You
                     </cg-button>
                 </div>
                 <asset-packs-pagination
                         :asset-pack-ids="assetPackIds"
-                        :asset-packs-type="showPacks"
+                        :asset-packs-type="`asset-packs-${showPacks}`"
                         :show-per-page="16"
                         :overlay="true"
                         grid="row-4"
@@ -34,9 +38,11 @@
 <script>
 
   import AssetPacksPagination from '../Profile/template/AssetPacksPagination.vue';
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import {
     METAMASK_ADDRESS,
+    SET_CREATED_ASSETS_PACKS_IDS,
+    SET_BOUGHT_ASSETS_PACKS_IDS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
   } from 'store/user-config/types';
@@ -53,6 +59,10 @@
         assetPackIds: [],
       };
     },
+    beforeMount() {
+      this[SET_CREATED_ASSETS_PACKS_IDS]();
+      this[SET_BOUGHT_ASSETS_PACKS_IDS]();
+    },
     computed: {
       ...mapGetters({
         metamaskAddress: METAMASK_ADDRESS,
@@ -68,6 +78,10 @@
       }
     },
     methods: {
+      ...mapActions({
+        SET_CREATED_ASSETS_PACKS_IDS,
+        SET_BOUGHT_ASSETS_PACKS_IDS
+      }),
       async getAssetPacks() {
         if (this.showPacks === 'created') {
           this.assetPackIds = this.createdPacksIDs;
@@ -105,28 +119,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 30px 0;
+        padding: 30px 0;
 
         .large-title {
             margin: 0;
         }
-
-        a {
-            text-decoration: none;
-        }
-
-        button {
-            min-width: 140px;
-        }
-
     }
 
     .line-separator {
         margin-bottom: 30px;
-    }
-
-    .large-title {
-        margin-top: 29px;
-        margin-bottom: 41px;
     }
 </style>

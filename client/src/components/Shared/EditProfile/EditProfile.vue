@@ -6,38 +6,33 @@
                 @submit.prevent="editProfile({ newUsername, newAvatarBytes32 })">
             <div class="left">
                 <img
-                        class="avatar"
-                        v-if="newAvatarBytes32 === ''"
-                        :src="ipfsNodePath + avatar">
+                    class="avatar"
+                    v-if="newAvatarBytes32 === ''"
+                    :src="avatar">
                 <img
-                        class="avatar"
-                        v-else
-                        :src="ipfsNodePath + newAvatarHash">
+                    class="avatar"
+                    v-else
+                    :src="ipfsNodePath + newAvatarHash">
                 <div class="input-group">
-                <span
+                    <span
                         class="info fail"
                         v-if="isExistingUsername">
-                    Existing username, please try again
-                </span>
+                        Existing username, please try again
+                    </span>
                     <span
-                            class="info success"
-                            v-if="isSuccess">
-                    You have updated your profile successfully!
-                </span>
-                    <span
-                            class="info"
-                            v-if="newUsername.length >= 16">
-                    Username can't be longer than 16 characters
-                </span>
+                        class="info"
+                        v-if="newUsername.length >= 16">
+                        Username can't be longer than 16 characters
+                    </span>
                     <cg-input
                             v-model="newUsername"
                             placeholder="Enter username" />
                     <input-file
-                            id="avatar-image"
-                            button-style="secondary"
-                            :multiple="false"
-                            @change="onFileChanged">
-                        <span v-if="newAvatarBytes32 === ''">Profile images must be 1:1 aspect ratio</span>
+                        id="avatar-image"
+                        button-style="secondary"
+                        :multiple="false"
+                        @change="onFileChanged">
+                        <span v-if="newAvatarBytes32 === ''">Profile image aspect ratio needs to be 1:1.</span>
                         <span v-else>You have selected: {{ imageName.slice(0, 22) }}<span v-if="imageName.length > 22">...</span></span>
                     </input-file>
                 </div>
@@ -60,6 +55,7 @@
 
   import { mapActions, mapGetters } from 'vuex';
   import { USERNAME, AVATAR, EDIT_PROFILE, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
+  import { TOGGLE_LOADING_MODAL  }from 'store/modal/types';
 
   export default {
     name: 'EditProfile',
@@ -73,6 +69,7 @@
     methods: {
       ...mapActions({
         editProfile: EDIT_PROFILE,
+        toggleLoadingModal: TOGGLE_LOADING_MODAL
       }),
       onFileChanged(event) {
         let selectedImage = event.target.files[0];
@@ -122,6 +119,9 @@
                 flex-direction: column;
                 margin-left: 20px;
                 min-width: 290px;
+                .input-wrapper {
+                    height: auto;
+                }
                 .info {
                     margin-bottom: 10px;
                     font-size: 12px;

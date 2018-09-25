@@ -1,29 +1,44 @@
 <template>
     <div>
         <graphic-playground />
+        <div class="fab">
+            <button-link to="/create-cryptographic" button-style="primary">Compose</button-link>
+        </div>
         <div class="how-it-works">
-            <p class="large-title">How it Works</p>
+            <h1 class="large-title">How it Works</h1>
             <div class="steps">
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-1.png" alt="">
                     </div>
-                    <p>1. Select <br> Asset pack</p>
+                    <p class="small-title">1. Select <br> Asset packs</p>
+                    <p class="secondary">
+                        Random assets from the chosen packs will make it to your Cryptographic.
+                    </p>
                 </div>
                 <ico-arrow></ico-arrow>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p>2. Generate <br> Cryptographic</p>
+                    <p class="small-title">2. Generate Cryptographics</p>
+                    <p class="secondary">
+                        A provably random composition process creates your Cryptographic.
+                    </p>
                 </div>
                 <ico-arrow></ico-arrow>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
                     </div>
-                    <p>3. Sell it on <br> market</p>
+                    <p class="small-title">3. Showcase it <br> or sell it</p>
+                    <p class="secondary">
+                        Store your Cryptographic permanently and showcase it or sell it in the Gallery.
+                    </p>
                 </div>
+            </div>
+            <div class="container">
+                <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC721 token.</p>
             </div>
         </div>
         <div class="landing-section">
@@ -32,9 +47,12 @@
             </h1>
             <div class="title-section">
                 <h1 class="large-title">Gallery</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+                <p>
+                    The Gallery showcases all Cryptographics that have been stored on the blockchain.
+                    It’s the place where you can discover, buy and sell Cryptographics.
+                </p>
             </div>
-            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" />
+            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" />
         </div>
         <div class="landing-section inverted">
             <h1 class="section-title">Create</h1>
@@ -47,45 +65,35 @@
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-1.png" alt="">
                     </div>
-                    <p class="small-title">Assets</p>
-                    <p>created by Artists</p>
+                    <p class="small-title">Design Assets</p>
+                    <p class="secondary">Create unique graphical elements.</p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-2.png" alt="">
                     </div>
-                    <p class="small-title">Asset Pack</p>
-                    <p>All assets in one <br> Asset Pack</p>
+                    <p class="small-title">Create Asset Packs</p>
+                    <p class="secondary">Group elements and upload them as Asset Packs.</p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/asset-pack-3.png" alt="">
                     </div>
-                    <p class="small-title">Cryptographic</p>
-                    <p>created with users <br> Asset packs</p>
+                    <p class="small-title">Sell to Creators</p>
+                    <p class="secondary">Offer your Asset Packs to Creators at your own price.</p>
                 </div>
-            </div>
-            <div class="steps-bottom-section">
-                <svg width="322" height="101" viewBox="0 0 322 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M322 100.5H1V0.5H26" stroke="black"/>
-                </svg>
-
-                <p>Artists take <b>90%</b> of Cryptographic price</p>
-                <svg width="338" height="102" viewBox="0 0 338 102" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M314 1H337V101.5H0" stroke="black"/>
-                </svg>
-
             </div>
             <div class="container">
                 <br>
                 <br>
-                <p class="wider">Each asset pack can contain up to 50 different graphic elements, one of which always
-                    needs to be a
+                <p class="wider">
+                    Each asset pack can contain up to 50 different elements, at least one of which should be a
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
-                    receive earnings every time a new Creator uses it.</p>
-                <button-link to="/upload-asset-pack">Create asset pack</button-link>
+                    receive earnings every time a new Creator uses it.
+                </p>
+                <button-link to="/create-asset-pack">Create asset pack</button-link>
             </div>
         </div>
         <asset-carousel />
@@ -99,6 +107,14 @@
   import { getImagesMetadata, getImageCount } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
+
+  const toggleFab = (e) => {
+    const scrollPos = window.pageYOffset;
+    if (scrollPos > 0)
+      document.querySelector('.fab').classList.add('shown');
+    else
+      document.querySelector('.fab').classList.remove('shown');
+  };
 
   export default {
     name: 'Landing',
@@ -115,14 +131,19 @@
     async created() {
       try {
         let numOfImages = parseInt(await getImageCount());
-        if (numOfImages > 6) numOfImages = 6;
-        this.imageIds = [...Array(numOfImages).keys()].reverse();
+        let imageIds = [...Array(numOfImages).keys()].reverse();
+        if (numOfImages > 12) imageIds = imageIds.slice(0, 12);
+        this.imageIds = imageIds;
         if (typeof this.$redrawVueMasonry === 'function') {
           this.$redrawVueMasonry();
         }
       } catch (e) {
         console.log(e);
       }
+      window.addEventListener('scroll', toggleFab);
+    },
+    beforeDestroy() {
+      window.removeEventListener('scroll', toggleFab);
     }
   };
 </script>
@@ -166,20 +187,44 @@
         text-align: center;
     }
 
+    p {
+        font-weight: 300;
+    }
+
     .steps {
         display: flex;
         justify-content: center;
+
 
         .step {
             .image-wrapper {
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 height: 160px;
             }
             p {
-                font-size: 15px;
-                line-height: 19px;
-                margin-top: 15px;
+                line-height: 1.4em;
+                margin: 15px auto 0;
+                max-width: 210px;
+                color: black;
+                font-size: 16px;
+
+                &.small-title {
+                    color: #000;
+                    font-weight: bold;
+                    font-family: YoungSerif-Regular;
+                    font-size: 21px;
+                    margin-top: 25px;
+                    margin-bottom: 10px;
+                }
+
+                &.secondary {
+                    /*margin: 10px auto 0;*/
+                    color: #717171;
+                    font-size: 13px;
+                    max-width: 180px;
+                }
             }
         }
 
@@ -206,6 +251,12 @@
             height: 34px;
             width: 18px;
         }
+    }
+
+
+    .steps-bottom {
+        font-size: 15px;
+        margin-top: 30px;
     }
 
     .steps-bottom-section {
@@ -255,8 +306,6 @@
         }
 
         p {
-            font-family: Roboto, sans-serif;
-            font-weight: 300;
             line-height: 26px;
             font-size: 15px;
             color: #717171;
@@ -265,15 +314,6 @@
 
             &.wider {
                 max-width: 610px;
-            }
-
-            &.small-title {
-                color: #000;
-                font-weight: bold;
-                font-family: YoungSerif-Regular;
-                font-size: 21px;
-                margin-top: 25px;
-                margin-bottom: 10px;
             }
         }
 
@@ -302,6 +342,30 @@
             p:last-of-type {
                 margin-bottom: 30px;
             }
+        }
+    }
+
+    .fab {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        transform: translateX(200%);
+        transition: all .2s;
+        z-index: 200;
+        @media screen and (max-width: 1200px) {
+            bottom: 20px;
+            right: 20px;
+        }
+        &.shown {
+            transform: translateX(0%);
+        }
+        button {
+            width: 64px;
+            height: 64px;
+            border-radius: 32px;
+            display: block;
+            padding: 0;
+            font-size: 11px;
         }
     }
 </style>

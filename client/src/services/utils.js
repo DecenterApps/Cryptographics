@@ -88,6 +88,21 @@ function getBytes32FromIpfsHash(ipfsHash) {
   return '0x' + bs58.decode(ipfsHash).slice(2).toString('hex');
 }
 
+const timeConverter = (UNIX_timestamp) => {
+  const a = new Date(UNIX_timestamp * 1000);
+  const year = a.getFullYear();
+  const month = a.getMonth();
+  const date = a.getDate();
+  const hour = a.getHours();
+  const min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+  const sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+
+
+  return `${date}/${month}/${year}, ${hour}:${min}`;
+};
+
+const isEmptyBytes = (string) => string === '0x0000000000000000000000000000000000000000000000000000000000000000';
+
 module.exports = {
   encode,
   decode,
@@ -95,4 +110,6 @@ module.exports = {
   pickRandomHashes,
   getIpfsHashFromBytes32,
   getBytes32FromIpfsHash,
+  timeConverter,
+  isEmptyBytes,
 };

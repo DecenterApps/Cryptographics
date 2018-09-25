@@ -20,35 +20,6 @@
                 </cg-button>
             </div>
         </div>
-        <!--<div class="container">-->
-        <!--<div class="left">-->
-        <!--<div class="create-art">-->
-        <!--<div class="canvas-holder">-->
-        <!--<overlay>-->
-        <!--<cg-button button-style="tertiary" icon-type="download" @click="openInEditor">-->
-        <!--Open in editor-->
-        <!--</cg-button>-->
-        <!--</overlay>-->
-        <!--<div class="canvas-holder-wrapper">-->
-        <!--<Canvas :canvasData="canvasData" height="400" width="400" />-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="right">-->
-        <!--<h2 class="large-title">This is a Cryptographic</h2>-->
-        <!--<div class="hero-text-content">-->
-        <!--<p>A graphic created by you, with a little help from provably secure randomness. </p>-->
-        <!--<p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and-->
-        <!--trade.</p>-->
-        <!--<p>Try creating another one.</p>-->
-        <!--<cg-button-->
-        <!--@click="renderCanvas">-->
-        <!--Recompose-->
-        <!--</cg-button>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
     </div>
 </template>
 
@@ -58,9 +29,9 @@
     calculateFirstSeed,
     convertSeed,
     getLandingPacks,
+    getImage,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
-  import { getFinalAssets, loadDataForAssets } from 'services/imageService';
   import * as utils from 'services/utils';
   import Canvas from 'pages/CreateGraphic/GraphicBuilder/Canvas';
   import { shuffleArray } from 'services/helpers';
@@ -79,7 +50,6 @@
       iterations: 0,
       timestamp: new Date().getTime(),
       randomHashIds: [],
-      allAssets: [],
       selectedAssets: [],
       potentialAssets: [],
       canvasData: {
@@ -89,11 +59,6 @@
       },
       coverIpfsHashes: [],
     }),
-    computed: {
-      ...mapGetters({
-        assetPacks: SELECTED_ASSET_PACKS,
-      })
-    },
     methods: {
       async renderCanvas() {
         this.iterations++;
@@ -103,7 +68,7 @@
         console.log('ITERATIONS: ' + this.iterations);
         console.log('TIMESTAMP: ' + this.timestamp);
         console.log('POTENTIAL ASSETS: ' + potentialAssets);
-        const finalAssets = await getFinalAssets(this.randomSeed, this.iterations, utils.encode(potentialAssets), this.allAssets);
+        const finalAssets = await getImage(this.randomSeed, this.iterations, utils.encode(potentialAssets));
         this.canvasData.assets = this.addSourceItem(this.assetPacks, finalAssets);
         this.potentialAssets = potentialAssets;
         console.log('iteration: ' + this.iterations);
@@ -124,7 +89,7 @@
         window.sessionStorage.setItem('iterations', (this.iterations - 1).toString());
         window.sessionStorage.setItem('timestamp', this.timestamp);
         window.sessionStorage.setItem('potentialAssets', JSON.stringify(this.potentialAssets));
-        this.$router.push('/create-graphic');
+        this.$router.push('/create-cryptographic');
       },
       download() {
         const canvas = document.getElementById('canvas');
@@ -145,10 +110,11 @@
       this.iterations = 0;
       this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
       this.randomSeed = await convertSeed(this.randomSeed);
+      const landingPacks = getLandingPacks();
+      this.assetPacks = landingPacks.packs;
       this.selectedAssets = this.assetPacks.map(assetPack =>
         assetPack.assets.map(item => parseInt(item.id)))
         .reduce((a, b) => a.concat(b), []);
-      this.allAssets = await loadDataForAssets();
       this.renderCanvas();
     }
   };
@@ -175,7 +141,7 @@
     .hero {
         /*background-color: #D9D9D9;*/
         position: relative;
-        background: url('../assets/home-header.png') center center;
+        background: url('../assets/home-header.png') center center no-repeat;
         height: 566px;
         padding: 45px 0;
 

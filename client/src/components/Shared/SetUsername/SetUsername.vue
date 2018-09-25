@@ -1,7 +1,7 @@
 <template>
     <div class="set-username">
         <h3 class="large-title">Enter artist name</h3>
-        <p class="description">In order to claim your token, you need to set your name first!</p>
+        <p class="description">In order to claim your Cryptographic, you need to set your name first.</p>
         <form
                 class="edit-profile-modal"
                 @submit.prevent="setUsername(newUsername)"

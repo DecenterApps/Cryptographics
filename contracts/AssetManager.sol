@@ -119,7 +119,8 @@ contract AssetManager is Ownable {
         AssetPack memory assetPack = assetPacks[_assetPackId];
         require(msg.value >= assetPack.price);
         // if someone wants to pay more money for asset pack, we will give all of it to creator
-        artistBalance[assetPack.creator] += msg.value;
+        artistBalance[assetPack.creator] += 95/100 * msg.value;
+        artistBalance[owner] += 5/100 * msg.value;
         boughtAssetPacks[_to].push(_assetPackId);
 
         emit AssetPackBought(_assetPackId, _to);

@@ -6,18 +6,26 @@
                 <!--<button-icon icon-type="zoom" color="#000" size="15px" />-->
             </div>
         </div>
+        <p class="page-description">
+            Please select the asset packs that you want to include in your Cryptographic. You can select as many asset packs as you want, but please note that a random number of assets will be included in a Cryptographic, with the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of Cryptographics afterwards.
+        </p>
         <separator />
         <div class="filter-section">
             <div>
                 <cg-button
-                        :button-style="showYourPacks === false ? 'tab-active' : 'tab-inactive'"
-                        @click="toggleAssetPacks">
-                    All asset packs
+                        :button-style="showPacks === 'all' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('all')">
+                    All
                 </cg-button>
                 <cg-button
-                        :button-style="showYourPacks === true ? 'tab-active' : 'tab-inactive'"
-                        @click="toggleAssetPacks">
-                    Your asset packs
+                        :button-style="showPacks === 'bought' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('bought')">
+                    Bought
+                </cg-button>
+                <cg-button
+                        :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
+                        @click="toggleAssetPacks('created')">
+                    Created by You
                 </cg-button>
             </div>
         </div>
@@ -29,7 +37,7 @@
                     :overlay="true"
                     :isSelected="isSelected.bind(this)"
                     :toggleAsset="toggleAsset.bind(this)"
-                    :changeTab="changeTab.bind(this)"
+                    :changeStep="changeStep.bind(this)"
                     :assetPackIds="assetPacks"
                     :totalPrice="totalPrice"
             />
@@ -44,6 +52,7 @@
 </template>
 
 <script>
+  import Decimal from 'decimal.js'
   import AssetPickerPagination from '../template/AssetPickerPagination.vue';
   import {
     METAMASK_ADDRESS,
@@ -64,8 +73,8 @@
   export default {
     name: 'AssetPicker',
     data: () => ({
-      assetPacks: [],
-      showYourPacks: false,
+      allAssetPacks: [],
+      showPacks: 'all',
       loading: true,
     }),
     components: { AssetPickerPagination },
@@ -80,39 +89,33 @@
           return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
             this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
         });
-        return filteredPacks.reduce((acc, item) => acc + parseFloat(item.price), 0);
+        return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), '0');
+      },
+      assetPacks() {
+        if (this.showPacks === 'created') return this.createdPacksIDs;
+        if (this.showPacks === 'bought') return this.boughtPacksIDs;
+        return this.allAssetPacks;
       }
     },
     methods: {
       ...mapActions({
         toggleAsset: TOGGLE_ASSET_PACK,
       }),
-      changeTab() {
-        this.$emit('tabChange', 'create');
+      changeStep() {
+        this.$emit('stepChange', 1);
       },
       isSelected(asset) {
         return this.selectedAssetPacks.findIndex(item => parseInt(item.id) === parseInt(asset.id)) >= 0;
       },
-      async toggleAssetPacks() {
-        this.showYourPacks = !this.showYourPacks;
-        this.loading = true;
-        if (this.showYourPacks) {
-          this.assetPacks = [
-            ...this.createdPacksIDs,
-            ...this.boughtPacksIDs
-          ];
-        } else {
-          const numOfAssets = await getNumberOfAssetPacks();
-          this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
-        }
-        this.loading = false;
+      toggleAssetPacks(toShow) {
+        this.showPacks = toShow;
       },
     },
 
     async created() {
       try {
         const numOfAssets = await getNumberOfAssetPacks();
-        this.assetPacks = [...Array(parseInt(numOfAssets)).keys()];
+        this.allAssetPacks = [...Array(parseInt(numOfAssets)).keys()];
       } catch (e) {
         console.log(e);
       } finally {
@@ -131,7 +134,7 @@
         justify-content: flex-start !important;
 
         .line-separator {
-            margin: 25px 0;
+            margin: 30px 0;
         }
         .header {
             display: flex;
@@ -145,6 +148,16 @@
                 margin-right: 22px;
             }
         }
+        .page-description {
+            font-family: Roboto, sans-serif;
+            font-size: 12px;
+            color: #717171;
+            margin-top: 30px;
+            margin-bottom: 0;
+            max-width: 650px;
+            font-weight: 300;
+            line-height: 19px;
+        }
         .filter-section {
             display: flex;
             justify-content: space-between;
@@ -152,11 +165,7 @@
             margin-bottom: 20px;
 
             button {
-                min-width: 130px;
-
-                &:first-child {
-                    margin-right: 20px;
-                }
+                margin-right: 20px;
             }
         }
     }

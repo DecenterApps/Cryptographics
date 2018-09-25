@@ -4,7 +4,10 @@
             <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following
                 asset packs:</p>
             <div class="asset-packs">
-                <router-link :to="'/asset-pack/' + assetPack.id" v-for="(assetPack, index) in assetPacks">
+                <router-link
+                    :to="'/asset-pack/' + assetPack.id"
+                    v-for="(assetPack, index) in assetPacks"
+                    :key="index">
                     <asset-box
                             :key="index"
                             :assetPack="assetPack"
@@ -24,10 +27,10 @@
                 <p class="description">{{ image.description }}</p>
 
             </div>
-            <div v-if="!sellGraphic" class="graphic-address">
-                <strong>Cryptographics address:</strong>
-                <span class="address">{{ image.creator }}</span>
-            </div>
+            <!--<div v-if="!sellGraphic" class="graphic-address">-->
+                <!--<strong>Cryptographics address:</strong>-->
+                <!--<span class="address">{{ image.creator }}</span>-->
+            <!--</div>-->
             <div
                     v-if="isLogged && !isForSale"
                     class="graphic-controls"
@@ -56,10 +59,19 @@
                         :value="image.price" />
             </div>
             <div
-                    class="graphic-controls"
+                    class="graphic-controls buy"
                     v-if="isForSale && !isLogged">
                 <cg-button @click="submitBuyImage">Buy</cg-button>
-                <price :value="image.price" />
+
+                <div class="price-wrapper">
+                    <price :value="image.price" />
+                    <div
+                            class="history"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        transfer-history
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +80,7 @@
 <script>
   import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
   import { mapActions, mapGetters } from 'vuex';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
   export default {
     name: 'GraphicDetails',
@@ -106,6 +118,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
@@ -117,7 +130,7 @@
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
         this.toggleLoadingModal();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.getData();
         this.openModal('Cryptographic successfully submitted for sale.');
       },
@@ -142,10 +155,10 @@
         const id = result.events.ImageBought.returnValues.imageId;
         this.toggleLoadingModal();
         this.getData();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.openModal('Cryptographic successfully bought.');
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -212,6 +225,14 @@
             flex-direction: column;
             margin-top: 0;
         }
+        &.buy {
+            align-items: center;
+
+            .button {
+                padding: 9px 34px;
+                margin-top: 8px;
+            }
+        }
         button {
             margin: 0 10px;
             &:first-of-type {
@@ -227,6 +248,26 @@
         .default-input {
             width: 100%;
             margin-bottom: 10px;
+        }
+
+        .price-wrapper {
+            margin-left: 16px;
+
+            .price {
+                margin-left: 0;
+            }
+
+            .history {
+                cursor: pointer;
+                color: #717171;
+                font-size: 12px;
+                margin-top: 5px;
+                transition: color 0.2s ease-in-out;
+
+                &:hover {
+                    color: lighten(#717171, 20);
+                }
+            }
         }
     }
 </style>

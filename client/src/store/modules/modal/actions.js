@@ -6,6 +6,7 @@ import {
   TOGGLE_LOADING_MODAL,
   MUTATE_LOADING_CONTENT,
   CHANGE_LOADING_CONTENT,
+  HIDE_LOADING_MODAL,
 } from './types';
 
 export default {
@@ -16,6 +17,9 @@ export default {
   [TOGGLE_LOADING_MODAL]: ({ commit, state }, loadingContent) => {
     commit(MUTATE_LOADING_CONTENT, loadingContent);
     commit(MUTATE_LOADING_MODAL, !state.showLoadingModal);
+  },
+  [HIDE_LOADING_MODAL]: ({ commit, state }) => {
+    commit(MUTATE_LOADING_MODAL, false);
   },
   [CHANGE_LOADING_CONTENT]: ({ commit, state }, loadingContent) => {
     commit(MUTATE_LOADING_CONTENT, loadingContent);

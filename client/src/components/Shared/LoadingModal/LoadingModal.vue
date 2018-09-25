@@ -4,14 +4,14 @@
         <div class="content">
             <loader />
             <div class="small-title">{{ content }}</div>
-            <cg-button button-style="secondary">Back to gallery</cg-button>
+            <cg-button @click="backToGallery" button-style="secondary">Back to gallery</cg-button>
         </div>
     </div>
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
-  import { TOGGLE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
+  import { HIDE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
 
   export default {
     name: 'LoadingModal',
@@ -23,8 +23,12 @@
     },
     methods: {
       ...mapActions({
-        closeModal: TOGGLE_LOADING_MODAL,
-      })
+        closeModal: HIDE_LOADING_MODAL,
+      }),
+      backToGallery() {
+        this.closeModal();
+        this.$router.push('/gallery')
+      }
     }
   };
 </script>

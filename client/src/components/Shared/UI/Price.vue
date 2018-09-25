@@ -29,7 +29,7 @@ export default {
 
 <style lang="scss" scoped>
 .price {
-    font-family: 'YoungSerif-Regular', serif;
+    font-family: 'Roboto', serif;
     cursor: default;
     &.white {
         color: #fff;
@@ -42,6 +42,12 @@ export default {
     }
     &.small {
         font-size: 21px;
+    }
+    &.medium {
+        font-size: 25px;
+    }
+    &.inherit {
+        font-size: inherit;
     }
     &:before {
         content: "\039E";

@@ -17,6 +17,10 @@
                         Please upload high resolution files.
                     </p>
                     <p class="upload-description">
+                        Max file resolution: <span>2480x3508px</span>,
+                        Max file size: <span>2.5MB.</span>
+                    </p>
+                    <p class="upload-description">
                         The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
                         paper at a resolution of <span>2480x3508px</span>, with a square format
                         of <span>2480x2480px</span> also available (same DPI).
@@ -43,6 +47,11 @@
                 <span v-if="assets.length === 0">
                     <p class="upload-description">
                         Please upload high resolution files.
+                    </p>
+                    <p class="upload-description">
+                        Max file resolution: <span>2480x3508px.</span>
+                        <br>
+                        Max file size: <span>2.5MB.</span>
                     </p>
                     <p class="upload-description">
                         The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
@@ -140,7 +149,7 @@
                         </div>
                         <div class="input-group">
                             <label class="small-title">Asset pack price</label>
-                            <cg-input v-model="price" name="price" placeholder="Value" />
+                            <cg-input v-model="price" inputType="number" name="price" placeholder="Value" />
                         </div>
                     </div>
                     <div class="input-group">
@@ -165,14 +174,14 @@
   import * as utils from 'services/utils';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
   import { mapGetters, mapActions } from 'vuex';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from 'store/modal/types';
+  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
   import IcoTrash from './template/IcoTrash.vue';
   import IcoBackground from './template/IcoBackground.vue';
   import { preloadImages, resizeCanvas } from 'services/helpers';
 
   export default {
-    name: 'UploadAssetPack',
+    name: 'CreateAssetPack',
     components: {
       IcoTrash,
       IcoBackground
@@ -209,6 +218,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       getAttributes(asset) {
@@ -228,11 +238,26 @@
       uploadAssets() {
         let x = document.getElementById('files');
         for (let i = 0; i < x.files.length; i++) {
-          this.assets.push({
-            path: URL.createObjectURL(x.files[i]),
-            file: x.files[i],
-            attribute: 211,
-          });
+          const file = x.files[i];
+
+          if (file.size > 2500000) return;
+
+          const img = new Image();
+          const path = URL.createObjectURL(file);
+          img.src = path;
+
+          img.onload = () => {
+            const width = img.naturalWidth;
+            const height = img.naturalHeight;
+
+            if (width > 2480 || height > 3598) return;
+
+            this.assets.push({
+              path,
+              file: x.files[i],
+              attribute: 211,
+            });
+          };
         }
       },
 
@@ -292,7 +317,7 @@
                 this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
                 const result = await transactionPromise();
                 const id = result.events.AssetPackCreated.returnValues.id;
-                this.toggleLoadingModal();
+                this.closeLoadingModal();
                 this.$router.push(`/asset-pack/${id}`);
                 this.openModal('Asset pack successfully saved to the blockchain forever.');
                 console.log(result, id);

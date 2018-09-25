@@ -12,8 +12,9 @@ $ truffle migrate --network=kovan
 $ cd frontend/scripts
 $ cp config.json.dist config.json
 $ python update_config.py
-
+$ npm run generatePacks
 ```
+Note: Leave input empty when running `generatePacks` for the first time after contract deployment.
 - To run application with already deployed and used contracts:
 ```
 $ git pull | git clone & cd Cryptographics
@@ -21,6 +22,8 @@ $ npm install
 $ cd frontend/scripts
 $ cp config.json.dist config.json
 ```
+
+- To specify which asset packs are selected by default on the homepage use `generatePacks` again and specify the asset pack IDs.
 
 After that, to run client side from root of the project:
 
