@@ -23,6 +23,16 @@
             </div>
         </div>
     </div>
+    <div v-else-if="layoutStyle.indexOf('full-screen') > -1" :class="['background-wrapper', layoutStyle]">
+        <div class="content-wrapper">
+            <template v-if="layoutContent === 'no-container'">
+                <slot />
+            </template>
+            <div v-else class="container">
+                <slot />
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -89,10 +99,14 @@
                     margin: 0 auto;
                 }
             }
-            &.gray-bg {
-                .content-wrapper {
-                    background-color: #D9D9D9;
-                }
+        }
+        &.full-screen {
+            background-color: #D9D9D9;
+
+            & .content-wrapper .container {
+                width: 100%;
+                max-width: 1120px;
+                margin: 0 auto;
             }
         }
         .content-wrapper {

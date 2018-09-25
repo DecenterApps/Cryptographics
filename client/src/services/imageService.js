@@ -266,7 +266,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
       image: image,
       x_coordinate: Math.floor(Math.random() * canvasWidth),
       y_coordinate: Math.floor(Math.random() * canvasHeight),
-      rotation: Math.floor((attribute / 10) % 10) === 1 ?  Math.floor(Math.random() * 360) : 0,
+      rotation: Math.floor((attribute / 10) % 10) === 1 ? Math.floor(Math.random() * 360) : 0,
       scale: Math.floor(attribute % 10) === 1 ? 800 + Math.floor(Math.random() * 200) : 1000,
       isBackground: Math.floor((attribute / 100) % 10) === 1,
       shouldScale: true,
@@ -343,7 +343,11 @@ export const makeImage = (objs, c, width, height, frame = {
 
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
-      } else {
+      }
+      else if (assets[i].uploadSrc) {
+        image.src = assets[i].uploadSrc;
+      }
+      else {
         image.src = ipfsNodePath + hashes[i];
       }
 

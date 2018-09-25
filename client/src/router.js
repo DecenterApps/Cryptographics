@@ -22,7 +22,7 @@ const router = new VueRouter({
     { path: '/cryptographic/:id', component: SingleGraphic },
     { path: '/create-cryptographic', component: CreateGraphic, name: 'create-cryptographic' },
     { path: '/gallery', component: GalleryPage }, // GalleryPage here
-    { path: '/create-asset-pack', component: CreateAssetPack },
+    { path: '/create-asset-pack', component: CreateAssetPack, name: 'create-asset-pack' },
     { path: '/asset-packs', component: AssetPacks },
     { path: '/asset-pack/:id', component: AssetPackPreview },
     { path: '/profile', component: Profile, props: { userProfile: true } },

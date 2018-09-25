@@ -5,7 +5,7 @@
                 :steps="['Select Asset Pack', 'Generate Cryptographic', 'Claim Cryptographic']"
                 v-on:stepChange="changeStep"
         />
-        <layout layout-style="full-width gray-bg" layout-content="no-container">
+        <layout layout-style="full-screen">
             <asset-picker
                     v-if="currentStep === 0"
                     :currentStep="currentStep"
@@ -27,7 +27,7 @@
   import { TOGGLE_ASSET_PACK } from 'store/canvas/types';
   import { mapActions } from 'vuex';
   import { getLandingPacks } from 'services/ethereumService';
-  import StepHeader from '../../Shared/StepHeader/StepHeader';
+  import StepHeader from 'shared/StepHeader/StepHeader';
 
   export default {
     name: 'CreateGraphic',
