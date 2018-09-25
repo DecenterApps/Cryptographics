@@ -234,7 +234,7 @@
 
         let image = canvasClone.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
-        console.log('IMAGE HASH' + ipfsHash);
+        console.log('IMAGE HASH ' + ipfsHash);
         console.log(this.potentialAssets);
         let imageMetadata = {
           title: this.title,
