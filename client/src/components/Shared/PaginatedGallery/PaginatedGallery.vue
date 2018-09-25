@@ -17,7 +17,7 @@
                     </div>
                     <div v-masonry-tile class="item" v-for="(image, index) in images" :key="index">
                         <div class="artwork">
-                            <router-link :to="`/single-graphic/${image.id}`">
+                            <router-link :to="`/cryptographic/${image.id}`">
                                 <overlay v-if="displayOverlay">
                                     <!--<button-icon icon-type="download"/>-->
                                     <button-icon icon-type="zoom" />

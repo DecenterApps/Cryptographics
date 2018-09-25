@@ -2,16 +2,24 @@
     <layout layout-style="full-width" layout-content="no-container">
         <div class="container">
             <div class="header">
-                <img v-if="avatar.length > 0" class="avatar" :src="ipfsNodePath + avatar">
+                <img v-if="avatar.length > 0" class="avatar" :src="avatar">
                 <div class="left">
                     <h1 class="large-title name">{{ username }}</h1>
-                </div>
-                <div class="right button-group">
                     <cg-button
                             button-style="secondary"
                             v-if="userAddress && userProfile"
-                            @click="openModal('editProfile')">
+                            @click="openModal('editProfile')"
+                    >
                         Edit Profile
+                    </cg-button>
+                </div>
+                <div class="right button-group">
+                    <cg-button
+                            button-style="primary"
+                            v-if="userAddress && userProfile"
+                            @click="openModal('balances')"
+                    >
+                        Withdraw {{this.totalBalance}} ETH
                     </cg-button>
                 </div>
             </div>
@@ -73,6 +81,7 @@
     getUsername,
     getCreatedAssetPacks,
     getBoughtAssetPacks,
+    fromWei,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
@@ -85,6 +94,8 @@
     SET_BOUGHT_ASSETS_PACKS_IDS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
+    BALANCES,
+    FETCH_BALANCES,
   } from 'store/user-config/types';
   import utils from 'services/utils';
 
@@ -125,14 +136,21 @@
         currentUserUsername: USERNAME,
         currentUserAvatar: AVATAR,
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
-        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS
-      })
+        boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
+        balances: BALANCES,
+      }),
+      totalBalance() {
+        console.log(this.balances);
+        const total = parseInt(this.balances.assetBalance) + parseInt(this.balances.marketplaceBalance) || 0;
+        return fromWei(total);
+      }
     },
     watch: {
       currentUserAddress: async function (val) {
         if (this.userProfile) {
           this.userAddress = val;
           this.imageIds = await getUserImages(val);
+          this.fetchBalances();
         }
       },
       currentUserUsername: function(val) {
@@ -160,6 +178,8 @@
     },
     methods: {
       ...mapActions({
+        openModal: TOGGLE_MODAL,
+        fetchBalances: FETCH_BALANCES,
         SET_CREATED_ASSETS_PACKS_IDS,
         SET_BOUGHT_ASSETS_PACKS_IDS,
         openModal: TOGGLE_MODAL
@@ -168,11 +188,11 @@
         if (this.userProfile) {
           this.userAddress = this.currentUserAddress;
           this.username = this.currentUserUsername;
-          this.avatar = this.currentUserAvatar;
+          this.avatar =  this.currentUserAvatar;
         } else {
           this.userAddress = this.$route.params.userId;
           this.username = await getUsername(this.userAddress);
-          this.avatar = utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
+          this.avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(await getAvatar(this.userAddress));
         }
         this.generateData();
       },
@@ -217,7 +237,8 @@
       }
     },
     async created() {
-      await this.onCreated()
+      await this.onCreated();
+      if (this.userProfile && this.userAddress) this.fetchBalances();
     },
   };
 
@@ -271,8 +292,10 @@
                 border-radius: 4px;
             }
             .left {
+                display: flex;
                 .name {
                     margin-bottom: 0;
+                    margin-right: 20px;
                 }
             }
         }

@@ -130,7 +130,7 @@
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
         this.toggleLoadingModal();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.getData();
         this.openModal('Cryptographic successfully submitted for sale.');
       },
@@ -155,7 +155,7 @@
         const id = result.events.ImageBought.returnValues.imageId;
         this.toggleLoadingModal();
         this.getData();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.openModal('Cryptographic successfully bought.');
       },
     },

@@ -8,6 +8,7 @@
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-else-if="content === 'setUsername'" />
             <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
+            <balances-modal v-else-if="content === 'balances'" />
             <success-message v-else :content="content" />
             <div v-else>
                 <slot />
@@ -24,6 +25,7 @@
   import SetUsername from 'shared/SetUsername/SetUsername.vue';
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
   import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
+  import BalancesModal from 'pages/Profile/BalancesModal.vue';
 
   export default {
     name: 'Modal',
@@ -37,6 +39,7 @@
       SetUsername,
       EditProfile,
       TransferHistory,
+      BalancesModal
     },
     methods: {
       ...mapActions({

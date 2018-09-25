@@ -4,6 +4,7 @@ import config from 'config/config.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
+import { getAccounts } from './helpers';
 import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
@@ -605,3 +606,21 @@ export const getImageTransferHistory = imageId =>
       reject(err);
     }
   });
+
+export const userBalances = async (address) => {
+  console.log('Fetching balance for ', address);
+  const assetBalance = await assetManagerContract().methods.artistBalance(address).call();
+  const marketplaceBalance = await marketPlaceContract().methods.balances(address).call();
+  console.log(assetBalance, marketplaceBalance);
+  return { assetBalance, marketplaceBalance };
+};
+
+export const fromWei = value => web3.utils.fromWei(value.toString(), 'ether');
+
+export const withdraw = async (fromCt, address) => {
+  const ct = fromCt === 'marketplace'
+    ? marketPlaceContract()
+    : assetManagerContract();
+  const account = await getAccounts();
+  return await ct.methods.withdraw().send({ from: account });
+};

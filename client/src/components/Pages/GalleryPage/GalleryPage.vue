@@ -3,7 +3,7 @@
         <div class="container">
             <div class="gallery-page-header">
                 <h1 class="large-title">Gallery</h1>
-                <button-link to="/create-graphic">Compose</button-link>
+                <button-link to="/create-cryptographic">Compose</button-link>
             </div>
             <separator />
             <div>

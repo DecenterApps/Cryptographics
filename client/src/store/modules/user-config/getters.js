@@ -7,6 +7,7 @@ import {
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS,
   NETWORK,
+  BALANCES,
 } from './types';
 
 export default {
@@ -33,5 +34,8 @@ export default {
   },
   [BOUGHT_ASSETS_PACKS_IDS]: state => {
     return state.assets.boughtIDs;
-  }
+  },
+  [BALANCES]: state => {
+    return state.balances;
+  },
 };

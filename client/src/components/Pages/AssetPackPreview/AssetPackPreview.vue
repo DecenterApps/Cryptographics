@@ -8,7 +8,7 @@
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
-                    <cg-button @click="composeWithAP" buttonStyle="transparent">Compose with this Asset Pack</cg-button>
+                    <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
             </div>
@@ -62,7 +62,7 @@
       }),
       composeWithAP () {
         this.selectSingleAssetPack(this.assetPack);
-        this.$router.push('/create-graphic')
+        this.$router.push('/create-cryptographic')
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
