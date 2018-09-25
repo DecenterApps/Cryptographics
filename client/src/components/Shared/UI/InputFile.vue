@@ -3,7 +3,7 @@
         <label
             class="button"
             :class="buttonStyle">
-        <span>Upload image</span>
+        <span>Upload {{ multiple ? 'images' : 'image' }}</span>
             <input
                 class="input"
                 :id="id"
