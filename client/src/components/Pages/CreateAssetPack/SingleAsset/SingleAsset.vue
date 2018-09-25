@@ -34,17 +34,34 @@
                     <span class="description">Use as background</span>
                 </span>
             </div>
-            <ico-trash @click.native="remove(index)" />
+            <ico-trash @click.native="remove" />
         </overlay>
     </div>
 </template>
 
 <script>
+
+  import IcoTrash from 'shared/UI/Icons/IcoTrash.vue';
+  import IcoBackground from 'shared/UI/Icons/IcoBackground.vue';
+
   export default {
     name: 'SingleAsset',
+    components: {
+      IcoTrash,
+      IcoBackground,
+    },
     props: {
       asset: {
         default: {},
+      },
+      index: {
+        default: 0,
+      },
+      remove: {
+        default: () => {},
+      },
+      toggleAttribute: {
+        default: () => {},
       }
     },
     methods: {

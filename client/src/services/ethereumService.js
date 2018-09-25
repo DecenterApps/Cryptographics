@@ -472,19 +472,19 @@ export const getImage = async (randomSeed, iterations, potentialAssets) => {
   return pickedAssets;
 };
 
-export const getTestImage = async (randomSeed, iterations, potentialAssets, attributes) => {
+export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
   console.log('POTENTIAL', potentialAssets);
   let pickedAssets = [];
 
   for (let i = 0; i < potentialAssets.length; i++) {
-    seed = web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
-    let metadata = getAssetMetadata(utils.hex2dec(seed), potentialAssets[i]);
+    seed = web3.utils.soliditySha3(seed, parseInt(i, 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), i);
 
     if (metadata !== null) {
       pickedAssets.push({
         ...metadata,
-        attributes: attributes[i],
+        attributes: potentialAssets[i].attribute,
       });
     }
   }

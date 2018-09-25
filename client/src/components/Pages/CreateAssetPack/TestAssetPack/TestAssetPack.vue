@@ -3,7 +3,7 @@
         <div class="left">
             <Canvas :canvasData="canvasData"></Canvas>
         </div>
-        <div v-if="currentStep === 1" class="right">
+        <div class="right">
 
             <div class="controls">
                 <div class="top-controls">
@@ -54,6 +54,9 @@
       selectedAssets: {
         default: [],
       },
+      changeStep: {
+        default: () => {}
+      },
       currentStep: {
         default: 0,
       }
@@ -69,8 +72,6 @@
       iterations: 0,
       timestamp: new Date().getTime(),
       randomHashIds: pickTenRandoms(),
-      potentialAssets: [],
-      selectedAssets: [],
     }),
     computed: {
       ...mapGetters({
@@ -82,20 +83,9 @@
         this.iterations++;
         let selectedAssets = this.selectedAssets;
         selectedAssets = selectedAssets.slice(0, 30);
-        this.canvasData.assets = await getTestImage(this.randomSeed, this.iterations, selectedAssets);
+        const imageAssets = await getTestImage(this.randomSeed, this.iterations, selectedAssets);
+        this.canvasData.assets = imageAssets.map((asset, i) => ({ ...asset, uploadSrc: this.selectedAssets[i].path }));
         console.log('iteration: ' + this.iterations);
-        this.potentialAssets = selectedAssets;
-        let picked = [];
-        for (let i = 0; i < this.canvasData.assets.length; i++) {
-          picked.push(this.canvasData.assets[i].id);
-        }
-        let price = await calculatePrice(picked, this.userAddress);
-
-        if (selectedAssets.length === 0) {
-          this.imagePrice = 0;
-        }
-        this.imagePrice = parseFloat(price);
-        console.log('PRICE : ' + this.imagePrice);
       },
       toggleRatio(square) {
         this.canvasData.ratio = square ? '1:1' : '2:3';
@@ -124,7 +114,7 @@
         .right {
             display: flex;
             flex-flow: column;
-            justify-content: space-between;
+            justify-content: flex-end;
             flex-grow: 1;
             margin-left: 50px;
             /*max-width: 400px;*/

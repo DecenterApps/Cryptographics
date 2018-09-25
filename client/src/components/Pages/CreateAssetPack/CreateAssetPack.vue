@@ -27,6 +27,9 @@
                         <div>
                             <single-asset
                                     v-for="(asset, index) in assets"
+                                    :remove="remove.bind(this, index)"
+                                    :index="index"
+                                    :toggleAttribute="toggleAttribute.bind(this)"
                                     :asset="asset"
                                     :key="index"
                             ></single-asset>
@@ -43,17 +46,22 @@
                 </div>
             </div>
         </div>
+        <div class="page-wrapper" v-if="currentStep === 1">
+            <layout layout-style="full-screen">
+                <test-asset-pack
+                        :selected-assets="assets"
+                        :changeStep="changeStep"
+                ></test-asset-pack>
+            </layout>
+        </div>
         <div class="page-wrapper" v-show="currentStep === 2">
             <layout layout-style="full-screen">
                 <div class="left-content">
                     <h1 class="large-title">Submit asset pack</h1>
                     <div class="graphic-preview">
-                        <canvas id="canvas"></canvas>
+                        <canvas id="thumbnail-canvas"></canvas>
                     </div>
                     <div class="button-group submit">
-                        <cg-button button-style="secondary" @click="changeStep(0)">
-                            Back
-                        </cg-button>
                         <cg-button button-style="secondary" @click="renderCanvas">
                             Generate thumbnail
                         </cg-button>
@@ -77,14 +85,17 @@
                             <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
                         </div>
                     </div>
-                    <div class="submit-button">
-                        <cg-button
-                                @click="uploadToIpfs">
-                            Submit
-                        </cg-button>
-                    </div>
                 </div>
             </layout>
+            <div class="container">
+                <separator></separator>
+                <div class="submit-button">
+                    <cg-button
+                            @click="uploadToIpfs">
+                        Submit
+                    </cg-button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -97,20 +108,18 @@
   import { mapGetters, mapActions } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
-  import IcoTrash from './template/IcoTrash.vue';
-  import IcoBackground from './template/IcoBackground.vue';
   import StepHeader from 'shared/StepHeader/StepHeader';
   import { preloadImages, resizeCanvas } from 'services/helpers';
   import SingleAsset from './SingleAsset/SingleAsset';
   import UploadDescription from './UploadDescription/UploadDescription';
+  import TestAssetPack from './TestAssetPack/TestAssetPack';
 
   export default {
     name: 'CreateAssetPack',
     components: {
+      TestAssetPack,
       UploadDescription,
       SingleAsset,
-      IcoTrash,
-      IcoBackground,
       StepHeader
     },
     data: () => ({
@@ -135,14 +144,6 @@
       })
     },
 
-    watch: {
-      stage: function (val) {
-        if (val === 'submit') {
-          this.renderCanvas();
-        }
-      }
-    },
-
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL,
@@ -151,6 +152,8 @@
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       changeStep(step) {
+        console.log(step);
+        if (step === 2) this.renderCanvas();
         this.currentStep = step;
       },
       uploadAssets() {
@@ -167,7 +170,7 @@
               const width = img.naturalWidth;
               const height = img.naturalHeight;
 
-              if (width > 2480 || height > 3598) return;
+              if (width > 2480 || height > 3508) return;
 
               this.assets.push({
                 path,
@@ -180,14 +183,14 @@
       },
 
       renderCanvas() {
-        let canvas = document.getElementById('canvas');
+        let canvas = document.getElementById('thumbnail-canvas');
         canvas.width = 2480;
         canvas.height = 1805;
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
       async uploadToIpfs() {
         let hashes = [];
-        let canvas = document.getElementById('canvas');
+        let canvas = document.getElementById('thumbnail-canvas');
 
         const UPLOAD_WIDTH = 386 * 2;
         const UPLOAD_HEIGHT = 281 * 2;
@@ -311,11 +314,11 @@
             }
             button {
                 margin: 0 5px;
+                width: 155px;
                 &:first-of-type {
                     margin-left: 0;
                 }
                 &:last-of-type {
-                    margin-left: 15px;
                     margin-right: 0;
                 }
             }
@@ -348,15 +351,14 @@
             margin-bottom: 20px;
         }
 
+        textarea {
+            width: 100%;
+            height: 155px;
+        }
+
         p {
             max-width: 240px;
             line-height: 19px;
-        }
-
-        .submit-button {
-            display: flex;
-            justify-content: flex-end;
-            max-width: 400px;
         }
 
         .inputs-wrapper {
@@ -390,6 +392,11 @@
             max-height: 432px !important;
             overflow: hidden !important;
         }
+    }
+
+    .submit-button {
+        display: flex;
+        justify-content: flex-end;
     }
 
     .pack-name {
