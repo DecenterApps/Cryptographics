@@ -1,6 +1,6 @@
 <template>
     <main>
-        <cg-header />
+        <cg-header v-if="['create-cryptographic'].indexOf($route.name) === -1" />
         <keep-alive>
             <!-- Keep slider alive between routes -->
             <slider-gallery v-if="[
@@ -13,7 +13,7 @@
                             ].indexOf($route.matched[0].path) >= 0" />
         </keep-alive>
         <router-view />
-        <cg-footer />
+        <cg-footer v-if="['create-cryptographic'].indexOf($route.name) === -1" />
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
         <error-bar v-if="network && deployedNetwork !== network"

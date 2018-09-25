@@ -16,9 +16,13 @@ import {
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
   SET_NEW_USERNAME,
-  SET_NETWORK, MUTATE_NETWORK,
+  SET_NETWORK,
+  MUTATE_NETWORK,
+  FETCH_BALANCES, MUTATE_BALANCES,
 } from './types';
-import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
+import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL } from '../modal/types';
+import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
+
 import {
   TOGGLE_MODAL
 } from '../modal/types';
@@ -31,7 +35,8 @@ import {
   usernameExists,
   registerUser,
   getCreatedAssetPacks,
-  getBoughtAssetPacks
+  getBoughtAssetPacks,
+  userBalances,
 } from 'services/ethereumService';
 
 export default {
@@ -71,7 +76,7 @@ export default {
     let avatarBytes32 = await getAvatar(state.metamaskAddress);
     const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
     if (avatarBytes32 !== initialAvatarBytes32) {
-      let avatar = utils.getIpfsHashFromBytes32(avatarBytes32);
+      let avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(avatarBytes32);
       commit(MUTATE_AVATAR, avatar);
     } else {
       let avatar = DEFAULT_AVATAR_IPFS_HASH;
@@ -113,6 +118,7 @@ export default {
     }
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
+    dispatch(TOGGLE_LOADING_MODAL, 'Please wait...') ;
     await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
     if (!state.changeUsername.isExisting) {
       if (newUsername === '') {
@@ -125,11 +131,17 @@ export default {
       await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
       let result = true;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
+      dispatch(HIDE_LOADING_MODAL);
       await dispatch(SET_USER_CONFIG);
       setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
     } else {
       let result = false;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
+      dispatch(HIDE_LOADING_MODAL);
     }
+  },
+  [FETCH_BALANCES]: async ({commit, state}) => {
+    const balances = await userBalances(state.metamaskAddress);
+    commit(MUTATE_BALANCES, balances)
   }
 };

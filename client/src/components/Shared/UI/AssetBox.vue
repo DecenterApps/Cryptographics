@@ -58,9 +58,9 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        height: 100px;
-        width: 136px;
+        justify-content: space-around;
+        height: 120px;
+        width: 165px;
         font-family: inherit;
         background-color: #eee;
         color: #494946;
@@ -70,8 +70,8 @@
         border: 4px solid #D9D9D9;
 
         &.small {
-            height: 55px;
-            width: 75px;
+            height: 60px;
+            width: 85px;
 
             .overlay-content {
                 display: flex;

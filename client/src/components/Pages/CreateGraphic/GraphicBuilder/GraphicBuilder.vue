@@ -4,7 +4,7 @@
             <Canvas :canvasData="canvasData"></Canvas>
         </div>
         <!-- FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
-        <div v-if="!buyScreen" class="right">
+        <div v-if="currentStep === 1" class="right">
             <div class="selected-asset-packs">
                 <h1 class="small-title">
                     Selected asset packs
@@ -17,9 +17,9 @@
                             :small="true"
                             color="#eee"
                             action="close"
-                            @click="changeTab"
+                            @click="changeStep(0)"
                     />
-                    <div @click="changeTab" class="add-more">
+                    <div @click="changeStep(0)" class="add-more">
                         +
                     </div>
                 </div>
@@ -39,10 +39,10 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
-                    <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
+                    <price size="medium" :value="displayPrice()" />
                     <cg-button
                             :loading="isCanvasDrawing"
-                            @click="buyScreen = true"
+                            @click="changeStep(2)"
                     >
                         Next
                     </cg-button>
@@ -52,7 +52,7 @@
         <!-- END OF FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
 
         <!-- SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
-        <div v-if="buyScreen" class="right">
+        <div v-if="currentStep === 2" class="right">
             <div class="selected-asset-packs">
                 <div class="final-pack-list">
                     <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
@@ -91,14 +91,14 @@
                 <div class="bottom-controls buy-screen">
                     <div>
                         <cg-button
-                                @click="buyScreen = false"
+                                @click="changeStep(1)"
                                 :button-style="'transparent'"
                         >
                             Back
                         </cg-button>
                     </div>
                     <div class="separate-controls">
-                        <h1 class="large-title" v-if="displayPrice()">Ξ {{ displayPrice() }}</h1>
+                        <price size="medium" :value="displayPrice()" />
                         <cg-button
                                 :loading="isCanvasDrawing"
                                 @click="buyImage"
@@ -135,6 +135,11 @@
     name: 'GraphicBuilder',
     components: {
       Canvas
+    },
+    props: {
+      currentStep: {
+        default: 0,
+      }
     },
     data: () => ({
       title: '',
@@ -229,7 +234,7 @@
 
         let image = canvasClone.toDataURL('image/png');
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
-        console.log('IMAGE HASH' + ipfsHash);
+        console.log('IMAGE HASH ' + ipfsHash);
         console.log(this.potentialAssets);
         let imageMetadata = {
           title: this.title,
@@ -257,7 +262,7 @@
         const result = await transactionPromise();
         const id = result.events.ImageCreated.returnValues.imageId;
         this.closeLoadingModal();
-        this.$router.push(`single-graphic/${id}`);
+        this.$router.push(`cryptographic/${id}`);
         this.openModal('Cryptographic successfully saved to the blockchain forever.');
       },
       async renderCanvas() {
@@ -297,8 +302,8 @@
           link.click();
         }, 'image/jpeg');
       },
-      changeTab() {
-        this.$emit('tabChange', 'picker');
+      changeStep(step) {
+        this.$emit('stepChange', step);
       },
       toggleRatio(square) {
         this.canvasData.ratio = square ? '1:1' : '2:3';
@@ -351,7 +356,7 @@
             justify-content: space-between;
             flex-grow: 1;
             margin-left: 50px;
-            max-width: 400px;
+            /*max-width: 400px;*/
             min-width: 300px;
             width: 100%;
         }
@@ -391,6 +396,7 @@
     }
 
     .selected-asset-packs {
+        max-width: 510px;
 
         .final-pack-list {
             display: flex;
@@ -433,8 +439,12 @@
             flex-wrap: wrap;
 
             .asset-box {
-                margin-right: 20px;
+                margin-right: 18px;
                 margin-bottom: 20px;
+
+                &:nth-child(5n) {
+                    margin-right: 0;
+                }
             }
             .add-more {
                 height: 55px;
@@ -529,11 +539,21 @@
             justify-content: flex-end;
             padding-top: 20px;
 
+            span {
+                margin-right: 17px;
+                font-weight: bold;
+            }
+
+            button {
+                min-width: 70px;
+            }
+
             &.buy-screen {
                 justify-content: space-between;
 
                 .separate-controls {
                     display: flex;
+                    align-items: center;
                     justify-content: flex-end;
 
                     button {

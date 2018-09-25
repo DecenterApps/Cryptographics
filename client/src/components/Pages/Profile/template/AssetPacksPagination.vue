@@ -51,13 +51,8 @@
                 :total="assetPackIds === null ? 0 : assetPackIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
-        <div v-if="assetPackIds.length === 0" class="asset-packs">
-            <p v-if="assetPacksType === 'created'">You haven't created any asset packs yet.</p>
-            <p v-if="assetPacksType === 'bought'">You haven't bought any asset packs yet. Go to
-                <router-link to="/asset-packs-market">market</router-link>
-                .
-            </p>
-        </div>
+
+        <empty-state v-if="assetPackIds.length === 0" :type="assetPacksType" />
     </div>
 </template>
 
@@ -72,13 +67,14 @@
     BOUGHT_ASSETS_PACKS_IDS
   } from 'store/user-config/types';
   import { ipfsNodePath } from 'config/constants';
+  import EmptyState from '../../../Shared/EmptyState/EmptyState';
 
   export default {
     name: 'AssetPacksPagination',
+    components: { EmptyState },
     props: {
       assetPacksType: {
         type: String,
-        default: 'created'
       },
       showPerPage: {
         type: Number,

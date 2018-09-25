@@ -16,5 +16,9 @@ export default {
   graphics: {
     createdIDs: [],
     boughtIDs: []
+  },
+  balances: {
+    assetsBalance: 0,
+    marketplaceBalance: 0,
   }
 };

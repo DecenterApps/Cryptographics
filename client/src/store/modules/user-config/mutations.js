@@ -7,6 +7,7 @@ import {
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
   MUTATE_NETWORK,
+  MUTATE_BALANCES,
 } from './types';
 
 export default {
@@ -33,7 +34,10 @@ export default {
   },
   [MUTATE_BOUGHT_ASSETS_PACKS_IDS]: (state, boughtIDs) => {
     state.assets.boughtIDs = boughtIDs;
-  }
+  },
+  [MUTATE_BALANCES]: (state, balances) => {
+    state.balances = balances;
+  },
 };
 
 
