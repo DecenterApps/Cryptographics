@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="graphic-builder">
         <div class="left">
             <Canvas :canvasData="canvasData"></Canvas>
         </div>
@@ -276,7 +276,7 @@
           selectedAssets = shuffleArray(selectedAssets);
         }
         selectedAssets = selectedAssets.slice(0, 30);
-        this.canvasData.assets = await getImage(this.randomSeed, this.iterations, utils.encode(selectedAssets));
+        this.canvasData.assets = await getImage(this.randomSeed, this.iterations, selectedAssets);
         console.log('iteration: ' + this.iterations);
         this.potentialAssets = selectedAssets;
         let picked = [];
@@ -345,8 +345,11 @@
 </script>
 
 <style scoped lang="scss">
-    .container {
+    .graphic-builder {
         position: relative;
+        display: flex;
+        width: 100%;
+
         .left {
             flex-shrink: 1;
         }

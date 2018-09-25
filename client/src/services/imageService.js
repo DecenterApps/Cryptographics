@@ -266,7 +266,7 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
       image: image,
       x_coordinate: Math.floor(Math.random() * canvasWidth),
       y_coordinate: Math.floor(Math.random() * canvasHeight),
-      rotation: Math.floor((attribute / 10) % 10) === 1 ?  Math.floor(Math.random() * 360) : 0,
+      rotation: Math.floor((attribute / 10) % 10) === 1 ? Math.floor(Math.random() * 360) : 0,
       scale: Math.floor(attribute % 10) === 1 ? 800 + Math.floor(Math.random() * 200) : 1000,
       isBackground: Math.floor((attribute / 100) % 10) === 1,
       shouldScale: true,
@@ -329,21 +329,28 @@ export const makeImage = (objs, c, width, height, frame = {
 
     if (assets.length === 0) return resolve('No assets provided.');
 
-    try {
-      hashes = await getAssetsIpfs(assets);
-    } catch (e) {
-      console.info(e);
-      return resolve('Could not get ipfs hashes for assets');
+    if (!assets[0].src && !assets[0].uploadSrc) {
+      try {
+        hashes = await getAssetsIpfs(assets);
+      } catch (e) {
+        console.info(e);
+        return resolve('Could not get ipfs hashes for assets');
+      }
+      console.log('HASHES');
+      console.log(hashes);
     }
-    console.log('HASHES');
-    console.log(hashes);
+
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
       image.crossOrigin = 'Anonymous';
 
       if (assets[i].src) {
         image.src = require(`../${assets[i].src}`);
-      } else {
+      }
+      else if (assets[i].uploadSrc) {
+        image.src = assets[i].uploadSrc;
+      }
+      else {
         image.src = ipfsNodePath + hashes[i];
       }
 
@@ -434,26 +441,3 @@ export const drawImageRot = (context, img, x, y, width, height, deg, scale, opti
   //
   context.translate((x) * (-1), (y) * (-1));
 };
-
-// let randomSeed = 123123;
-// let iterations = 5;
-// let potentialAssets = [1,2,3,4,5,6,7,8,9,10,11];
-// potentialAssets = utils.encode(potentialAssets);
-
-async function test() {
-  // let x = await loadDataForAssets();
-  // console.log(x);
-  ipfsHashes = ['QmUJeMmc2jETHdTUfCQyK27bMhSfoAFfRpQuX5RpVN2gHf',
-    'QmQKJdkbGEsiav3vdzK8pTH5WoNXCoXN8VbZLrFoWjmPwR',
-    'Qmd9VNGsVST4y4ZLz5rQtLMxDb2HhJwutAfQ5Et5MoAA7z',
-    'QmaL8YXHZA2aayApzaAeeV7RDJXAf5ZvqCbPraQkgdkTSh',
-    'QmPNSue3FwTVeYsYrDtMBPWWofFQCtP72C3m8vtYS3xEAu'];
-
-  for (let i = 0; i < ipfsHashes.length; i++) {
-    ipfsHashes[i] = utils.getBytes32FromIpfsHash(ipfsHashes[i]);
-  }
-  console.log(ipfsHashes);
-  await createAssetPack(ipfsHashes, 2000, '0xf67cDA56135d5777241DF325c94F1012c72617eA');
-}
-
-// test();
