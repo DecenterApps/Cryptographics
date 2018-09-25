@@ -20,6 +20,7 @@ import {
   MUTATE_NETWORK,
   FETCH_BALANCES, MUTATE_BALANCES,
 } from './types';
+import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL } from '../modal/types';
 import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
 import {
@@ -117,6 +118,7 @@ export default {
     }
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
+    dispatch(TOGGLE_LOADING_MODAL, 'Please wait...') ;
     await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
     if (!state.changeUsername.isExisting) {
       if (newUsername === '') {
@@ -129,11 +131,13 @@ export default {
       await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
       let result = true;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
+      dispatch(HIDE_LOADING_MODAL);
       await dispatch(SET_USER_CONFIG);
       setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
     } else {
       let result = false;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
+      dispatch(HIDE_LOADING_MODAL);
     }
   },
   [FETCH_BALANCES]: async ({commit, state}) => {
