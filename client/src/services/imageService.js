@@ -329,14 +329,17 @@ export const makeImage = (objs, c, width, height, frame = {
 
     if (assets.length === 0) return resolve('No assets provided.');
 
-    try {
-      hashes = await getAssetsIpfs(assets);
-    } catch (e) {
-      console.info(e);
-      return resolve('Could not get ipfs hashes for assets');
+    if (!assets[0].src && !assets[0].uploadSrc) {
+      try {
+        hashes = await getAssetsIpfs(assets);
+      } catch (e) {
+        console.info(e);
+        return resolve('Could not get ipfs hashes for assets');
+      }
+      console.log('HASHES');
+      console.log(hashes);
     }
-    console.log('HASHES');
-    console.log(hashes);
+
     for (let i = 0; i < objs.length; i++) {
       let image = new Image();
       image.crossOrigin = 'Anonymous';
