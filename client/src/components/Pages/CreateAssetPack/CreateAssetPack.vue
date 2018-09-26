@@ -74,8 +74,8 @@
                             <div class="input-group">
                                 <label class="small-title">Asset pack name</label>
                                 <cg-input
-                                        v-on:input="checkErrors"
-                                        :inputStyle="errors.find(err => err === 'nameError') ? 'input error' : 'input'"
+                                        v-on:input="checkErrors('name')"
+                                        :inputStyle="errors.name ? 'input error' : 'input'"
                                         v-model="name"
                                         :max-length="20"
                                         name="packName"
@@ -84,8 +84,8 @@
                             <div class="input-group">
                                 <label class="small-title">Asset pack price</label>
                                 <cg-input
-                                        v-on:input="checkErrors"
-                                        :inputStyle="errors.find(err => err === 'priceError') ? 'input error' : 'input'"
+                                        v-on:input="checkErrors('price')"
+                                        :inputStyle="errors.price ? 'input error' : 'input'"
                                         v-model="price"
                                         inputType="number"
                                         name="price"
@@ -144,7 +144,10 @@
       stage: 'select',
       maxAssets: 50,
       assets: [],
-      errors: [],
+      errors: {
+        name: false,
+        price: false,
+      },
       canvasData: {
         assets: [],
         ratio: '1:1',
@@ -203,13 +206,13 @@
         canvas.height = 1805;
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
-      checkErrors() {
-        this.errors = [];
+      checkErrors(toCheck = '') {
+        const checkAll = !toCheck;
 
-        if (!this.name || this.name.length > 20) this.errors.push('nameError');
-        if (!this.price || this.price === 0) this.errors.push('priceError');
+        if (toCheck === 'name' || checkAll) this.errors.name = !this.name || this.name.length > 20;
+        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0
 
-        return this.errors.length > 0;
+        return Object.keys(this.errors).filter(key => this.errors[key]).length > 0;
       },
       async uploadToIpfs() {
         if (this.checkErrors()) return;

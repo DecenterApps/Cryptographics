@@ -45,6 +45,7 @@
     isImageForSale,
     parseContractAssetData,
     getGalleryImage,
+    getUserInfo,
   } from 'services/ethereumService';
   import ShareIcons from './ShareIcons';
 
@@ -108,9 +109,11 @@
     async created() {
       const metadata = await getImageMetadata(this.$route.params.id);
       const image = await getGalleryImage(this.$route.params.id, true);
+      const creatorMeta = await getUserInfo(image.creator);
       this.image = {
         ...metadata,
         ...image,
+        creatorMeta
       };
       this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];

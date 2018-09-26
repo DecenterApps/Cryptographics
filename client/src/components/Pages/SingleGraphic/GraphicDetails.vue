@@ -23,7 +23,16 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
                 </h3>
-                <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
+                <div class="user-links-wrapper">
+                    <div class="user-link-wrapper">
+                        <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username" :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
+                        <span class="title">Creator</span>
+                    </div>
+                    <div class="user-link-wrapper">
+                        <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" color="black" additionalClass="ellipsis" />
+                        <span class="title">Owner</span>
+                    </div>
+                </div>
                 <p class="description">{{ image.description }}</p>
 
             </div>
@@ -74,10 +83,9 @@
 </template>
 
 <script>
-  import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
-  import { mapActions, mapGetters } from 'vuex';
+  import { getUserInfo, sellImage, cancelSell, buyImage } from 'services/ethereumService';
+  import { mapActions } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
-  import { METAMASK_ADDRESS } from 'store/user-config/types';
 
   export default {
     name: 'GraphicDetails',
@@ -110,11 +118,6 @@
         type: Function,
         default: () => {},
       }
-    },
-    computed: {
-      ...mapGetters({
-        userAddress: METAMASK_ADDRESS,
-      })
     },
     methods: {
       ...mapActions({
@@ -149,7 +152,7 @@
         this.openModal('Cryptographic successfully removed from the marketplace.');
       },
       async submitBuyImage() {
-        if (!this.userAddress) return this.openModal('metaMaskInfo');
+        if (!this.userAddress || this.userAddress === '0x0') return this.openModal('metaMaskInfo');
 
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
@@ -205,6 +208,28 @@
             margin-bottom: 10px;
             position: relative;
             display: flex;
+        }
+
+        .user-links-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+
+            .user-link-wrapper {
+                position: relative;
+                margin-right: 35px;
+
+                .user {
+                    max-width: 350px;
+                }
+
+                .title {
+                    position: absolute;
+                    color: #9D9D9D;
+                    font-size: 12px;
+                    left: 43px;
+                    top: 25px;
+                }
+            }
         }
     }
 

@@ -561,11 +561,22 @@ const mapUserInfo = userInfoTx => {
   const username = userInfoTx[0] || DEFAULT_USERNAME;
 
   const isImageEmptyBytes = utils.isEmptyBytes(userInfoTx[1]);
-  const avatarIpfsHash = isImageEmptyBytes ? DEFAULT_AVATAR_IPFS_HASH : utils.getIpfsHashFromBytes32(userInfoTx[1]);
-  const avatar = `${ipfsNodePath}${utils.getIpfsHashFromBytes32(avatarIpfsHash)}`;
+  const avatar = isImageEmptyBytes ? DEFAULT_AVATAR_IPFS_HASH : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(userInfoTx[1])}`;
 
   return { username, avatar };
 };
+
+export const getUserInfo = address =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const userContract = await digitalPrintImageContract();
+      const res = await userContract.methods.getUserInfo(address).call();
+
+      resolve(mapUserInfo(res))
+    } catch(err) {
+      reject(err);
+    }
+  });
 
 export const getImageTransferHistory = imageId =>
   new Promise(async (resolve, reject) => {
