@@ -1,19 +1,33 @@
 <template>
     <div class="empty-state">
-        <div v-if="type === 'gallery-all'">There are no Cryptographics created at the moment.</div>
-        <div v-if="type === 'gallery-sale'">There are no Cryptographics for sale at the moment.</div>
+        <div v-if="type === 'gallery-all'">There are no Cryptographics created yet.</div>
+        <div v-if="type === 'gallery-sale'">There are no Cryptographics for sale yet.</div>
 
-        <div v-if="type === 'profile-gallery'">You don't own any Cryptographics at the moment.</div>
+        <div v-if="type === 'profile-gallery-all-own'">You don't own any Cryptographics yet.</div>
+        <div v-if="type === 'profile-gallery-all'">This user doesn't own any Cryptographics yet.</div>
 
-        <div v-if="type === 'profile-asset-packs-all'">You don't own any Asset packs at the moment.</div>
-        <div v-if="type === 'profile-asset-packs-bought'">
-            You haven't bought any asset packs yet. Go to <router-link to="/asset-packs">market</router-link>.
+        <div v-if="type === 'profile-gallery-created-own'">
+            You haven't created any Cryptographics yet. <router-link to="/create-cryptographic">Start creating!</router-link>
         </div>
-        <div v-if="type === 'profile-asset-packs-created' || type === 'asset-packs-created'">
-            You haven't created any Asset packs yet.
-        </div>
+        <div v-if="type === 'profile-gallery-created'">This hasn't created any Cryptographics yet.</div>
 
-        <div v-if="type === 'asset-packs-all'">There are no Asset packs created at the moment.</div>
+        <div v-if="type === 'profile-gallery-bought-own'">
+            You haven't bought any Cryptographics yet. Check some out in the <router-link to="/gallery">gallery</router-link>.
+        </div>
+        <div v-if="type === 'profile-gallery-bought'">This user hasn't bought any Cryptographics yet.</div>
+
+        <div v-if="type === 'profile-asset-packs-all-own'">You don't own any asset packs yet.</div>
+        <div v-if="type === 'profile-asset-packs-all'">This user doesn't own any asset packs yet.</div>
+        <div v-if="type === 'profile-asset-packs-bought-own'">
+            You haven't bought any asset packs yet. Take a look at the <router-link to="/asset-packs">market</router-link>.
+        </div>
+        <div v-if="type === 'profile-asset-packs-bought'">This user hasn't bought any asset packs yet. </div>
+        <div v-if="type === 'profile-asset-packs-created-own' || type === 'asset-packs-created'">
+            You haven't created any asset packs yet.
+        </div>
+        <div v-if="type === 'profile-asset-packs-created'">This user hasn't created any asset packs yet.</div>
+
+        <div v-if="type === 'asset-packs-all'">There are no asset packs created yet.</div>
     </div>
 </template>
 

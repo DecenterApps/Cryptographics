@@ -384,6 +384,11 @@ export const getGalleryImage = async (imageId, getPrice) =>
     });
   });
 
+export const getImageOwnerAndCreator = async (imageId) => ({
+  ...(await digitalPrintImageContract().methods.getGalleryData(imageId).call()),
+  id: imageId
+});
+
 export const getImageMetadata = (imageId) =>
   new Promise(async (resolve, reject) => {
     try {
