@@ -101,8 +101,7 @@
         }, 'image/jpeg');
       },
       async getData() {
-        console.log(this.image.owner, this.userAddress);
-        this.loggedIn = this.image.owner.toLowerCase() === this.userAddress.toLowerCase();
+        this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
         this.forSale = await isImageForSale(this.$route.params.id);
       }
     },

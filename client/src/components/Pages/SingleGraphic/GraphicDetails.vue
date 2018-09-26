@@ -143,6 +143,8 @@
         this.openModal('Cryptographic successfully removed from the marketplace.');
       },
       async submitBuyImage() {
+        if (!this.isLogged) return this.openModal('metaMaskInfo');
+
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
