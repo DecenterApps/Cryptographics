@@ -342,8 +342,7 @@ export const getImagesOnSale = () => marketPlaceContract().methods.getActiveAds(
 
 export const getImagePrice = async (imageId) => {
   const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
-
-  return web3.utils.fromWei(marketplaceAd.price, 'ether');
+  return marketplaceAd.active ? web3.utils.fromWei(marketplaceAd.price, 'ether') : 0;
 };
 
 export const getGalleryImage = async (imageId, getPrice) =>
@@ -366,7 +365,7 @@ export const getGalleryImage = async (imageId, getPrice) =>
       console.error(e);
     }
     const hasFrame = parseInt(metadata.frame) === 1;
-    const initialAvatar = "0x0000000000000000000000000000000000000000000000000000000000000000"
+    const initialAvatar = '0x0000000000000000000000000000000000000000000000000000000000000000';
     const userAvatar = (image[3] === initialAvatar) ? DEFAULT_AVATAR_IPFS_HASH : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`;
     resolve({
       id: imageId,
@@ -576,8 +575,8 @@ export const getUserInfo = address =>
       const userContract = await digitalPrintImageContract();
       const res = await userContract.methods.getUserInfo(address).call();
 
-      resolve(mapUserInfo(res))
-    } catch(err) {
+      resolve(mapUserInfo(res));
+    } catch (err) {
       reject(err);
     }
   });

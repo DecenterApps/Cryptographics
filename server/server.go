@@ -86,6 +86,13 @@ func form(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if p.Quantity < 1 || len(p.Email) < 5 || len(p.FirstName) < 1 || len(p.LastName) < 1 || len(p.StreetAddress) < 1 ||
+		len(p.Apartment) < 1 || len(p.City) < 1 || len(p.Country) < 1 || len(p.PostalCode) < 1 || len(p.Phone) < 1 {
+		res, _ := json.Marshal(Response{Ok: false, Message: "input validation failed"})
+		w.Write(res)
+		return
+	}
+
 	sendMail(p)
 	connection.Collection("form").Save(&p)
 
