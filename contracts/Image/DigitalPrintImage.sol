@@ -160,6 +160,10 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
         );
     }
 
+    function getUserImages(address _user) public view returns(uint[]) {
+        return ownedTokens[_user];
+    }
+
     /// @notice adds marketplace address to contract only if it doesn't already exist
     /// @param _marketplaceContract address of marketplace contract
     function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
