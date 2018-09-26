@@ -13,7 +13,7 @@
                             :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
                             @click.native="toggleAttribute(index, 0)"
                     />
-                    <span class="description">Enable asset scaling</span>
+                    <span class="description">{{ isAttributeSelected(asset, 2) ? 'Disable' : 'Enable' }} asset scaling</span>
                 </span>
                 <span>
                     <button-icon
@@ -22,7 +22,7 @@
                             :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
                             @click.native="toggleAttribute(index, 1)"
                     />
-                    <span class="description">Enable asset rotation</span>
+                    <span class="description">{{ isAttributeSelected(asset, 1) ? 'Disable' : 'Enable' }} asset rotation</span>
                 </span>
                 <span>
                     <ico-background
@@ -31,7 +31,7 @@
                             ico-stroke="none"
                             @click.native="toggleAttribute(index, 2)"
                     />
-                    <span class="description">Use as background</span>
+                    <span class="description">{{ isAttributeSelected(asset, 0) ? 'Don\'t use' : 'Use'  }} as background</span>
                 </span>
             </div>
             <ico-trash @click.native="remove" />

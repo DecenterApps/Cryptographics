@@ -1,7 +1,7 @@
 <template>
     <div class="asset-picker">
         <div class="header">
-            <h2 class="large-title">Select Asset Pack</h2>
+            <h2 class="large-title">Select Asset Packs</h2>
             <div>
                 <!--<button-icon icon-type="zoom" color="#000" size="15px" />-->
             </div>

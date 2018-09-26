@@ -21,7 +21,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p class="small-title">2. Generate Cryptographics</p>
+                    <p class="small-title">2. Generate a Cryptographic</p>
                     <p class="secondary">
                         A provably random composition process creates your Cryptographic.
                     </p>
@@ -31,14 +31,14 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
                     </div>
-                    <p class="small-title">3. Showcase it <br> or sell it</p>
+                    <p class="small-title">3. Claim ownership</p>
                     <p class="secondary">
-                        Store your Cryptographic permanently and showcase it or sell it in the Gallery.
+                        Saving your Cryptographic lets you keep it forever or sell it in the Gallery
                     </p>
                 </div>
             </div>
             <div class="container">
-                <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC721 token.</p>
+                <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC-721 token.</p>
             </div>
         </div>
         <div class="landing-section">
