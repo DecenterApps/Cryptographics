@@ -24,11 +24,11 @@
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
                 </h3>
                 <div class="user-links-wrapper">
-                    <div class="user-link-wrapper">
+                    <div class="user-link-wrapper" v-if="image.creatorMeta">
                         <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username" :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
                         <span class="title">Creator</span>
                     </div>
-                    <div class="user-link-wrapper">
+                    <div class="user-link-wrapper" v-if="image.owner">
                         <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" color="black" additionalClass="ellipsis" />
                         <span class="title">Owner</span>
                     </div>
@@ -45,9 +45,19 @@
                     <cg-button button-style="secondary" @click="$emit('showPrintForm')">Print</cg-button>
                 </template>
                 <template v-else>
-                    <cg-input v-model="sellPrice" type="text" placeholder="Price in ether" />
+                    <cg-input
+                            v-on:input="checkErrors('sellPrice')"
+                            :inputStyle="errors.sellPrice ? 'input error' : 'input'"
+                            v-model="sellPrice"
+                            inputType="number"
+                            type="text"
+                            placeholder="Price in ether"
+                    />
                     <div class="button-group">
-                        <cg-button button-style="secondary" @click="sellGraphic = !sellGraphic">
+                        <cg-button button-style="secondary" @click="() => {
+                            this.errors.sellPrice = false;
+                            this.sellGraphic = !this.sellGraphic;
+                        }">
                             Cancel
                         </cg-button>
                         <cg-button @click="submitImageForSale">List for sale</cg-button>
@@ -92,6 +102,9 @@
     data: () => ({
       sellGraphic: false,
       sellPrice: '',
+      errors: {
+        sellPrice: false,
+      },
     }),
     props: {
       image: {
@@ -127,7 +140,15 @@
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
+      checkErrors(toCheck = '') {
+        const checkAll = !toCheck;
+
+        if (toCheck === 'sellPrice' || checkAll) this.errors.sellPrice = !this.sellPrice || this.sellPrice === 0;
+
+        return Object.keys(this.errors).filter(key => this.errors[key]).length > 0;
+      },
       async submitImageForSale() {
+        if (this.checkErrors()) return;
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +

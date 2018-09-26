@@ -415,6 +415,8 @@
     }
 
     .right {
+        justify-content: flex-end;
+
         & > div {
             width: 100% !important;
             max-width: 688px !important;
