@@ -28,11 +28,11 @@
         width: 100px;
 
         img {
-            height: 40px;
+            height: 37px;
             width: 40px;
             display: block;
             position: absolute;
-            top: 50%;
+            top: 53%;
             left: 50%;
             margin-left: -20px;
             margin-top: -20px;
