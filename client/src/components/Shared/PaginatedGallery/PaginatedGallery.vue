@@ -118,7 +118,7 @@
       async changePage(currentPage) {
         this.loading = true;
         const selectedImages = paginateArray(this.imageIds, currentPage, this.showPerPage);
-        this.images = await getImagesMetadata(selectedImages, true);
+        this.images = await getGalleryImages(selectedImages, true);
         this.loading = false;
       }
     }

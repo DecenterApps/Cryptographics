@@ -7,6 +7,7 @@
                     @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-else-if="content === 'setUsername'" />
+            <meta-mask-info v-else-if="content === 'metaMaskInfo'" />
             <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
             <balances-modal v-else-if="content === 'balances'" />
             <success-message v-else :content="content" />
@@ -25,6 +26,7 @@
   import SetUsername from 'shared/SetUsername/SetUsername.vue';
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
   import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
+  import MetaMaskInfo from 'shared/MetaMaskInfo/MetaMaskInfo.vue';
   import BalancesModal from 'pages/Profile/BalancesModal.vue';
 
   export default {
@@ -39,13 +41,16 @@
       SetUsername,
       EditProfile,
       TransferHistory,
-      BalancesModal
+      BalancesModal,
+      MetaMaskInfo,
     },
     methods: {
       ...mapActions({
         closeModal: TOGGLE_MODAL
       }),
       smallerPadding(content) {
+        if (content === 'metaMaskInfo') return 'smaller-padding';
+
         return ['Cryptographic', 'Asset pack'].indexOf(content) >= 0 ? 'small-padding' : 0;
       }
     }
@@ -64,6 +69,7 @@
         justify-content: center;
         align-items: center;
         max-height: 100vh;
+
         .overlay {
             position: absolute;
             top: 0;
@@ -80,6 +86,10 @@
 
             &.small-padding {
                 padding: 45px;
+            }
+
+            &.smaller-padding {
+                padding: 30px 60px 60px 60px;
             }
 
             .ico-button {

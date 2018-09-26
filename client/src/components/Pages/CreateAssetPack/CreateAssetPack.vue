@@ -73,11 +73,24 @@
                         <div class="inputs-wrapper">
                             <div class="input-group">
                                 <label class="small-title">Asset pack name</label>
-                                <cg-input v-model="name" :max-length="20" name="packName" />
+                                <cg-input
+                                        v-on:input="checkErrors"
+                                        :inputStyle="errors.find(err => err === 'nameError') ? 'input error' : 'input'"
+                                        v-model="name"
+                                        :max-length="20"
+                                        name="packName"
+                                />
                             </div>
                             <div class="input-group">
                                 <label class="small-title">Asset pack price</label>
-                                <cg-input v-model="price" inputType="number" name="price" placeholder="Value" />
+                                <cg-input
+                                        v-on:input="checkErrors"
+                                        :inputStyle="errors.find(err => err === 'priceError') ? 'input error' : 'input'"
+                                        v-model="price"
+                                        inputType="number"
+                                        name="price"
+                                        placeholder="Value"
+                                />
                             </div>
                         </div>
                         <div class="input-group">
@@ -131,6 +144,7 @@
       stage: 'select',
       maxAssets: 50,
       assets: [],
+      errors: [],
       canvasData: {
         assets: [],
         ratio: '1:1',
@@ -170,6 +184,7 @@
               const width = img.naturalWidth;
               const height = img.naturalHeight;
 
+              if (this.assets.length >= 50) return;
               if (width > 2480 || height > 3508) return;
 
               this.assets.push({
@@ -188,7 +203,18 @@
         canvas.height = 1805;
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
+      checkErrors() {
+        this.errors = [];
+
+        if (!this.name || this.name.length > 20) this.errors.push('nameError');
+        if (!this.price || this.price === 0) this.errors.push('priceError');
+
+        return this.errors.length > 0;
+      },
       async uploadToIpfs() {
+        if (this.checkErrors()) return;
+        if (!this.userAddress) return this.openModal('metaMaskInfo');
+
         let hashes = [];
         let canvas = document.getElementById('thumbnail-canvas');
 

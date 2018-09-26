@@ -77,6 +77,7 @@
   import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
+  import { METAMASK_ADDRESS } from 'store/user-config/types';
 
   export default {
     name: 'GraphicDetails',
@@ -109,6 +110,11 @@
         type: Function,
         default: () => {},
       }
+    },
+    computed: {
+      ...mapGetters({
+        userAddress: METAMASK_ADDRESS,
+      })
     },
     methods: {
       ...mapActions({
@@ -143,6 +149,8 @@
         this.openModal('Cryptographic successfully removed from the marketplace.');
       },
       async submitBuyImage() {
+        if (!this.userAddress) return this.openModal('metaMaskInfo');
+
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
