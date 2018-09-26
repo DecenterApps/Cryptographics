@@ -19,5 +19,8 @@ website/i18n/*
 package-lock.json
 client/config/config.json
 client/config/clientConfig.json
+client/config/landingAssetPacks.json
+client/src/assets/landingart
 build/*
 .vscode
+public/

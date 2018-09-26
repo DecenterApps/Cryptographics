@@ -1,6 +1,6 @@
 <template>
     <main>
-        <cg-header />
+        <cg-header v-if="fullScreenPages.indexOf($route.name) === -1" />
         <keep-alive>
             <!-- Keep slider alive between routes -->
             <slider-gallery v-if="[
@@ -12,8 +12,8 @@
                                 '/user/:userId',
                             ].indexOf($route.matched[0].path) >= 0" />
         </keep-alive>
-        <router-view />
-        <cg-footer />
+        <router-view :key="$route.fullPath"/>
+        <cg-footer v-if="fullScreenPages.indexOf($route.name) === -1" />
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
         <error-bar v-if="network && deployedNetwork !== network"
@@ -41,6 +41,7 @@
       CgFooter
     },
     data: () => ({
+      fullScreenPages: ['create-asset-pack', 'create-cryptographic'],
       deployedNetwork: clientConfig.network,
       testnets,
     }),

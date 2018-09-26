@@ -34,14 +34,13 @@ for key in dict:
 with open("../client/config/config.json.dist","r+") as jsonFile:
     data = json.load(jsonFile)
 
-#    functions = data["functionsContract"]
+    #functions = data["functionsContract"]
     assetManager = data["assetManagerContract"]
     digitalPrintImage = data["digitalPrintImageContract"]
-
-
- #   data["functionsContract"]["abi"] = abi["Functions.json"]
-  #  data["functionsContract"]["networks"]["42"]["address"] = dict["Functions.json"]
-
+    
+    data["functionsContract"] = {"networks": {"42": {}}}
+    data["functionsContract"]["abi"] = abi["Functions.json"]
+    data["functionsContract"]["networks"]["42"]["address"] = dict["Functions.json"]
 
     data["assetManagerContract"]["abi"] = abi["AssetManager.json"]
     data["assetManagerContract"]["networks"]["42"]["address"] = dict["AssetManager.json"]

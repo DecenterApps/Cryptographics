@@ -23,14 +23,10 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
                 </h3>
-                <user-link :to="'/user/' + image.creator" :name="username" :avatar="image.avatar" />
+                <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
                 <p class="description">{{ image.description }}</p>
 
             </div>
-            <!--<div v-if="!sellGraphic" class="graphic-address">-->
-                <!--<strong>Cryptographics address:</strong>-->
-                <!--<span class="address">{{ image.creator }}</span>-->
-            <!--</div>-->
             <div
                     v-if="isLogged && !isForSale"
                     class="graphic-controls"
@@ -81,6 +77,7 @@
   import { sellImage, cancelSell, buyImage } from 'services/ethereumService';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
+  import { METAMASK_ADDRESS } from 'store/user-config/types';
 
   export default {
     name: 'GraphicDetails',
@@ -114,6 +111,11 @@
         default: () => {},
       }
     },
+    computed: {
+      ...mapGetters({
+        userAddress: METAMASK_ADDRESS,
+      })
+    },
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL,
@@ -130,7 +132,7 @@
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
         this.toggleLoadingModal();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.getData();
         this.openModal('Cryptographic successfully submitted for sale.');
       },
@@ -147,6 +149,8 @@
         this.openModal('Cryptographic successfully removed from the marketplace.');
       },
       async submitBuyImage() {
+        if (!this.userAddress) return this.openModal('metaMaskInfo');
+
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
@@ -155,7 +159,7 @@
         const id = result.events.ImageBought.returnValues.imageId;
         this.toggleLoadingModal();
         this.getData();
-        // this.$router.push(`/single-graphic/${id}`);
+        // this.$router.push(`/cryptographic/${id}`);
         this.openModal('Cryptographic successfully bought.');
       },
     },

@@ -8,12 +8,21 @@
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
-                    <cg-button @click="composeWithAP" buttonStyle="transparent">Compose with this Asset Pack</cg-button>
+                    <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
             </div>
             <div class="asset-list">
-                <div class="asset" v-for="asset in assetPack.assets">
+                <div
+                    class="asset"
+                    v-for="(asset, index) in assetPack.assets"
+                    :key="index">
+                    <span
+                        v-if="Math.floor((asset.attribute / 100) % 10) === 1"
+                        class="asset-type">Static Background</span>
+                    <span
+                        v-else
+                        class="asset-type">Asset</span>
                     <img :src="asset.src" alt="">
                 </div>
             </div>
@@ -53,7 +62,7 @@
       }),
       composeWithAP () {
         this.selectSingleAssetPack(this.assetPack);
-        this.$router.push('/create-graphic')
+        this.$router.push('/create-cryptographic')
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
@@ -109,22 +118,47 @@
     }
 
     .asset-list {
-        display: flex;
-        flex-wrap: wrap;
         margin-bottom: 120px;
-        justify-content: space-between;
 
         .asset {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 206px;
-            width: 206px;
-            margin-bottom: 22px;
+            position: relative;
+            display: inline-block;
+            text-align: center;
             background-color: #ECECEC;
-            padding: 10px;
+            padding: 30px 10px;
             box-sizing: border-box;
+            width: 19%;
+            max-height: 19%;
+            height: 213px;
+            margin: 0 1.25% 1.25% 0;
+            vertical-align: top;
+            &:nth-child(5n) {
+                margin-right: 0;
+            }
+            &:hover {
+                .asset-type {
+                    opacity: 1;
+                }
+            }
+            .asset-type {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: #C7C7C7;
+                color: #fff;
+                padding: 5px 10px;
+                font-size: 12px;
+                min-height: 22px;
+                min-width: 22px;
+                pointer-events: none;
+                transition: opacity .2s ease-in-out;
+                opacity: .4;
+                &.is-bg {
+                    background-color: #F55800;
+                }
+            }
             img {
+                position: relative;
                 max-height: 100%;
                 max-width: 100%;
             }

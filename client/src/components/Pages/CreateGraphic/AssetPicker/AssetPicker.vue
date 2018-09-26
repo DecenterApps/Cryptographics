@@ -1,11 +1,17 @@
 <template>
-    <div class="container">
+    <div class="asset-picker">
         <div class="header">
             <h2 class="large-title">Select Asset Pack</h2>
             <div>
                 <!--<button-icon icon-type="zoom" color="#000" size="15px" />-->
             </div>
         </div>
+        <p class="page-description">
+            Please select the asset packs that you want to include in your Cryptographic. You can select as many asset
+            packs as you want, but please note that a random number of assets will be included in a Cryptographic, with
+            the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of
+            Cryptographics afterwards.
+        </p>
         <separator />
         <div class="filter-section">
             <div>
@@ -34,7 +40,7 @@
                     :overlay="true"
                     :isSelected="isSelected.bind(this)"
                     :toggleAsset="toggleAsset.bind(this)"
-                    :changeTab="changeTab.bind(this)"
+                    :changeStep="changeStep.bind(this)"
                     :assetPackIds="assetPacks"
                     :totalPrice="totalPrice"
             />
@@ -49,7 +55,7 @@
 </template>
 
 <script>
-  import Decimal from 'decimal.js'
+  import Decimal from 'decimal.js';
   import AssetPickerPagination from '../template/AssetPickerPagination.vue';
   import {
     METAMASK_ADDRESS,
@@ -98,8 +104,8 @@
       ...mapActions({
         toggleAsset: TOGGLE_ASSET_PACK,
       }),
-      changeTab() {
-        this.$emit('tabChange', 'create');
+      changeStep() {
+        this.$emit('stepChange', 1);
       },
       isSelected(asset) {
         return this.selectedAssetPacks.findIndex(item => parseInt(item.id) === parseInt(asset.id)) >= 0;
@@ -123,37 +129,47 @@
 </script>
 
 <style scoped lang="scss">
-    .container {
+
+    .asset-picker {
+        width: 100%;
+    }
+
+    .line-separator {
+        margin: 30px 0;
+    }
+
+    .header {
         display: flex;
-        flex-direction: column;
-        max-width: 920px;
-        margin-left: 0;
-        justify-content: flex-start !important;
-
-        .line-separator {
-            margin: 25px 0;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        .large-title {
+            margin-bottom: 0;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            .large-title {
-                margin-bottom: 0;
-            }
-            .ico-button {
-                margin-right: 22px;
-            }
+        .ico-button {
+            margin-right: 22px;
         }
-        .filter-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+    }
 
-            button {
-                margin-right: 20px;
-            }
+    .page-description {
+        font-family: Roboto, sans-serif;
+        font-size: 12px;
+        color: #717171;
+        margin-top: 30px;
+        margin-bottom: 0;
+        max-width: 650px;
+        font-weight: 300;
+        line-height: 19px;
+    }
+
+    .filter-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        button {
+            margin-right: 20px;
         }
     }
 

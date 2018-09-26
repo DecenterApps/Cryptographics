@@ -2,51 +2,56 @@
     <div class="gallery">
         <div v-if="loading" class="loading-section">
             <loader />
+            <h3>Please wait, loading Cryptographics from the blockchain.</h3>
         </div>
-        <div class="masonry-wrapper"
-            v-if="!loading"
-            v-masonry
-            transition-duration="0s"
-            stutter="0"
-            item-selector=".item"
-            gutter=".gutter-sizer"
-            fit-width="true">
-            <div class="grid">
-                <div class="gutter-sizer"></div>
-            </div>
-            <div v-masonry-tile class="item" v-for="(image, index) in images" :key="index">
-                <div class="artwork">
-                    <router-link :to="`/single-graphic/${image.id}`">
-                        <overlay v-if="displayOverlay">
-                            <!--<button-icon icon-type="download"/>-->
-                            <button-icon icon-type="zoom" />
-                        </overlay>
-                    </router-link>
-                    <img v-bind:class="image.className" v-bind:src="image.src" alt="" width="307" :height="image.width === image.height ? '307':'434'">
-                    <p class="artwork-title">{{ image.title }}</p>
+        <div v-if="!loading">
+            <div v-if="images && images.length > 0">
+                <div class="masonry-wrapper"
+                     v-masonry
+                     transition-duration="0s"
+                     stutter="0"
+                     item-selector=".item"
+                     gutter=".gutter-sizer"
+                     fit-width="true">
+                    <div class="grid">
+                        <div class="gutter-sizer"></div>
+                    </div>
+                    <div v-masonry-tile class="item" v-for="(image, index) in images" :key="index">
+                        <div class="artwork">
+                            <router-link :to="`/cryptographic/${image.id}`">
+                                <overlay v-if="displayOverlay">
+                                    <button-icon icon-type="zoom" />
+                                </overlay>
+                            </router-link>
+                            <img v-bind:class="image.className" v-bind:src="image.src" alt="" width="307" :height="image.width === image.height ? '307':'434'">
+                            <p class="artwork-title">{{ image.title }}</p>
+                        </div>
+                        <div class="artwork-details">
+                            <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
+                            <price
+                                    v-if="image.price"
+                                    :value="image.price"
+                                    size="small" />
+                        </div>
+                    </div>
                 </div>
-                <div class="artwork-details">
-                    <user-link :to="'/user/' + image.creator" :name="image.username" :avatar="image.avatar" />
-                    <price
-                            v-if="image.price"
-                            :value="image.price"
-                            size="small" />
+                <div class="bottom-controls">
+                    <pagination
+                            :total="imageIds === null ? 0 : imageIds.length"
+                            :per-page="showPerPage"
+                            @updatePage="changePage" />
                 </div>
+                <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
             </div>
+
+            <empty-state v-if="images && images.length === 0" :type="emptyStateType" />
         </div>
-        <div class="bottom-controls">
-            <pagination
-                    :total="imageIds === null ? 0 : imageIds.length"
-                    :per-page="showPerPage"
-                    @updatePage="changePage" />
-        </div>
-        <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
 <script>
   import {
-    getImagesMetadata,
+    getGalleryImages,
   } from 'services/ethereumService';
   import { paginateArray } from 'services/helpers';
   import { mapGetters } from 'vuex';
@@ -56,9 +61,11 @@
     BOUGHT_ASSETS_PACKS_IDS
   } from 'store/user-config/types';
   import { ipfsNodePath } from 'config/constants';
+  import EmptyState from '../EmptyState/EmptyState';
 
   export default {
     name: 'PaginatedGallery',
+    components: { EmptyState },
     props: {
       showPerPage: {
         type: Number,
@@ -75,7 +82,11 @@
       seeMore: {
         type: Boolean,
         default: false,
-      }
+      },
+      emptyStateType: {
+        type: String,
+        default: '',
+      },
     },
     data() {
       return {
@@ -94,7 +105,7 @@
         async get() {
           this.loading = true;
           const selectedImages = paginateArray(this.imageIds, 1, this.showPerPage);
-          const images = await getImagesMetadata(selectedImages, true);
+          const images = await getGalleryImages(selectedImages, true);
           this.loading = false;
           return images;
         },
@@ -107,7 +118,7 @@
       async changePage(currentPage) {
         this.loading = true;
         const selectedImages = paginateArray(this.imageIds, currentPage, this.showPerPage);
-        this.images = await getImagesMetadata(selectedImages, true);
+        this.images = await getGalleryImages(selectedImages, true);
         this.loading = false;
       }
     }
@@ -206,10 +217,14 @@
             width: 100%;
             height: 470px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-color: #CECECE;
             margin-top: 30px;
+            & .loader-content {
+                margin-bottom: 20px;
+            }
         }
     }
 </style>

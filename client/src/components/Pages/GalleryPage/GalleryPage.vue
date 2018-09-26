@@ -3,7 +3,7 @@
         <div class="container">
             <div class="gallery-page-header">
                 <h1 class="large-title">Gallery</h1>
-                <button-link to="/create-graphic">Compose</button-link>
+                <button-link to="/create-cryptographic">Compose</button-link>
             </div>
             <separator />
             <div>
@@ -19,7 +19,7 @@
                         For sale
                     </cg-button>
                 </div>
-                <paginated-gallery :imageIds="showGraphics === 'all' ? imageIds : imagesOnSale" :display-overlay="true" />
+                <paginated-gallery :emptyStateType="`gallery-${showGraphics}`" :imageIds="showGraphics === 'all' ? imageIds : imagesOnSale" :display-overlay="true" />
             </div>
         </div>
     </div>

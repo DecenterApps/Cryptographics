@@ -1,20 +1,25 @@
 import { BigNumber } from 'bignumber.js';
 import utils from 'services/utils';
 import config from 'config/config.json';
+import clientConfig from 'config/clientConfig.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
+import { getAccounts } from './helpers';
 import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
-const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
+const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
-const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
+const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-const marketPlaceContractAddress = config.marketplaceContract.networks['42'].address;
+const marketPlaceContractAddress = config.marketplaceContract.networks[clientConfig.network].address;
 const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
+
+const functionsContractAddress = config.functionsContract.networks[clientConfig.network].address;
+const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
 export const pickTenRandoms = () => {
   let randoms = [];
@@ -324,8 +329,8 @@ export const getNumberOfAssets = async () => {
   return await assetManagerContract().methods.getNumberOfAssets().call();
 };
 
-export const getImagesMetadata = async (imageIds, getPrice) => {
-  const promises = imageIds.map(async imageId => await getImageMetadata(imageId, getPrice));
+export const getGalleryImages = async (imageIds, getPrice) => {
+  const promises = imageIds.map(async imageId => await getGalleryImage(imageId, getPrice));
   return Promise.all(promises);
 };
 
@@ -341,10 +346,9 @@ export const getImagePrice = async (imageId) => {
   return web3.utils.fromWei(marketplaceAd.price, 'ether');
 };
 
-export const getImageMetadata = (imageId, getPrice) =>
+export const getGalleryImage = async (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
-    const image = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
-    const pickedAssets = await digitalPrintImageContract().methods.pickRandomAssets(image[0], image[1]).call();
+    const image = await digitalPrintImageContract().methods.getGalleryData(imageId).call();
 
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
@@ -356,7 +360,7 @@ export const getImageMetadata = (imageId, getPrice) =>
       'height': 3508
     };
     try {
-      const metadataIpfs = await ipfsService.getFileContent(image[7]);
+      const metadataIpfs = await ipfsService.getFileContent(image[5]);
       metadata = JSON.parse(metadataIpfs);
     } catch (e) {
       console.error('Error getting ipfs metadata for image with ID: ', imageId);
@@ -366,21 +370,35 @@ export const getImageMetadata = (imageId, getPrice) =>
 
     resolve({
       id: imageId,
-      finalSeed: image[0],
-      usedAssetsBytes: image[1],
-      usedAssets: pickedAssets,
-      timestamp: image[2],
-      username: image[3],
-      avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[4])}`,
-      creator: image[5],
-      ipfsHash: image[6],
-      src: `${ipfsNodePath}${image[6]}`,
+      creator: image[0],
+      owner: image[1],
+      username: image[2],
+      avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`,
+      ipfsHash: image[4],
+      src: `${ipfsNodePath}${image[4]}`,
       hasFrame,
       width: metadata.width,
       height: metadata.height,
       title: metadata.title,
       description: metadata.description,
       price,
+    });
+  });
+
+export const getImageMetadata = (imageId) =>
+  new Promise(async (resolve, reject) => {
+    const imageMetadata = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
+    const finalSeed = imageMetadata[2];
+    const potentialAssets = imageMetadata[5];
+    const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
+
+    if (!imageMetadata) resolve({});
+    resolve({
+      finalSeed,
+      id: imageId,
+      usedAssetsBytes: potentialAssets,
+      usedAssets: pickedAssets,
+      timestamp: imageMetadata[4]
     });
   });
 
@@ -391,21 +409,12 @@ export const getUserImages = async (address) => {
   return await digitalPrintImageContract().methods.getUserImages(address).call();
 };
 
-export const getImageMetadataFromContract = async (image_id) => {
-  if (image_id < 0) {
-    return null;
-  }
-  let imageMetadata = await digitalPrintImageContract().methods.getImageMetadata(image_id).call();
-  imageMetadata[0] = await convertSeed(imageMetadata[0]);
-  return imageMetadata;
-};
-
 export const convertSeed = async (randomSeed) => {
-  return await digitalPrintImageContract().methods.toHex(randomSeed).call();
+  return await functionsContract().methods.toHex(randomSeed).call();
 };
 
 export const calculateFirstSeed = async (timestamp, rands) => {
-  return await digitalPrintImageContract().methods.calculateSeed(rands, timestamp).call();
+  return await functionsContract().methods.calculateSeed(rands, timestamp).call();
 };
 
 export const calculateSeed = (random_seed, x) => {
@@ -451,27 +460,39 @@ export const getAssetsOrigins = async (assetIds) => {
 
 export const getImage = async (randomSeed, iterations, potentialAssets) => {
   let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log('FINAL SEED: ', seed);
-  let pot_assets = [];
-  console.log(potentialAssets.length);
-  for (let j = 0; j < potentialAssets.length; j++) {
-    let arr = [];
-    arr.push(potentialAssets[j]);
-    pot_assets = [...pot_assets, ...utils.decode(arr)];
-  }
-  console.log('POTENTIAL', pot_assets);
+  console.log('POTENTIAL', potentialAssets);
   let pickedAssets = [];
-  let attributes = await getAttributesForAssets(pot_assets);
+  let attributes = await getAttributesForAssets(potentialAssets);
   console.log('ATTRIBUTES', attributes);
 
-  for (let i = 0; i < pot_assets.length; i++) {
-    seed = web3.utils.soliditySha3(seed, parseInt(pot_assets[i], 10));
-    let metadata = getAssetMetadata(utils.hex2dec(seed), pot_assets[i]);
+  for (let i = 0; i < potentialAssets.length; i++) {
+    seed = web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), potentialAssets[i]);
 
-    if (metadata != null) {
+    if (metadata !== null) {
       pickedAssets.push({
         ...metadata,
         attributes: attributes[i],
+      });
+    }
+  }
+  console.log('PICKED ASSETS', pickedAssets);
+  return pickedAssets;
+};
+
+export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
+  let seed = calculateFinalSeed(randomSeed, iterations);
+  console.log('POTENTIAL', potentialAssets);
+  let pickedAssets = [];
+
+  for (let i = 0; i < potentialAssets.length; i++) {
+    seed = web3.utils.soliditySha3(seed, parseInt(i, 10));
+    let metadata = getAssetMetadata(utils.hex2dec(seed), i);
+
+    if (metadata !== null) {
+      pickedAssets.push({
+        ...metadata,
+        attributes: potentialAssets[i].attribute,
       });
     }
   }
@@ -498,7 +519,7 @@ export const getAssetStats = async (id) => {
 
 export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets, width, height) => {
   // Hardcoded width & height because contract always uses 2:3 aspect
-  return await digitalPrintImageContract().methods.getImage(finalSeed, potentialAssets, 2480, 3508).call();
+  return await functionsContract().methods.getImage(finalSeed, potentialAssets, 2480, 3508).call();
 };
 
 export const getBoughtAssets = async () => {
@@ -536,32 +557,6 @@ export async function parseContractAssetData(image) {
   return parsedAssets;
 }
 
-async function test() {
-  // assets = getImage("0x0de5ac0773fa76034fd9fdcfbd8f8b96377fd2d0057ed6d0080afd3434b91636",5, ["0x000000000100000200000300000400000500000600000700000800000900000a", "0x000000000000000000000000000000000000000000000000000000000000000b"]);
-  // printImageData(assets);
-  // console.log(getAssetMetadata("0x123f12ddd3ffaa",5));
-  // getImageMetadataFromContract(0);
-  // let ipfs = await getAssetIpfs(5);
-  // console.log("DECODED : " + utils.getIpfsHashFromBytes32(ipfs));
-
-  // console.log(await getCreatedAssetPacks("0xf67cDA56135d5777241DF325c94F1012c72617eA"));
-  // console.log(await getAssetPackData(0));
-  // console.log(await getAssetPackData(5));
-  // console.log(await getPackInformation([1,2,3],"0xf67cDA56135d5777241DF325c94F1012c72617eA"));
-  // await getImageMetadataFromContract(0);
-  // await getPositionsOfAssetsInImage('0x240610f366b57b4546eeaaa4de0e441613c1412f0b7f6689e1f19e858f056925',
-  //   ['0x0000000000000001000002000003000004000005000006000007000008000009', '0x000000000a00000b00000c00000d00000e00000f000010000011000012000013',
-  //     '0x000000001400001500001600001700001800001900001a00001b00001c00001d',
-  //     '0x000000001e00001f000020000021000022000023000024000025000026000027']);
-  // await getAttributesForAssets([1,2,3,4]);
-}
-
-function printImageData(assets) {
-  for (let i = 0; i < assets.length; i++) {
-    let obj = assets[i];
-  }
-}
-
 const mapUserInfo = userInfoTx => {
   const username = userInfoTx[0] || DEFAULT_USERNAME;
 
@@ -573,19 +568,22 @@ const mapUserInfo = userInfoTx => {
 };
 
 export const getImageTransferHistory = imageId =>
-  new Promise(async(resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     try {
       const contract = await marketPlaceContract();
       const userContract = await digitalPrintImageContract();
 
-      const events = await contract.getPastEvents('ImageBought', { filter: { imageId }, fromBlock: 0 });
+      const events = await contract.getPastEvents('ImageBought', {
+        filter: { imageId },
+        fromBlock: 0
+      });
 
       const prices = events.map(event => web3.utils.fromWei(event.returnValues[2], 'ether'));
 
       // get time from the events tx block numbers
       const eventTimestampsPromise = events.map(event => web3.eth.getBlock(event.blockNumber));
       const eventsBlocks = await Promise.all(eventTimestampsPromise);
-      const eventsTimes = eventsBlocks.map(block =>  utils.timeConverter(block.timestamp));
+      const eventsTimes = eventsBlocks.map(block => utils.timeConverter(block.timestamp));
 
       // get users name and images from the events
       const usersAddresses = events.map(event => event.returnValues[1]);
@@ -605,3 +603,21 @@ export const getImageTransferHistory = imageId =>
       reject(err);
     }
   });
+
+export const userBalances = async (address) => {
+  console.log('Fetching balance for ', address);
+  const assetBalance = await assetManagerContract().methods.artistBalance(address).call();
+  const marketplaceBalance = await marketPlaceContract().methods.balances(address).call();
+  console.log(assetBalance, marketplaceBalance);
+  return { assetBalance, marketplaceBalance };
+};
+
+export const fromWei = value => web3.utils.fromWei(value.toString(), 'ether');
+
+export const withdraw = async (fromCt, address) => {
+  const ct = fromCt === 'marketplace'
+    ? marketPlaceContract()
+    : assetManagerContract();
+  const account = await getAccounts();
+  return await ct.methods.withdraw().send({ from: account });
+};

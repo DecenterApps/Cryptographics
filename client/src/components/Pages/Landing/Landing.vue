@@ -2,16 +2,16 @@
     <div>
         <graphic-playground />
         <div class="fab">
-            <button-link to="/create-graphic" button-style="primary">Compose</button-link>
+            <button-link to="/create-cryptographic" button-style="primary">Compose</button-link>
         </div>
         <div class="how-it-works">
-            <p class="large-title">How it Works</p>
+            <h1 class="large-title">How it Works</h1>
             <div class="steps">
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-1.png" alt="">
                     </div>
-                    <p>1. Select Asset packs</p>
+                    <p class="small-title">1. Select <br> Asset packs</p>
                     <p class="secondary">
                         Random assets from the chosen packs will make it to your Cryptographic.
                     </p>
@@ -21,7 +21,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p>2. Generate Cryptographics</p>
+                    <p class="small-title">2. Generate Cryptographics</p>
                     <p class="secondary">
                         A provably random composition process creates your Cryptographic.
                     </p>
@@ -31,7 +31,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
                     </div>
-                    <p>3. Showcase it or sell it</p>
+                    <p class="small-title">3. Showcase it <br> or sell it</p>
                     <p class="secondary">
                         Store your Cryptographic permanently and showcase it or sell it in the Gallery.
                     </p>
@@ -93,7 +93,7 @@
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
                     receive earnings every time a new Creator uses it.
                 </p>
-                <button-link to="/upload-asset-pack">Create asset pack</button-link>
+                <button-link to="/create-asset-pack">Create asset pack</button-link>
             </div>
         </div>
         <asset-carousel />
@@ -104,7 +104,7 @@
   import IcoArrow from 'shared/UI/Icons/IcoArrow';
   import AssetCarousel from './AssetCarousel/AssetCarousel';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImagesMetadata, getImageCount } from 'services/ethereumService';
+  import { getImageCount } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 
@@ -186,6 +186,11 @@
         padding-bottom: 200px;
         text-align: center;
     }
+
+    p {
+        font-weight: 300;
+    }
+
     .steps {
         display: flex;
         justify-content: center;
@@ -204,6 +209,16 @@
                 max-width: 210px;
                 color: black;
                 font-size: 16px;
+
+                &.small-title {
+                    color: #000;
+                    font-weight: bold;
+                    font-family: YoungSerif-Regular;
+                    font-size: 21px;
+                    margin-top: 25px;
+                    margin-bottom: 10px;
+                }
+
                 &.secondary {
                     /*margin: 10px auto 0;*/
                     color: #717171;
@@ -291,8 +306,6 @@
         }
 
         p {
-            font-family: Roboto, sans-serif;
-            font-weight: 300;
             line-height: 26px;
             font-size: 15px;
             color: #717171;
@@ -301,15 +314,6 @@
 
             &.wider {
                 max-width: 610px;
-            }
-
-            &.small-title {
-                color: #000;
-                font-weight: bold;
-                font-family: YoungSerif-Regular;
-                font-size: 21px;
-                margin-top: 25px;
-                margin-bottom: 10px;
             }
         }
 
