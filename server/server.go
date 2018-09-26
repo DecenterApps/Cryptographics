@@ -97,7 +97,7 @@ func sendMail(p Print) (response []*m.Response, err error) {
 	client := m.ClientWithKey(os.Getenv("API_KEY"))
 
 	message := &m.Message{}
-	message.AddRecipient("print@decenter.com", "Decenter", "to")
+	message.AddRecipient("printcg@decenter.com", "Decenter", "to")
 	message.FromEmail = "contact@decenter.com"
 	message.FromName = p.FirstName + " " + p.LastName
 	message.Subject = "Cryptographics print form"
