@@ -170,6 +170,7 @@
               const width = img.naturalWidth;
               const height = img.naturalHeight;
 
+              if (this.assets.length >= 50) return;
               if (width > 2480 || height > 3508) return;
 
               this.assets.push({
