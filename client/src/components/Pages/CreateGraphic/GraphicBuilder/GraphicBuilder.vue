@@ -219,6 +219,7 @@
 
       async buyImage() {
         if (!this.checkTitle()) return;
+        if (!this.userAddress) return this.openModal('metaMaskInfo');
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
