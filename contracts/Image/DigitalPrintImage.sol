@@ -1,12 +1,12 @@
 pragma solidity ^0.4.23;
 
-import "./ImageToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "../Utils/Functions.sol";
 import "../IAssetManager.sol";
 import "../UserManager.sol";
+import "../Utils/Ownable.sol";
 
-
-contract DigitalPrintImage is ImageToken, UserManager {
+contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
 
     struct ImageMetadata {
         uint finalSeed;
@@ -32,9 +32,11 @@ contract DigitalPrintImage is ImageToken, UserManager {
 
     event ImageCreated(uint indexed imageId, address indexed owner);
     /// @dev only for testing purposes
-    function createImageTest() public returns(uint) {
-        return createImage(msg.sender);
+    function createImageTest() public {
+        _mint(msg.sender, totalSupply());
     }
+
+    constructor() public ERC721Token("DigitalPrintImage", "DPM") {}
 
     /// @notice Function will create new image
     /// @dev owner of image will be msg.sender, and timestamp will be automatically generated
@@ -61,7 +63,7 @@ contract DigitalPrintImage is ImageToken, UserManager {
 
         // if user doesn't exists create that user with no profile picture
         if (!usernameExists[_author]) {
-            register(_author, "0x0");
+            register(_author, bytes32(0));
         }
 
         uint[] memory pickedAssets;
@@ -81,7 +83,8 @@ contract DigitalPrintImage is ImageToken, UserManager {
         
         require(msg.value >= finalPrice);
 
-        uint id = createImage(msg.sender);
+        uint id = totalSupply();
+        _mint(msg.sender, id);
 
         imageMetadata[id] = ImageMetadata({
             finalSeed: finalSeed,
@@ -130,7 +133,7 @@ contract DigitalPrintImage is ImageToken, UserManager {
 
     function getGalleryData(uint _imageId) public view 
     returns(address, address, string, bytes32, string, string) {
-        require(_imageId < numOfImages);
+        require(_imageId < totalSupply());
 
         return(
             imageMetadata[_imageId].creator,
@@ -170,14 +173,12 @@ contract DigitalPrintImage is ImageToken, UserManager {
     /// @param _to address that we give permission to take image
     /// @param _imageId we are willing to give
     function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
-        require(tokensForOwner[_imageId] != 0x0);
-        require(ownerOf(_imageId) == _from);
+        require(isApprovedOrOwner(_from, _imageId));
 
-        tokensForApproved[_imageId] = 0x0;
-        removeImage(_from, _imageId);
-        addImage(_to, _imageId);
+        clearApproval(_from, _imageId);
+        removeTokenFrom(_from, _imageId);
+        addTokenTo(_to, _imageId);
 
-        emit Approval(_from, 0, _imageId);
         emit Transfer(_from, _to, _imageId);
     }
 
