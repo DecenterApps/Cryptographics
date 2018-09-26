@@ -387,19 +387,23 @@ export const getGalleryImage = async (imageId, getPrice) =>
 
 export const getImageMetadata = (imageId) =>
   new Promise(async (resolve, reject) => {
-    const imageMetadata = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
-    const finalSeed = imageMetadata[2];
-    const potentialAssets = imageMetadata[5];
-    const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
+    try {
+      const imageMetadata = await digitalPrintImageContract().methods.getImageMetadata(imageId).call();
+      const finalSeed = imageMetadata[2];
+      const potentialAssets = imageMetadata[5];
+      const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
-    if (!imageMetadata) resolve({});
-    resolve({
-      finalSeed,
-      id: imageId,
-      usedAssetsBytes: potentialAssets,
-      usedAssets: pickedAssets,
-      timestamp: imageMetadata[4]
-    });
+      if (!imageMetadata) reject();
+      resolve({
+        finalSeed,
+        id: imageId,
+        usedAssetsBytes: potentialAssets,
+        usedAssets: pickedAssets,
+        timestamp: imageMetadata[4]
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 
 export const getUserImages = async (address) => {

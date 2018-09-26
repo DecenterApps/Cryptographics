@@ -1,32 +1,35 @@
 <template>
-    <layout layout-style="pulled-left">
-        <div class="left">
-            <graphic-preview
-                    name="YoungSerif"
-                    id="518"
-                    :image="image"
-                    year="2018"
-                    @download="download"
-            />
-        </div>
-        <div class="right">
-            <graphic-details
-                    v-if="!orderPrint"
-                    :image="image"
-                    :assetPacks="assetPacksUsed"
-                    :isLogged="loggedIn"
-                    :isForSale="forSale"
-                    :userAddress="userAddress"
-                    @showPrintForm="orderPrint = true"
-                    :getData="getData"
-            />
-            <print-form @closePrintForm="orderPrint = false" v-else />
-            <share-icons />
-        </div>
-        <div class="canvas-wrapper">
-            <Canvas :canvasData="canvasData"></Canvas>
-        </div>
-    </layout>
+    <div>
+        <graphic-empty-state v-if="imageFailedToLoad" />
+        <layout v-if="!imageFailedToLoad" layout-style="pulled-left">
+            <div class="left">
+                <graphic-preview
+                        name="YoungSerif"
+                        id="518"
+                        :image="image"
+                        year="2018"
+                        @download="download"
+                />
+            </div>
+            <div class="right">
+                <graphic-details
+                        v-if="!orderPrint"
+                        :image="image"
+                        :assetPacks="assetPacksUsed"
+                        :isLogged="loggedIn"
+                        :isForSale="forSale"
+                        :userAddress="userAddress"
+                        @showPrintForm="orderPrint = true"
+                        :getData="getData"
+                />
+                <print-form @closePrintForm="orderPrint = false" v-else />
+                <share-icons />
+            </div>
+            <div class="canvas-wrapper">
+                <Canvas :canvasData="canvasData"></Canvas>
+            </div>
+        </layout>
+    </div>
 </template>
 
 <script>
@@ -34,6 +37,7 @@
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
   import GraphicPreview from './GraphicPreview.vue';
+  import GraphicEmptyState from './GraphicEmptyState.vue';
   import GraphicDetails from './GraphicDetails.vue';
   import PrintForm from './PrintForm.vue';
   import Canvas from '../CreateGraphic/GraphicBuilder/Canvas.vue';
@@ -78,6 +82,7 @@
       GraphicDetails,
       PrintForm,
       Canvas,
+      GraphicEmptyState,
     },
     computed: {
       ...mapGetters({
@@ -107,14 +112,20 @@
       }
     },
     async created() {
-      const metadata = await getImageMetadata(this.$route.params.id);
-      const image = await getGalleryImage(this.$route.params.id, true);
-      const creatorMeta = await getUserInfo(image.creator);
-      this.image = {
-        ...metadata,
-        ...image,
-        creatorMeta
-      };
+      try {
+        const metadata = await getImageMetadata(this.$route.params.id);
+        const image = await getGalleryImage(this.$route.params.id, true);
+        const creatorMeta = await getUserInfo(image.creator);
+        this.image = {
+          ...metadata,
+          ...image,
+          creatorMeta
+        };
+      } catch (err) {
+        this.imageFailedToLoad = true;
+        return;
+      }
+
       this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
