@@ -107,7 +107,6 @@
           const selectedImages = paginateArray(this.imageIds, 1, this.showPerPage);
           const images = await getGalleryImages(selectedImages, true);
           this.loading = false;
-          console.log(images);
           return images;
         },
         watch() {

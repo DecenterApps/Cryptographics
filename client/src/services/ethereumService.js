@@ -349,7 +349,6 @@ export const getImagePrice = async (imageId) => {
 export const getGalleryImage = async (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getGalleryData(imageId).call();
-    console.log(image);
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
     let metadata = {
