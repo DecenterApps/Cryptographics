@@ -47,6 +47,7 @@ export default {
     text-decoration: none;
     .avatar {
         display: inline-flex;
+        flex: 1;
         border-radius: 50%;
         width: 33px;
         height: 33px;
