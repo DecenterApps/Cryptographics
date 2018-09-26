@@ -4,34 +4,34 @@ import (
 	"log"
 	"net/http"
 
+	"encoding/json"
+	"github.com/go-bongo/bongo"
 	"github.com/joho/godotenv"
 	m "github.com/keighl/mandrill"
 	"os"
-	"encoding/json"
-	"strconv"
-	"github.com/go-bongo/bongo"
 	"path/filepath"
+	"strconv"
 )
 
 const (
-	Address = "127.0.0.1:8888"
+	Address = "127.0.0.1:8008"
 
 	MongoConnectionString = "127.0.0.1:27017"
 	MongoDatabase         = "cryptographics"
 )
 
 type Print struct {
-	bongo.DocumentBase   `bson:",inline"`
-	Quantity      int    `json:"quantity"`
-	Email         string `json:"email"`
-	FirstName     string `json:"firstName"`
-	LastName      string `json:"lastName"`
-	StreetAddress string `json:"streetAddress"`
-	Apartment     string `json:"apartment"`
-	City          string `json:"city"`
-	Country       string `json:"country"`
-	PostalCode    string `json:"postalCode"`
-	Phone         string `json:"phone"`
+	bongo.DocumentBase `bson:",inline"`
+	Quantity           int    `json:"quantity"`
+	Email              string `json:"email"`
+	FirstName          string `json:"firstName"`
+	LastName           string `json:"lastName"`
+	StreetAddress      string `json:"streetAddress"`
+	Apartment          string `json:"apartment"`
+	City               string `json:"city"`
+	Country            string `json:"country"`
+	PostalCode         string `json:"postalCode"`
+	Phone              string `json:"phone"`
 }
 
 func (p Print) String() string {
