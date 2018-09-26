@@ -37,7 +37,24 @@
                     </div>
                     <separator />
                     <div class="gallery" v-if="currentTab === 'gallery'">
-                        <paginated-gallery :emptyStateType="'profile-gallery'" :imageIds="imageIds.slice().reverse()" :display-overlay="true" />
+                        <div class="button-group">
+                            <cg-button
+                                    :button-style="showGraphics === 'all' ? 'tab-active' : 'tab-inactive'"
+                                    @click="showGraphics = 'all'">
+                                All
+                            </cg-button>
+                            <cg-button
+                                    :button-style="showGraphics === 'bought' ? 'tab-active' : 'tab-inactive'"
+                                    @click="showGraphics = 'bought'">
+                                Bought
+                            </cg-button>
+                            <cg-button
+                                    :button-style="showGraphics === 'created' ? 'tab-active' : 'tab-inactive'"
+                                    @click="showGraphics = 'created'">
+                                Created {{userProfile ? 'by You' : ''}}
+                            </cg-button>
+                        </div>
+                        <paginated-gallery :emptyStateType="`profile-gallery-${showGraphics}${(userProfile ? '-own' : '')}`" :imageIds="shownImageIds" :display-overlay="true" />
                     </div>
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
@@ -54,12 +71,12 @@
                             <cg-button
                                     :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
                                     @click="showPacks = 'created'">
-                                Created by You
+                                Created {{userProfile ? 'by You' : ''}}
                             </cg-button>
                         </div>
                         <asset-packs-pagination
                                 :asset-pack-ids="assetPackIds"
-                                :asset-packs-type="`profile-asset-packs-${showPacks}`"
+                                :asset-packs-type="`profile-asset-packs-${showPacks}${(userProfile ? '-own' : '')}`"
                                 :show-per-page="16"
                                 :overlay="true"
                                 grid="row-4"
@@ -82,6 +99,7 @@
     getCreatedAssetPacks,
     getBoughtAssetPacks,
     fromWei,
+    getImageOwnerAndCreator,
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
@@ -115,8 +133,10 @@
       return {
         ipfsNodePath,
         showPacks: 'all',
+        showGraphics: 'all',
         currentTab: 'gallery',
         imageIds: [],
+        boughtImageIds: [],
         assetPackIds: [],
         userAddress: '0x0',
         username: '',
@@ -144,6 +164,13 @@
         console.log(this.balances);
         const total = parseInt(this.balances.assetBalance) + parseInt(this.balances.marketplaceBalance) || 0;
         return fromWei(total);
+      },
+      shownImageIds() {
+        if (this.showGraphics === 'bought')
+          return this.boughtImageIds.slice().reverse();
+        if (this.showGraphics === 'created')
+          return this.imageIds.filter(id => this.boughtImageIds.indexOf(id) === -1).slice().reverse();
+        return this.imageIds.slice().reverse();
       }
     },
     watch: {
@@ -209,7 +236,10 @@
       },
       async getImages() {
         if (!this.userAddress) return;
-        this.imageIds = await getUserImages(this.userAddress);
+        const imageIds = await getUserImages(this.userAddress);
+        const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
+        this.imageIds = imageIds;
+        this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
       },
       async getAssetPacks() {
         if (this.userProfile) {
