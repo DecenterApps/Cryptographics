@@ -7,8 +7,11 @@
                 </router-link>
             </div>
             <div class="steps">
-                <div @click="changeStep(index)" :class="['step', currentStep >= index ? 'active' : '']"
-                     v-for="(step, index) in steps">
+                <div
+                    @click="changeStep(index)"
+                    :class="['step', currentStep >= index ? 'active' : '']"
+                     v-for="(step, index) in steps"
+                     :key="index">
                     {{ step }}
                     <ico-small-arrow v-if="index !== steps.length - 1" />
                 </div>
