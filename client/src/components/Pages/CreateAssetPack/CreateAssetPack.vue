@@ -190,6 +190,8 @@
         makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
       },
       async uploadToIpfs() {
+        if (!this.userAddress) return this.openModal('metaMaskInfo');
+
         let hashes = [];
         let canvas = document.getElementById('thumbnail-canvas');
 
