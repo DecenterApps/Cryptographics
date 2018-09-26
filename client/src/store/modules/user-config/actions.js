@@ -125,13 +125,20 @@ export default {
         newUsername = state.username;
       }
       if (newAvatarBytes32 === '') {
-        const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        newAvatarBytes32 = initialAvatarBytes32;
+        if (state.avatar === DEFAULT_AVATAR_IPFS_HASH) {
+          const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
+          newAvatarBytes32 = initialAvatarBytes32;
+        }
+        if (state.avatar !== DEFAULT_AVATAR_IPFS_HASH) {
+          newAvatarBytes32 = await getAvatar(state.metamaskAddress);
+        }
       }
+      console.log(newUsername, newAvatarBytes32, state.metamaskAddress);
       await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
       let result = true;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
       dispatch(HIDE_LOADING_MODAL);
+      dispatch(TOGGLE_MODAL);
       await dispatch(SET_USER_CONFIG);
       setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
     } else {
