@@ -84,7 +84,6 @@
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-model="description"
                             :max-length="20"
-                            placeholder="Describe your Cryptographic."
                     />
                 </div>
                 <!--<separator></separator>-->
@@ -103,7 +102,7 @@
                                 :loading="isCanvasDrawing"
                                 @click="buyImage"
                         >
-                            Save Cryptographic
+                            Claim Cryptographic
                         </cg-button>
                     </div>
                 </div>

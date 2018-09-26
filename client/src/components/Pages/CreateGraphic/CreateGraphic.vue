@@ -2,7 +2,7 @@
     <div class="create-art-wrapper">
         <step-header
                 :currentStep="currentStep"
-                :steps="['Select Asset Pack', 'Generate Cryptographic', 'Claim Cryptographic']"
+                :steps="['Select Asset Packs', 'Generate Cryptographic', 'Claim Cryptographic']"
                 v-on:stepChange="changeStep"
         />
         <layout layout-style="full-screen">
