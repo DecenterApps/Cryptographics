@@ -349,7 +349,6 @@ export const getImagePrice = async (imageId) => {
 export const getGalleryImage = async (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
     const image = await digitalPrintImageContract().methods.getGalleryData(imageId).call();
-
     if (!image) resolve({});
     const price = !getPrice ? undefined : await getImagePrice(imageId);
     let metadata = {
@@ -367,13 +366,14 @@ export const getGalleryImage = async (imageId, getPrice) =>
       console.error(e);
     }
     const hasFrame = parseInt(metadata.frame) === 1;
-
+    const initialAvatar = "0x0000000000000000000000000000000000000000000000000000000000000000"
+    const userAvatar = (image[3] === initialAvatar) ? DEFAULT_AVATAR_IPFS_HASH : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`;
     resolve({
       id: imageId,
       creator: image[0],
       owner: image[1],
       username: image[2],
-      avatar: `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`,
+      avatar: userAvatar,
       ipfsHash: image[4],
       src: `${ipfsNodePath}${image[4]}`,
       hasFrame,
