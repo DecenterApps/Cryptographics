@@ -22,12 +22,12 @@ export const uploadFile = async (data) =>
 export const uploadJSON = async (data) =>
   new Promise((resolve, reject) => {
     // window.node.files.add([Buffer.from(data, 'base64')], (err, uploadedFile) => {
-    window.node.files.add([Buffer.from(data)], (err, uploadedFile) => {
+    window.node.files.add([Buffer.from(data)], async (err, uploadedFile) => {
       if (err) {
         return reject(err);
       }
       const { hash } = uploadedFile[0];
-      replicate(hash, 'file');
+      await replicate(hash, 'file');
       resolve(hash);
     });
   });
@@ -42,12 +42,12 @@ export const replicate = async (hash, type) => {
         .then(() => {
           successful += 1;
           console.log(`Successfully replicated ${type} with hash: ${hash} on ${successful}/${replicationNodes.length} nodes`);
-          resolve();
+          resolve(true);
         })
         .catch((error) => {
           console.error(`Failed replicating ${type} with hash: ${hash} on a node ${url}`);
           console.error(error);
-          resolve();
+          resolve(false);
         });
     }),
   );
