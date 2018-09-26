@@ -44,6 +44,7 @@
           console.error(e);
           return this.toggleDrawing();
         }
+        if (assets.length > 0) this.$emit('canvasDrawn');
         this.toggleDrawing();
       }
     },
@@ -87,14 +88,14 @@
             /*max-width: 100%;*/
             height: calc(100vh - 200px);
             /*@media screen and (max-width: 940px) {*/
-                /*height: auto;*/
+            /*height: auto;*/
             /*}*/
         }
         &.square {
             canvas {
                 max-height: 670px;
                 /*@media screen and (max-width: 1120px) {*/
-                    /*height: auto;*/
+                /*height: auto;*/
                 /*}*/
             }
         }

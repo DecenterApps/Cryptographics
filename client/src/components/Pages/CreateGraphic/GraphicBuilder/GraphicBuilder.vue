@@ -232,7 +232,7 @@
         let canvas = Canvas.methods.getCanvasElement();
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
-        let image = canvasClone.toDataURL('image/png');
+        let image = canvasClone.toDataURL('image/png', 1);
         let ipfsHash = await ipfsService.uploadFile(image.substr(22));
         console.log('IMAGE HASH ' + ipfsHash);
         console.log(this.potentialAssets);

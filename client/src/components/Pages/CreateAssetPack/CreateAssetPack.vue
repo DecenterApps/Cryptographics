@@ -225,7 +225,7 @@
         const UPLOAD_HEIGHT = 281 * 2;
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
-        let coverImage = canvasClone.toDataURL('image/png');
+        let coverImage = canvasClone.toDataURL('image/png', 1);
         let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
         let metadata = {
           name: this.name,
