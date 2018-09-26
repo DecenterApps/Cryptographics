@@ -43,8 +43,8 @@
                             <span @click="closeModal">
                                 <user-link
                                         :to="'/user/' + image.creator"
-                                        :name="image.username"
-                                        :avatar="image.avatar"
+                                        :name="image.creatorMeta.username"
+                                        :avatar="image.creatorMeta.avatar"
                                         color="black"
                                         @click="closeModal"
                                 />
