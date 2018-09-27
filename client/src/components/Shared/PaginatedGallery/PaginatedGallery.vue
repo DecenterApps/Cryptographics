@@ -35,17 +35,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottom-controls">
-                    <pagination
-                            :total="imageIds === null ? 0 : imageIds.length"
-                            :per-page="showPerPage"
-                            @updatePage="changePage" />
-                </div>
-                <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
             </div>
 
             <empty-state v-if="images && images.length === 0" :type="emptyStateType" />
         </div>
+        <pagination
+                :total="imageIds === null ? 0 : imageIds.length"
+                :per-page="showPerPage"
+                @updatePage="changePage" />
     </div>
 </template>
 
@@ -78,10 +75,6 @@
       imageIds: {
         type: Array,
         default: []
-      },
-      seeMore: {
-        type: Boolean,
-        default: false,
       },
       emptyStateType: {
         type: String,
