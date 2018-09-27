@@ -3,7 +3,8 @@
         <input
             type="radio"
             :name="name"
-            :value="value"
+            :value="label"
+            @change="$emit('change', $event.target.value)"
             v-bind="$attrs">
         <span class="label"><slot/></span>
     </label>
@@ -17,7 +18,7 @@ export default {
             type: String,
             default: ''
         },
-        value: {
+        label: {
             type: String,
             default: ''
         }
