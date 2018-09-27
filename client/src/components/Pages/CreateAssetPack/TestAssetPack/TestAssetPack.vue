@@ -83,8 +83,7 @@
         this.iterations++;
         let selectedAssets = this.selectedAssets;
         selectedAssets = selectedAssets.slice(0, 30);
-        const imageAssets = await getTestImage(this.randomSeed, this.iterations, selectedAssets);
-        this.canvasData.assets = imageAssets.map((asset, i) => ({ ...asset, uploadSrc: this.selectedAssets[i].path }));
+        this.canvasData.assets = await getTestImage(this.randomSeed, this.iterations, selectedAssets);
         console.log('iteration: ' + this.iterations);
       },
       toggleRatio(square) {

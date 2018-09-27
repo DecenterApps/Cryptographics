@@ -502,6 +502,7 @@ export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
       pickedAssets.push({
         ...metadata,
         attributes: potentialAssets[i].attribute,
+        uploadSrc: potentialAssets[i].path
       });
     }
   }

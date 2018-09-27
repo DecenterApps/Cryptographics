@@ -147,12 +147,7 @@
       errors: {
         name: false,
         price: false,
-      },
-      canvasData: {
-        assets: [],
-        ratio: '1:1',
-        frame: false,
-      },
+      }
     }),
 
     computed: {
