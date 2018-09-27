@@ -12,6 +12,7 @@
                         <router-link to="/gallery" active-class="active">Gallery</router-link>
                         <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
                         <router-link to="/about" active-class="active">About</router-link>
+                        <router-link to="/faq" active-class="active">FAQ</router-link>
                     </div>
                     <div class="profile">
                         <router-link class="profile-link" to="/profile">
