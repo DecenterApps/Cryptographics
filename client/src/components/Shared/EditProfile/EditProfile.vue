@@ -25,8 +25,8 @@
                         Username can't be longer than 16 characters
                     </span>
                     <cg-input
-                            v-model="newUsername"
-                            placeholder="Enter username" />
+                        v-model="newUsername"
+                        placeholder="Enter username" />
                     <input-file
                         id="avatar-image"
                         button-style="secondary"
@@ -66,6 +66,9 @@
       newAvatarHash: '',
       imageName: ''
     }),
+    created() {
+        this.newUsername = this.currentUsername;
+    },
     methods: {
       ...mapActions({
         editProfile: EDIT_PROFILE,
