@@ -199,13 +199,14 @@
         let canvas = document.getElementById('thumbnail-canvas');
         canvas.width = 2480;
         canvas.height = 1805;
-        makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
+        const assets = this.assets.slice(0, 30);
+        makeCoverImage(false, assets, canvas, canvas.width, canvas.height);
       },
       checkErrors(toCheck = '') {
         const checkAll = !toCheck;
 
         if (toCheck === 'name' || checkAll) this.errors.name = !this.name || this.name.length > 20;
-        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0
+        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0;
 
         return Object.keys(this.errors).filter(key => this.errors[key]).length > 0;
       },

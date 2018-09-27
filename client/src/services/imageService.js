@@ -261,17 +261,19 @@ export const makeCoverImage = (isHome, assets, c, width, height, frame = {
 
     image.src = assets[i].path;
     image.crossOrigin = 'Anonymous';
-    images.push({
-      id: i,
-      image: image,
-      x_coordinate: Math.floor(Math.random() * canvasWidth),
-      y_coordinate: Math.floor(Math.random() * canvasHeight),
-      rotation: Math.floor((attribute / 10) % 10) === 1 ? Math.floor(Math.random() * 360) : 0,
-      scale: Math.floor(attribute % 10) === 1 ? 800 + Math.floor(Math.random() * 200) : 1000,
-      isBackground: Math.floor((attribute / 100) % 10) === 1,
-      shouldScale: true,
-      shouldRotate: true,
-    });
+    if (Math.ceil((Math.random() * 10) ** 8) % 2 === 0) {
+      images.push({
+        id: i,
+        image: image,
+        x_coordinate: Math.floor(Math.random() * canvasWidth),
+        y_coordinate: Math.floor(Math.random() * canvasHeight),
+        rotation: Math.floor((attribute / 10) % 10) === 1 ? Math.floor(Math.random() * 360) : 0,
+        scale: Math.floor(attribute % 10) === 1 ? 800 + Math.floor(Math.random() * 200) : 1000,
+        isBackground: Math.floor((attribute / 100) % 10) === 1,
+        shouldScale: true,
+        shouldRotate: true,
+      });
+    }
   }
 
   images = helpers.shuffleArray(images);
