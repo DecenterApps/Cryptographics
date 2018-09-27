@@ -1,5 +1,6 @@
 <template>
     <div class="graphic-preview" @click="$emit('download')">
+        <div v-if="isFake">FAKE</div>
         <overlay>
             <button-icon icon-type="download"/>
         </overlay>
@@ -17,6 +18,10 @@
       image: {
         type: Object,
       },
+      isFake: {
+        type: Boolean,
+        default: false,
+      }
     }
   };
 </script>
