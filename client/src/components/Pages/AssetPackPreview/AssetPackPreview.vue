@@ -4,7 +4,11 @@
             <div class="asset-pack-header">
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
-                    <p class="small-title">Assets in pack - {{ assetPack.assets.length }}</p>
+                    <p class="small-title">
+                        <span>Assets in pack - {{ assetPack.assets.length }}</span>
+                        <span>{{ regularAssets }} are dynamic assets</span>
+                        <span>{{ backgroundAssets }} are static backgrounds</span>
+                    </p>
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
@@ -48,7 +52,9 @@
           packName: '',
           assets: []
         },
-        alreadyBought: false
+        alreadyBought: false,
+        backgroundAssets: 0,
+        regularAssets: 0,
       };
     },
     computed: {
@@ -73,6 +79,10 @@
     async created() {
       this.assetPack = await getAssetPackData(this.$route.params.id);
       this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
+      this.assetPack.assets.forEach(asset => {
+        Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
+      })
+      this.regularAssets = this.assetPack.assets.length - this.backgroundAssets;
     }
   };
 </script>
@@ -92,6 +102,14 @@
         margin: 16px 16px 29px 0;
         font-size: 12px;
         font-family: Roboto, sans-serif;
+        span {
+          display: block;
+          margin-bottom: 3px;
+          &:first-of-type {
+            font-weight: bold;
+            margin-bottom: 8px;
+          }
+        }
     }
 
     .asset-pack-description {
