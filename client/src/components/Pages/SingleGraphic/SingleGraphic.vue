@@ -22,6 +22,7 @@
                         :userAddress="userAddress"
                         @showPrintForm="orderPrint = true"
                         :getData="getData"
+                        v-on:updateUI="getData"
                 />
                 <print-form @closePrintForm="orderPrint = false" v-else />
                 <share-icons />
@@ -97,6 +98,13 @@
         isCanvasDrawing: CANVAS_DRAWING,
       })
     },
+    watch: {
+      userAddress: {
+        handler() {
+          this.getData();
+        }
+      }
+    },
     methods: {
       async checkFakeImage() {
         const canvas = document.getElementById('canvas');
@@ -134,26 +142,29 @@
         }, 'image/jpeg');
       },
       async getData() {
+        isImageForSale(this.$route.params.id)
+          .then(isForSale => {
+            console.log(isForSale);
+            this.forSale = isForSale;
+          });
+        try {
+          const metadata = await getImageMetadata(this.$route.params.id);
+          const image = await getGalleryImage(this.$route.params.id, true);
+          const creatorMeta = await getUserInfo(image.creator);
+          this.image = {
+            ...metadata,
+            ...image,
+            creatorMeta
+          };
+        } catch (err) {
+          this.imageFailedToLoad = true;
+          return;
+        }
         this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
-        this.forSale = await isImageForSale(this.$route.params.id);
       }
     },
     async created() {
-      try {
-        const metadata = await getImageMetadata(this.$route.params.id);
-        const image = await getGalleryImage(this.$route.params.id, true);
-        const creatorMeta = await getUserInfo(image.creator);
-        this.image = {
-          ...metadata,
-          ...image,
-          creatorMeta
-        };
-      } catch (err) {
-        this.imageFailedToLoad = true;
-        return;
-      }
-
-      this.getData();
+      await this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       const assetsForCanvas = await getImage(this.image.randomSeed, null, this.image.potentialAssets, this.image.finalSeed);

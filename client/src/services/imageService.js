@@ -416,7 +416,6 @@ export const drawImageRot = (context, img, x, y, width, height, deg, scale, opti
   };
   const multiplier = shouldScale ? scale / 1000 : 1;
 
-  console.log(options, isBackground);
   if (options && isBackground) {
     context.drawImage(img, 0, 0, width, height);
     return;

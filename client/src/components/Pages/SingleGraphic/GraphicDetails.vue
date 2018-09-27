@@ -159,6 +159,7 @@
         // this.$router.push(`/cryptographic/${id}`);
         this.getData();
         this.openModal('Cryptographic successfully submitted for sale.');
+        this.$emit('updateUI');
       },
       async removeFromMarketPlace() {
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
@@ -171,6 +172,7 @@
         this.getData();
         // this.$router.push(this.$router.currentRoute);
         this.openModal('Cryptographic successfully removed from the marketplace.');
+        this.$emit('updateUI');
       },
       async submitBuyImage() {
         if (!this.userAddress || this.userAddress === '0x0') return this.openModal('metaMaskInfo');
@@ -185,6 +187,7 @@
         this.getData();
         // this.$router.push(`/cryptographic/${id}`);
         this.openModal('Cryptographic successfully bought.');
+        this.$emit('updateUI');
       },
     },
   };
