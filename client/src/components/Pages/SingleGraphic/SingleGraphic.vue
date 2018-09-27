@@ -7,6 +7,7 @@
                         name="YoungSerif"
                         id="518"
                         :image="image"
+                        :isFake="isFake"
                         year="2018"
                         @download="download"
                 />
@@ -21,12 +22,15 @@
                         :userAddress="userAddress"
                         @showPrintForm="orderPrint = true"
                         :getData="getData"
+                        v-on:updateUI="getData"
                 />
                 <print-form @closePrintForm="orderPrint = false" v-else />
                 <share-icons />
             </div>
             <div class="canvas-wrapper">
-                <Canvas :canvasData="canvasData"></Canvas>
+                <Canvas
+                        :canvasData="canvasData"
+                ></Canvas>
             </div>
         </layout>
     </div>
@@ -36,6 +40,7 @@
   import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
+  import * as ipfsService from 'services/ipfsService';
   import GraphicPreview from './GraphicPreview.vue';
   import GraphicEmptyState from './GraphicEmptyState.vue';
   import GraphicDetails from './GraphicDetails.vue';
@@ -44,7 +49,7 @@
   import {
     getAssetsOrigins,
     getImageMetadata,
-    getUsername,
+    getImage,
     getSelectedAssetPacksWithAssetData,
     isImageForSale,
     parseContractAssetData,
@@ -52,11 +57,13 @@
     getUserInfo,
   } from 'services/ethereumService';
   import ShareIcons from './ShareIcons';
+  import { resizeCanvas } from '../../../services/helpers';
 
   export default {
     name: 'SingleGraphic',
 
     data: () => ({
+      imageFailedToLoad: false,
       orderPrint: false,
       loggedIn: false,
       forSale: false,
@@ -74,6 +81,7 @@
         frame: false,
         noBottomFrame: false,
       },
+      isFake: false,
       canvasDataLoaded: false,
     }),
     components: {
@@ -90,7 +98,34 @@
         isCanvasDrawing: CANVAS_DRAWING,
       })
     },
+    watch: {
+      userAddress: {
+        handler() {
+          this.getData();
+        }
+      }
+    },
     methods: {
+      async checkFakeImage() {
+        const canvas = document.getElementById('canvas');
+
+        const UPLOAD_WIDTH = 307 * 2;
+        const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
+        console.log(UPLOAD_WIDTH, UPLOAD_HEIGHT);
+        const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
+
+        let image = canvasClone.toDataURL('image/png', 1);
+        const hash = await ipfsService.getHash(image.substr(22));
+        canvasClone.toBlob((blob) => {
+          const link = document.createElement('a');
+          const title = this.image.title || 'cryptographic';
+          link.setAttribute('download', title + '.png');
+          link.setAttribute('href', window.URL.createObjectURL(blob));
+          link.click();
+        }, 'image/png');
+        console.log(hash, this.image.ipfsHash);
+        // this.isFake = hash.toLowerCase() !== this.image.ipfsHash.toLowerCase();
+      },
       async download() {
         const canvas = document.getElementById('canvas');
         while (!(this.canvasDataLoaded && !this.isCanvasDrawing)) {
@@ -107,29 +142,32 @@
         }, 'image/jpeg');
       },
       async getData() {
+        isImageForSale(this.$route.params.id)
+          .then(isForSale => {
+            console.log(isForSale);
+            this.forSale = isForSale;
+          });
+        try {
+          const metadata = await getImageMetadata(this.$route.params.id);
+          const image = await getGalleryImage(this.$route.params.id, true);
+          const creatorMeta = await getUserInfo(image.creator);
+          this.image = {
+            ...metadata,
+            ...image,
+            creatorMeta
+          };
+        } catch (err) {
+          this.imageFailedToLoad = true;
+          return;
+        }
         this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
-        this.forSale = await isImageForSale(this.$route.params.id);
       }
     },
     async created() {
-      try {
-        const metadata = await getImageMetadata(this.$route.params.id);
-        const image = await getGalleryImage(this.$route.params.id, true);
-        const creatorMeta = await getUserInfo(image.creator);
-        this.image = {
-          ...metadata,
-          ...image,
-          creatorMeta
-        };
-      } catch (err) {
-        this.imageFailedToLoad = true;
-        return;
-      }
-
-      this.getData();
+      await this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
-      const assetsForCanvas = await parseContractAssetData(this.image);
+      const assetsForCanvas = await getImage(this.image.randomSeed, null, this.image.potentialAssets, this.image.finalSeed);
       console.log('assetsForCanvas', assetsForCanvas);
       this.canvasData = {
         frame: this.image.hasFrame,

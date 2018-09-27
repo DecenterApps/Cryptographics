@@ -6,6 +6,17 @@ export const bootstrapNodes = [
   '/dns4/ipfs.decenter.com/tcp/4443/wss/ipfs/QmWv5BiGHbZNQKg48cA1FLJaiM7aBj4NNDc1HmBkxbxhLz',
 ];
 
+export const getHash = async (data) =>
+  new Promise((resolve, reject) => {
+    window.node.files.add([Buffer.from(data, 'base64')], { onlyHash: true }, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data[0].hash);
+    });
+
+  });
+
 export const uploadFile = async (data) =>
   new Promise((resolve, reject) => {
     window.node.files.add([Buffer.from(data, 'base64')], async (err, uploadedFile) => {
@@ -51,7 +62,7 @@ export const replicate = async (hash, type) => {
         });
     }),
   );
-  return Promise.all(replicationPromises)
+  return Promise.all(replicationPromises);
 };
 
 export const getFileContent = (hash) =>

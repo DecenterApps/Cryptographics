@@ -384,6 +384,11 @@ export const getGalleryImage = async (imageId, getPrice) =>
     });
   });
 
+export const getImageOwnerAndCreator = async (imageId) => ({
+  ...(await digitalPrintImageContract().methods.getGalleryData(imageId).call()),
+  id: imageId
+});
+
 export const getImageMetadata = (imageId) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -394,8 +399,9 @@ export const getImageMetadata = (imageId) =>
 
       if (!imageMetadata) reject();
       resolve({
-        finalSeed,
+        finalSeed: web3.utils.toHex(finalSeed),
         id: imageId,
+        potentialAssets: utils.decode(potentialAssets),
         usedAssetsBytes: potentialAssets,
         usedAssets: pickedAssets,
         timestamp: imageMetadata[4]
@@ -461,9 +467,9 @@ export const getAssetsOrigins = async (assetIds) => {
   return onlyUnique;
 };
 
-export const getImage = async (randomSeed, iterations, potentialAssets) => {
-  let seed = calculateFinalSeed(randomSeed, iterations);
-  console.log('POTENTIAL', potentialAssets);
+export const getImage = async (randomSeed, iterations, potentialAssets, finalSeed) => {
+  let seed = finalSeed || calculateFinalSeed(randomSeed, iterations);
+  console.log('POTENTIAL', potentialAssets, seed, finalSeed);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(potentialAssets);
   console.log('ATTRIBUTES', attributes);
@@ -496,6 +502,7 @@ export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
       pickedAssets.push({
         ...metadata,
         attributes: potentialAssets[i].attribute,
+        uploadSrc: potentialAssets[i].path
       });
     }
   }

@@ -17,11 +17,12 @@ const (
 	Address = "127.0.0.1:8008"
 
 	MongoConnectionString = "127.0.0.1:27017"
-	MongoDatabase         = "cryptographics"
+	MongoDatabase         = "crypto graphics"
 )
 
 type Print struct {
 	bongo.DocumentBase `bson:",inline"`
+	GraphicId          string `json:"graphicId"`
 	Quantity           int    `json:"quantity"`
 	Email              string `json:"email"`
 	FirstName          string `json:"firstName"`
@@ -32,10 +33,12 @@ type Print struct {
 	Country            string `json:"country"`
 	PostalCode         string `json:"postalCode"`
 	Phone              string `json:"phone"`
+	ShippingMethod     string `json:"shippingMethod"`
 }
 
 func (p Print) String() string {
-	return "Quantity: " + strconv.Itoa(p.Quantity) +
+	return "GraphicId: " + p.GraphicId +
+		"\n" + "Quantity: " + strconv.Itoa(p.Quantity) +
 		"\n" + "Email: " + p.Email +
 		"\n" + "FirstName: " + p.FirstName +
 		"\n" + "LastName: " + p.LastName +
@@ -44,7 +47,8 @@ func (p Print) String() string {
 		"\n" + "City: " + p.City +
 		"\n" + "Country: " + p.Country +
 		"\n" + "PostalCode: " + p.PostalCode +
-		"\n" + "Phone: " + p.Phone
+		"\n" + "Phone: " + p.Phone +
+		"\n" + "ShippingMethod: " + p.ShippingMethod
 }
 
 type Response struct {
@@ -86,8 +90,9 @@ func form(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if p.Quantity < 1 || len(p.Email) < 5 || len(p.FirstName) < 1 || len(p.LastName) < 1 || len(p.StreetAddress) < 1 ||
-		len(p.Apartment) < 1 || len(p.City) < 1 || len(p.Country) < 1 || len(p.PostalCode) < 1 || len(p.Phone) < 1 {
+	if len(p.GraphicId) < 1 || p.Quantity < 1 || len(p.Email) < 5 || len(p.FirstName) < 1 || len(p.LastName) < 1 ||
+		len(p.StreetAddress) < 1 || len(p.Apartment) < 1 || len(p.City) < 1 || len(p.Country) < 1 ||
+		len(p.PostalCode) < 1 || len(p.Phone) < 1 || len(p.ShippingMethod) < 8 {
 		res, _ := json.Marshal(Response{Ok: false, Message: "input validation failed"})
 		w.Write(res)
 		return

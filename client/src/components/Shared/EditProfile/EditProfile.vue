@@ -32,7 +32,7 @@
                         button-style="secondary"
                         :multiple="false"
                         @change="onFileChanged">
-                        <span v-if="newAvatarBytes32 === ''">Profile image aspect ratio needs to be 1:1.</span>
+                        <span v-if="newAvatarBytes32 === ''">Profile image aspect ratio should be 1:1.</span>
                         <span v-else>You have selected: {{ imageName.slice(0, 22) }}<span v-if="imageName.length > 22">...</span></span>
                     </input-file>
                 </div>
@@ -83,7 +83,7 @@
         profileImg.src = url.createObjectURL(selectedImage);
         profileImg.onload = async () => {
           context.drawImage(profileImg, 0, 0, profileImg.width, profileImg.height, 0, 0, 160, 160);
-          let pngUrl = canvas.toDataURL('image/png');
+          let pngUrl = canvas.toDataURL('image/png', 1);
           this.newAvatarHash = await ipfsService.uploadFile(pngUrl.substr(22));
           this.newAvatarBytes32 = utils.getBytes32FromIpfsHash(this.newAvatarHash);
           this.imageName = selectedImage.name;

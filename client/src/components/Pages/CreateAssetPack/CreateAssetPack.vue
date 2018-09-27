@@ -147,12 +147,7 @@
       errors: {
         name: false,
         price: false,
-      },
-      canvasData: {
-        assets: [],
-        ratio: '1:1',
-        frame: false,
-      },
+      }
     }),
 
     computed: {
@@ -204,13 +199,14 @@
         let canvas = document.getElementById('thumbnail-canvas');
         canvas.width = 2480;
         canvas.height = 1805;
-        makeCoverImage(false, this.assets, canvas, canvas.width, canvas.height);
+        const assets = this.assets.slice(0, 30);
+        makeCoverImage(false, assets, canvas, canvas.width, canvas.height);
       },
       checkErrors(toCheck = '') {
         const checkAll = !toCheck;
 
         if (toCheck === 'name' || checkAll) this.errors.name = !this.name || this.name.length > 20;
-        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0
+        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0;
 
         return Object.keys(this.errors).filter(key => this.errors[key]).length > 0;
       },
@@ -225,7 +221,7 @@
         const UPLOAD_HEIGHT = 281 * 2;
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
-        let coverImage = canvasClone.toDataURL('image/png');
+        let coverImage = canvasClone.toDataURL('image/png', 1);
         let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
         let metadata = {
           name: this.name,
