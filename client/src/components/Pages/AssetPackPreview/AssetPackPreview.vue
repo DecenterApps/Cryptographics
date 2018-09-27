@@ -4,10 +4,17 @@
             <div class="asset-pack-header">
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
-                    <p class="small-title">
-                        <span>Assets in pack - {{ assetPack.assets.length }}</span>
-                        <span>{{ regularAssets }} are dynamic assets</span>
-                        <span>{{ backgroundAssets }} are static backgrounds</span>
+                    <p class="small-title" v-if="backgroundAssets === 1">
+                        This Cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
+                    </p>
+                    <p class="small-title" v-if="backgroundAssets > 1">
+                        This Cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
+                    </p>
+                    <p class="small-title" v-if="backgroundAssets === 0">
+                        This Cryptographic contains {{ assetPack.assets.length }} assets, none of which are backgrounds
+                    </p>
+                    <p class="small-title" v-if="assetPack.assets.length === 1">
+                        This Cryptographic contains {{ assetPack.assets.length }} asset
                     </p>
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
@@ -23,7 +30,7 @@
                     :key="index">
                     <span
                         v-if="Math.floor((asset.attribute / 100) % 10) === 1"
-                        class="asset-type">Static Background</span>
+                        class="asset-type">Background</span>
                     <span
                         v-else
                         class="asset-type">Asset</span>
@@ -54,7 +61,6 @@
         },
         alreadyBought: false,
         backgroundAssets: 0,
-        regularAssets: 0,
       };
     },
     computed: {
@@ -82,7 +88,6 @@
       this.assetPack.assets.forEach(asset => {
         Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
       })
-      this.regularAssets = this.assetPack.assets.length - this.backgroundAssets;
     }
   };
 </script>
@@ -102,14 +107,6 @@
         margin: 16px 16px 29px 0;
         font-size: 12px;
         font-family: Roboto, sans-serif;
-        span {
-          display: block;
-          margin-bottom: 3px;
-          &:first-of-type {
-            font-weight: bold;
-            margin-bottom: 8px;
-          }
-        }
     }
 
     .asset-pack-description {
