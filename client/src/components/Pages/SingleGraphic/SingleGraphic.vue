@@ -33,7 +33,7 @@
                         v-on:updateUI="getData"
                 />
                 <print-form @closePrintForm="orderPrint = false" v-else />
-                <share-icons />
+                <share-icons v-if="!orderPrint" />
             </div>
             <div class="canvas-wrapper">
                 <Canvas

@@ -21,7 +21,7 @@
         </div>
         <div class="graphic-meta">
             <div class="graphic-name">
-                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id) + 1) }}</span>
+                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id)) }}</span>
                 </h3>
                 <div class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
