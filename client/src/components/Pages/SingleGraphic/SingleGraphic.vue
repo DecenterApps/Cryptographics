@@ -1,7 +1,15 @@
 <template>
     <div>
-        <graphic-empty-state v-if="imageFailedToLoad" />
-        <layout v-if="!imageFailedToLoad" layout-style="pulled-left">
+        <layout layout-style="pulled-left" v-if="loading" >
+            <div class="loading-section">
+                <loader />
+                <h3>Please wait, loading Cryptographics from the blockchain.</h3>
+            </div>
+        </layout>
+
+        <graphic-empty-state v-if="!loading && imageFailedToLoad" />
+
+        <layout v-if="!loading && !imageFailedToLoad" layout-style="pulled-left">
             <div class="left">
                 <graphic-preview
                         name="YoungSerif"
@@ -64,6 +72,7 @@
 
     data: () => ({
       imageFailedToLoad: false,
+      loading: false,
       orderPrint: false,
       loggedIn: false,
       forSale: false,
@@ -142,6 +151,7 @@
         }, 'image/jpeg');
       },
       async getData() {
+        this.loading = true;
         isImageForSale(this.$route.params.id)
           .then(isForSale => {
             console.log(isForSale);
@@ -156,7 +166,9 @@
             ...image,
             creatorMeta
           };
+          this.loading = false;
         } catch (err) {
+          this.loading = false;
           this.imageFailedToLoad = true;
           return;
         }
@@ -197,5 +209,19 @@
 
     .canvas-wrapper {
         display: none;
+    }
+
+    .loading-section {
+        height: 742px;
+        width: 525px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #CECECE;
+        margin-top: 30px;
+        & .loader-content {
+            margin-bottom: 20px;
+        }
     }
 </style>
