@@ -642,3 +642,15 @@ export const withdraw = async (fromCt, address) => {
   const account = await getAccounts();
   return await ct.methods.withdraw().send({ from: account });
 };
+
+export const sendETHtoAddress = (from, to, value) => {
+  try {
+    web3.eth.sendTransaction({
+      from,
+      to,
+      value: web3.utils.toWei(value, "ether")
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}

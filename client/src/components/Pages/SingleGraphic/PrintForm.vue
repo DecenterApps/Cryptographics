@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-print">
         <h2 v-if="!isSuccess" class="large-title">Select your options</h2>
-        <p v-if="isSuccess" class="form-success">You have successfully ordered your print.</p>
+        <p v-if="isSuccess" class="form-success">You have successfully ordered your print. We'll contact you soon.</p>
         <div v-if="!isSuccess"  class="info">
             <span>Size — A4 (210 x 197mm)</span>
             <span>Paper  —  Standard Stock (120gsm)</span>
@@ -42,7 +42,7 @@
                 <cg-input placeholder="Phone" v-model="phone" />
                 <p v-if="!areFieldsEmpty" class="error">Please enter valid shipping address informations.</p>
             </div>
-            <div v-if="!isSuccess" class="fieldset">
+            <!-- <div v-if="!isSuccess" class="fieldset">
                 <span class="fieldset-title">Shipping method</span>
                 <div class="radio-group">
                     <cg-radio
@@ -65,11 +65,11 @@
                         UPS Saver
                     </cg-radio>
                 </div>
-            </div>
+            </div> -->
             <div class="graphic-controls">
                 <cg-button button-style="secondary" @click="$emit('closePrintForm')">Back</cg-button>
                 <cg-button v-if="!isSuccess" type="submit" :loading="isSubmitting">Order</cg-button>
-                <price v-if="!isSuccess" value="0.05" />
+                <!-- <price v-if="!isSuccess" value="0.05" /> -->
             </div>
             <p v-if="formError" class="form-error">There was an error submitting the form. Please try again.</p>
         </form>
@@ -77,7 +77,11 @@
 </template>
 
 <script>
+import { sendETHtoAddress } from 'services/ethereumService';
 import axios from 'axios';
+import { PRINT_ORDERS_ADDRESS } from 'config/constants';
+import { METAMASK_ADDRESS } from 'store/user-config/types';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'PrintForm',
@@ -93,7 +97,8 @@ export default {
     country: '',
     postalCode: '',
     phone: '',
-    shippingMethod: 'International Standard (5-10 business days)',
+    shippingMethod: 'Printful',
+    printPrice: 0.05,
     isValidEmail: true,
     isValidQuantity: true,
     areFieldsEmpty: true,
@@ -106,6 +111,11 @@ export default {
       type: Function,
       default: () => {},
     }
+  },
+  computed: {
+      ...mapGetters({
+          userAddress: METAMASK_ADDRESS
+      })
   },
   created() {
     this.graphicId = this.$route.params.id;
@@ -129,6 +139,8 @@ export default {
       return true;
     },
     orderPrint() {
+      // const price = this.printPrice * this.quantity;
+      // sendETHtoAddress(this.userAddress, PRINT_ORDERS_ADDRESS, price.toString());
       this.isSubmitting = true;
       this.formError = false;
       let isFormValid = this.validateForm();
