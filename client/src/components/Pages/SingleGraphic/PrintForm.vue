@@ -1,12 +1,13 @@
 <template>
     <div class="graphic-print">
-        <h2 class="large-title">Select your options</h2>
-        <div class="info">
+        <h2 v-if="!isSuccess" class="large-title">Select your options</h2>
+        <p v-if="isSuccess" class="form-success">You have successfully ordered your print.</p>
+        <div v-if="!isSuccess"  class="info">
             <span>Size — A4 (210 x 197mm)</span>
             <span>Paper  —  Standard Stock (120gsm)</span>
         </div>
         <form @submit.prevent="orderPrint">
-            <div class="fieldset labeled-input">
+            <div v-if="!isSuccess" class="fieldset labeled-input">
                 <label class="label">Quantity</label>
                 <cg-input
                   inputType="number"
@@ -15,17 +16,17 @@
                   v-model="quantity"
                   :inputStyle="!isValidQuantity ? 'error' : null" />
             </div>
-            <p v-if="!isValidQuantity" style="color: #BE0000;">Please enter quantity.</p>
-            <div class="fieldset">
+            <p v-if="!isValidQuantity" class="error">Please enter quantity.</p>
+            <div  v-if="!isSuccess" class="fieldset">
                 <span class="fieldset-title">Contact information</span>
                 <cg-input
                   type="email"
                   placeholder="Email"
                   v-model="email"
                   :inputStyle="!isValidEmail ? 'error' : null" />
-                <p v-if="!isValidEmail" style="color: #BE0000;">Please enter valid email address.</p>
+                <p v-if="!isValidEmail" class="error">Please enter valid email address.</p>
             </div>
-            <div class="fieldset">
+            <div v-if="!isSuccess" class="fieldset">
                 <span class="fieldset-title">Shipping address</span>
                 <div class="input-group">
                     <cg-input placeholder="First name" v-model="firstName" />
@@ -39,9 +40,9 @@
                     <cg-input placeholder="Postal code" v-model="postalCode" />
                 </div>
                 <cg-input placeholder="Phone" v-model="phone" />
-                <p v-if="!areFieldsEmpty" style="color: #BE0000">Please enter valid shipping address informations.</p>
+                <p v-if="!areFieldsEmpty" class="error">Please enter valid shipping address informations.</p>
             </div>
-            <div class="fieldset">
+            <div v-if="!isSuccess" class="fieldset">
                 <span class="fieldset-title">Shipping method</span>
                 <div class="radio-group">
                     <cg-radio
@@ -67,9 +68,10 @@
             </div>
             <div class="graphic-controls">
                 <cg-button button-style="secondary" @click="$emit('closePrintForm')">Back</cg-button>
-                <cg-button type="submit">Order</cg-button>
-                <price value="0.05" />
+                <cg-button v-if="!isSuccess" type="submit" :loading="isSubmitting">Order</cg-button>
+                <price v-if="!isSuccess" value="0.05" />
             </div>
+            <p v-if="formError" class="form-error">There was an error submitting the form. Please try again.</p>
         </form>
     </div>
 </template>
@@ -95,6 +97,9 @@ export default {
     isValidEmail: true,
     isValidQuantity: true,
     areFieldsEmpty: true,
+    isSubmitting: false,
+    formError: false,
+    isSuccess: false
   }),
   props: {
     goBack: {
@@ -117,10 +122,15 @@ export default {
       this.isValidEmail = this.validateEmail(this.email);
       this.isValidQuantity = this.quantity !== '' || this.quantity > 0;
       this.areFieldsEmpty = this.firstName !== '' && this.lastName !== '' && this.streetAddress !== '' && this.country !== '' && this.phone !== '' && this.postalCode !== '' && this.phone !== '';
-      if (!this.isValidEmail || !this.isValidQuantity || !this.areFieldsEmpty) return false;
-      return true
+      if (!this.isValidEmail || !this.isValidQuantity || !this.areFieldsEmpty) {
+        this.isSubmitting = false;
+        return false;
+      };
+      return true;
     },
     orderPrint() {
+      this.isSubmitting = true;
+      this.formError = false;
       let isFormValid = this.validateForm();
       if (!isFormValid) return false;
       const data = {
@@ -145,9 +155,12 @@ export default {
         })
         .then(res => {
           console.log(res);
+          this.isSuccess = true;
+          this.isSubmitting = false;
         })
         .catch(err => {
-          console.log(err);
+          this.isSubmitting = false;
+          this.formError = true;
         })
     }
   }
@@ -197,7 +210,18 @@ export default {
             }
         }
     }
-
+    .error {
+      color: #BE0000;
+    }
+    .form-error {
+      color: #BE0000;
+      margin: 25px 0;
+    }
+    .form-success {
+      color: black;
+      font-weight: bold;
+      margin: 30px 0;
+    }
     .graphic-controls {
         display: flex;
         .price {
