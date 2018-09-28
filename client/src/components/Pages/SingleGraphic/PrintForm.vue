@@ -2,6 +2,7 @@
     <div class="graphic-print">
         <h2 v-if="!isSuccess" class="large-title">Select your options</h2>
         <p v-if="isSuccess" class="form-success">You have successfully ordered your print. We'll contact you soon.</p>
+        <p>At the moment we process all print orders manually and we'll get back to you via email with payment and shipping details.</p>
         <div v-if="!isSuccess"  class="info">
             <span>Size — A4 (210 x 197mm)</span>
             <span>Paper  —  Standard Stock (120gsm)</span>
