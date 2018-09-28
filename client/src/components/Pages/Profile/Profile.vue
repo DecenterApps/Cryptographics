@@ -104,7 +104,7 @@
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
-  import { DEFAULT_AVATAR_IPFS_HASH } from 'config/constants';
+  import { DEFAULT_AVATAR } from 'config/constants';
   import {
     USERNAME,
     METAMASK_ADDRESS,
@@ -223,7 +223,7 @@
           const getAvatarBytes32 = await getAvatar(this.userAddress);
           const initialAvatar = "0x0000000000000000000000000000000000000000000000000000000000000000";
           if (getAvatarBytes32 === initialAvatar) {
-            this.avatar = DEFAULT_AVATAR_IPFS_HASH;
+            this.avatar = DEFAULT_AVATAR;
           } else {
             this.avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(getAvatarBytes32);
           }

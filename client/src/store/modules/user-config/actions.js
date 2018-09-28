@@ -21,7 +21,7 @@ import {
   FETCH_BALANCES, MUTATE_BALANCES,
 } from './types';
 import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL } from '../modal/types';
-import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
+import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
 import {
   TOGGLE_MODAL
@@ -79,7 +79,7 @@ export default {
       let avatar = ipfsNodePath + utils.getIpfsHashFromBytes32(avatarBytes32);
       commit(MUTATE_AVATAR, avatar);
     } else {
-      let avatar = DEFAULT_AVATAR_IPFS_HASH;
+      let avatar = DEFAULT_AVATAR;
       commit(MUTATE_AVATAR, avatar);
     }
   },
@@ -125,11 +125,11 @@ export default {
         newUsername = state.username;
       }
       if (newAvatarBytes32 === '') {
-        if (state.avatar === DEFAULT_AVATAR_IPFS_HASH) {
+        if (state.avatar === DEFAULT_AVATAR) {
           const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
           newAvatarBytes32 = initialAvatarBytes32;
         }
-        if (state.avatar !== DEFAULT_AVATAR_IPFS_HASH) {
+        if (state.avatar !== DEFAULT_AVATAR) {
           newAvatarBytes32 = await getAvatar(state.metamaskAddress);
         }
       }

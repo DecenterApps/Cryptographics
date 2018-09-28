@@ -2,7 +2,7 @@ export const ipfsNodePath = 'https://ipfs.decenter.com/ipfs/';
 
 import avatar from 'assets/anon-avatar.png';
 
-export const DEFAULT_AVATAR_IPFS_HASH = avatar;
+export const DEFAULT_AVATAR = avatar;
 export const DEFAULT_USERNAME = 'Anon';
 
 export const testnets = {
