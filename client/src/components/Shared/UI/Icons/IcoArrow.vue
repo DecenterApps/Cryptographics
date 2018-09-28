@@ -18,11 +18,11 @@
       },
       width: {
         type: String,
-        default: '18px'
+        default: '18'
       },
       height: {
         type: String,
-        default: '34px'
+        default: '34'
       }
     }
   };

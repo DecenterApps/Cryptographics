@@ -6,7 +6,7 @@ import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
 import { getAccounts } from './helpers';
-import { DEFAULT_AVATAR_IPFS_HASH, DEFAULT_USERNAME } from 'config/constants';
+import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
@@ -366,7 +366,7 @@ export const getGalleryImage = async (imageId, getPrice) =>
     }
     const hasFrame = parseInt(metadata.frame) === 1;
     const initialAvatar = '0x0000000000000000000000000000000000000000000000000000000000000000';
-    const userAvatar = (image[3] === initialAvatar) ? DEFAULT_AVATAR_IPFS_HASH : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`;
+    const userAvatar = (image[3] === initialAvatar) ? DEFAULT_AVATAR : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(image[3])}`;
     resolve({
       id: imageId,
       creator: image[0],
@@ -571,7 +571,7 @@ const mapUserInfo = userInfoTx => {
   const username = userInfoTx[0] || DEFAULT_USERNAME;
 
   const isImageEmptyBytes = utils.isEmptyBytes(userInfoTx[1]);
-  const avatar = isImageEmptyBytes ? DEFAULT_AVATAR_IPFS_HASH : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(userInfoTx[1])}`;
+  const avatar = isImageEmptyBytes ? DEFAULT_AVATAR : `${ipfsNodePath}${utils.getIpfsHashFromBytes32(userInfoTx[1])}`;
 
   return { username, avatar };
 };
@@ -642,3 +642,15 @@ export const withdraw = async (fromCt, address) => {
   const account = await getAccounts();
   return await ct.methods.withdraw().send({ from: account });
 };
+
+export const sendETHtoAddress = (from, to, value) => {
+  try {
+    web3.eth.sendTransaction({
+      from,
+      to,
+      value: web3.utils.toWei(value, "ether")
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
