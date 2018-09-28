@@ -5,7 +5,7 @@
                 <h1 class="large-title">Asset Packs</h1>
                 <button-link to="/create-asset-pack">Create Asset Pack</button-link>
             </div>
-            <p>
+            <p class="asset-pack-description">
                 Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
                 asset pack has its price, but you only need to pay for each asset pack once.
             </p>
@@ -113,6 +113,10 @@
     .asset-packs-wrapper {
         display: flex;
         flex-wrap: wrap;
+    }
+
+    .asset-pack-description {
+        max-width: 550px;
     }
 
     .all-assets-header {
