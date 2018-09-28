@@ -1,6 +1,6 @@
 <template>
     <div>
-        <layout layout-style="pulled-left" v-if="loading" >
+        <layout layout-style="pulled-left" v-if="loading">
             <div class="loading-section">
                 <loader />
                 <h3>Please wait, loading Cryptographics from the blockchain.</h3>
@@ -149,7 +149,6 @@
         }, 'image/jpeg');
       },
       async getData() {
-        this.loading = true;
         isImageForSale(this.$route.params.id)
           .then(isForSale => {
             console.log(isForSale);
@@ -164,9 +163,7 @@
             ...image,
             creatorMeta
           };
-          this.loading = false;
         } catch (err) {
-          this.loading = false;
           this.imageFailedToLoad = true;
           return;
         }
@@ -174,10 +171,11 @@
       }
     },
     async created() {
+      this.loading = true;
       await this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
-      this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       const assetsForCanvas = await getImage(this.image.randomSeed, null, this.image.potentialAssets, this.image.finalSeed);
+      this.loading = false;
       console.log('assetsForCanvas', assetsForCanvas);
       this.canvasData = {
         frame: this.image.hasFrame,
@@ -186,6 +184,7 @@
         assets: assetsForCanvas,
         delay: 75,
       };
+      this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;
     }
   };
