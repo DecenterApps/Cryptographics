@@ -2,7 +2,7 @@
     <footer class="footer">
         <div class="container footer-container">
             <router-link to="/" class="logo">
-                <logo/>
+                <logo />
                 <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
             </router-link>
             <div class="links-section">
@@ -13,32 +13,31 @@
             </div>
             <div class="social">
                 <ico-social
-                    v-for="(item, index) in social"
-                    :href="item.url"
-                    :social-media="item.name"
-                    :key="index"/>
+                        v-for="(item, index) in social"
+                        :href="item.url"
+                        :social-media="item.name"
+                        :key="index" />
             </div>
         </div>
     </footer>
 </template>
 
 <script>
-import Logo from '../UI/Logo.vue';
-import IcoSocial from './IcoSocial.vue';
+  import Logo from '../UI/Logo.vue';
+  import IcoSocial from './IcoSocial.vue';
 
   export default {
     name: 'CgFooter',
     components: {
-        Logo,
-        IcoSocial
+      Logo,
+      IcoSocial
     },
     data: () => ({
-        social: [
-            { name: 'facebook', url: 'https://www.facebook.com' },
-            { name: 'instagram', url: 'https://www.facebook.com' },
-            { name: 'twitter', url: 'https://www.facebook.com' },
-            { name: 'youtube', url: 'https://www.facebook.com' }
-        ]
+      social: [
+        { name: 'reddit', url: 'https://www.reddit.com/r/Cryptographics/' },
+        { name: 'discord', url: 'https://discord.gg/xnhfYRS' },
+        { name: 'twitter', url: 'https://twitter.com/_Cryptographics' }
+      ]
     })
   };
 </script>

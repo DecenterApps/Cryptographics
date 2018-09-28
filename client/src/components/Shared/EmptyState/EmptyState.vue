@@ -45,12 +45,12 @@
 <style scoped lang="scss">
     .empty-state {
         margin: 20px 0;
-        font-size: 32px;
+        font-size: 20px;
         line-height: 52px;
         font-family: 'YoungSerif-Regular', serif;
 
         a {
-            text-decoration: none;
+            text-decoration: underline;
             color: black;
             transition: opacity .2s ease-in-out;
 

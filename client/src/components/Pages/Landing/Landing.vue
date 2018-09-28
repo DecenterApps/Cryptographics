@@ -41,7 +41,7 @@
                 <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC-721 token.</p>
             </div>
         </div>
-        <div class="landing-section">
+        <div class="landing-section gallery-section">
             <h1 class="section-title">
                 Cryptographics
             </h1>
@@ -280,6 +280,10 @@
         background-color: #d9d9d9;
         z-index: 1;
         text-align: center;
+
+        &.gallery-section {
+            padding-bottom: 100px;
+        }
 
         &.inverted {
             background-color: #fff;

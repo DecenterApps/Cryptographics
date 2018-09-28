@@ -307,6 +307,7 @@
                 transition: height, 0.2s ease-in-out;
                 line-height: 32px;
                 font-size: 15px;
+                max-width: 60%;
 
                 a {
                     text-decoration: none;
