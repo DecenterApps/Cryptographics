@@ -5,6 +5,7 @@ import {
   TOGGLE_ASSET_PACK,
   MUTATE_SELECTED_ASSET_PACKS,
   SELECT_SINGLE_ASSET_PACK,
+  CLEAR_ASSET_PACKS,
 } from './types';
 import { preloadAssets } from '../../../services/helpers';
 
@@ -14,6 +15,9 @@ export default {
   },
   [FINISH_CANVAS_DRAWING]: ({ commit, state }, content) => {
     commit(MUTATE_CANVAS_DRAWING, false);
+  },
+  [CLEAR_ASSET_PACKS]: ({ commit, state }) => {
+    commit(MUTATE_SELECTED_ASSET_PACKS, []);
   },
   [TOGGLE_ASSET_PACK]: ({ commit, state }, assetPack) => {
     const index = state.selectedAssetPacks.findIndex(item => item.id.toString() === assetPack.id.toString());
