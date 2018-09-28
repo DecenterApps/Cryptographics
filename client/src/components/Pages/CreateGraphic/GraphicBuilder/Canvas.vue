@@ -1,6 +1,6 @@
 <template>
     <div class="canvas-wrapper" :class="{'square': this.canvasData.ratio === '1:1'}">
-        <canvas fill="#fff" id="canvas"></canvas>
+        <canvas :fill="fill" id="canvas"></canvas>
     </div>
 </template>
 
@@ -11,7 +11,14 @@
 
   export default {
     data: () => ({}),
-    props: ['canvasData', 'frame', 'width', 'height'],
+    props: {
+      canvasData: {
+        type: Object,
+      },
+      fill: {
+        default: '#fff',
+      }
+    },
     methods: {
       ...mapActions({
         toggleDrawing: TOGGLE_CANVAS_DRAWING,

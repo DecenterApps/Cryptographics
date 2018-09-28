@@ -1,19 +1,20 @@
 <template>
     <div class="graphic-preview" @click="$emit('download')">
-        <div v-if="isFake">FAKE</div>
         <overlay>
-            <button-icon icon-type="download"/>
+            <button-icon icon-type="download" />
         </overlay>
-        <img
-                class="image"
-                :src="image.src"
-        >
+        <Canvas
+                :canvasData="canvasData"
+                fill="#D9D9D9"
+        ></Canvas>
     </div>
 </template>
 
 <script>
+  import Canvas from '../CreateGraphic/GraphicBuilder/Canvas.vue';
+
   export default {
-    name: 'Graphic',
+    name: 'GraphicPreview',
     props: {
       image: {
         type: Object,
@@ -21,8 +22,13 @@
       isFake: {
         type: Boolean,
         default: false,
+      },
+      canvasData: {
+        type: Object,
+        default: {}
       }
-    }
+    },
+    components: { Canvas }
   };
 </script>
 

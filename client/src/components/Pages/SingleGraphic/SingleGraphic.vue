@@ -15,7 +15,7 @@
                         name="YoungSerif"
                         id="518"
                         :image="image"
-                        :isFake="isFake"
+                        :canvasData="canvasData"
                         year="2018"
                         @download="download"
                 />
@@ -36,9 +36,7 @@
                 <share-icons />
             </div>
             <div class="canvas-wrapper">
-                <Canvas
-                        :canvasData="canvasData"
-                ></Canvas>
+
             </div>
         </layout>
     </div>
@@ -186,7 +184,7 @@
         noBottomFrame: false,
         ratio: this.image.width === this.image.height ? '1:1' : '2:3',
         assets: assetsForCanvas,
-        delay: 0,
+        delay: 75,
       };
       this.canvasDataLoaded = true;
     }
@@ -212,8 +210,8 @@
     }
 
     .loading-section {
-        height: 742px;
-        width: 525px;
+        height: 100%;
+        width: 1120px;
         display: flex;
         flex-direction: column;
         align-items: center;
