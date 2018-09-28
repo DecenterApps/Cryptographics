@@ -286,6 +286,7 @@
 
             .section-title {
                 color: #fff;
+                pointer-events: none;
             }
 
             .section-title {
