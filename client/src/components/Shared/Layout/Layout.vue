@@ -100,6 +100,10 @@
                 }
             }
         }
+        &.full-height {
+            min-height: calc(100vh - 70px);
+            background-color: #D9D9D9;
+        }
         &.full-screen {
             background-color: #D9D9D9;
 
