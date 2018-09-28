@@ -1,6 +1,6 @@
 <template>
     <div>
-        <layout layout-style="pulled-left" v-if="loading">
+        <layout layout-style="full-screen full-height" v-if="loading">
             <div class="loading-section">
                 <loader />
                 <h3>Please wait, loading Cryptographics from the blockchain.</h3>
@@ -9,7 +9,7 @@
 
         <graphic-empty-state v-if="!loading && imageFailedToLoad" />
 
-        <layout v-if="!loading && !imageFailedToLoad" layout-style="pulled-left">
+        <layout v-if="!loading && !imageFailedToLoad" layout-style="full-screen full-height">
             <div class="left">
                 <graphic-preview
                         name="YoungSerif"
@@ -34,9 +34,6 @@
                 />
                 <print-form @closePrintForm="orderPrint = false" v-else />
                 <share-icons />
-            </div>
-            <div class="canvas-wrapper">
-
             </div>
         </layout>
     </div>
@@ -199,7 +196,7 @@
 
     .right {
         position: relative;
-        max-width: 400px;
+        /*max-width: 400px;*/
         min-width: 300px;
         padding-right: 50px;
     }
@@ -215,7 +212,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background-color: #CECECE;
+        /*background-color: #CECECE;*/
         margin-top: 30px;
         & .loader-content {
             margin-bottom: 20px;

@@ -1,9 +1,9 @@
 <template>
     <div class="share-icons">
         <IcoTwitter @click.native="openTwitterShare" />
-        <IcoPinterest />
-        <IcoReddit />
-        <IcoTumblr />
+        <!--<IcoPinterest />-->
+        <!--<IcoReddit />-->
+        <!--<IcoTumblr />-->
     </div>
 </template>
 
@@ -20,7 +20,7 @@
     props: {},
     methods: {
       openTwitterShare() {
-        let href = `https://twitter.com/intent/tweet?text=Check%20this%20out%20${document.location.href}`;
+        let href = `https://twitter.com/intent/tweet?text=Check%20out%20my%20cryptographic%20-%20${document.location.href}`;
         console.log(href);
         window.open(href);
       }
@@ -33,7 +33,7 @@
         display: flex;
         flex-direction: column;
         position: absolute;
-        right: 10px;
+        right: 0;
         top: 0;
 
         svg {

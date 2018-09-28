@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets from the following
+            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets <br> from the following
                 asset packs:</p>
             <div class="asset-packs">
                 <router-link
@@ -211,10 +211,10 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        font-weight: 300;
     }
 
     .graphic-name {
-        margin-bottom: 20px;
         .graphic-id {
             font-family: Roboto, sans-serif;
             font-size: 12px;
@@ -227,6 +227,7 @@
             font-family: Roboto, sans-serif;
             font-weight: 300;
             line-height: 19px;
+            margin-bottom: 0;
         }
         .large-title {
             margin-bottom: 10px;
