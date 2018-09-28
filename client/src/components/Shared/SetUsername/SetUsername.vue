@@ -12,11 +12,6 @@
                     Existing username, please try again
                 </span>
             <span
-                    class="info success"
-                    v-if="isSuccess">
-                    You have updated your username successfully!
-                </span>
-            <span
                     class="info"
                     v-if="newUsername.length >= 20">
                     Username can't be longer than 16 characters
@@ -40,7 +35,7 @@
   import { ipfsNodePath } from 'config/constants';
 
   import { mapActions, mapGetters } from 'vuex';
-  import { USERNAME, AVATAR, SET_NEW_USERNAME, USERNAME_EXISTENCE, EDIT_PROFILE_RESULT } from 'store/user-config/types';
+  import { USERNAME, AVATAR, SET_NEW_USERNAME, USERNAME_EXISTENCE } from 'store/user-config/types';
 
   export default {
     name: 'SetUsername',
@@ -57,7 +52,6 @@
       ...mapGetters({
         currentUsername: USERNAME,
         isExistingUsername: USERNAME_EXISTENCE,
-        isSuccess: EDIT_PROFILE_RESULT,
       })
     }
   };
