@@ -155,7 +155,7 @@
           'Your Cryptographic will be listed shortly.');
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
-        this.toggleLoadingModal();
+        this.closeLoadingModal();
         // this.$router.push(`/cryptographic/${id}`);
         this.getData();
         this.openModal('Cryptographic successfully submitted for sale.');
@@ -168,7 +168,7 @@
           'Your Cryptographic\'s sale will be canceled shortly.');
         const result = await transactionPromise();
         console.log(result);
-        this.toggleLoadingModal();
+        this.closeLoadingModal();
         this.getData();
         // this.$router.push(this.$router.currentRoute);
         this.openModal('Cryptographic successfully removed from the marketplace.');
@@ -183,7 +183,7 @@
           'Your will receive this Cryptographic shortly.');
         const result = await transactionPromise();
         const id = result.events.ImageBought.returnValues.imageId;
-        this.toggleLoadingModal();
+        this.closeLoadingModal();
         this.getData();
         // this.$router.push(`/cryptographic/${id}`);
         this.openModal('Cryptographic successfully bought.');

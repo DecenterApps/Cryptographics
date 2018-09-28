@@ -1,20 +1,28 @@
 <template>
     <div class="canvas-wrapper" :class="{'square': this.canvasData.ratio === '1:1'}">
-        <canvas fill="#fff" id="canvas"></canvas>
+        <canvas :fill="fill" id="canvas"></canvas>
     </div>
 </template>
 
 <script>
   import { mapActions, mapState } from 'vuex';
-  import { TOGGLE_CANVAS_DRAWING } from 'store/canvas/types';
+  import { START_CANVAS_DRAWING, FINISH_CANVAS_DRAWING } from 'store/canvas/types';
   import { getSize, makeImage } from 'services/imageService';
 
   export default {
     data: () => ({}),
-    props: ['canvasData', 'frame', 'width', 'height'],
+    props: {
+      canvasData: {
+        type: Object,
+      },
+      fill: {
+        default: '#fff',
+      }
+    },
     methods: {
       ...mapActions({
-        toggleDrawing: TOGGLE_CANVAS_DRAWING,
+        startDrawing: START_CANVAS_DRAWING,
+        finishDrawing: FINISH_CANVAS_DRAWING,
       }),
       getCanvasElement() {
         return document.getElementById('canvas');
@@ -37,15 +45,15 @@
           ratio: this.canvasData.ratio,
           shouldDrawFrame: frame,
         };
-        this.toggleDrawing();
+        this.startDrawing();
         try {
           await makeImage(assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES, delay);
         } catch (e) {
           console.error(e);
-          return this.toggleDrawing();
+          return this.finishDrawing();
         }
         if (assets.length > 0) this.$emit('canvasDrawn');
-        this.toggleDrawing();
+        this.finishDrawing();
       }
     },
     computed: {

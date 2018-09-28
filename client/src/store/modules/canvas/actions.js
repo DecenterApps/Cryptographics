@@ -1,5 +1,6 @@
 import {
-  TOGGLE_CANVAS_DRAWING,
+  START_CANVAS_DRAWING,
+  FINISH_CANVAS_DRAWING,
   MUTATE_CANVAS_DRAWING,
   TOGGLE_ASSET_PACK,
   MUTATE_SELECTED_ASSET_PACKS,
@@ -8,8 +9,11 @@ import {
 import { preloadAssets } from '../../../services/helpers';
 
 export default {
-  [TOGGLE_CANVAS_DRAWING]: ({ commit, state }, content) => {
-    commit(MUTATE_CANVAS_DRAWING, !state.isCanvasDrawing);
+  [START_CANVAS_DRAWING]: ({ commit, state }, content) => {
+    commit(MUTATE_CANVAS_DRAWING, true);
+  },
+  [FINISH_CANVAS_DRAWING]: ({ commit, state }, content) => {
+    commit(MUTATE_CANVAS_DRAWING, false);
   },
   [TOGGLE_ASSET_PACK]: ({ commit, state }, assetPack) => {
     const index = state.selectedAssetPacks.findIndex(item => item.id.toString() === assetPack.id.toString());
