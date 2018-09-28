@@ -1,13 +1,14 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets <br> from the following
+            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets <br> from the
+                following
                 asset packs:</p>
             <div class="asset-packs">
                 <router-link
-                    :to="'/asset-pack/' + assetPack.id"
-                    v-for="(assetPack, index) in assetPacks"
-                    :key="index">
+                        :to="'/asset-pack/' + assetPack.id"
+                        v-for="(assetPack, index) in assetPacks"
+                        :key="index">
                     <asset-box
                             :key="index"
                             :assetPack="assetPack"
@@ -25,14 +26,17 @@
                 </h3>
                 <div class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
-                        <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username" :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
+                        <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
+                                   :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
                         <span class="title">Creator</span>
                     </div>
                     <div class="user-link-wrapper" v-if="image.owner">
-                        <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" color="black" additionalClass="ellipsis" />
+                        <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar"
+                                   color="black" additionalClass="ellipsis" />
                         <span class="title">Owner</span>
                     </div>
                 </div>
+                <div v-if="image.description.length > 0" class="description-label">Description:</div>
                 <p class="description">{{ image.description }}</p>
 
             </div>
@@ -40,19 +44,26 @@
                     v-if="isLogged && !isForSale"
                     class="graphic-controls"
                     :class="{ sell: sellGraphic }">
-                <template v-if="!sellGraphic">
-                    <cg-button @click="sellGraphic = !sellGraphic">List for sale</cg-button>
-                    <cg-button button-style="secondary" @click="$emit('showPrintForm')">Print</cg-button>
-                </template>
-                <template v-else>
-                    <cg-input
-                            v-on:input="checkErrors('sellPrice')"
-                            :inputStyle="errors.sellPrice ? 'input error' : 'input'"
-                            v-model="sellPrice"
-                            inputType="number"
-                            type="text"
-                            placeholder="Price in ether"
-                    />
+                <separator></separator>
+                <div class="bottom-controls" v-if="!sellGraphic">
+                    <cg-button
+                            button-style="secondary"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        Transfer history
+                    </cg-button>
+                    <div class="button-group">
+                        <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
+                        <cg-button @click="sellGraphic = !sellGraphic">List for sale</cg-button>
+                    </div>
+                </div>
+                <div class="bottom-controls" v-else>
+                    <cg-button
+                            button-style="secondary"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        Transfer history
+                    </cg-button>
                     <div class="button-group">
                         <cg-button button-style="secondary" @click="() => {
                             this.errors.sellPrice = false;
@@ -60,31 +71,50 @@
                         }">
                             Cancel
                         </cg-button>
+
+                        <cg-input
+                                v-on:input="checkErrors('sellPrice')"
+                                :inputStyle="errors.sellPrice ? 'input error' : 'input'"
+                                v-model="sellPrice"
+                                inputType="number"
+                                type="text"
+                                placeholder="Enter price in ETH"
+                        />
                         <cg-button @click="submitImageForSale">List for sale</cg-button>
                     </div>
-                </template>
+                </div>
             </div>
             <div
                     v-if="isLogged && isForSale"
                     class="graphic-controls"
             >
-                <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
-                <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
-                <price
-                        :value="image.price" />
+                <separator></separator>
+                <div class="bottom-controls">
+                    <div></div>
+                    <div class="price-controls">
+                        <price :value="image.price" />
+                        <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
+                        <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
+                    </div>
+                </div>
             </div>
             <div
                     class="graphic-controls buy"
                     v-if="isForSale && !isLogged">
-                <cg-button @click="submitBuyImage">Buy</cg-button>
-
-                <div class="price-wrapper">
-                    <price :value="image.price" />
-                    <div
-                            class="history"
+                <separator></separator>
+                <div class="bottom-controls">
+                    <cg-button
+                            button-style="secondary"
                             @click="openModal({ name: 'transferHistory', data: { image } })"
                     >
-                        transfer-history
+                        Transfer history
+                    </cg-button>
+
+                    <div class="price-controls">
+                        <price :value="image.price" />
+                        <div class="button-group">
+                            <cg-button @click="submitBuyImage">Buy</cg-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,6 +228,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        width: 100%;
     }
 
     .asset-packs {
@@ -221,6 +252,13 @@
             margin-left: 10px;
             font-weight: bold;
             color: #858585;
+        }
+        .description-label {
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #717171;
         }
         .description {
             margin-top: 10px;
@@ -272,9 +310,29 @@
     }
 
     .graphic-controls {
-        margin-top: 18px;
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
+
+        .bottom-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            .price-controls {
+                display: flex;
+                align-items: center;
+
+                .price {
+                    margin-right: 10px;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .line-separator {
+            margin: 25px 0;
+        }
         &.sell {
             flex-direction: column;
             margin-top: 0;
@@ -282,9 +340,10 @@
         &.buy {
             align-items: center;
 
-            .button {
-                padding: 9px 34px;
-                margin-top: 8px;
+            .price-controls {
+                .button {
+                    padding: 9px 34px;
+                }
             }
         }
         button {
