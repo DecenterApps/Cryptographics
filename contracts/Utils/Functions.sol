@@ -13,11 +13,38 @@ contract Functions {
         }
     }
 
+    /// @notice Function to calculate initial random seed based on our hashes
+    /// @param _randomHashIds are ids in our array of hashes
+    /// @param _timestamp is timestamp for that hash
+    /// @return uint representation of random seed
+    function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint) {
+        require(_timestamp != 0);
+        require(_randomHashIds.length == 10);
+
+        bytes32 randomSeed = keccak256(
+            abi.encodePacked(
+            randomHashes[_randomHashIds[0]], randomHashes[_randomHashIds[1]],
+            randomHashes[_randomHashIds[2]], randomHashes[_randomHashIds[3]],
+            randomHashes[_randomHashIds[4]], randomHashes[_randomHashIds[5]],
+            randomHashes[_randomHashIds[6]], randomHashes[_randomHashIds[7]],
+            randomHashes[_randomHashIds[8]], randomHashes[_randomHashIds[9]],
+            _timestamp
+            )
+        );
+
+        return uint(randomSeed);
+    }
+
+    function getRandomHashesLength() public view returns(uint) {
+        return randomHashes.length;
+    }
+
     /// @notice Function which decodes bytes32 to array of integers
     /// @param _potentialAssets are potential assets user would like to have
     /// @return array of assetIds
     function decodeAssets(bytes32[] _potentialAssets) public pure returns (uint[] assets) {
         require(_potentialAssets.length > 0);
+
         uint[] memory assetsCopy = new uint[](_potentialAssets.length*10);
         uint numberOfAssets = 0;
 
@@ -79,7 +106,7 @@ contract Functions {
     /// @param _potentialAssets is bytes32[] array of potential assets
     /// @param _width of canvas
     /// @param _height of canvas
-    /// @return uint[] array of randomly picked assets
+    /// @return arrays of randomly picked assets defining ids, coordinates, zoom, rotation and layers
     function getImage(uint _finalSeed, bytes32[] _potentialAssets, uint _width, uint _height) public pure 
     returns(uint[] finalPicked, uint[] x, uint[] y, uint[] zoom, uint[] rotation, uint[] layers) {
         require(_finalSeed != 0);
@@ -112,7 +139,6 @@ contract Functions {
     }
 
     /// @notice Function to pick random position for an asset
-    /// @dev based on id and random_seed
     /// @param _randomSeed is random seed for that image
     /// @param _width of canvas
     /// @param _height of canvas
@@ -127,28 +153,6 @@ contract Functions {
         // using random number for now
         // if two layers are same, sort by (keccak256(layer, assetId))
         layer = _randomSeed % 1234567; 
-    }
-
-    /// @notice Function to calculate initial random seed based on our hashes
-    /// @param _randomHashIds are ids in our array of hashes
-    /// @param _timestamp is timestamp for that hash
-    /// @return uint representation of random seed
-    function calculateSeed(uint[] _randomHashIds, uint _timestamp) public view returns (uint) {
-        require(_timestamp != 0);
-        require(_randomHashIds.length == 10);
-
-        bytes32 randomSeed = keccak256(
-            abi.encodePacked(
-            randomHashes[_randomHashIds[0]], randomHashes[_randomHashIds[1]],
-            randomHashes[_randomHashIds[2]], randomHashes[_randomHashIds[3]],
-            randomHashes[_randomHashIds[4]], randomHashes[_randomHashIds[5]],
-            randomHashes[_randomHashIds[6]], randomHashes[_randomHashIds[7]],
-            randomHashes[_randomHashIds[8]], randomHashes[_randomHashIds[9]],
-            _timestamp
-            )
-        );
-
-        return uint(randomSeed);
     }
 
     /// @notice Function to calculate final random seed for user
@@ -166,18 +170,6 @@ contract Functions {
         }
 
         return finalSeed;
-    }
-
-    function getRandomHash(uint _index) public view returns(bytes32) {
-        return randomHashes[_index];
-    }
-
-    function getLen() public view returns(uint) {
-        return randomHashes.length;
-    }
-
-    function getSeed(uint _assetId, uint _randomSeed) public pure returns(uint) {
-        return uint(keccak256(abi.encodePacked(_randomSeed, _assetId)));
     }
 
     function toHex(uint _randomSeed) public pure returns (bytes32) {
