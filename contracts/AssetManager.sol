@@ -93,8 +93,6 @@ contract AssetManager is Ownable {
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
     function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public returns(uint) {
-        // require(hashExists[_ipfsHash] == false);
-
         uint id = numberOfAssets;
 
         assets.push(Asset({
@@ -104,12 +102,14 @@ contract AssetManager is Ownable {
             ipfsHash : _ipfsHash
         }));
 
-        // hashExists[_ipfsHash] = true;
         numberOfAssets++;
 
         return id;
     }
 
+    /// @notice Method to buy right to use specific asset pack
+    /// @param _to is address of user who will get right on that asset pack
+    /// @param _assetPackId is id of asset pack user is buying
     function buyAssetPack(address _to, uint _assetPackId) public payable {
         ///validate if user have already bought permission for this pack
         for (uint i = 0; i < boughtAssetPacks[_to].length; i++) {
@@ -124,6 +124,15 @@ contract AssetManager is Ownable {
         boughtAssetPacks[_to].push(_assetPackId);
 
         emit AssetPackBought(_assetPackId, _to);
+    }
+
+    /// @notice Change price of asset pack
+    /// @param _assetPackId is id of asset pack for changing price
+    /// @param _newPrice is new price for that asset pack
+    function changeAssetPackPrice(uint _assetPackId, uint _newPrice) public payable {
+        require(assetPacks[_assetPackId].creator == msg.sender);
+
+        assetPacks[_assetPackId].price = _newPrice;
     }
 
     /// @notice Function to fetch total number of assets
