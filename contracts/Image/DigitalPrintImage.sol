@@ -39,8 +39,6 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
     constructor() public ERC721Token("DigitalPrintImage", "DPM") {}
 
     /// @notice Function will create new image
-    /// @dev owner of image will be msg.sender, and timestamp will be automatically generated
-    /// @dev _txHash and _timestamp together with keccak256 will give us randomSeed for user
     /// @param _randomHashIds is array of random hashes from our array
     /// @param _timestamp is timestamp when image is created
     /// @param _iterations is number of how many times he generated random asset positions until he liked what he got
@@ -69,7 +67,7 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
         uint[] memory pickedAssets;
         uint finalSeed;
        
-        (pickedAssets, finalSeed) = getPickedAssets(_potentialAssets, _randomHashIds, _timestamp, _iterations); 
+        (pickedAssets, finalSeed) = getPickedAssetsAndFinalSeed(_potentialAssets, _randomHashIds, _timestamp, _iterations); 
         uint[] memory pickedAssetPacks = assetManager.pickUniquePacks(pickedAssets);
         uint finalPrice = 0;
 
@@ -101,15 +99,43 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
         emit ImageCreated(id, msg.sender);
     }
 
+    /// @notice approving image to be taken from specific address
+    /// @param _from address from which we transfer image
+    /// @param _to address that we give permission to take image
+    /// @param _imageId we are willing to give
+    function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
+        require(isApprovedOrOwner(_from, _imageId));
 
-    function getPickedAssets(bytes32[] _potentialAssets, uint[] _randomHashIds, uint _timestamp, uint _iterations) internal view returns(uint[], uint) {
-        uint finalSeed = uint(functions.getFinalSeed(functions.calculateSeed(_randomHashIds, _timestamp), _iterations));
+        clearApproval(_from, _imageId);
+        removeTokenFrom(_from, _imageId);
+        addTokenTo(_to, _imageId);
 
-        require(!seedExists[finalSeed]);
-
-        return (functions.pickRandomAssets(finalSeed, _potentialAssets), finalSeed);
+        emit Transfer(_from, _to, _imageId);
     }
 
+    /// @notice adds marketplace address to contract only if it doesn't already exist
+    /// @param _marketplaceContract address of marketplace contract
+    function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
+        require(address(marketplaceContract) == 0x0);
+        
+        marketplaceContract = _marketplaceContract;
+    }
+
+    /// @notice Function to add assetManager
+    /// @param _assetManager is address of assetManager contract
+    function addAssetManager(address _assetManager) public onlyOwner {
+        require(address(assetManager) == 0x0);
+
+        assetManager = IAssetManager(_assetManager);
+    }
+
+    /// @notice Function to add functions contract
+    /// @param _functions is address of functions contract
+    function addFunctions(address _functions) public onlyOwner {
+        require(address(functions) == 0x0);
+
+        functions = Functions(_functions);
+    }
 
     /// @notice Function to calculate final price for an image based on selected assets
     /// @param _pickedAssets is array of picked packs
@@ -131,6 +157,8 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
         return finalPrice;
     }
 
+    /// @notice Method returning informations needed for gallery page
+    /// @param _imageId id of image 
     function getGalleryData(uint _imageId) public view 
     returns(address, address, string, bytes32, string, string) {
         require(_imageId < totalSupply());
@@ -146,6 +174,9 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
 
     }
 
+    /// @notice returns metadata of image
+    /// @dev not possible to use public mapping because of array of bytes32
+    /// @param _imageId id of image
     function getImageMetadata(uint _imageId) public view
     returns(address, string, uint, string, uint, bytes32[]) {
         ImageMetadata memory metadata = imageMetadata[_imageId];
@@ -160,40 +191,23 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
         );
     }
 
+    /// @notice returns all images owned by _user
+    /// @param _user address of user
     function getUserImages(address _user) public view returns(uint[]) {
         return ownedTokens[_user];
     }
 
-    /// @notice adds marketplace address to contract only if it doesn't already exist
-    /// @param _marketplaceContract address of marketplace contract
-    function addMarketplaceContract(address _marketplaceContract) public onlyOwner {
-        // not required while on testnet
-        // @dev require(address(marketplaceContract) == 0x0);
-        marketplaceContract = _marketplaceContract;
+    /// @notice returns picked assets from potential assets and final seed
+    /// @param _potentialAssets array of all potential assets encoded in bytes32
+    /// @param _randomHashIds selected random hash ids from our contract
+    /// @param _timestamp timestamp of image creation
+    /// @param _iterations number of iterations to get to final seed
+    function getPickedAssetsAndFinalSeed(bytes32[] _potentialAssets, uint[] _randomHashIds, uint _timestamp, uint _iterations) internal view returns(uint[], uint) {
+        uint finalSeed = uint(functions.getFinalSeed(functions.calculateSeed(_randomHashIds, _timestamp), _iterations));
+
+        require(!seedExists[finalSeed]);
+
+        return (functions.pickRandomAssets(finalSeed, _potentialAssets), finalSeed);
     }
 
-    /// @notice approving image to be taken from specific address
-    /// @param _from address from which we transfer image
-    /// @param _to address that we give permission to take image
-    /// @param _imageId we are willing to give
-    function transferFromMarketplace(address _from, address _to, uint256 _imageId) public onlyMarketplaceContract {
-        require(isApprovedOrOwner(_from, _imageId));
-
-        clearApproval(_from, _imageId);
-        removeTokenFrom(_from, _imageId);
-        addTokenTo(_to, _imageId);
-
-        emit Transfer(_from, _to, _imageId);
-    }
-
-    /// @notice Function to add assetManager
-    /// @dev during testing can be changed, after deployment to main network can be set only once
-    /// @param _assetManager is address of assetManager contract
-    function addAssetManager(address _assetManager) public onlyOwner {
-        assetManager = IAssetManager(_assetManager);
-    }
-
-    function addFunctions(address _functions) public onlyOwner {
-        functions = Functions(_functions);
-    }
 }
