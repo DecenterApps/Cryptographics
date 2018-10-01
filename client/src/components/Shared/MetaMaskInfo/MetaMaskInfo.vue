@@ -8,18 +8,24 @@
             are logged in.
         </div>
 
-        <h3 @click="toggleShowMoreInfo">What is MetaMask?</h3>
+        <h3>What is MetaMask?</h3>
 
-        <div v-if="showMoreInfo">
+        <div>
             <div class="text-wrapper secondary">
                 MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
                 blockchain. It manages your Ethereum account which keeps your Ether funds and unique Cryptographics
                 tokens.
             </div>
 
-            <h3 class="link">
-                <a target="_blank" rel="noopener noreferrer" href="https://metamask.io/">Get MetaMask</a>
-            </h3>
+            <a
+                target="_blank"
+                class="button secondary"
+                rel="noopener noreferrer"
+                href="https://metamask.io/">
+                Get MetaMask
+            </a>
+            <p>Or if you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
+            
         </div>
 
         <img class="round-logo" :src="roundLogo" alt="">
@@ -42,16 +48,18 @@
     methods: {
       ...mapActions({
         openModal: TOGGLE_MODAL,
-        toggleShowMoreInfo() {
-          this.showMoreInfo = !this.showMoreInfo;
-        }
       }),
     },
   };
 </script>
 
 <style scoped lang="scss">
+    @import "../UI/button-styles";
     .meta-mask-info {
+        text-align: center;
+        .button {
+            margin-bottom: 15px;
+        }
         svg {
             display: block;
             margin: auto;
@@ -92,7 +100,7 @@
             }
 
             &.secondary {
-                margin-top: 30px;
+                margin: 30px 0;
             }
         }
 
