@@ -16,7 +16,7 @@
                         Random assets from the chosen packs will make it to your Cryptographic.
                     </p>
                 </div>
-                <ico-arrow></ico-arrow>
+                <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
@@ -26,7 +26,7 @@
                         A provably random composition process creates your Cryptographic.
                     </p>
                 </div>
-                <ico-arrow></ico-arrow>
+                <ico-arrow-long></ico-arrow-long>
                 <div class="step">
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
@@ -235,12 +235,15 @@
 
             svg {
                 position: relative;
-                top: 170px;
+                top: 230px;
+                margin: 0 50px;
             }
         }
 
         svg {
-            margin: 60px 50px;
+            margin: 0 30px;
+            position: relative;
+            top: 200px;
         }
 
         .step::after {
