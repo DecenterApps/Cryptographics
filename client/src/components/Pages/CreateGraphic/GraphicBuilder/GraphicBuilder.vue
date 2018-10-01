@@ -127,7 +127,7 @@
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
+  import { TOGGLE_MODAL, SHOW_LOADING_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
   import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
 
   export default {
@@ -189,6 +189,7 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
@@ -226,44 +227,50 @@
           return this.openModal('setUsername');
         }
 
-        const UPLOAD_WIDTH = 307 * 2;
-        const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
-        console.log(UPLOAD_WIDTH, UPLOAD_HEIGHT);
-        let canvas = Canvas.methods.getCanvasElement();
-        const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
+        try {
+          const UPLOAD_WIDTH = 307 * 2;
+          const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
+          console.log(UPLOAD_WIDTH, UPLOAD_HEIGHT);
+          let canvas = Canvas.methods.getCanvasElement();
+          const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
-        let image = canvasClone.toDataURL('image/png', 1);
-        let ipfsHash = await ipfsService.uploadFile(image.substr(22));
-        console.log('IMAGE HASH ' + ipfsHash);
-        console.log(this.potentialAssets);
-        let imageMetadata = {
-          title: this.title,
-          description: this.description,
-          frame: this.canvasData.frame ? 1 : 0,
-          width: 2480,
-          height: (this.canvasData.ratio === '2:3' ? 3508 : 2480),
-        };
-        let extraData = await ipfsService.uploadJSON(JSON.stringify(imageMetadata));
-        console.log(extraData);
+          this.openLoadingModal('Uploading your graphic to IPFS...');
+          let image = canvasClone.toDataURL('image/png', 1);
+          let ipfsHash = await ipfsService.uploadFile(image.substr(22));
+          console.log('IMAGE HASH ' + ipfsHash);
+          console.log(this.potentialAssets);
+          let imageMetadata = {
+            title: this.title,
+            description: this.description,
+            frame: this.canvasData.frame ? 1 : 0,
+            width: 2480,
+            height: (this.canvasData.ratio === '2:3' ? 3508 : 2480),
+          };
+          let extraData = await ipfsService.uploadJSON(JSON.stringify(imageMetadata));
+          console.log(extraData);
 
-        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-        let transactionPromise = await imageService.createImage(
-          this.randomHashIds,
-          this.timestamp,
-          this.iterations,
-          this.potentialAssets,
-          this.username,
-          this.userAddress,
-          this.imagePrice,
-          ipfsHash,
-          extraData,
-        );
-        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
-        const result = await transactionPromise();
-        const id = result.events.ImageCreated.returnValues.imageId;
-        this.closeLoadingModal();
-        this.$router.push(`cryptographic/${id}`);
-        this.openModal('Cryptographic successfully saved to the blockchain forever.');
+          this.openLoadingModal('Please confirm the transaction in MetaMask.');
+          let transactionPromise = await imageService.createImage(
+            this.randomHashIds,
+            this.timestamp,
+            this.iterations,
+            this.potentialAssets,
+            this.username,
+            this.userAddress,
+            this.imagePrice,
+            ipfsHash,
+            extraData,
+          );
+          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
+          const result = await transactionPromise();
+          const id = result.events.ImageCreated.returnValues.imageId;
+          this.closeLoadingModal();
+          this.$router.push(`cryptographic/${id}`);
+          this.openModal('Cryptographic successfully saved to the blockchain forever.');
+        } catch (e) {
+          const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+          this.openLoadingModal(message, true);
+        }
       },
       async renderCanvas() {
         this.iterations++;

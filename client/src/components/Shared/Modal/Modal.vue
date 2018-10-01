@@ -7,7 +7,7 @@
                     @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-else-if="content === 'setUsername'" />
-            <meta-mask-info v-else-if="content === 'metaMaskInfo'" />
+            <meta-mask-info v-else-if="content === 'metaMaskInfo'" :hasMetaMask="hasMetaMask" />
             <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
             <balances-modal v-else-if="content === 'balances'" />
             <success-message v-else :content="content" />
@@ -31,6 +31,9 @@
 
   export default {
     name: 'Modal',
+    data: () => ({
+        hasMetaMask: false,
+    }),
     props: {
       content: {
         default: ''
@@ -43,6 +46,14 @@
       TransferHistory,
       BalancesModal,
       MetaMaskInfo,
+    },
+    created() {
+        this.hasMetaMask = window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';
+    },
+    computed: {
+        hasMetaMask: function() {
+            return window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';
+        }
     },
     methods: {
       ...mapActions({
