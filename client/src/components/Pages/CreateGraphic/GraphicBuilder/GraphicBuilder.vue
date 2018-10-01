@@ -83,7 +83,7 @@
                     <cg-textarea
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-model="description"
-                            :max-length="20"
+                            :max-length="600"
                     />
                 </div>
                 <!--<separator></separator>-->
