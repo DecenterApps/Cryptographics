@@ -95,7 +95,10 @@
                         </div>
                         <div class="input-group">
                             <label class="small-title">Description</label>
-                            <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
+                            <cg-textarea
+                                v-model="description"
+                                placeholder="Describe your asset pack"
+                                :max-length="600"></cg-textarea>
                         </div>
                     </div>
                 </div>
