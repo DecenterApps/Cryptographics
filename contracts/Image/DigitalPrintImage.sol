@@ -32,9 +32,9 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
 
     event ImageCreated(uint indexed imageId, address indexed owner);
     /// @dev only for testing purposes
-    function createImageTest() public {
-        _mint(msg.sender, totalSupply());
-    }
+    // function createImageTest() public {
+    //     _mint(msg.sender, totalSupply());
+    // }
 
     constructor() public ERC721Token("DigitalPrintImage", "DPM") {}
 

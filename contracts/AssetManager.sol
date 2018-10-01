@@ -39,6 +39,7 @@ contract AssetManager is Ownable {
     mapping(address => uint[]) public createdAssetPacks;
     mapping(address => uint[]) public boughtAssetPacks;
     mapping(address => mapping(uint => bool)) public hasPermission;
+    mapping(uint => address) public approvedTakeover;
 
     event AssetPackCreated(uint indexed id, address indexed owner);
     event AssetPackBought(uint indexed id, address indexed buyer);
@@ -129,6 +130,24 @@ contract AssetManager is Ownable {
         require(assetPacks[_assetPackId].creator == msg.sender);
 
         assetPacks[_assetPackId].price = _newPrice;
+    }
+
+    /// @notice Approve address to become creator of that pack
+    /// @param _assetPackId id of asset pack for other address to claim
+    /// @param _newCreator address that will be able to claim that asset pack
+    function approveTakeover(uint _assetPackId, address _newCreator) public {
+        require(assetPacks[_assetPackId].creator == msg.sender);
+
+        approvedTakeover[_assetPackId] = _newCreator;
+    }
+
+    /// @notice claim asset pack that is previously approved by creator
+    /// @param _assetPackId id of asset pack that is changing creator
+    function claimAssetPack(uint _assetPackId) public {
+        require(approvedTakeover[_assetPackId] == msg.sender);
+        
+        approvedTakeover[_assetPackId] = address(0);
+        assetPacks[_assetPackId].creator = msg.sender;
     }
 
     ///@notice Function where all artists can withdraw their funds
