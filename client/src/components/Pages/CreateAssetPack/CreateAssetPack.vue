@@ -40,7 +40,9 @@
             <div class="container">
                 <separator></separator>
                 <div class="bottom-content">
-                    <cg-button @click="changeStep(1)">
+                    <cg-button
+                        :disabled="assets.length === 0"
+                        @click="changeStep(1)">
                         Next
                     </cg-button>
                 </div>
