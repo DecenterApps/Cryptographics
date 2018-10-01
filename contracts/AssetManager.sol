@@ -38,6 +38,7 @@ contract AssetManager is Ownable {
 
     mapping(address => uint[]) public createdAssetPacks;
     mapping(address => uint[]) public boughtAssetPacks;
+    mapping(address => mapping(uint => bool)) public hasPermission;
 
     event AssetPackCreated(uint indexed id, address indexed owner);
     event AssetPackBought(uint indexed id, address indexed buyer);
@@ -68,7 +69,6 @@ contract AssetManager is Ownable {
         uint[] memory ids = new uint[](_ipfsHashes.length);
 
         for (uint i = 0; i < _ipfsHashes.length; i++) {
-            require(isAttributesValid(_attributes[i]), "Attributes are not valid.");
             ids[i] = createAsset(_attributes[i], _ipfsHashes[i], numberOfAssetPacks);
         }
 
@@ -87,13 +87,12 @@ contract AssetManager is Ownable {
     }
 
     /// @notice Function which creates an asset
-    /// @dev this method will be internal/private later in production
-    /// @dev id is automatically generated, and it's it's position in array which holds all assets
-    /// @dev add attributes validation
     /// @param _attributes is meta info for asset
     /// @param _ipfsHash is ipfsHash to image of asset
-    function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) public returns(uint) {
+    function createAsset(uint _attributes, bytes32 _ipfsHash, uint _packId) internal returns(uint) {
         uint id = numberOfAssets;
+
+        require(isAttributesValid(_attributes), "Attributes are not valid.");
 
         assets.push(Asset({
             id : id,
@@ -111,10 +110,6 @@ contract AssetManager is Ownable {
     /// @param _to is address of user who will get right on that asset pack
     /// @param _assetPackId is id of asset pack user is buying
     function buyAssetPack(address _to, uint _assetPackId) public payable {
-        ///validate if user have already bought permission for this pack
-        for (uint i = 0; i < boughtAssetPacks[_to].length; i++) {
-            require(boughtAssetPacks[_to][i] != _assetPackId);
-        }
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
         require(msg.value >= assetPack.price);
@@ -122,6 +117,7 @@ contract AssetManager is Ownable {
         artistBalance[assetPack.creator] += msg.value * 95 / 100;
         artistBalance[owner] += msg.value * 5 / 100;
         boughtAssetPacks[_to].push(_assetPackId);
+        hasPermission[_to][_assetPackId] = true;
 
         emit AssetPackBought(_assetPackId, _to);
     }
@@ -133,6 +129,14 @@ contract AssetManager is Ownable {
         require(assetPacks[_assetPackId].creator == msg.sender);
 
         assetPacks[_assetPackId].price = _newPrice;
+    }
+
+    ///@notice Function where all artists can withdraw their funds
+    function withdraw() public {
+        uint amount = artistBalance[msg.sender];
+        artistBalance[msg.sender] = 0;
+
+        msg.sender.transfer(amount);
     }
 
     /// @notice Function to fetch total number of assets
@@ -151,18 +155,8 @@ contract AssetManager is Ownable {
     /// @param _address is address of user
     /// @param _packId is id of pack
     function checkHasPermissionForPack(address _address, uint _packId) public view returns (bool) {
-        AssetPack memory assetPack = assetPacks[_packId];
-        if (assetPack.creator == _address) {
-            return true;
-        }
 
-        for (uint i = 0; i < boughtAssetPacks[_address].length; i++) {
-            if (boughtAssetPacks[_address][i] == _packId) {
-                return true;
-            }
-        }
-
-        return false;
+        return (assetPacks[_packId].creator == _address) || hasPermission[_address][_packId];
     }
 
     /// @notice Function to check does hash exist in mapping
@@ -171,6 +165,7 @@ contract AssetManager is Ownable {
         return hashExists[_ipfsHash];
     }
 
+    /// @notice method that gets all unique packs from array of assets
     function pickUniquePacks(uint[] assetIds) public view returns (uint[]) {
         require(assetIds.length > 0);
 
@@ -212,6 +207,8 @@ contract AssetManager is Ownable {
         return (asset.id, asset.packId, asset.attributes, asset.ipfsHash);
     }
 
+    /// @notice method returns all asset packs created by _address
+    /// @param _address is creator address
     function getAssetPacksUserCreated(address _address) public view returns(uint[]) {
         return createdAssetPacks[_address];
     }
@@ -221,8 +218,8 @@ contract AssetManager is Ownable {
     /// @return string representation of ipfs hash of that asset
     function getAssetIpfs(uint _id) public view returns (bytes32) {
         require(_id < numberOfAssets);
-        Asset memory asset = assets[_id];
-        return asset.ipfsHash;
+        
+        return assets[_id].ipfsHash;
     }
 
     /// @notice Function to get attributes for selected asset
@@ -230,8 +227,8 @@ contract AssetManager is Ownable {
     /// @return uint representation of attributes of that asset
     function getAssetAttributes(uint _id) public view returns (uint) {
         require(_id < numberOfAssets);
-        Asset memory asset = assets[_id];
-        return asset.attributes;
+        
+        return assets[_id].attributes;
     }
 
     /// @notice Function to get array of ipfsHashes for specific assets
@@ -248,6 +245,7 @@ contract AssetManager is Ownable {
         return hashes;
     }
 
+    /// @notice method that returns attributes for many assets
     function getAttributesForAssets(uint[] _ids) public view returns(uint[]) {
         uint[] memory attributes = new uint[](_ids.length);
         
@@ -256,14 +254,6 @@ contract AssetManager is Ownable {
             attributes[i] = asset.attributes;
         }
         return attributes;
-    }
-
-    ///@notice Function where all artists can withdraw their funds
-    function withdraw() public {
-        uint amount = artistBalance[msg.sender];
-        artistBalance[msg.sender] = 0;
-
-        msg.sender.transfer(amount);
     }
 
     /// @notice Function to get ipfs hash and id for all assets in one asset pack
@@ -297,9 +287,8 @@ contract AssetManager is Ownable {
 
     function getAssetPackPrice(uint _assetPackId) public view returns (uint) {
         require(_assetPackId < numberOfAssetPacks);
-        AssetPack memory assetPack = assetPacks[_assetPackId];
 
-        return assetPack.price;
+        return assetPacks[_assetPackId].price;
     }
 
     function getBoughtAssetPacks(address _address) public view returns (uint[]) {
