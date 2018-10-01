@@ -10,8 +10,9 @@
                 <cg-button
                         button-style="secondary"
                         @click="withdraw('asset')"
+                        :disabled="assetBalance === '0'"
                 >Withdraw</cg-button>
-                <span>ETH - {{assetBalance}}</span>
+                <span>ETH: {{assetBalance}}</span>
             </div>
         </div>
         <div>
@@ -21,8 +22,9 @@
                 <cg-button
                         button-style="secondary"
                         @click="withdraw('marketplace')"
+                        :disabled="marketplaceBalance === '0'"
                 >Withdraw</cg-button>
-                <span>ETH - {{marketplaceBalance}}</span>
+                <span>ETH: {{marketplaceBalance}}</span>
             </div>
         </div>
     </div>
@@ -50,10 +52,10 @@
         balances: BALANCES,
       }),
       assetBalance() {
-        return fromWei(this.balances.assetBalance);
+        return fromWei(this.balances.assetBalance, 3);
       },
       marketplaceBalance() {
-        return fromWei(this.balances.marketplaceBalance);
+        return fromWei(this.balances.marketplaceBalance, 3);
       },
     },
     methods: {

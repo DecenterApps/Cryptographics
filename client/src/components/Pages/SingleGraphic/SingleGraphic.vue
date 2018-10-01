@@ -33,7 +33,7 @@
                         v-on:updateUI="getData"
                 />
                 <print-form @closePrintForm="orderPrint = false" v-else />
-                <share-icons v-if="!orderPrint" />
+                <share-icons :image="image" v-if="!orderPrint" />
             </div>
         </layout>
     </div>
@@ -78,6 +78,7 @@
         owner: '',
         username: '',
         src: '',
+        id: '',
       },
       canvasData: {
         assets: [],
@@ -100,7 +101,7 @@
       ...mapGetters({
         userAddress: METAMASK_ADDRESS,
         isCanvasDrawing: CANVAS_DRAWING,
-      })
+      }),
     },
     watch: {
       userAddress: {
@@ -158,7 +159,8 @@
           this.image = {
             ...metadata,
             ...image,
-            creatorMeta
+            creatorMeta,
+            id: this.$route.params.id,
           };
         } catch (err) {
           this.imageFailedToLoad = true;
@@ -179,7 +181,7 @@
         noBottomFrame: false,
         ratio: this.image.width === this.image.height ? '1:1' : '2:3',
         assets: assetsForCanvas,
-        delay: 75,
+        delay: 0,
       };
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;

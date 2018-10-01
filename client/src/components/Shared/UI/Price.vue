@@ -31,6 +31,7 @@ export default {
 .price {
     font-family: 'Roboto', serif;
     cursor: default;
+    vertical-align: top;
     &.white {
         color: #fff;
     }
@@ -54,8 +55,10 @@ export default {
         font-family: Roboto, sans-serif;
         font-size: .6em;
         position: relative;
-        bottom: 2px;
-        display: inline-flex;
+        vertical-align: middle;
+        height: 1em;
+        line-height: 1.5em;
+        display: inline-block;
     }
     
 }

@@ -32,7 +32,7 @@
                     @updatePage="changePage" />
             </div>
 
-            <cg-button @click="changeStep" button-style="primary">
+            <cg-button :disabled="selectedAssetPacks.length === 0" @click="changeStep" button-style="primary">
                 Next
             </cg-button>
         </div>
@@ -86,6 +86,10 @@
       totalPrice: {
         type: String,
         default: 0,
+      },
+      selectedAssetPacks: {
+        type: Array,
+        default: [],
       }
     },
     data() {
@@ -155,6 +159,7 @@
 
     .meta-info {
         .price-section, .hover-info {
+            height: 18px;
             span {
                 font-weight: normal;
                 font-size: 16px;

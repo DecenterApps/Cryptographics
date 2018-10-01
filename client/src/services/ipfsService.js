@@ -25,7 +25,7 @@ export const uploadFile = async (data) =>
         return reject(err);
       }
       const { hash } = uploadedFile[0];
-      await replicate(hash, 'file');
+      try { await replicate(hash, 'file') } catch (e) { reject(e) }
       resolve(hash);
     });
   });
@@ -38,7 +38,7 @@ export const uploadJSON = async (data) =>
         return reject(err);
       }
       const { hash } = uploadedFile[0];
-      await replicate(hash, 'file');
+      try { await replicate(hash, 'file') } catch (e) { reject(e) }
       resolve(hash);
     });
   });
@@ -46,7 +46,7 @@ export const uploadJSON = async (data) =>
 export const replicate = async (hash, type) => {
   let successful = 0;
   const replicationPromises = replicationNodes.map(node =>
-    new Promise((resolve) => {
+    new Promise((resolve, reject) => {
       const url = `${node}${type === 'file' ?
         '/api/v0/get?arg=' : '/api/v0/object/get?arg='}${hash}`;
       return fetch(url, { method: 'head', mode: 'no-cors' })
@@ -58,7 +58,7 @@ export const replicate = async (hash, type) => {
         .catch((error) => {
           console.error(`Failed replicating ${type} with hash: ${hash} on a node ${url}`);
           console.error(error);
-          resolve(false);
+          reject(new Error(`Failed replicating ${type} with hash: ${hash} on a node ${url}`));
         });
     }),
   );

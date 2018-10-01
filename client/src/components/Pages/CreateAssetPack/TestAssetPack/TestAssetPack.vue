@@ -82,6 +82,7 @@
       async renderCanvas() {
         this.iterations++;
         let selectedAssets = this.selectedAssets;
+        selectedAssets = shuffleArray(selectedAssets);
         selectedAssets = selectedAssets.slice(0, 30);
         this.canvasData.assets = await getTestImage(this.randomSeed, this.iterations, selectedAssets);
         console.log('iteration: ' + this.iterations);

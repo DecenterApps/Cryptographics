@@ -40,7 +40,9 @@
             <div class="container">
                 <separator></separator>
                 <div class="bottom-content">
-                    <cg-button @click="changeStep(1)">
+                    <cg-button
+                        :disabled="assets.length === 0"
+                        @click="changeStep(1)">
                         Next
                     </cg-button>
                 </div>
@@ -95,7 +97,10 @@
                         </div>
                         <div class="input-group">
                             <label class="small-title">Description</label>
-                            <cg-textarea v-model="description" placeholder="Describe your asset pack"></cg-textarea>
+                            <cg-textarea
+                                v-model="description"
+                                placeholder="Describe your asset pack"
+                                :max-length="600"></cg-textarea>
                         </div>
                     </div>
                 </div>
@@ -119,7 +124,9 @@
   import * as utils from 'services/utils';
   import { METAMASK_ADDRESS } from 'store/user-config/types';
   import { mapGetters, mapActions } from 'vuex';
-  import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
+  import {
+    TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL, SHOW_LOADING_MODAL
+  } from 'store/modal/types';
 
   import StepHeader from 'shared/StepHeader/StepHeader';
   import { preloadImages, resizeCanvas } from 'services/helpers';
@@ -161,6 +168,7 @@
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
+        openLoadingModal: SHOW_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       changeStep(step) {
@@ -221,58 +229,70 @@
         const UPLOAD_HEIGHT = 281 * 2;
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
-        let coverImage = canvasClone.toDataURL('image/png', 1);
-        let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
-        let metadata = {
-          name: this.name,
-          description: this.description,
-        };
-        let metadataIpfsHash = await ipfsService.uploadJSON(JSON.stringify(metadata));
-        console.log(metadataIpfsHash);
-        const price = this.price;
-        const images = [];
-        for (let i = 0; i < this.assets.length; i++) {
-          const file = {
-            image: new FileReader(),
+        try {
+          let coverImage = canvasClone.toDataURL('image/png', 1);
+          let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
+          let metadata = {
+            name: this.name,
+            description: this.description,
           };
-          file.image.readAsDataURL(this.assets[i].file);
-          images.push(file);
-        }
+          let metadataIpfsHash = await ipfsService.uploadJSON(JSON.stringify(metadata));
+          console.log(metadataIpfsHash);
+          const price = this.price;
+          const images = [];
+          for (let i = 0; i < this.assets.length; i++) {
+            const file = {
+              image: new FileReader(),
+            };
+            file.image.readAsDataURL(this.assets[i].file);
+            images.push(file);
+          }
 
-        console.log('started');
-        preloadImages(images)
-          .done(async (loadedImages) => {
-            console.log(loadedImages, images);
-            for (let i = 0; i < this.assets.length; i++) {
-              let ipfsHash = await ipfsService.uploadFile(loadedImages[i].image.result.substr(22));
-              hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
-              if (i === this.assets.length - 1) {
-                console.log(hashes);
-                console.log(price);
-                const attributes = this.assets.map(item => item.attribute);
-                console.log(attributes);
-                this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-                const transactionPromise = await createAssetPack(
-                  utils.getBytes32FromIpfsHash(coverHash),
-                  attributes,
-                  hashes,
-                  price,
-                  this.userAddress,
-                  metadataIpfsHash,
-                );
-                this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
-                const result = await transactionPromise();
-                const id = result.events.AssetPackCreated.returnValues.id;
-                this.closeLoadingModal();
-                this.$router.push(`/asset-pack/${id}`);
-                this.openModal('Asset pack successfully saved to the blockchain forever.');
-                console.log(result, id);
+          console.log('started');
+          preloadImages(images)
+            .done(async (loadedImages) => {
+              console.log(loadedImages, images);
+              for (let i = 0; i < this.assets.length; i++) {
+                try {
+                  let ipfsHash = await ipfsService.uploadFile(loadedImages[i].image.result.substr(22));
+                  hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
+                  if (i === this.assets.length - 1) {
+                    console.log(hashes);
+                    console.log(price);
+                    const attributes = this.assets.map(item => item.attribute);
+                    console.log(attributes);
+                    this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+                    const transactionPromise = await createAssetPack(
+                      utils.getBytes32FromIpfsHash(coverHash),
+                      attributes,
+                      hashes,
+                      price,
+                      this.userAddress,
+                      metadataIpfsHash,
+                    );
+                    this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
+                    const result = await transactionPromise();
+                    const id = result.events.AssetPackCreated.returnValues.id;
+                    this.closeLoadingModal();
+                    this.$router.push(`/asset-pack/${id}`);
+                    this.openModal('Asset pack successfully saved to the blockchain forever.');
+                    console.log(result, id);
+                  }
+                } catch (e) {
+                  const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+                  this.openLoadingModal(message, true);
+                }
               }
-            }
-          });
+            });
+        } catch (e) {
+          const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+          this.openLoadingModal(message, true);
+        }
       },
       remove(index) {
         this.assets.splice(index, 1);
+        let x = document.getElementById('files');
+        x.value = '';
       },
 
       toggleAttribute(index, attributeType) {

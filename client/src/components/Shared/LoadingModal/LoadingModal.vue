@@ -2,9 +2,18 @@
     <div class="loading-modal">
         <div class="overlay" @click="closeModal"></div>
         <div class="content">
-            <loader />
+            <loader v-if="!hasError" />
+            <ico-error v-if="hasError" />
+
             <div class="small-title">{{ content }}</div>
-            <cg-button @click="backToGallery" button-style="secondary">Back to gallery</cg-button>
+
+            <cg-button @click="closeModal" button-style="secondary" v-if="hasError">
+                Ok
+            </cg-button>
+
+            <cg-button @click="backToGallery" button-style="secondary" v-if="!hasError">
+                Back to gallery
+            </cg-button>
         </div>
     </div>
 </template>
@@ -12,14 +21,19 @@
 <script>
   import { mapActions, mapGetters } from 'vuex';
   import { HIDE_LOADING_MODAL, LOADING_CONTENT } from 'store/modal/types';
+  import IcoError from '../../Shared/UI/Icons/IcoError';
 
   export default {
     name: 'LoadingModal',
     data: () => ({}),
+    components: { IcoError },
     computed: {
       ...mapGetters({
         content: LOADING_CONTENT,
-      })
+      }),
+      hasError() {
+        return this.content.toLowerCase().indexOf('error') >= 0;
+      },
     },
     methods: {
       ...mapActions({

@@ -1,27 +1,34 @@
 <template>
     <div class="meta-mask-info">
         <ico-error />
-
-        <div class="text-wrapper">
-            You don’t have <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
-            ownership of the Cryptographics you create, or trade them. Please enable MetaMask or check if you
-            are logged in.
-        </div>
-
-        <h3 @click="toggleShowMoreInfo">What is MetaMask?</h3>
-
-        <div v-if="showMoreInfo">
-            <div class="text-wrapper secondary">
-                MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
-                blockchain. It manages your Ethereum account which keeps your Ether funds and unique Cryptographics
-                tokens.
+        <div v-if="!hasMetaMask">
+            <div class="text-wrapper">
+                You don’t have <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
+                ownership of the Cryptographics you create, or trade them. Please enable MetaMask or check if you
+                are logged in.
             </div>
-
-            <h3 class="link">
-                <a target="_blank" rel="noopener noreferrer" href="https://metamask.io/">Get MetaMask</a>
-            </h3>
+            <h3>What is MetaMask?</h3>
+            <div>
+                <div class="text-wrapper secondary">
+                    MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
+                    blockchain. It manages your Ethereum account which keeps your Ether funds and unique Cryptographics
+                    tokens.
+                </div>
+                <a
+                    target="_blank"
+                    class="button secondary"
+                    rel="noopener noreferrer"
+                    href="https://metamask.io/">
+                    Get MetaMask
+                </a>
+                <p>Or if you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
+            </div>
         </div>
-
+        <div v-else>
+           <div class="text-wrapper">
+                Your MetaMask account is locked, please log in.
+            </div> 
+        </div>
         <img class="round-logo" :src="roundLogo" alt="">
     </div>
 </template>
@@ -39,19 +46,21 @@
       showMoreInfo: false,
       roundLogo,
     }),
-    methods: {
-      ...mapActions({
-        openModal: TOGGLE_MODAL,
-        toggleShowMoreInfo() {
-          this.showMoreInfo = !this.showMoreInfo;
+    props: {
+        hasMetaMask: {
+            type: Boolean
         }
-      }),
-    },
+    }
   };
 </script>
 
 <style scoped lang="scss">
+    @import "../UI/button-styles";
     .meta-mask-info {
+        text-align: center;
+        .button {
+            margin-bottom: 15px;
+        }
         svg {
             display: block;
             margin: auto;
@@ -92,7 +101,7 @@
             }
 
             &.secondary {
-                margin-top: 30px;
+                margin: 30px 0;
             }
         }
 
