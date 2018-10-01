@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery">
+    <div class="gallery" :class="{centered: centered}">
         <div v-if="loading" class="loading-section">
             <loader />
             <h3>Please wait, loading Cryptographics from the blockchain.</h3>
@@ -72,6 +72,10 @@
         type: Boolean,
         default: false
       },
+      centered: {
+        type: Boolean,
+        default: false
+      },
       imageIds: {
         type: Array,
         default: []
@@ -120,9 +124,8 @@
 
 <style scoped lang="scss">
     .gallery {
-        padding: 70px 0;
-        .masonry-wrapper {
-            /*width: 100% !important;*/
+        padding: 60px 0;
+        &.centered .masonry-wrapper {
             margin: 0 auto;
         }
         .gutter-sizer {
@@ -214,7 +217,7 @@
             align-items: center;
             justify-content: center;
             background-color: #CECECE;
-            margin-top: 30px;
+            margin-top: 0px;
             & .loader-content {
                 margin-bottom: 20px;
             }

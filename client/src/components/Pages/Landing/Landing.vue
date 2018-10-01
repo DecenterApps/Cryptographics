@@ -52,7 +52,7 @@
                     It’s the place where you can discover, buy and sell Cryptographics.
                 </p>
             </div>
-            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" />
+            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" centered />
         </div>
         <div class="landing-section inverted">
             <h1 class="section-title">Create</h1>
