@@ -159,6 +159,7 @@
 
     .meta-info {
         .price-section, .hover-info {
+            height: 18px;
             span {
                 font-weight: normal;
                 font-size: 16px;
