@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-import "./Utils/Ownable.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./UserManager.sol";
 
 
