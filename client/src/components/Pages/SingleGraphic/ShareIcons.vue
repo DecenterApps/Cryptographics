@@ -1,9 +1,25 @@
 <template>
     <div class="share-icons">
-        <IcoTwitter @click.native="openTwitterShare" />
-        <!--<IcoPinterest />-->
+        <a @click="open(`http://pinterest.com/pin/create/button/?` +
+                    `url=https://cryptographics.app/cryptographic/${image.id}&` +
+                    `media=${image.src}&` +
+                    `description=${image.title} by ${image.creatorMeta.username}`)"
+        >
+            <IcoPinterest />
+        </a>
+        <a @click="open(`https://twitter.com/share?` +
+                    `url=https://cryptographics.app/cryptographic/${image.id}&` +
+                    `text=${image.title} by ${image.creatorMeta.username}`)"
+        >
+            <IcoTwitter />
+        </a>
+
+        <a @click="open(`http://www.tumblr.com/share/link?` +
+                    `url=https://cryptographics.app/cryptographic/${image.id}`)"
+        >
+            <IcoTumblr />
+        </a>
         <!--<IcoReddit />-->
-        <!--<IcoTumblr />-->
     </div>
 </template>
 
@@ -17,12 +33,11 @@
     name: 'ShareIcons',
     components: { IcoTwitter, IcoPinterest, IcoReddit, IcoTumblr },
     data: () => ({}),
-    props: {},
+    props: ['image'],
     methods: {
-      openTwitterShare() {
-        let href = `https://twitter.com/intent/tweet?text=Check%20out%20my%20cryptographic%20-%20${document.location.href}`;
-        console.log(href);
-        window.open(href);
+      open(link) {
+        console.log(link)
+        window.open(link, 'share-window', 'width=800, height=400');
       }
     }
   };
