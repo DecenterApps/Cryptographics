@@ -272,7 +272,7 @@
 
         // Don't shuffle if user came from home page
         console.log(window.sessionStorage.length);
-        if (window.sessionStorage.length <= 0) { // TODO remove because selectedAssetPacks is in store now
+        if (window.sessionStorage.length <= 0) {
           selectedAssets = shuffleArray(selectedAssets);
         }
         selectedAssets = selectedAssets.slice(0, 30);
