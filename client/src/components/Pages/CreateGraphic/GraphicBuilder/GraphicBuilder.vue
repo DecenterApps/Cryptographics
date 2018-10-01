@@ -30,7 +30,7 @@
                     <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
                     <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
-                            :loading="isCanvasDrawing"
+                            :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas"
                             button-style="secondary">
                         Recompose
@@ -127,7 +127,13 @@
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
-  import { TOGGLE_MODAL, SHOW_LOADING_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
+  import {
+    TOGGLE_MODAL,
+    SHOW_LOADING_MODAL,
+    TOGGLE_LOADING_MODAL,
+    CHANGE_LOADING_CONTENT,
+    HIDE_LOADING_MODAL
+  } from 'store/modal/types';
   import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
 
   export default {
@@ -159,6 +165,7 @@
       potentialAssets: [],
       selectedAssets: [],
       claimPressed: false,
+      gettingImageData: false,
     }),
     computed: {
       ...mapGetters({
@@ -273,30 +280,36 @@
         }
       },
       async renderCanvas() {
-        this.iterations++;
-        console.log(this.selectedAssets);
-        let selectedAssets = this.selectedAssets;
+        this.gettingImageData = true;
+        try {
+          this.iterations++;
+          console.log(this.selectedAssets);
+          let selectedAssets = this.selectedAssets;
 
-        // Don't shuffle if user came from home page
-        console.log(window.sessionStorage.length);
-        if (window.sessionStorage.length <= 0) {
-          selectedAssets = shuffleArray(selectedAssets);
-        }
-        selectedAssets = selectedAssets.slice(0, 30);
-        this.canvasData.assets = await getImage(this.randomSeed, this.iterations, selectedAssets);
-        console.log('iteration: ' + this.iterations);
-        this.potentialAssets = selectedAssets;
-        let picked = [];
-        for (let i = 0; i < this.canvasData.assets.length; i++) {
-          picked.push(this.canvasData.assets[i].id);
-        }
-        let price = await calculatePrice(picked, this.userAddress);
+          // Don't shuffle if user came from home page
+          console.log(window.sessionStorage.length);
+          if (window.sessionStorage.length <= 0) {
+            selectedAssets = shuffleArray(selectedAssets);
+          }
+          selectedAssets = selectedAssets.slice(0, 30);
+          this.canvasData.assets = await getImage(this.randomSeed, this.iterations, selectedAssets);
+          console.log('iteration: ' + this.iterations);
+          this.potentialAssets = selectedAssets;
+          let picked = [];
+          for (let i = 0; i < this.canvasData.assets.length; i++) {
+            picked.push(this.canvasData.assets[i].id);
+          }
+          let price = await calculatePrice(picked, this.userAddress);
 
-        if (selectedAssets.length === 0) {
-          this.imagePrice = 0;
+          if (selectedAssets.length === 0) {
+            this.imagePrice = 0;
+          }
+          this.imagePrice = parseFloat(price);
+          console.log('PRICE : ' + this.imagePrice);
+        } catch (e) {
+          this.gettingImageData = false;
         }
-        this.imagePrice = parseFloat(price);
-        console.log('PRICE : ' + this.imagePrice);
+        this.gettingImageData = false;
       },
       download() {
         const canvas = document.getElementById('canvas');
