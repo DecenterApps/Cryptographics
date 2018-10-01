@@ -273,6 +273,8 @@
       },
       remove(index) {
         this.assets.splice(index, 1);
+        let x = document.getElementById('files');
+        x.value = '';
       },
 
       toggleAttribute(index, attributeType) {
