@@ -40,6 +40,7 @@
                     :overlay="true"
                     :isSelected="isSelected.bind(this)"
                     :toggleAsset="toggleAsset.bind(this)"
+                    :selectedAssetPacks="selectedAssetPacks"
                     :changeStep="changeStep.bind(this)"
                     :assetPackIds="assetPacks"
                     :totalPrice="totalPrice"
