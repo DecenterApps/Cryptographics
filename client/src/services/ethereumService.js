@@ -633,7 +633,15 @@ export const userBalances = async (address) => {
   return { assetBalance, marketplaceBalance };
 };
 
-export const fromWei = value => web3.utils.fromWei(value.toString(), 'ether');
+export const fromWei = (value, decimals) => {
+  let eth = value;
+  if (decimals) {
+    const dec = web3.utils.toWei((10 ** (-decimals)).toString(), 'ether');
+    eth = Math.floor(eth / dec) * dec;
+  }
+  eth = web3.utils.fromWei(eth.toString(), 'ether');
+  return eth
+};
 
 export const withdraw = async (fromCt, address) => {
   const ct = fromCt === 'marketplace'

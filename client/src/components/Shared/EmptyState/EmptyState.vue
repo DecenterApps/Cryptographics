@@ -23,7 +23,7 @@
         </div>
         <div v-if="type === 'profile-asset-packs-bought'">This user hasn't bought any asset packs yet. </div>
         <div v-if="type === 'profile-asset-packs-created-own' || type === 'asset-packs-created'">
-            You haven't created any asset packs yet.
+            You haven't created any asset packs yet. <router-link to="/create-asset-pack">Create one now!</router-link>
         </div>
         <div v-if="type === 'profile-asset-packs-created'">This user hasn't created any asset packs yet.</div>
 

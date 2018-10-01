@@ -14,12 +14,13 @@
                     </cg-button>
                 </div>
                 <div class="right button-group">
+                    <price :value="totalBalance" />
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
                             @click="openModal('balances')"
                     >
-                        Withdraw {{this.totalBalance}} ETH
+                        Withdraw
                     </cg-button>
                 </div>
             </div>
@@ -161,9 +162,8 @@
         balances: BALANCES,
       }),
       totalBalance() {
-        console.log(this.balances);
         const total = parseInt(this.balances.assetBalance) + parseInt(this.balances.marketplaceBalance) || 0;
-        return fromWei(total);
+        return fromWei(total, 3);
       },
       shownImageIds() {
         if (this.showGraphics === 'bought')
