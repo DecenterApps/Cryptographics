@@ -181,7 +181,7 @@
         noBottomFrame: false,
         ratio: this.image.width === this.image.height ? '1:1' : '2:3',
         assets: assetsForCanvas,
-        delay: 75,
+        delay: 0,
       };
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;

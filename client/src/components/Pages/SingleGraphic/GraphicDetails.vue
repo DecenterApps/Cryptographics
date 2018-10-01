@@ -58,12 +58,7 @@
                     </div>
                 </div>
                 <div class="bottom-controls" v-else>
-                    <cg-button
-                            button-style="secondary"
-                            @click="openModal({ name: 'transferHistory', data: { image } })"
-                    >
-                        Transfer history
-                    </cg-button>
+                    <div></div>
                     <div class="button-group">
                         <cg-button button-style="secondary" @click="() => {
                             this.errors.sellPrice = false;
