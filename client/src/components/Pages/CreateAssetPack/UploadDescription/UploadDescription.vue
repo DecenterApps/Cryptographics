@@ -4,6 +4,10 @@
             Please upload high resolution files.
         </p>
         <p class="upload-description">
+            You can only upload assets in the following supported image formats:
+            <span>JPG, JPEG, PNG</span>.
+        </p>
+        <p class="upload-description">
             Max file resolution: <span>2480x3508px</span>,
             Max file size: <span>2.5MB.</span>
         </p>

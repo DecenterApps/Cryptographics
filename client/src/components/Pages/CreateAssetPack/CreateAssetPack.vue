@@ -12,6 +12,7 @@
                     <div class="top-content">
                         <h1 class="large-title">Select assets</h1>
                         <input-file
+                                accept="image/png, image/jpeg"
                                 id="files"
                                 button-style="secondary"
                                 @change="uploadAssets">
