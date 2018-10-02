@@ -397,9 +397,12 @@ export const getImageMetadata = (imageId) =>
       const potentialAssets = imageMetadata[5];
       const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
+      let hexFinalSeed = web3.utils.toHex(finalSeed);
+      if (hexFinalSeed.length < 66) hexFinalSeed = '0x0' + hexFinalSeed.substr(2);
+
       if (!imageMetadata) reject();
       resolve({
-        finalSeed: web3.utils.toHex(finalSeed),
+        finalSeed: hexFinalSeed,
         id: imageId,
         potentialAssets: utils.decode(potentialAssets),
         usedAssetsBytes: potentialAssets,
