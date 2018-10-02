@@ -3,8 +3,8 @@
         <div class="overlay" @click="closeModal"></div>
         <div :class="['content', smallerPadding(content)]">
             <button-icon
-                    icon-type="close"
-                    @click="closeModal" />
+                icon-type="close"
+                @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
             <set-username v-else-if="content === 'setUsername'" />
             <meta-mask-info v-else-if="content === 'metaMaskInfo'" :hasMetaMask="hasMetaMask" />
@@ -52,11 +52,6 @@
     },
     created() {
         this.hasMetaMask = window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';
-    },
-    computed: {
-        hasMetaMask: function() {
-            return window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';
-        }
     },
     methods: {
       ...mapActions({
