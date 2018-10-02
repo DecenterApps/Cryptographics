@@ -1,8 +1,30 @@
 <template>
     <div>
+        <div class="selected-asset-packs">
+            <div class="large-title">Selected asset packs:</div>
+
+            <div class="packs-wrapper" v-if="selectedAssetPacks.length > 0">
+                <asset-box
+                        :assetPack="assetPack"
+                        :selected="isSelected(assetPack)"
+                        @click="toggleAsset(assetPack)"
+                        v-for="(assetPack, index) in selectedAssetPacks" :key="index"
+                        @mouseenter="setHover(assetPack)"
+                        @mouseleave="setHover(false)"
+                />
+            </div>
+
+            <div class="empty-packs-wrapper" v-if="selectedAssetPacks.length === 0">
+                <div class="empty-asset-box"><div></div></div>
+            </div>
+
+            <separator />
+        </div>
+
         <div v-if="loading" class="loading-section">
             <loader />
         </div>
+
         <div class="asset-packs" v-if="assetPacks !== false && this.loading === false" :class="grid">
             <asset-box
                     :assetPack="assetPack"
@@ -134,7 +156,7 @@
 </script>
 
 <style scoped lang="scss">
-    .asset-packs {
+    .asset-packs, .selected-asset-packs .packs-wrapper {
         min-width: 768px;
         display: flex;
         flex-wrap: wrap;
@@ -149,6 +171,32 @@
 
             &:nth-child(6n) {
                 margin-right: 0;
+            }
+        }
+    }
+
+    .selected-asset-packs {
+        margin-bottom: 20px;
+
+        .large-title {
+            font-size: 20px;
+        }
+
+        .packs-wrapper, .empty-packs-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .empty-packs-wrapper {
+
+            .empty-asset-box {
+                height: 120px;
+                width: 165px;
+                border: 4px solid #D9D9D9;
+
+                div {
+                    height: 100%;
+                    border: 1px solid black;
+                }
             }
         }
     }
