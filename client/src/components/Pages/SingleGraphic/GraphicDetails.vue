@@ -24,7 +24,7 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id)) }}</span>
                 </h3>
-                <div class="user-links-wrapper">
+                <div v-if="image.creatorMeta.username !== image.username" class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
                         <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
                                    :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
@@ -34,6 +34,13 @@
                         <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar"
                                    color="black" additionalClass="ellipsis" />
                         <span class="title">Owner</span>
+                    </div>
+                </div>
+                <div v-if="image.creatorMeta.username === image.username" class="user-links-wrapper">
+                    <div class="user-link-wrapper" v-if="image.creatorMeta">
+                        <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
+                                   :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
+                        <span class="title">Creator/Owner</span>
                     </div>
                 </div>
                 <div v-if="image.description.length > 0" class="description-label">Description:</div>
@@ -267,19 +274,23 @@
             position: relative;
             display: flex;
         }
-
         .user-links-wrapper {
             display: flex;
+            flex-direction: column;
             flex-wrap: wrap;
-
+            padding-left: 10px;
+            padding-top: 10px;
             .user-link-wrapper {
                 position: relative;
-                margin-right: 35px;
-
-                .user {
-                    max-width: 350px;
+                &:first-of-type {
+                    margin-bottom: 15px;
                 }
-
+                .user {
+                    max-width: 300px;
+                    .name {
+                        margin-top: -10px;
+                    }
+                }
                 .title {
                     position: absolute;
                     color: #9D9D9D;
