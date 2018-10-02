@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import { METAMASK_ADDRESS, USERNAME } from 'store/user-config/types';
+  import { METAMASK_ADDRESS, USERNAME, BANNED_CRYPTOGRAPHIC_IDS } from 'store/user-config/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
   import * as ipfsService from 'services/ipfsService';
@@ -55,7 +55,6 @@
     getImage,
     getSelectedAssetPacksWithAssetData,
     isImageForSale,
-    parseContractAssetData,
     getGalleryImage,
     getUserInfo,
   } from 'services/ethereumService';
@@ -101,6 +100,7 @@
       ...mapGetters({
         userAddress: METAMASK_ADDRESS,
         isCanvasDrawing: CANVAS_DRAWING,
+        bannedIDs: BANNED_CRYPTOGRAPHIC_IDS,
       }),
     },
     watch: {
@@ -170,6 +170,9 @@
       }
     },
     async created() {
+      if (this.bannedIDs.indexOf(parseInt(this.$route.params.id)) > -1) {
+        this.$router.push('/');
+      }
       this.loading = true;
       await this.getData();
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];

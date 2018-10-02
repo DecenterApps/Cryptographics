@@ -1,14 +1,27 @@
 <template>
     <div class="assets-slider">
         <!--<carousel :per-page="10" :paginationEnabled="false" :scroll-per-page="false" :autoplay-timeout="2000"-->
-                  <!--:mouse-drag="true" :autoplay="true" :loop="true" class="assets-slider">-->
+        <!--:mouse-drag="true" :autoplay="true" :loop="true" class="assets-slider">-->
         <slick ref="slick" :options="slickOptions">
-            <div class="asset"><img src="./asset-packs/landing-ap-1.jpg"></div>
-            <div class="asset"><img src="./asset-packs/landing-ap-2.jpg"></div>
-            <div class="asset"><img src="./asset-packs/landing-ap-3.jpg"></div>
-            <div class="asset"><img src="./asset-packs/landing-ap-4.jpg"></div>
-            <div class="asset"><img src="./asset-packs/landing-ap-5.jpg"></div>
-            <div class="asset"><img src="./asset-packs/landing-ap-6.jpg"></div>
+
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-1.jpg"></router-link>
+            </div>
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-2.jpg"></router-link>
+            </div>
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-3.jpg"></router-link>
+            </div>
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-4.jpg"></router-link>
+            </div>
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-5.jpg"></router-link>
+            </div>
+            <div class="asset">
+                <router-link to="/"><img src="./asset-packs/landing-ap-6.jpg"></router-link>
+            </div>
         </slick>
         <!--</carousel>-->
     </div>
@@ -47,6 +60,9 @@
         padding: 0 0 50px;
         .asset {
             margin: 0 10px;
+            a {
+                outline: none;
+            }
             &:hover {
                 .overlay {
                     opacity: 1;

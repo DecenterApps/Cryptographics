@@ -23,7 +23,8 @@
                                     <button-icon icon-type="zoom" />
                                 </overlay>
                             </router-link>
-                            <img v-bind:class="image.className" v-bind:src="image.src" alt="" width="307" :height="image.width === image.height ? '307':'434'">
+                            <img v-bind:class="image.className" v-bind:src="image.src" alt="" width="307"
+                                 :height="image.width === image.height ? '307':'434'">
                             <p class="artwork-title">{{ image.title }}</p>
                         </div>
                         <div class="artwork-details">
@@ -40,7 +41,7 @@
             <empty-state v-if="images && images.length === 0" :type="emptyStateType" />
         </div>
         <pagination
-                :total="imageIds === null ? 0 : imageIds.length"
+                :total="filteredIds === null ? 0 : filteredIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
     </div>
@@ -55,7 +56,8 @@
   import {
     METAMASK_ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
-    BOUGHT_ASSETS_PACKS_IDS
+    BOUGHT_ASSETS_PACKS_IDS,
+    BANNED_CRYPTOGRAPHIC_IDS
   } from 'store/user-config/types';
   import { ipfsNodePath } from 'config/constants';
   import EmptyState from '../EmptyState/EmptyState';
@@ -90,18 +92,28 @@
         ipfsNodePath,
         loading: false,
         images: [],
+        filteredIds: [],
       };
     },
     computed: {
       ...mapGetters({
         metamaskAddress: METAMASK_ADDRESS,
+        bannedIDs: BANNED_CRYPTOGRAPHIC_IDS,
       })
+    },
+    created() {
+      this.filteredIds = this.imageIds.filter(id => this.bannedIDs.indexOf(parseInt(id, 10)) === -1);
+    },
+    watch: {
+      imageIds: function (imageIds) {
+        this.filteredIds = imageIds.filter(id => this.bannedIDs.indexOf(parseInt(id, 10)) === -1);
+      }
     },
     asyncComputed: {
       images: {
         async get() {
           this.loading = true;
-          const selectedImages = paginateArray(this.imageIds, 1, this.showPerPage);
+          const selectedImages = paginateArray(this.filteredIds, 1, this.showPerPage);
           const images = await getGalleryImages(selectedImages, true);
           this.loading = false;
           return images;
@@ -114,7 +126,7 @@
     methods: {
       async changePage(currentPage) {
         this.loading = true;
-        const selectedImages = paginateArray(this.imageIds, currentPage, this.showPerPage);
+        const selectedImages = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.images = await getGalleryImages(selectedImages, true);
         this.loading = false;
       }
