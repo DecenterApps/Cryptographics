@@ -5,16 +5,16 @@
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
                     <p class="small-title" v-if="backgroundAssets === 1">
-                        This Cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
+                        This cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
                     </p>
                     <p class="small-title" v-if="backgroundAssets > 1">
-                        This Cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
+                        This cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
                     </p>
                     <p class="small-title" v-if="backgroundAssets === 0">
-                        This Cryptographic contains {{ assetPack.assets.length }} assets, none of which are backgrounds
+                        This cryptographic contains {{ assetPack.assets.length }} assets, none of which are backgrounds
                     </p>
                     <p class="small-title" v-if="assetPack.assets.length === 1">
-                        This Cryptographic contains {{ assetPack.assets.length }} asset
+                        This cryptographic contains {{ assetPack.assets.length }} asset
                     </p>
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>

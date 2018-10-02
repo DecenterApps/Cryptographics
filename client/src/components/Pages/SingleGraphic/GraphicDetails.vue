@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets <br> from the
+            <p v-if="image.usedAssets">This cryptographic contains {{image.usedAssets.length}} assets <br> from the
                 following
                 asset packs:</p>
             <div class="asset-packs">
@@ -184,7 +184,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your Cryptographic will be listed shortly.');
+          'Your cryptographic will be listed shortly.');
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
         this.closeLoadingModal();
@@ -197,7 +197,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await cancelSell(this.userAddress, this.image.id);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your Cryptographic\'s sale will be canceled shortly.');
+          'Your cryptographic\'s sale will be canceled shortly.');
         const result = await transactionPromise();
         console.log(result);
         this.closeLoadingModal();
@@ -212,7 +212,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your will receive this Cryptographic shortly.');
+          'Your will receive this cryptographic shortly.');
         const result = await transactionPromise();
         const id = result.events.ImageBought.returnValues.imageId;
         this.closeLoadingModal();

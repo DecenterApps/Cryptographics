@@ -102,7 +102,7 @@
                                 :loading="isCanvasDrawing"
                                 @click="buyImage"
                         >
-                            Claim Cryptographic
+                            Claim cryptographic
                         </cg-button>
                     </div>
                 </div>
@@ -268,7 +268,7 @@
             ipfsHash,
             extraData,
           );
-          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
+          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.');
           const result = await transactionPromise();
           const id = result.events.ImageCreated.returnValues.imageId;
           this.closeLoadingModal();
