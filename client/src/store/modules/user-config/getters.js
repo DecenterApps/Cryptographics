@@ -41,9 +41,9 @@ export default {
     return state.balances;
   },
   [BANNED_ASSET_PACK_IDS]: state => {
-    return state.assets.bannedIDs;
+    return state.bannedIDs.assetPacks;
   },
   [BANNED_CRYPTOGRAPHIC_IDS]: state => {
-    return state.graphics.bannedIDs;
+    return state.bannedIDs.cryptographics;
   }
 };

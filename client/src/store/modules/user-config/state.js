@@ -9,15 +9,17 @@ export default {
     isExisting: undefined,
     result: undefined
   },
+  bannedIDs: {
+    assetPacks: [],
+    cryptographics: [],
+  },
   assets: {
     createdIDs: [],
     boughtIDs: [],
-    bannedIDs: [],
   },
   graphics: {
     createdIDs: [],
     boughtIDs: [],
-    bannedIDs: [],
   },
   balances: {
     assetsBalance: 0,
