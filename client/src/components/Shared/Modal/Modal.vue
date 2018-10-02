@@ -9,6 +9,7 @@
             <set-username v-else-if="content === 'setUsername'" />
             <meta-mask-info v-else-if="content === 'metaMaskInfo'" :hasMetaMask="hasMetaMask" />
             <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
+            <asset-pack-upload-error v-else-if="content && content.name === 'assetPackUploadError'" v-bind="content.data" />
             <balances-modal v-else-if="content === 'balances'" />
             <success-message v-else :content="content" />
             <div v-else>
@@ -27,6 +28,7 @@
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
   import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
   import MetaMaskInfo from 'shared/MetaMaskInfo/MetaMaskInfo.vue';
+  import AssetPackUploadError from 'shared/AssetPackUploadError/AssetPackUploadError.vue';
   import BalancesModal from 'pages/Profile/BalancesModal.vue';
 
   export default {
@@ -46,6 +48,7 @@
       TransferHistory,
       BalancesModal,
       MetaMaskInfo,
+      AssetPackUploadError,
     },
     created() {
         this.hasMetaMask = window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';

@@ -179,6 +179,8 @@
       },
       uploadAssets() {
         let x = document.getElementById('files');
+        const fileErrors = [];
+
         for (let i = 0; i < x.files.length; i++) {
           const file = x.files[i];
 
@@ -192,7 +194,14 @@
               const height = img.naturalHeight;
 
               if (this.assets.length >= 50) return;
-              if (width > 2480 || height > 3508) return;
+              if (width > 2480) {
+                fileErrors.push({ file: file.name, error: 'Assets width is larger than the allowed 2480px' });
+                return;
+              }
+              if (height > 3508) {
+                fileErrors.push({ file: file.name, error: 'Assets height is larger than the allowed 3508px' });
+                return;
+              }
 
               this.assets.push({
                 path,
@@ -200,7 +209,13 @@
                 attribute: 211,
               });
             };
+          } else {
+            fileErrors.push({ file: file.name, error: 'Assets size is larger than the allowed 2.5MB' })
           }
+        }
+
+        if (fileErrors.length > 0) {
+          this.openModal({ name: 'assetPackUploadError', data: { errors: fileErrors } })
         }
       },
 
