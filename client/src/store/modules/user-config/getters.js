@@ -8,6 +8,8 @@ import {
   BOUGHT_ASSETS_PACKS_IDS,
   NETWORK,
   BALANCES,
+  BANNED_ASSET_PACK_IDS,
+  BANNED_CRYPTOGRAPHIC_IDS,
 } from './types';
 
 export default {
@@ -38,4 +40,10 @@ export default {
   [BALANCES]: state => {
     return state.balances;
   },
+  [BANNED_ASSET_PACK_IDS]: state => {
+    return state.assets.bannedIDs;
+  },
+  [BANNED_CRYPTOGRAPHIC_IDS]: state => {
+    return state.graphics.bannedIDs;
+  }
 };

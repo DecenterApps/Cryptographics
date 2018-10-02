@@ -48,11 +48,11 @@
             </div>
         </div>
         <pagination
-                :total="assetPackIds === null ? 0 : assetPackIds.length"
+                :total="filteredIds === null ? 0 : filteredIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
 
-        <empty-state v-if="assetPackIds.length === 0" :type="assetPacksType" />
+        <empty-state v-if="filteredIds.length === 0" :type="assetPacksType" />
     </div>
 </template>
 
@@ -64,8 +64,10 @@
   import {
     METAMASK_ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
-    BOUGHT_ASSETS_PACKS_IDS
+    BOUGHT_ASSETS_PACKS_IDS,
+    BANNED_ASSET_PACK_IDS,
   } from 'store/user-config/types';
+  import { mapGetters } from 'vuex';
   import { ipfsNodePath } from 'config/constants';
   import EmptyState from '../../../Shared/EmptyState/EmptyState';
 
@@ -97,13 +99,29 @@
       return {
         ipfsNodePath,
         loading: false,
+        filteredIds: [],
       };
+    },
+    computed: {
+      ...mapGetters({
+        metamaskAddress: METAMASK_ADDRESS,
+        bannedIDs: BANNED_ASSET_PACK_IDS,
+      })
+    },
+    created() {
+      this.filteredIds = this.assetPackIds.filter(id => this.bannedIDs.indexOf(parseInt(id, 10)) === -1);
+    },
+    watch: {
+      assetPackIds: function (assetPackIds) {
+        this.filteredIds = assetPackIds.filter(id => this.bannedIDs.indexOf(parseInt(id, 10)) === -1);
+        console.log(this.filteredIds, assetPackIds);
+      }
     },
     asyncComputed: {
       assetPacks: {
         async get() {
           this.loading = true;
-          const selectedPacks = paginateArray(this.assetPackIds, 1, this.showPerPage);
+          const selectedPacks = paginateArray(this.filteredIds, 1, this.showPerPage);
           const assetPacks = await getPackInformation(selectedPacks);
           this.loading = false;
           return assetPacks;
@@ -113,7 +131,7 @@
     methods: {
       async changePage(currentPage) {
         this.loading = true;
-        const selectedPacks = paginateArray(this.assetPackIds, currentPage, this.showPerPage);
+        const selectedPacks = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.assetPacks = await getPackInformation(selectedPacks);
         this.loading = false;
       }

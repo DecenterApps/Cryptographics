@@ -11,11 +11,13 @@ export default {
   },
   assets: {
     createdIDs: [],
-    boughtIDs: []
+    boughtIDs: [],
+    bannedIDs: [],
   },
   graphics: {
     createdIDs: [],
-    boughtIDs: []
+    boughtIDs: [],
+    bannedIDs: [],
   },
   balances: {
     assetsBalance: 0,
