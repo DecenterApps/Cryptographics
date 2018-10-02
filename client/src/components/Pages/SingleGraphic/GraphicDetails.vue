@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This Cryptographic contains {{image.usedAssets.length}} assets <br> from the
+            <p v-if="image.usedAssets">This cryptographic contains {{image.usedAssets.length}} assets <br> from the
                 following
                 asset packs:</p>
             <div class="asset-packs">
@@ -24,7 +24,7 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id)) }}</span>
                 </h3>
-                <div class="user-links-wrapper">
+                <div v-if="image.creatorMeta.username !== image.username" class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
                         <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
                                    :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
@@ -34,6 +34,13 @@
                         <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar"
                                    color="black" additionalClass="ellipsis" />
                         <span class="title">Owner</span>
+                    </div>
+                </div>
+                <div v-if="image.creatorMeta.username === image.username" class="user-links-wrapper">
+                    <div class="user-link-wrapper" v-if="image.creatorMeta">
+                        <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
+                                   :avatar="image.creatorMeta.avatar" color="black" additionalClass="ellipsis" />
+                        <span class="title">Creator/Owner</span>
                     </div>
                 </div>
                 <div v-if="image.description.length > 0" class="description-label">Description:</div>
@@ -177,7 +184,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your Cryptographic will be listed shortly.');
+          'Your cryptographic will be listed shortly.');
         const result = await transactionPromise();
         const id = result.events.SellingImage.returnValues.imageId;
         this.closeLoadingModal();
@@ -190,7 +197,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await cancelSell(this.userAddress, this.image.id);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your Cryptographic\'s sale will be canceled shortly.');
+          'Your cryptographic\'s sale will be canceled shortly.');
         const result = await transactionPromise();
         console.log(result);
         this.closeLoadingModal();
@@ -205,7 +212,7 @@
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
-          'Your will receive this Cryptographic shortly.');
+          'Your will receive this cryptographic shortly.');
         const result = await transactionPromise();
         const id = result.events.ImageBought.returnValues.imageId;
         this.closeLoadingModal();
@@ -267,19 +274,23 @@
             position: relative;
             display: flex;
         }
-
         .user-links-wrapper {
             display: flex;
+            flex-direction: column;
             flex-wrap: wrap;
-
+            padding-left: 10px;
+            padding-top: 10px;
             .user-link-wrapper {
                 position: relative;
-                margin-right: 35px;
-
-                .user {
-                    max-width: 350px;
+                &:first-of-type {
+                    margin-bottom: 15px;
                 }
-
+                .user {
+                    max-width: 300px;
+                    .name {
+                        margin-top: -10px;
+                    }
+                }
                 .title {
                     position: absolute;
                     color: #9D9D9D;

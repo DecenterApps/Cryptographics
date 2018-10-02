@@ -4,7 +4,7 @@
             <Canvas :canvasData="canvasData" />
         </div>
         <div class="right">
-            <h2 class="large-title">This is a <br> Cryptographic</h2>
+            <h2 class="large-title">This is a <br> cryptographic</h2>
             <div class="hero-text-content">
                 <p>A graphic created by you, with a little help from provably secure randomness. </p>
                 <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and

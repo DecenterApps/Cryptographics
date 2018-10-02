@@ -12,7 +12,7 @@
             Max file size: <span>2.5MB.</span>
         </p>
         <p class="upload-description">
-            The default <span>Cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
+            The default <span>cryptographic canvas</span> is a <span>300DPI A4 (210x297mm)</span>
             paper at a resolution of <span>2480x3508px</span>, with a square format
             of <span>2480x2480px</span> also available (same DPI).
         </p>

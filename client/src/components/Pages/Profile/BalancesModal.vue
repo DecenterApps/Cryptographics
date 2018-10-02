@@ -17,7 +17,7 @@
         </div>
         <div>
             <h4>Cryptographics balance</h4>
-            <p>These funds are earned by selling your Cryptographics. </p>
+            <p>These funds are earned by selling your cryptographics. </p>
             <div class="withdraw">
                 <cg-button
                         button-style="secondary"
