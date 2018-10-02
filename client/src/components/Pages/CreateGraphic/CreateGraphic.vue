@@ -61,6 +61,8 @@
         const packs = landingPacks.packs;
         packs.map(pack => this.toggleAsset(pack));
       }
+
+      if (this.$route.query.selected && this.selectedAssetPacks.length > 0) this.changeStep(1);
     },
     beforeDestroy() {
       this.clearAssetPacks();

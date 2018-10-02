@@ -74,7 +74,10 @@
       }),
       composeWithAP () {
         this.selectSingleAssetPack(this.assetPack);
-        this.$router.push('/create-cryptographic')
+        this.$router.push({
+          name: 'create-cryptographic',
+          query: { selected: true },
+        })
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
