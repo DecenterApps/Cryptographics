@@ -38,6 +38,7 @@
                                             color="white" />
                                     <price
                                             :value="assetPack.price"
+                                            :showIfFree="true"
                                             color="white"
                                             size="small" />
                                 </div>
@@ -124,6 +125,7 @@
           const selectedPacks = paginateArray(this.filteredIds, 1, this.showPerPage);
           const assetPacks = await getPackInformation(selectedPacks);
           this.loading = false;
+          console.log(assetPacks);
           return assetPacks;
         }
       },

@@ -6,6 +6,12 @@
         :class="[color, size]">
         {{ formatNum(value) }}
     </span>
+    <span
+        v-else-if="showIfFree && value >= 0"
+        class="price"
+        :class="[color, size]">
+        {{ value }}
+    </span>
 </template>
 
 <script>
@@ -25,11 +31,15 @@
             size: {
                 type: String,
                 default: 'normal'
+            },
+            showIfFree: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {
           formatNum(num) { return formatSmallNumber(parseFloat(num)); },
-        },
+        }
     }
 </script>
 
