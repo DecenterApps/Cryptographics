@@ -109,7 +109,7 @@
                             button-style="secondary"
                             @click="openModal({ name: 'transferHistory', data: { image } })"
                     >
-                        Transfer history
+                        Trade history
                     </cg-button>
 
                     <div class="price-controls">
