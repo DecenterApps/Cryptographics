@@ -27,7 +27,7 @@
                             <p class="artwork-title">{{ image.title }}</p>
                         </div>
                         <div class="artwork-details">
-                            <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" />
+                            <user-link :to="'/user/' + image.owner" :name="image.username" :avatar="image.avatar" additionalClass="ellipsis" />
                             <price
                                     v-if="image.price"
                                     :value="image.price"
@@ -190,6 +190,10 @@
                 justify-content: space-between;
                 align-items: center;
                 margin-top: 10px;
+
+                .user { max-width: 210px; }
+                .price { max-width: 90px; }
+
                 .author {
                     display: flex;
                     align-items: center;

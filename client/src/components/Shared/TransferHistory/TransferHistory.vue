@@ -127,6 +127,7 @@
     }
 
     .empty-wrapper {
+        margin-top: 70px;
         text-align: center;
     }
 

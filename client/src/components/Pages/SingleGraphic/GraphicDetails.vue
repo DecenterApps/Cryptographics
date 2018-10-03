@@ -50,7 +50,7 @@
                             button-style="secondary"
                             @click="openModal({ name: 'transferHistory', data: { image } })"
                     >
-                        Transfer history
+                        Trade history
                     </cg-button>
                     <div class="button-group">
                         <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
