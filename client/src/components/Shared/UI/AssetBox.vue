@@ -70,7 +70,7 @@
         border: 4px solid #D9D9D9;
 
         &.small {
-            height: 60px;
+            height: 64px;
             width: 85px;
 
             .overlay-content {
