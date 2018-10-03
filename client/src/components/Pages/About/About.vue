@@ -9,13 +9,13 @@
                 Cryptographics is a fully decentralized digital art creation platform that allows users to create, store and trade unique randomly generated digital artwork on the blockchain. It is a place where Artists, Creators and Collectors come together to create graphical assets, generate Cryptographics and collect or trade them.
             </p>
             <p class="about-text">
-                Artists are visual artists, illustrators, photographers or graphic designers, who create graphical assets and upload them as Asset packs that can then be used to generate Cryptographics.
+                Artists are visual artists, illustrators, photographers or graphic designers, who create graphical assets and upload them as Asset packs that can then be used to generate cryptographics.
             </p>
             <p class="about-text">
-                Creators are authors of Cryptographics and they select, buy and use Asset packs to generate unique randomly generated digital artwork (Cryptographics) and claim ownership by storing them on the blockchain as unique ERC-721 tokens in order to keep or sell them.
+                Creators are authors of cryptographics and they select, buy and use Asset packs to generate unique randomly generated digital artwork (cryptographics) and claim ownership by storing them on the blockchain as unique ERC-721 tokens in order to keep or sell them.
             </p>
             <p class="about-text">
-                Collectors can purchase and collect Cryptographics, either to create a unique collection of their own, or to trade them as unique digital collectibles on the Gallery marketplace.
+                Collectors can purchase and collect cryptographics, either to create a unique collection of their own, or to trade them as unique digital collectibles on the Gallery marketplace.
             </p>
             <p class="about-text">
                 Cryptographics DApp is powered by the Ethereum blockchain and made with love for digital art and passion for decentralization by
@@ -25,7 +25,7 @@
             <h1 class="large-title terms">Terms</h1>
 
             <p class="about-text">
-                Cryptographics is a DApp, a fully decentralized app, and as such it cannot be censored. We do, however, retain the right to hide from the Cryptographics frontend (website) any Asset packs or Cryptographics created with malicious intentions or breaking any copyright laws.
+                Cryptographics is a DApp, a fully decentralized app, and as such it cannot be censored. We do, however, retain the right to hide from the Cryptographics frontend (website) any Asset packs or cryptographics created with malicious intentions or breaking any copyright laws.
             </p>
         </div>
     </div>

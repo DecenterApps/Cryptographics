@@ -20,7 +20,7 @@ import {
   MUTATE_NETWORK,
   FETCH_BALANCES, MUTATE_BALANCES,
 } from './types';
-import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL } from '../modal/types';
+import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
 import {
@@ -118,7 +118,7 @@ export default {
     }
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
-    dispatch(TOGGLE_LOADING_MODAL, 'Please wait...') ;
+    dispatch(TOGGLE_LOADING_MODAL, 'Please confirm the transaction in MetaMask.');
     await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
     if (!state.changeUsername.isExisting) {
       if (newUsername === '') {
@@ -133,12 +133,16 @@ export default {
           newAvatarBytes32 = await getAvatar(state.metamaskAddress);
         }
       }
-      console.log(newUsername, newAvatarBytes32, state.metamaskAddress);
-      await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
+      const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
+      dispatch(CHANGE_LOADING_CONTENT, 'Please wait while the transaction is written to the blockchain. ' +
+      'Your profile will be updated shortly.');
+      const isRegistred = await transactionPromise();
+      console.log(isRegistred);
       let result = true;
       commit(MUTATE_EDIT_PROFILE_RESULT, result);
       dispatch(HIDE_LOADING_MODAL);
-      dispatch(TOGGLE_MODAL);
+      await dispatch(TOGGLE_MODAL);
+      dispatch(TOGGLE_MODAL, 'Your profile has been updated successfully.');
       await dispatch(SET_USER_CONFIG);
       setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
     } else {

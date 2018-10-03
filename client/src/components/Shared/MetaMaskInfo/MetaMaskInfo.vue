@@ -4,14 +4,14 @@
         <div v-if="!hasMetaMask">
             <div class="text-wrapper">
                 You don’t have <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
-                ownership of the Cryptographics you create, or trade them. Please enable MetaMask or check if you
+                ownership of the cryptographics you create, or trade them. Please enable MetaMask or check if you
                 are logged in.
             </div>
             <h3>What is MetaMask?</h3>
             <div>
                 <div class="text-wrapper secondary">
                     MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
-                    blockchain. It manages your Ethereum account which keeps your Ether funds and unique Cryptographics
+                    blockchain. It manages your Ethereum account which keeps your Ether funds and unique cryptographics
                     tokens.
                 </div>
                 <a

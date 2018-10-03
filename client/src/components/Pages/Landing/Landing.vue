@@ -13,7 +13,7 @@
                     </div>
                     <p class="small-title">1. Select <br> Asset packs</p>
                     <p class="secondary">
-                        Random assets from the chosen packs will make it to your Cryptographic.
+                        Random assets from the chosen packs will make it to your cryptographic.
                     </p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
@@ -21,9 +21,9 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p class="small-title">2. Generate a Cryptographic</p>
+                    <p class="small-title">2. Generate a cryptographic</p>
                     <p class="secondary">
-                        A provably random composition process creates your Cryptographic.
+                        A provably random composition process creates your cryptographic.
                     </p>
                 </div>
                 <ico-arrow-long></ico-arrow-long>
@@ -33,12 +33,12 @@
                     </div>
                     <p class="small-title">3. Claim ownership</p>
                     <p class="secondary">
-                        Saving your Cryptographic lets you keep it forever or sell it in the Gallery
+                        Saving your cryptographic lets you keep it forever or sell it in the Gallery
                     </p>
                 </div>
             </div>
             <div class="container">
-                <p class="steps-bottom">Each Cryptographic is stored on the blockchain forever as a unique ERC-721 token.</p>
+                <p class="steps-bottom">Each cryptographic is stored on the blockchain forever as a unique ERC-721 token.</p>
             </div>
         </div>
         <div class="landing-section gallery-section">
@@ -48,8 +48,8 @@
             <div class="title-section">
                 <h1 class="large-title">Gallery</h1>
                 <p>
-                    The Gallery showcases all Cryptographics that have been stored on the blockchain.
-                    It’s the place where you can discover, buy and sell Cryptographics.
+                    The Gallery showcases all cryptographics that have been stored on the blockchain.
+                    It’s the place where you can discover, buy and sell cryptographics.
                 </p>
             </div>
             <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" centered />
@@ -194,7 +194,9 @@
     .steps {
         display: flex;
         justify-content: center;
-
+        @media screen and (max-width: 767px) {
+            display: block;
+        }
 
         .step {
             .image-wrapper {
@@ -244,6 +246,9 @@
             margin: 0 30px;
             position: relative;
             top: 200px;
+            @media screen and (max-width: 767px) {
+                display: none;
+            }
         }
 
         .step::after {
@@ -298,6 +303,9 @@
 
             .section-title {
                 margin-left: -263px;
+                @media screen and (max-width: 528px) {
+                    margin-left: -50%;
+                }
             }
         }
         .section-title {
@@ -311,6 +319,11 @@
             left: 50%;
             margin-left: -622px;
             user-select: none;
+            max-width: 100vw;
+            overflow: hidden;
+            @media screen and (max-width: 1245px) {
+                margin-left: -50%;
+            }
         }
 
         p {

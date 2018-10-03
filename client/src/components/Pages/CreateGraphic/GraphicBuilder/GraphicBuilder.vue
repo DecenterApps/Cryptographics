@@ -91,7 +91,7 @@
                     <div>
                         <cg-button
                                 @click="changeStep(1)"
-                                :button-style="'transparent'"
+                                button-style="secondary"
                         >
                             Back
                         </cg-button>
@@ -102,7 +102,7 @@
                                 :loading="isCanvasDrawing"
                                 @click="buyImage"
                         >
-                            Claim Cryptographic
+                            Claim cryptographic
                         </cg-button>
                     </div>
                 </div>
@@ -268,7 +268,7 @@
             ipfsHash,
             extraData,
           );
-          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your Cryptographics token shortly.');
+          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.');
           const result = await transactionPromise();
           const id = result.events.ImageCreated.returnValues.imageId;
           this.closeLoadingModal();
@@ -470,8 +470,9 @@
                 }
             }
             .add-more {
-                height: 55px;
+                height: 56px;
                 width: 75px;
+                margin-top: 4px;
                 border: 1px solid #949494;
                 display: flex;
                 align-items: center;

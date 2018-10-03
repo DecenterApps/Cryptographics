@@ -108,7 +108,9 @@ a {
   width: 100%;
   margin: 0 auto;
   @media screen and (max-width: 1120px) {
-    width: 80%;
+    margin: 0 20px;
+    max-width: 100%;
+    width: auto;
   }
 }
 

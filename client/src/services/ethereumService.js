@@ -234,19 +234,22 @@ export const getAvatar = async (address) => {
   return await digitalPrintImageContract().methods.getProfilePicture(address).call();
 };
 
-export const registerUser = async (username, hashToProfilePicture, account) => {
-  try {
-    console.log(account);
-    return await digitalPrintImageContract().methods.register(username, hashToProfilePicture).send({
-      from: account
-    }, (a, b) => {
-      console.log(a, b);
-    });
-  } catch (e) {
-    console.log(e);
-    throw new Error('Cannot register user');
-  }
-};
+export const registerUser = (username, hashToProfilePicture, account) => 
+  new Promise(async (resolve, reject) => {
+    if (!web3.utils.isAddress(account)) return;
+    try {
+      const transactionPromise = digitalPrintImageContract().methods.register(username, hashToProfilePicture).send({
+        from: account
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Cannot register user');
+    }
+  });
 
 export const isImageForSale = async (imageId) => {
   return await marketPlaceContract().methods.isImageOnSale(imageId).call();
@@ -397,9 +400,12 @@ export const getImageMetadata = (imageId) =>
       const potentialAssets = imageMetadata[5];
       const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
+      let hexFinalSeed = web3.utils.toHex(finalSeed);
+      if (hexFinalSeed.length < 66) hexFinalSeed = '0x0' + hexFinalSeed.substr(2);
+
       if (!imageMetadata) reject();
       resolve({
-        finalSeed: web3.utils.toHex(finalSeed),
+        finalSeed: hexFinalSeed,
         id: imageId,
         potentialAssets: utils.decode(potentialAssets),
         usedAssetsBytes: potentialAssets,
