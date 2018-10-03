@@ -194,7 +194,9 @@
     .steps {
         display: flex;
         justify-content: center;
-
+        @media screen and (max-width: 767px) {
+            display: block;
+        }
 
         .step {
             .image-wrapper {
@@ -244,6 +246,9 @@
             margin: 0 30px;
             position: relative;
             top: 200px;
+            @media screen and (max-width: 767px) {
+                display: none;
+            }
         }
 
         .step::after {
@@ -298,6 +303,9 @@
 
             .section-title {
                 margin-left: -263px;
+                @media screen and (max-width: 528px) {
+                    margin-left: -50%;
+                }
             }
         }
         .section-title {
@@ -311,6 +319,11 @@
             left: 50%;
             margin-left: -622px;
             user-select: none;
+            max-width: 100vw;
+            overflow: hidden;
+            @media screen and (max-width: 1245px) {
+                margin-left: -50%;
+            }
         }
 
         p {

@@ -130,6 +130,12 @@
         margin: auto auto;
         height: 351px;
         width: 250px;
+
+        @media screen and (max-width: 767px) {
+            padding-bottom: 380px;
+            box-sizing: content-box;
+        }
+
         canvas {
             height: 100%;
             width: 100%;
@@ -144,6 +150,12 @@
         background: url('../assets/home-header.png') center center no-repeat;
         height: 566px;
         padding: 45px 0;
+        @media screen and (max-width: 767px) {
+            background-position: 50% 0px;
+            padding-top: 415px;
+            height: 946px;
+            background-color: #eee;
+        }
 
         .right {
             position: absolute;
@@ -156,6 +168,12 @@
             padding: 20px;
             top: 0;
             bottom: 0;
+            min-width: 300px;
+            @media screen and (max-width: 767px) {
+                position: relative;
+                left: 0;
+                top: 170px;
+            }
 
             .large-title {
                 line-height: 39px;
@@ -163,7 +181,9 @@
 
             .hero-text-content {
                 max-width: 250px;
-
+                @media screen and (max-width: 767px) {
+                    max-width: none;
+                }
                 p {
                     color: #000;
                     font-family: Roboto, sans-serif;
