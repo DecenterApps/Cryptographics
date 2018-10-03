@@ -2,9 +2,8 @@
     <div class="hero">
         <div class="canvas-holder-wrapper" @click="renderCanvas">
             <Canvas :canvasData="canvasData" />
-            <div class="tap-to-recompose">
-                <span>Tap to recompose</span>
-            </div>
+            <div class="tap-to-recompose mobile"><span>Tap to recompose</span></div>
+            <div class="tap-to-recompose desktop"><span>Click to recompose</span></div>
         </div>
         <div class="right">
             <h2 class="large-title">This is a <br> cryptographic</h2>
@@ -171,6 +170,11 @@
                 0% { opacity: 1; }
                 60% { opacity: 1; }
                 100% { opacity: 0; }
+            }
+            &.mobile { display: none; }
+            @media screen and (max-width: 767px) {
+                &.desktop { display: none; }
+                &.mobile { display: flex; }
             }
         }
     }

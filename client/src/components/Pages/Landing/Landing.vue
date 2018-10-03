@@ -340,6 +340,9 @@
 
         .button {
             margin: 70px 0 100px 0;
+            @media screen and (max-width: 767px) {
+                display: none;
+            }
         }
 
         .title-section {
@@ -373,6 +376,9 @@
         transform: translateX(200%);
         transition: all .2s;
         z-index: 200;
+        @media screen and (max-width: 767px) {
+            display: none;
+        }
         @media screen and (max-width: 1200px) {
             bottom: 20px;
             right: 20px;
