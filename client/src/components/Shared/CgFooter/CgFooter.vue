@@ -107,6 +107,7 @@
             .social {
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 a {
                     margin-right: 20px;
                 }
