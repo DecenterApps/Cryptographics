@@ -187,7 +187,7 @@
             </div>
 
             <div class="answer-wrapper" v-bind:class="{ open: items[13].open }">
-                For any questions that are not answered here, feel free to join the Cryptographics Discord server or post in the Cryptographics subreddit. You can also reach out to us directly via email.
+                For any questions that are not answered here, feel free to join the <a href="https://discord.gg/xnhfYRS" target="_blank">Cryptographics Discord server</a> or post in the <a href="https://www.reddit.com/r/cryptographics/" target="_blank">Cryptographics subreddit</a>. You can also reach out to us directly via <a href="mailto:cryptographics@decenter.com">email</a>.
             </div>
         </div>
     </div>
