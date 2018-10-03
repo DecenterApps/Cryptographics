@@ -143,7 +143,7 @@
         }
 
         @media screen and (max-width: 767px) {
-            margin-bottom: 417px;
+            margin-bottom: 427px;
         }
 
         canvas {
@@ -186,7 +186,7 @@
         @media screen and (max-width: 767px) {
             background-position: 50% -50px;
             padding-top: 0;
-            height: 826px;
+            height: 836px;
             background-color: #eee;
         }
 
