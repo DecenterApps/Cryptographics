@@ -57,7 +57,7 @@
         <div class="landing-section inverted">
             <h1 class="section-title">Create</h1>
             <div class="title-section">
-                <h1 class="large-title">Asset Pack</h1>
+                <h1 class="large-title">Asset Packs</h1>
                 <p class="wider">All visual artists are welcome to create and upload their asset packs.</p>
             </div>
             <div class="steps asset-packs">
