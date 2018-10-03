@@ -6,7 +6,7 @@ import "../Utils/Functions.sol";
 import "../IAssetManager.sol";
 import "../UserManager.sol";
 
-contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
+contract DigitalPrintImage is ERC721Token("DigitalPrintImage", "DPM"), UserManager, Ownable {
 
     struct ImageMetadata {
         uint finalSeed;
@@ -35,8 +35,6 @@ contract DigitalPrintImage is ERC721Token, UserManager, Ownable {
     // function createImageTest() public {
     //     _mint(msg.sender, totalSupply());
     // }
-
-    constructor() public ERC721Token("DigitalPrintImage", "DPM") {}
 
     /// @notice Function will create new image
     /// @param _randomHashIds is array of random hashes from our array

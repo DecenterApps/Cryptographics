@@ -111,6 +111,7 @@ contract AssetManager is Ownable {
     /// @param _to is address of user who will get right on that asset pack
     /// @param _assetPackId is id of asset pack user is buying
     function buyAssetPack(address _to, uint _assetPackId) public payable {
+        require(!checkHasPermissionForPack(_to, _assetPackId));
 
         AssetPack memory assetPack = assetPacks[_assetPackId];
         require(msg.value >= assetPack.price);
@@ -126,7 +127,7 @@ contract AssetManager is Ownable {
     /// @notice Change price of asset pack
     /// @param _assetPackId is id of asset pack for changing price
     /// @param _newPrice is new price for that asset pack
-    function changeAssetPackPrice(uint _assetPackId, uint _newPrice) public payable {
+    function changeAssetPackPrice(uint _assetPackId, uint _newPrice) public {
         require(assetPacks[_assetPackId].creator == msg.sender);
 
         assetPacks[_assetPackId].price = _newPrice;
