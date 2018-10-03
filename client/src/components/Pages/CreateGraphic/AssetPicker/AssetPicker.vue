@@ -11,12 +11,12 @@
                 <!--</div>-->
             </div>
         </div>
-        <p class="page-description">
-            Please select the asset packs that you want to include in your cryptographic. You can select as many asset
-            packs as you want, but please note that a random number of assets will be included in a cryptographic, with
-            the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of
-            cryptographics afterwards.
-        </p>
+        <!--<p class="page-description">-->
+        <!--Please select the asset packs that you want to include in your cryptographic. You can select as many asset-->
+        <!--packs as you want, but please note that a random number of assets will be included in a cryptographic, with-->
+        <!--the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of-->
+        <!--cryptographics afterwards.-->
+        <!--</p>-->
         <separator />
         <div class="selected-asset-packs">
             <div class="large-title">Selected asset packs</div>
