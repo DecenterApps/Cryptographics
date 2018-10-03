@@ -13,7 +13,7 @@
                         Edit Profile
                     </cg-button>
                 </div>
-                <div class="right button-group">
+                <div class="right button-group price-group">
                     <price :value="totalBalance" />
                     <cg-button
                             button-style="primary"
@@ -336,6 +336,20 @@
                 }
             }
         }
+
+        .price-group {
+            display: flex;
+            align-items: center;
+
+            .price {
+                max-width: 100px;
+                margin-right: 10px;
+                &:before {
+                    bottom: 6px;
+                }
+            }
+        }
+
         .assets, .gallery {
             padding-bottom: 30px;
             .button-group {

@@ -12,7 +12,10 @@
                         @click="withdraw('asset')"
                         :disabled="assetBalance === '0'"
                 >Withdraw</cg-button>
-                <span>ETH: {{assetBalance}}</span>
+                <span class="eth-wrapper">
+                    <span>ETH:</span>
+                    <span class="eth">{{assetBalance}}</span>
+                </span>
             </div>
         </div>
         <div>
@@ -24,7 +27,10 @@
                         @click="withdraw('marketplace')"
                         :disabled="marketplaceBalance === '0'"
                 >Withdraw</cg-button>
-                <span>ETH: {{marketplaceBalance}}</span>
+                <span class="eth-wrapper">
+                    <span>ETH:</span>
+                    <span class="eth">{{marketplaceBalance}}</span>
+                </span>
             </div>
         </div>
     </div>
@@ -87,6 +93,22 @@
                 margin-left: 20px;
                 vertical-align: top;
                 line-height: 32px;
+            }
+        }
+
+        .eth-wrapper {
+            display: inline-flex;
+
+            span {
+                margin-left: 0;
+            }
+
+            .eth {
+                margin-left: 5px;
+                max-width: 50px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }
