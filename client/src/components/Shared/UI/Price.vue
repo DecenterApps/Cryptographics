@@ -1,5 +1,6 @@
 <template>
     <span
+        :title="`${value}`"
         v-if="value > 0"
         class="price"
         :class="[color, size]">
