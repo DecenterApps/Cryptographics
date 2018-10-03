@@ -330,6 +330,7 @@
                 align-items: center;
 
                 .price {
+                    max-width: 105px;
                     margin-right: 10px;
                     font-weight: normal;
 

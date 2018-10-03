@@ -572,6 +572,14 @@
                 min-width: 70px;
             }
 
+            .price {
+                max-width: 85px;
+
+                &:before {
+                    bottom: 3px;
+                }
+            }
+
             &.buy-screen {
                 justify-content: space-between;
 
