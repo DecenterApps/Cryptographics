@@ -85,7 +85,8 @@
                     </div>
                 </template>
                 <template v-else>
-                    <p>Connect to MetaMask.</p>
+                    <p>In order to update your username and profile image you will need <a target="_blank" rel="noopener noreferrer" href="https://metamask.io/">MetaMask.</a></p>
+                    <p>If you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
                 </template>
             </div>
         </div>
@@ -291,7 +292,6 @@
         .line-separator {
             margin: 21px 0;
         }
-
         .tabs {
 
             .large-title {
