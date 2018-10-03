@@ -67,6 +67,7 @@
                     </cg-radio>
                 </div>
             </div> -->
+            <separator />
             <div class="graphic-controls">
                 <cg-button button-style="secondary" @click="$emit('closePrintForm')">Back</cg-button>
                 <cg-button v-if="!isSuccess" type="submit" :loading="isSubmitting">Order</cg-button>
@@ -234,6 +235,9 @@ export default {
       color: black;
       font-weight: bold;
       margin: 30px 0;
+    }
+    .line-separator {
+        margin: 25px 0;
     }
     .graphic-controls {
         display: flex;
