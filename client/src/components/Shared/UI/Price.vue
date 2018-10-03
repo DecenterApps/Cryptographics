@@ -31,22 +31,15 @@
             size: {
                 type: String,
                 default: 'normal'
+            },
+            showIfFree: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {
           formatNum(num) { return formatSmallNumber(parseFloat(num)); },
-        },
-<<<<<<< HEAD
-        size: {
-            type: String,
-            default: 'normal'
-        },
-        showIfFree: {
-            type: Boolean,
-            default: false
         }
-=======
->>>>>>> cf7487da833e3a64ad091dfc3c54be6753683bea
     }
 </script>
 
