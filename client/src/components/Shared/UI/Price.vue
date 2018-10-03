@@ -32,6 +32,11 @@ export default {
     font-family: 'Roboto', serif;
     cursor: default;
     vertical-align: top;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: right;
+
     &.white {
         color: #fff;
     }
@@ -56,9 +61,9 @@ export default {
         font-size: .6em;
         position: relative;
         vertical-align: middle;
-        height: 1em;
         line-height: 1.5em;
         display: inline-block;
+        height: 19px;
     }
     
 }

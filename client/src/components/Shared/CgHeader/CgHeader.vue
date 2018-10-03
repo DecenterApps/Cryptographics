@@ -81,8 +81,11 @@
                 font-size: 14px;
                 font-weight: bold;
                 margin-left: 4px;
-                opacity: 0;
                 transition: opacity .2s;
+                opacity: 0;
+                @media screen and (max-width: 767px) {
+                    opacity: 1;
+                }
             }
             &:hover span {
                 opacity: 1;
@@ -114,6 +117,9 @@
             }
         }
         .links-section {
+            @media screen and (max-width: 767px) {
+                display: none;
+            }
             display: flex;
             align-items: center;
             .links a {
