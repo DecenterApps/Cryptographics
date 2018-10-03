@@ -7,9 +7,9 @@
         {{ formatNum(value) }}
     </span>
     <span
-        v-else-if="showIfFree && value >= 0"
-        class="price"
-        :class="[color, size]">
+            v-else-if="showIfFree && parseInt(value, 10) === 0"
+            class="price"
+            :class="[color, size]">
         {{ value }}
     </span>
 </template>
@@ -47,11 +47,11 @@
 .price {
     font-family: 'Roboto', serif;
     cursor: default;
-    vertical-align: top;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     text-align: right;
+    vertical-align: middle;
 
     &.white {
         color: #fff;
@@ -61,12 +61,15 @@
     }
     &.normal {
         font-size: 32px;
+        line-height: 32px;
     }
     &.small {
         font-size: 21px;
+        line-height: 21px;
     }
     &.medium {
         font-size: 25px;
+        line-height: 25px;
     }
     &.inherit {
         font-size: inherit;
@@ -76,8 +79,9 @@
         font-family: Roboto, sans-serif;
         font-size: .6em;
         position: relative;
+        margin-right: 5px;
         vertical-align: middle;
-        line-height: 1.5em;
+        line-height: 19px;
         display: inline-block;
         height: 19px;
     }

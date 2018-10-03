@@ -3,7 +3,12 @@
         <div class="header">
             <h2 class="large-title">Select Asset Packs</h2>
             <div>
-                <!--<button-icon icon-type="zoom" color="#000" size="15px" />-->
+                <!--<div description="Please select the asset packs that you want to include in your cryptographic. You can select as many asset-->
+                <!--packs as you want, but please note that a random number of assets will be included in a cryptographic, with-->
+                <!--the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of-->
+                <!--cryptographics afterwards.">-->
+                <!--aa-->
+                <!--</div>-->
             </div>
         </div>
         <p class="page-description">
@@ -13,6 +18,28 @@
             cryptographics afterwards.
         </p>
         <separator />
+        <div class="selected-asset-packs">
+            <div class="large-title">Selected asset packs</div>
+
+            <div class="packs-wrapper" v-if="selectedAssetPacks.length > 0">
+                <asset-box
+                        :assetPack="assetPack"
+                        :selected="isSelected(assetPack)"
+                        @click="toggleAsset(assetPack)"
+                        v-for="(assetPack, index) in selectedAssetPacks" :key="index"
+                        @mouseenter="setHover(assetPack)"
+                        @mouseleave="setHover(false)"
+                />
+            </div>
+
+            <div class="empty-packs-wrapper" v-if="selectedAssetPacks.length === 0">
+                <div class="empty-asset-box">
+                    <div></div>
+                </div>
+            </div>
+
+            <separator />
+        </div>
         <div class="filter-section">
             <div>
                 <cg-button
@@ -70,8 +97,6 @@
   import { mapGetters, mapActions } from 'vuex';
   import {
     getNumberOfAssetPacks,
-    getAssetPacksWithAssetData,
-    getSelectedAssetPacksWithAssetData
   } from 'services/ethereumService';
 
   export default {
@@ -149,6 +174,56 @@
         }
         .ico-button {
             margin-right: 22px;
+        }
+    }
+
+    .selected-asset-packs {
+        margin-bottom: 20px;
+        min-width: 768px;
+
+        @media screen and (max-width: 1120px) {
+            min-width: 720px;
+
+            .asset-box {
+                margin-right: 18px;
+            }
+        }
+        .asset-box {
+            /*flex: 0 0 16%;*/
+            margin-right: 26px;
+            margin-bottom: 20px;
+
+            &:nth-child(6n) {
+                margin-right: 0;
+            }
+        }
+
+        .large-title {
+            font-family: Roboto, sans-serif;
+            font-weight: bold;
+            line-height: normal;
+            font-size: 15px;
+            text-decoration-line: underline;
+
+            color: #000000;
+        }
+
+        .packs-wrapper, .empty-packs-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .empty-packs-wrapper {
+
+            .empty-asset-box {
+                height: 120px;
+                width: 165px;
+                border: 4px solid #D9D9D9;
+
+                div {
+                    height: 100%;
+                    border: 1px solid black;
+                }
+            }
         }
     }
 

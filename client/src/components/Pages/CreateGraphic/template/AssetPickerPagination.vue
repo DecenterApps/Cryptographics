@@ -1,26 +1,5 @@
 <template>
     <div>
-        <div class="selected-asset-packs">
-            <div class="large-title">Selected asset packs:</div>
-
-            <div class="packs-wrapper" v-if="selectedAssetPacks.length > 0">
-                <asset-box
-                        :assetPack="assetPack"
-                        :selected="isSelected(assetPack)"
-                        @click="toggleAsset(assetPack)"
-                        v-for="(assetPack, index) in selectedAssetPacks" :key="index"
-                        @mouseenter="setHover(assetPack)"
-                        @mouseleave="setHover(false)"
-                />
-            </div>
-
-            <div class="empty-packs-wrapper" v-if="selectedAssetPacks.length === 0">
-                <div class="empty-asset-box"><div></div></div>
-            </div>
-
-            <separator />
-        </div>
-
         <div v-if="loading" class="loading-section">
             <loader />
         </div>
@@ -34,24 +13,29 @@
                     @mouseenter="setHover(assetPack)"
                     @mouseleave="setHover(false)"
             />
+            <div class="meta-info">
+                <div class="hover-info">
+                    <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} —
+                        <price size="inherit" :show-if-free="true" :value="this.hovered.price" />
+                    </h1>
+                </div>
+
+            </div>
         </div>
 
-        <div class="meta-info">
-            <div class="hover-info">
-                <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} — <price size="inherit" :value="this.hovered.price" /></h1>
-            </div>
-            <div class="price-section">
-                <h1 v-if="totalPrice > 0" class="small-title">Total price — <price size="inherit" :value="totalPrice"/></h1>
-            </div>
-        </div>
-
-        <div class="bottom-controls">
-            <div>
-                <pagination
+        <div class="pagination">
+            <pagination
                     :total="assetPackIds === null ? 0 : assetPackIds.length"
                     :per-page="showPerPage"
                     pagination-style="left"
                     @updatePage="changePage" />
+        </div>
+        <separator></separator>
+        <div class="bottom-controls">
+            <div class="price-section">
+                <h1 v-if="totalPrice > 0" class="small-title">Total price —
+                    <price size="inherit" :value="totalPrice" />
+                </h1>
             </div>
 
             <cg-button :disabled="selectedAssetPacks.length === 0" @click="changeStep" button-style="primary">
@@ -157,13 +141,11 @@
 
 <style scoped lang="scss">
     .asset-packs, .selected-asset-packs .packs-wrapper {
+        position: relative;
         min-width: 768px;
         display: flex;
         flex-wrap: wrap;
 
-        @media screen and (max-width: 1120px) {
-            min-width: 720px;
-        }
         .asset-box {
             /*flex: 0 0 16%;*/
             margin-right: 26px;
@@ -173,30 +155,18 @@
                 margin-right: 0;
             }
         }
-    }
 
-    .selected-asset-packs {
-        margin-bottom: 20px;
-
-        .large-title {
-            font-size: 20px;
+        @media screen and (max-width: 1300px) {
+            .asset-box {
+                margin-right: 18px;
+            }
         }
 
-        .packs-wrapper, .empty-packs-wrapper {
-            margin-bottom: 20px;
-        }
-
-        .empty-packs-wrapper {
-
-            .empty-asset-box {
-                height: 120px;
-                width: 165px;
-                border: 4px solid #D9D9D9;
-
-                div {
-                    height: 100%;
-                    border: 1px solid black;
-                }
+        @media screen and (max-width: 1120px) {
+            min-width: 720px;
+            justify-content: space-between;
+            .asset-box {
+                margin-right: 0;
             }
         }
     }
@@ -205,12 +175,44 @@
         width: 85px;
     }
 
+    .line-separator {
+        margin: 25px 0;
+    }
+
     .meta-info {
+        position: absolute;
+        top: -68px;
+        right: 0;
+    }
+
+    .meta-info,
+    .bottom-controls {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 20px 0;
+
+        button {
+            margin-left: 20px;
+        }
+
         .price-section, .hover-info {
             height: 18px;
-            span {
-                font-weight: normal;
+
+            .small-title {
+                font-family: Roboto, sans-serif;
                 font-size: 16px;
+                font-weight: normal;
+                display: flex;
+                align-items: center;
+                line-height: 25px;
+            }
+            span {
+                font-weight: bold;
+                font-size: 25px;
+                display: flex;
+                align-items: center;
+                margin-left: 5px;
             }
         }
 
@@ -218,18 +220,18 @@
             display: flex;
 
             .price {
-                max-width: 55px;
+                /*max-width: 55px;*/
 
-                &:before { top: 2px; }
+                &:before {
+                    top: 2px;
+                }
             }
         }
     }
 
-    .meta-info,
-    .bottom-controls {
+    .pagination {
         display: flex;
-        justify-content: space-between;
-        margin: 20px 0;
+        justify-content: flex-end;
     }
 
     .loading-section {
