@@ -1,9 +1,14 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets">This cryptographic contains {{image.usedAssets.length}} assets <br> from the
-                following
-                asset packs:</p>
+            <p v-if="image.usedAssets && backgroundAssets === 1">This cryptographic contains {{image.usedAssets.length}} assets, {{ backgroundAssets }} of which is a background.<br> The assets are from the following packs:</p>
+
+            <p v-if="image.usedAssets && backgroundAssets > 1">This cryptographic contains {{image.usedAssets.length}} assets, {{ backgroundAssets }} of which are backgrounds.<br> The assets are from the following packs:</p>
+
+            <p v-if="image.usedAssets && backgroundAssets === 0">This cryptographic contains {{image.usedAssets.length}} assets, none of which are backgrounds.<br> The assets are from the following packs:</p>
+
+            <p v-if="image.usedAssets.length === 1">This cryptographic contains {{image.usedAssets.length}} asset.<br> The asset is from the following pack:</p>
+
             <div class="asset-packs">
                 <router-link
                         :to="'/asset-pack/' + assetPack.id"
@@ -137,6 +142,7 @@
       errors: {
         sellPrice: false,
       },
+      backgroundAssets: 0
     }),
     props: {
       image: {
@@ -163,6 +169,11 @@
         type: Function,
         default: () => {},
       }
+    },
+    created() {
+        this.image.usedAssetsInfo.forEach(asset => {
+            Math.floor((asset[2] / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
+        })
     },
     methods: {
       ...mapActions({

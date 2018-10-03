@@ -155,7 +155,6 @@ export const getSelectedAssetPacksWithAssetData = (assetPackIds) =>
 
     Promise.all(assetPackPromises)
       .then(assetPacks => {
-        console.log(assetPacks);
         resolve(assetPacks);
       })
       .catch(error => {
@@ -400,6 +399,12 @@ export const getImageMetadata = (imageId) =>
       const potentialAssets = imageMetadata[5];
       const pickedAssets = await functionsContract().methods.pickRandomAssets(finalSeed, potentialAssets).call();
 
+      let usedAssetsInfo = [];
+      pickedAssets.forEach(async assetId => {
+        const getInfo = await getAssetInfo(assetId);
+        usedAssetsInfo.push(getInfo);
+      });
+
       let hexFinalSeed = web3.utils.toHex(finalSeed);
       if (hexFinalSeed.length < 66) hexFinalSeed = '0x0' + hexFinalSeed.substr(2);
 
@@ -410,7 +415,8 @@ export const getImageMetadata = (imageId) =>
         potentialAssets: utils.decode(potentialAssets),
         usedAssetsBytes: potentialAssets,
         usedAssets: pickedAssets,
-        timestamp: imageMetadata[4]
+        timestamp: imageMetadata[4],
+        usedAssetsInfo,
       });
     } catch (err) {
       reject(err);
@@ -475,10 +481,8 @@ export const getAssetsOrigins = async (assetIds) => {
 
 export const getImage = async (randomSeed, iterations, potentialAssets, finalSeed) => {
   let seed = finalSeed || calculateFinalSeed(randomSeed, iterations);
-  console.log('POTENTIAL', potentialAssets, seed, finalSeed);
   let pickedAssets = [];
   let attributes = await getAttributesForAssets(potentialAssets);
-  console.log('ATTRIBUTES', attributes);
 
   for (let i = 0; i < potentialAssets.length; i++) {
     seed = web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
@@ -491,7 +495,6 @@ export const getImage = async (randomSeed, iterations, potentialAssets, finalSee
       });
     }
   }
-  console.log('PICKED ASSETS', pickedAssets);
   return pickedAssets;
 };
 
@@ -532,6 +535,11 @@ export const getAssetStats = async (id) => {
     };
   }
 };
+
+export const getAssetInfo = async id => {
+  let info = await assetManagerContract().methods.getAssetInfo(id).call();
+  return info;
+}
 
 export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets, width, height) => {
   // Hardcoded width & height because contract always uses 2:3 aspect

@@ -116,7 +116,6 @@
 
         const UPLOAD_WIDTH = 307 * 2;
         const UPLOAD_HEIGHT = this.canvasData.ratio === '1:1' ? UPLOAD_WIDTH : 434 * 2;
-        console.log(UPLOAD_WIDTH, UPLOAD_HEIGHT);
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
         let image = canvasClone.toDataURL('image/png', 1);
@@ -128,7 +127,6 @@
           link.setAttribute('href', window.URL.createObjectURL(blob));
           link.click();
         }, 'image/png');
-        console.log(hash, this.image.ipfsHash);
         // this.isFake = hash.toLowerCase() !== this.image.ipfsHash.toLowerCase();
       },
       async download() {
@@ -149,7 +147,6 @@
       async getData() {
         isImageForSale(this.$route.params.id)
           .then(isForSale => {
-            console.log(isForSale);
             this.forSale = isForSale;
           });
         try {
@@ -178,7 +175,6 @@
       const packsUsed = await getAssetsOrigins(this.image.usedAssets) || [];
       const assetsForCanvas = await getImage(this.image.randomSeed, null, this.image.potentialAssets, this.image.finalSeed);
       this.loading = false;
-      console.log('assetsForCanvas', assetsForCanvas);
       this.canvasData = {
         frame: this.image.hasFrame,
         noBottomFrame: false,

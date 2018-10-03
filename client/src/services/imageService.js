@@ -318,7 +318,6 @@ export const makeImage = (objs, c, width, height, frame = {
   new Promise(async (resolve, reject) => {
     let hashes;
     let assets = objs.slice();
-    console.log('DRAW ASSETS', assets);
     let context = c.getContext('2d');
     const { left, right, bottom, top } = frame;
     const canvasHeight = height;
@@ -338,8 +337,6 @@ export const makeImage = (objs, c, width, height, frame = {
         console.info(e);
         return resolve('Could not get ipfs hashes for assets');
       }
-      console.log('HASHES');
-      console.log(hashes);
     }
 
     for (let i = 0; i < objs.length; i++) {
@@ -369,7 +366,6 @@ export const makeImage = (objs, c, width, height, frame = {
     }
 
     assets = helpers.moveBackgrounds(assets);
-    console.log('SORTED ASSETS', assets);
 
     preloadImages(assets)
       .done(async (loadedImages) => {
@@ -390,7 +386,6 @@ export const makeImage = (objs, c, width, height, frame = {
             }
           }
           if (i === assets.length - 1) {
-            console.log('All assets loaded.');
             resolve({ message: 'Success' });
           }
         }
