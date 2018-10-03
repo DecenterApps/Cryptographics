@@ -119,7 +119,7 @@
     async created() {
       try {
         const numOfAssets = await getNumberOfAssetPacks();
-        this.allAssetPacks = [...Array(parseInt(numOfAssets)).keys()];
+        this.allAssetPacks = [...Array(parseInt(numOfAssets)).keys()].reverse();
       } catch (e) {
         console.log(e);
       } finally {

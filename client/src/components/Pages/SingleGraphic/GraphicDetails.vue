@@ -332,6 +332,10 @@
                 .price {
                     margin-right: 10px;
                     font-weight: normal;
+
+                    &:before {
+                        bottom: 6px;
+                    }
                 }
             }
         }
