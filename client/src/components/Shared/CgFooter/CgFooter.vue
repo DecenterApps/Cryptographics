@@ -1,7 +1,7 @@
 <template>
     <footer class="footer">
         <div class="container footer-container">
-            <router-link to="/" class="logo">
+            <router-link tag="div" to="/" class="logo">
                 <logo />
                 <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
             </router-link>
@@ -13,23 +13,29 @@
             </div>
             <div class="social">
                 <ico-social
-                        v-for="(item, index) in social"
-                        :href="item.url"
-                        :social-media="item.name"
-                        :key="index" />
+                    v-for="(item, index) in social"
+                    :href="item.url"
+                    :social-media="item.name"
+                    :key="index" />
             </div>
+            <a href="https://www.decenter.com/" target="_blank" class="decenter-logo">
+                <p>Developed by</p>
+                <logo-decenter />
+            </a>
         </div>
     </footer>
 </template>
 
 <script>
   import Logo from '../UI/Logo.vue';
+  import LogoDecenter from '../UI/LogoDecenter.vue';
   import IcoSocial from './IcoSocial.vue';
 
   export default {
     name: 'CgFooter',
     components: {
       Logo,
+      LogoDecenter,
       IcoSocial
     },
     data: () => ({
@@ -57,6 +63,13 @@
             padding: 15px 0;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            & div {
+                flex: 0 0 33%;
+            }
+            & > a {
+                flex: 1 0 100%;
+            }
             @media screen and (max-width: 767px) {
                 flex-direction: column;
                 padding: 30px 0;
@@ -69,6 +82,7 @@
                 color: #fff;
                 font-size: 15px;
                 font-family: Roboto, sans-serif;
+                margin-bottom: 15px;
                 svg {
                     margin-right: 15px;
                 }
@@ -87,9 +101,21 @@
                     }
                 }
             }
+            .decenter-logo {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                p {
+                    font-size: 9px;
+                    color: #fff;
+                    margin-bottom: 3px;
+                }
+            }
             .links-section {
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 a {
                     font-size: 12px;
                     margin-right: 25px;
