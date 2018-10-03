@@ -5,6 +5,12 @@
         :class="[color, size]">
         {{ value }}
     </span>
+    <span
+        v-else-if="showIfFree && value >= 0"
+        class="price"
+        :class="[color, size]">
+        {{ value }}
+    </span>
 </template>
 
 <script>
@@ -22,6 +28,10 @@ export default {
         size: {
             type: String,
             default: 'normal'
+        },
+        showIfFree: {
+            type: Boolean,
+            default: false
         }
     }
 }
