@@ -156,6 +156,7 @@
             &:hover {
                 .asset-type {
                     opacity: 1;
+                    background-color: #000;
                 }
             }
             .asset-type {
@@ -169,11 +170,8 @@
                 min-height: 22px;
                 min-width: 22px;
                 pointer-events: none;
-                transition: opacity .2s ease-in-out;
-                opacity: .4;
-                &.is-bg {
-                    background-color: #F55800;
-                }
+                transition: all .2s ease-in-out;
+                opacity: .6;
             }
             img {
                 position: relative;
