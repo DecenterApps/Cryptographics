@@ -213,6 +213,16 @@
                 font-size: 16px;
             }
         }
+
+        .price-section .small-title, .hover-info, .small-title {
+            display: flex;
+
+            .price {
+                max-width: 55px;
+
+                &:before { top: 2px; }
+            }
+        }
     }
 
     .meta-info,

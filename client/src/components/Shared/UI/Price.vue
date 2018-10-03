@@ -1,9 +1,10 @@
 <template>
     <span
+        :title="`${formatNum(value)}`"
         v-if="value > 0"
         class="price"
         :class="[color, size]">
-        {{ value }}
+        {{ formatNum(value) }}
     </span>
     <span
         v-else-if="showIfFree && value >= 0"
@@ -14,17 +15,28 @@
 </template>
 
 <script>
-export default {
-    name: 'Price',
-    props: {
-        value: {
-            type: String,
-            default: '0.00'
+    import { formatSmallNumber } from 'services/utils';
+
+    export default {
+        name: 'Price',
+        props: {
+            value: {
+                type: String,
+                default: '0.00'
+            },
+            color: {
+                type: String,
+                default: 'black'
+            },
+            size: {
+                type: String,
+                default: 'normal'
+            }
         },
-        color: {
-            type: String,
-            default: 'black'
+        methods: {
+          formatNum(num) { return formatSmallNumber(parseFloat(num)); },
         },
+<<<<<<< HEAD
         size: {
             type: String,
             default: 'normal'
@@ -33,8 +45,9 @@ export default {
             type: Boolean,
             default: false
         }
+=======
+>>>>>>> cf7487da833e3a64ad091dfc3c54be6753683bea
     }
-}
 </script>
 
 <style lang="scss" scoped>
