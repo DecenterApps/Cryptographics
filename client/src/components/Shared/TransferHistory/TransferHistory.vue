@@ -34,7 +34,9 @@
                                     <span class="owner" v-if="index === 0">owner</span>
                                 </div>
                                 <div class="time">{{ trade.time }}</div>
-                                <price size="small" :value="trade.price" />
+                                <div class="price-wrapper">
+                                    <price size="small" :value="trade.price" />
+                                </div>
                             </div>
                         </div>
 
@@ -165,12 +167,14 @@
                     width: 216px;
                 }
 
-                .price {
+                .price-wrapper {
                     width: 110px;
-                    text-align: right;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+                    display: flex;
+                    justify-content: flex-end;
+
+                    .price {
+                        max-width: 70px;
+                    }
                 }
 
                 .time {
