@@ -246,6 +246,7 @@
         const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
         try {
+          this.openLoadingModal('Uploading your asset pack to IPFS...');
           let coverImage = canvasClone.toDataURL('image/png', 1);
           let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
           let metadata = {
@@ -277,7 +278,7 @@
                     console.log(price);
                     const attributes = this.assets.map(item => item.attribute);
                     console.log(attributes);
-                    this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+                    this.openLoadingModal('Please confirm the transaction in MetaMask.');
                     const transactionPromise = await createAssetPack(
                       utils.getBytes32FromIpfsHash(coverHash),
                       attributes,

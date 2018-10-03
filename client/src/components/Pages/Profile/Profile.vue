@@ -29,10 +29,10 @@
                     <div class="tabs">
                         <div class="current-tabs">
                             <button @click="changeTab('gallery')" :class="['large-title', isActive('gallery')]">
-                                Gallery
+                                My cryptographics
                             </button>
                             <button @click="changeTab('asset-packs')" :class="['large-title', isActive('asset-packs')]">
-                                Asset Packs
+                                My asset packs
                             </button>
                         </div>
                     </div>

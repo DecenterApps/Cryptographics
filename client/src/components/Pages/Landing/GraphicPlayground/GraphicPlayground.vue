@@ -1,7 +1,10 @@
 <template>
     <div class="hero">
-        <div class="canvas-holder-wrapper">
+        <div class="canvas-holder-wrapper" @click="renderCanvas">
             <Canvas :canvasData="canvasData" />
+            <div class="tap-to-recompose">
+                <span>Tap to recompose</span>
+            </div>
         </div>
         <div class="right">
             <h2 class="large-title">This is a <br> cryptographic</h2>
@@ -9,14 +12,14 @@
                 <p>A graphic created by you, with a little help from provably secure randomness. </p>
                 <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
                     trade.</p>
-                <p>Try creating another one.</p>
+                <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
             <div class="button-group">
                 <cg-button button-style="primary" @click="renderCanvas">
                     Recompose
                 </cg-button>
                 <cg-button button-style="tertiary" icon-type="download" @click="openInEditor">
-                    continue in editor
+                    Customize and save
                 </cg-button>
             </div>
         </div>
@@ -130,15 +133,45 @@
         margin: auto auto;
         height: 351px;
         width: 250px;
+        cursor: pointer;
+        @media (min-width: 768px) {
+            &:hover {
+                .tap-to-recompose {
+                    opacity: 1;
+                }
+            }
+        }
 
         @media screen and (max-width: 767px) {
-            padding-bottom: 380px;
-            box-sizing: content-box;
+            margin-bottom: 427px;
         }
 
         canvas {
             height: 100%;
             width: 100%;
+        }
+
+        .tap-to-recompose {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            width: 226px;
+            height: 293px;
+            background-color: rgba(0, 0, 0, .5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            animation: fade-out 2s;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .2s;
+            @keyframes fade-out {
+                0% { opacity: 1; }
+                60% { opacity: 1; }
+                100% { opacity: 0; }
+            }
         }
     }
 </style>
@@ -151,9 +184,9 @@
         height: 566px;
         padding: 45px 0;
         @media screen and (max-width: 767px) {
-            background-position: 50% 0px;
-            padding-top: 415px;
-            height: 946px;
+            background-position: 50% -50px;
+            padding-top: 0;
+            height: 836px;
             background-color: #eee;
         }
 
@@ -172,7 +205,7 @@
             @media screen and (max-width: 767px) {
                 position: relative;
                 left: 0;
-                top: 170px;
+                top: 530px;
             }
 
             .large-title {
@@ -201,6 +234,9 @@
 
             .button-group button {
                 margin: 0;
+            }
+            @media screen and (max-width: 767px) {
+                .button-group { display: none; }
             }
         }
     }
