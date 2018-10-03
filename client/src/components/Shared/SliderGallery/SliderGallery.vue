@@ -62,7 +62,7 @@
         { image: '/assets/images/Slide 09.jpg', assetPacks: [{ image: '/assets/images/landing-ap-2.jpg', id: 2 }, { image: '/assets/images/landing-ap-3.jpg', id: 3 }] },
       ],
       textSliderWords: [
-        'inspiring', 'dramatic', 'unique', 'different', 'forever', 'unconventional', 'striking',
+        'inspiring', 'dramatic', 'unique', 'different', 'eternal', 'unconventional', 'striking',
       ].sort(() => 0.5 - Math.random()),
     }),
     computed: {
