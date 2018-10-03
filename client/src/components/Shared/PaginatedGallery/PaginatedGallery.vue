@@ -189,6 +189,10 @@
                     font-family: Roboto, sans-serif;
                     margin: 0;
                     text-align: left;
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
                 &:hover {
                     .overlay {

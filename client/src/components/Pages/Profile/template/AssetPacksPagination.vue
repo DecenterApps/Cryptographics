@@ -207,6 +207,10 @@
                     .bottom {
                         display: flex;
                         justify-content: space-between;
+                        align-items: center;
+
+                        .user { max-width: 150px }
+                        .price { max-width: 75px; }
                     }
                 }
             }
