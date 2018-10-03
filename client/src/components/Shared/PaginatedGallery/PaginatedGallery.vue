@@ -44,6 +44,7 @@
                 :total="filteredIds === null ? 0 : filteredIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
+        <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
@@ -75,6 +76,10 @@
         default: false
       },
       centered: {
+        type: Boolean,
+        default: false
+      },
+      seeMore: {
         type: Boolean,
         default: false
       },
