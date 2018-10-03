@@ -9,14 +9,14 @@
                 <p>A graphic created by you, with a little help from provably secure randomness. </p>
                 <p>It uses assets uploaded by artists to create this one-of-a-kind piece that you can store and
                     trade.</p>
-                <p>Try creating another one.</p>
+                <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
             <div class="button-group">
                 <cg-button button-style="primary" @click="renderCanvas">
                     Recompose
                 </cg-button>
                 <cg-button button-style="tertiary" icon-type="download" @click="openInEditor">
-                    continue in editor
+                    Customize and save
                 </cg-button>
             </div>
         </div>
