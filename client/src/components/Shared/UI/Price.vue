@@ -1,31 +1,36 @@
 <template>
     <span
-        :title="`${value}`"
+        :title="`${formatNum(value)}`"
         v-if="value > 0"
         class="price"
         :class="[color, size]">
-        {{ value }}
+        {{ formatNum(value) }}
     </span>
 </template>
 
 <script>
-export default {
-    name: 'Price',
-    props: {
-        value: {
-            type: String,
-            default: '0.00'
+    import { formatSmallNumber } from 'services/utils';
+
+    export default {
+        name: 'Price',
+        props: {
+            value: {
+                type: String,
+                default: '0.00'
+            },
+            color: {
+                type: String,
+                default: 'black'
+            },
+            size: {
+                type: String,
+                default: 'normal'
+            }
         },
-        color: {
-            type: String,
-            default: 'black'
+        methods: {
+          formatNum(num) { return formatSmallNumber(parseFloat(num)); },
         },
-        size: {
-            type: String,
-            default: 'normal'
-        }
     }
-}
 </script>
 
 <style lang="scss" scoped>
