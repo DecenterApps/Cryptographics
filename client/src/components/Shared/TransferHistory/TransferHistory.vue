@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="content-wrapper" v-if="trades.length > 0">
-                        <div class="trades-list" v-for="(trade, index) in trades.reverse()" :key="index">
+                        <div class="trades-list" v-for="(trade, index) in trades" :key="index">
                             <div class="trade">
                                 <div class="index">{{ trades.length - index }}.</div>
                                 <div class="buyer">
