@@ -2,21 +2,19 @@
     <div class="asset-picker">
         <div class="header">
             <h2 class="large-title">Select Asset Packs</h2>
-            <div>
-                <!--<div description="Please select the asset packs that you want to include in your cryptographic. You can select as many asset-->
-                <!--packs as you want, but please note that a random number of assets will be included in a cryptographic, with-->
-                <!--the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of-->
-                <!--cryptographics afterwards.">-->
-                <!--aa-->
-                <!--</div>-->
+             <button v-tippy="{
+                html: '#tooltip-1',
+                interactive : true,
+                animation : 'shift-away',
+                theme : 'light',
+                placement: 'left',
+                flipBehavior: ['left', 'bottom']}">
+                I
+            </button>
+            <div id="tooltip-1" class="hidden" v-tippy-html>
+                <p class="tooltip">Please select the asset packs that you want to include in your cryptographic. You can select as many asset packs as you want, but please note that a random number of assets will be included in a cryptographic, with the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of cryptographics afterwards.</p>
             </div>
         </div>
-        <!--<p class="page-description">-->
-        <!--Please select the asset packs that you want to include in your cryptographic. You can select as many asset-->
-        <!--packs as you want, but please note that a random number of assets will be included in a cryptographic, with-->
-        <!--the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of-->
-        <!--cryptographics afterwards.-->
-        <!--</p>-->
         <separator />
         <div class="selected-asset-packs">
             <div class="large-title">Selected asset packs</div>
@@ -155,6 +153,9 @@
 </script>
 
 <style scoped lang="scss">
+    .hidden {
+        display: none;
+    }
 
     .asset-picker {
         width: 100%;
@@ -227,12 +228,12 @@
         }
     }
 
-    .page-description {
+    .tooltip {
         font-family: Roboto, sans-serif;
         font-size: 12px;
-        color: #717171;
-        margin-top: 30px;
-        margin-bottom: 0;
+        text-align: left;
+        margin: 0;
+        color: #717171;;
         max-width: 650px;
         font-weight: 300;
         line-height: 19px;

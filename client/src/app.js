@@ -4,6 +4,7 @@ import router from './router';
 import store from './store/store';
 import Vuebar from 'vuebar';
 import AsyncComputed from 'vue-async-computed';
+import VueTippy from 'vue-tippy';
 
 import App from './components/App.vue';
 
@@ -52,6 +53,7 @@ Vue.component('separator', Separator);
 Vue.use(VueMasonryPlugin);
 Vue.use(Vuebar);
 Vue.use(AsyncComputed);
+Vue.use(VueTippy);
 
 const app = new Vue({
   ...App,

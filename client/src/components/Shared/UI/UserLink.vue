@@ -52,6 +52,7 @@ export default {
         width: 33px;
         min-height: 33px;
         margin-right: 10px;
+        // sto
         &.white {
             background-color: #fff;
         }
