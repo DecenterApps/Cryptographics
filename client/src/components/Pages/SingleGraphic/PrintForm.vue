@@ -100,6 +100,7 @@ export default {
     postalCode: '',
     phone: '',
     shippingMethod: 'Printful',
+    postTo: '',
     printPrice: 0.05,
     isValidEmail: true,
     isValidQuantity: true,
@@ -121,6 +122,7 @@ export default {
   },
   created() {
     this.graphicId = this.$route.params.id;
+    this.postTo = '//' + window.location.hostname + '/api/print-form';
   },
   methods: {
     changeShippingMethod(newValue) {
@@ -161,7 +163,7 @@ export default {
         Phone: this.phone,
         ShippingMethod: this.shippingMethod
       };
-      axios.post('//cryptographics.decenter.com/api/print-form', data, {
+      axios.post(this.postTo, data, {
           headers: {
             'Cache-Control': 'no-cache',
             'Content-Type': 'application/json',
