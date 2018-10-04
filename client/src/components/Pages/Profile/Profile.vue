@@ -14,7 +14,11 @@
                     </cg-button>
                 </div>
                 <div class="right button-group price-group">
-                    <price :show-if-free="true" :value="totalBalance" />
+                    <price
+                            v-if="userProfile"
+                            :show-if-free="true"
+                            :value="totalBalance"
+                    />
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
@@ -55,7 +59,9 @@
                                 Created {{userProfile ? 'by You' : ''}}
                             </cg-button>
                         </div>
-                        <paginated-gallery :emptyStateType="`profile-gallery-${showGraphics}${(userProfile ? '-own' : '')}`" :imageIds="shownImageIds" :display-overlay="true" />
+                        <paginated-gallery
+                                :emptyStateType="`profile-gallery-${showGraphics}${(userProfile ? '-own' : '')}`"
+                                :imageIds="shownImageIds" :display-overlay="true" />
                     </div>
                     <div class="assets" v-if="currentTab === 'asset-packs'">
                         <div class="button-group">
@@ -85,8 +91,12 @@
                     </div>
                 </template>
                 <template v-else>
-                    <p>In order to update your username and profile image you will need <a target="_blank" rel="noopener noreferrer" href="https://metamask.io/">MetaMask.</a></p>
-                    <p>If you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
+                    <p>In order to update your username and profile image you will need <a target="_blank"
+                                                                                           rel="noopener noreferrer"
+                                                                                           href="https://metamask.io/">MetaMask.</a>
+                    </p>
+                    <p>If you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a>
+                        with us.</p>
                 </template>
             </div>
         </div>
@@ -182,12 +192,12 @@
           this.fetchBalances();
         }
       },
-      currentUserUsername: function(val) {
+      currentUserUsername: function (val) {
         if (this.userProfile) {
           this.username = val;
         }
       },
-      currentUserAvatar: function(val) {
+      currentUserAvatar: function (val) {
         if (this.userProfile) {
           this.avatar = val;
         }
@@ -202,7 +212,7 @@
         this.getAssetPacks();
       },
       '$route.path': function (id) {
-        this.onCreated()
+        this.onCreated();
       }
     },
     methods: {
@@ -217,12 +227,12 @@
         if (this.userProfile) {
           this.userAddress = this.currentUserAddress;
           this.username = this.currentUserUsername;
-          this.avatar =  this.currentUserAvatar;
+          this.avatar = this.currentUserAvatar;
         } else {
           this.userAddress = this.$route.params.userId;
           this.username = await getUsername(this.userAddress);
           const getAvatarBytes32 = await getAvatar(this.userAddress);
-          const initialAvatar = "0x0000000000000000000000000000000000000000000000000000000000000000";
+          const initialAvatar = '0x0000000000000000000000000000000000000000000000000000000000000000';
           if (getAvatarBytes32 === initialAvatar) {
             this.avatar = DEFAULT_AVATAR;
           } else {
