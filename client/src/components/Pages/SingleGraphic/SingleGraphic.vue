@@ -3,7 +3,7 @@
         <layout layout-style="full-screen full-height" v-if="loading">
             <div class="loading-section">
                 <loader />
-                <h3>Please wait, loading cryptographics from the blockchain.</h3>
+                <h3>Please be patient, we are loading the cryptographic from the blockchain and IPFS.</h3>
             </div>
         </layout>
 

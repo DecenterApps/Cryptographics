@@ -17,7 +17,7 @@
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
         <error-bar v-if="network && deployedNetwork !== network"
-                   :error="`Wrong network, please switch to ${testnets[deployedNetwork]} testnet.`"
+                   :error="`Wrong network, please switch to the ${networksDisplay[deployedNetwork]}.`"
         />
     </main>
 </template>
@@ -31,7 +31,7 @@
   import CgFooter from 'shared/CgFooter/CgFooter.vue';
   import ErrorBar from './Shared/ErrorBar/ErrorBar';
   import clientConfig from 'config/clientConfig.json';
-  import { testnets } from 'config/constants';
+  import { networksDisplay } from 'config/constants';
 
   export default {
     name: 'App',
@@ -43,7 +43,7 @@
     data: () => ({
       fullScreenPages: ['create-asset-pack', 'create-cryptographic'],
       deployedNetwork: clientConfig.network,
-      testnets,
+      networksDisplay,
     }),
     beforeMount() {
       this[SET_USER_CONFIG]();

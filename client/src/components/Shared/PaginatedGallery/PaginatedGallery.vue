@@ -2,7 +2,7 @@
     <div class="gallery" :class="{centered: centered}">
         <div v-if="loading" class="loading-section">
             <loader />
-            <h3>Please wait, loading cryptographics from the blockchain.</h3>
+            <h3>Please be patient, we are loading cryptographics from the blockchain and IPFS.</h3>
         </div>
         <div v-if="!loading">
             <div v-if="images && images.length > 0">
@@ -243,7 +243,8 @@
             justify-content: center;
             background-color: #CECECE;
             margin-top: 0px;
-            & .loader-content {
+
+            .loader-content {
                 margin-bottom: 20px;
             }
         }
