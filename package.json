@@ -14,7 +14,7 @@
     "build": "webpack --config client/build/webpack.prod.js -p",
     "dev": "webpack-dev-server --history-api-fallback --mode=development --open --port 3300 --compress --config ./client/build/webpack.config.js",
     "generatePacks": "node client/config/generatePacks.js 0",
-    "copyConfig": "cp client/config/config.json.dist client/config/config.json"
+    "copyConfig": "cp client/config/config.json.dist client/config/config.json && cp client/config/clientConfig.json.dist client/config/clientConfig.json"
   },
   "dependencies": {
     "add-asset-html-webpack-plugin": "^2.1.3",

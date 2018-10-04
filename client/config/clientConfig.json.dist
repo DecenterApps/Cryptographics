@@ -1,4 +1,5 @@
 {
     "network": 42,
-    "provider": "https://kovan.infura.io"
+    "provider": "https://kovan.infura.io",
+    "deployBlockNumber": 8940000
 }
