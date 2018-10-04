@@ -56,17 +56,6 @@
                 </div>
                 <div v-if="image.description.length > 0" class="description-label">Description:</div>
                 <p class="description">{{ image.description }}</p>
-                <div class="graphic-controls">
-                    <separator></separator>
-                    <div class="bottom-controls">
-                        <cg-button
-                                button-style="secondary"
-                                @click="openModal({ name: 'transferHistory', data: { image } })"
-                        >
-                            Ownership history
-                        </cg-button>
-                    </div>
-                </div>
             </div>
             <div
                     v-if="isLogged && !isForSale"
@@ -139,6 +128,20 @@
                             <cg-button @click="submitBuyImage">Buy</cg-button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div
+                    class="graphic-controls"
+                    v-if="!isForSale && !isLogged"
+            >
+                <separator></separator>
+                <div class="bottom-controls">
+                    <cg-button
+                            button-style="secondary"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        Ownership history
+                    </cg-button>
                 </div>
             </div>
         </div>
