@@ -12,4 +12,11 @@ export const testnets = {
   '4': 'Rinkeby',
 };
 
+export const networksDisplay = {
+  '42': 'Kovan Testnet',
+  '1': 'Main Ethereum Network',
+  '3': 'Ropsten Testnet',
+  '4': 'Rinkeby Testnet',
+};
+
 export const PRINT_ORDERS_ADDRESS = '0x6e11fd408290293c0bf3be9e7fc405bace52e36b'; // TODO change to real address, this is aleksandars just for testing purpose
