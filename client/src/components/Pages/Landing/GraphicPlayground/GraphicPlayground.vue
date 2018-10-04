@@ -13,7 +13,7 @@
                     trade.</p>
                 <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
-            <div class="button-group">
+            <div class="button-group hero-button-group">
                 <cg-button button-style="primary" @click="renderCanvas">
                     Recompose
                 </cg-button>
@@ -241,6 +241,10 @@
             }
             @media screen and (max-width: 767px) {
                 .button-group { display: none; }
+            }
+
+            .hero-button-group .button {
+                text-transform: none;
             }
         }
     }
