@@ -2,7 +2,7 @@
     <div>
         <div v-if="loading" class="loading-section">
             <loader />
-            <h3>Please be patient, we are loading asset packs from the blockchain and IPFS.</h3>
+            <h3>Please wait, we are loading asset packs from the blockchain and IPFS.</h3>
         </div>
         <div v-if="assetPacks !== false && this.loading === false" class="asset-packs" :class="grid">
             <div
