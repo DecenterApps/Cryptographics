@@ -10,6 +10,8 @@ Collectors can purchase and collect Cryptographics, either to create a collectio
 Cryptographics is powered by the Ethereum blockchain and each Cryptographic is stored as a unique ERC721 token.
 
 
+You can try creating cryptographics by visiting [cryptographics.app](https://cryptographics.app)
+
 ### Run with pre-deployed contracts:
 ```
 $ yarn
