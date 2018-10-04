@@ -2,18 +2,23 @@
     <div class="asset-picker">
         <div class="header">
             <h2 class="large-title">Select Asset Packs</h2>
-             <button v-tippy="{
-                html: '#tooltip-1',
-                interactive : true,
-                animation : 'shift-away',
-                theme : 'light',
-                placement: 'left',
-                flipBehavior: ['left', 'bottom']}">
-                I
-            </button>
             <div id="tooltip-1" class="hidden" v-tippy-html>
-                <p class="tooltip">Please select the asset packs that you want to include in your cryptographic. You can select as many asset packs as you want, but please note that a random number of assets will be included in a cryptographic, with the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of cryptographics afterwards.</p>
+                <p class="tooltip-content">Please select the asset packs that you want to include in your cryptographic. You can select as many asset packs as you want, but please note that a random number of assets will be included in a cryptographic, with the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of cryptographics afterwards.</p>
             </div>
+            <button
+                v-tippy="{
+                    html: '#tooltip-1',
+                    interactive : true,
+                    duration : 0,
+                    animation : 'fade',
+                    theme : 'cryptographics',
+                    placement: 'left-start',
+                    flipBehavior: ['left', 'bottom-end']
+                }"
+                class="info-btn"
+            >
+                <ico-info />
+            </button>
         </div>
         <separator />
         <div class="selected-asset-packs">
@@ -83,6 +88,7 @@
 <script>
   import Decimal from 'decimal.js';
   import AssetPickerPagination from '../template/AssetPickerPagination.vue';
+  import IcoInfo from 'shared/UI/Icons/IcoInfo.vue';
   import {
     METAMASK_ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
@@ -104,7 +110,7 @@
       showPacks: 'all',
       loading: true,
     }),
-    components: { AssetPickerPagination },
+    components: { AssetPickerPagination, IcoInfo },
     computed: {
       ...mapGetters({
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
@@ -153,12 +159,16 @@
 </script>
 
 <style scoped lang="scss">
-    .hidden {
-        display: none;
-    }
-
     .asset-picker {
         width: 100%;
+    }
+
+    .info-btn {
+        border: none;
+        margin: 0;
+        padding: 0;
+        background: none;
+        cursor: pointer;
     }
 
     .line-separator {
@@ -227,18 +237,6 @@
             }
         }
     }
-
-    .tooltip {
-        font-family: Roboto, sans-serif;
-        font-size: 12px;
-        text-align: left;
-        margin: 0;
-        color: #717171;;
-        max-width: 650px;
-        font-weight: 300;
-        line-height: 19px;
-    }
-
     .filter-section {
         display: flex;
         justify-content: space-between;

@@ -1,5 +1,5 @@
 {
-  "name": "digitalprint",
+  "name": "Cryptographics",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -82,12 +82,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DecenterApps/DigitalPrint.git"
+    "url": "git+https://github.com/DecenterApps/Cryptographics.git"
   },
-  "author": "Nikola Madjarevic",
+  "author": "Decenter",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DecenterApps/DigitalPrint/issues"
+    "url": "https://github.com/DecenterApps/Cryptographics/issues"
   },
-  "homepage": "https://github.com/DecenterApps/DigitalPrint#readme"
+  "homepage": "https://github.com/DecenterApps/Cryptographics#readme"
 }
