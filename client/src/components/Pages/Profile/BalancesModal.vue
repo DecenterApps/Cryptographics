@@ -3,6 +3,10 @@
         <div>
             <h3 class="large-title">Account balances</h3>
         </div>
+        <div class="acc-wrapper">
+            <div class="label">Withdraw address:</div>
+            <div class="val">{{ currentUserAddress.toLowerCase() }}</div>
+        </div>
         <div>
             <h4>Asset Packs balance</h4>
             <p>These funds are collected from sales of your asset packs. </p>
@@ -94,7 +98,12 @@
 
 <style scoped lang="scss">
     .balances-modal-wrapper {
-        max-width: 300px;
+        max-width: 480px;
+
+        .large-title {
+            margin-bottom: 20px;
+        }
+
         h4 {
             font-weight: normal;
             font-size: 16px;
@@ -125,6 +134,19 @@
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+            }
+        }
+
+        .acc-wrapper {
+
+            .label {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+            .val {
+                font-size: 14px;
+                color: #747474;
             }
         }
     }
