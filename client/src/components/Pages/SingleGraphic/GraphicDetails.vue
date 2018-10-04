@@ -346,7 +346,7 @@
                     font-weight: normal;
 
                     &:before {
-                        bottom: 6px;
+                        bottom: 1px;
                     }
                 }
             }
