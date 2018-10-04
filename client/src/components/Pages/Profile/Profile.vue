@@ -345,7 +345,7 @@
                 max-width: 100px;
                 margin-right: 10px;
                 &:before {
-                    bottom: 6px;
+                    bottom: 2px;
                 }
             }
         }
