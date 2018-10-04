@@ -295,7 +295,7 @@
 
         &.inverted {
             background-color: #fff;
-
+            padding-bottom: 40px;
             .section-title {
                 color: #fff;
                 pointer-events: none;
@@ -304,7 +304,8 @@
         .section-title {
             position: absolute;
             z-index: 0;
-            top: -10vw;
+            // padding-top: 10px;
+            top: -9.5vw;
             font-size: 11vw;
             // line-height: 160px;
             color: #d9d9d9;
@@ -339,6 +340,7 @@
             text-align: center;
             position: relative;
             top: -29px;
+            margin-bottom: 20px;
             @media screen and (max-width: 767px) {
                 top: 10px;
             }
