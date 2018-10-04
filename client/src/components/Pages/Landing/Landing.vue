@@ -300,30 +300,20 @@
                 color: #fff;
                 pointer-events: none;
             }
-
-            .section-title {
-                margin-left: -263px;
-                @media screen and (max-width: 528px) {
-                    margin-left: -50%;
-                }
-            }
         }
         .section-title {
             position: absolute;
             z-index: 0;
-            top: -135px;
-            font-size: 160px;
-            line-height: 160px;
+            top: -10vw;
+            font-size: 11vw;
+            // line-height: 160px;
             color: #d9d9d9;
             font-family: YoungSerif-Regular, sans-serif;
             left: 50%;
-            margin-left: -622px;
+            transform: translateX(-50%);
             user-select: none;
             max-width: 100vw;
             overflow: hidden;
-            @media screen and (max-width: 1245px) {
-                margin-left: -50%;
-            }
         }
 
         p {
@@ -349,6 +339,9 @@
             text-align: center;
             position: relative;
             top: -29px;
+            @media screen and (max-width: 767px) {
+                top: 10px;
+            }
 
             .large-title {
                 margin-bottom: 40px;
