@@ -1,12 +1,14 @@
 <template>
     <div>
         <div class="trade-history-header">
-            <h3 class="large-title">Trade History</h3>
+            <h3 class="large-title">Ownership History</h3>
             <separator />
         </div>
 
         <div class="trade-history-content">
-            <div class="loader-wrapper" v-if="fetchingTrades"><loader /></div>
+            <div class="loader-wrapper" v-if="fetchingTrades">
+                <loader />
+            </div>
 
             <div class="loaded-wrapper" v-if="!fetchingTrades">
                 <div class="error-wrapper" v-if="fetchingTradesError">{{ fetchingTradesError }}</div>
@@ -17,9 +19,28 @@
                     </div>
 
                     <div class="content-wrapper" v-if="trades.length > 0">
-                        <div class="trades-list" v-for="(trade, index) in trades" :key="index">
+                        <div class="trades-list">
                             <div class="trade">
-                                <div class="index">{{ trades.length - index }}.</div>
+                                <div class="index">1.</div>
+                                <div class="buyer">
+                                    <span @click="closeModal">
+                                        <user-link
+                                                :to="'/user/' + image.creator"
+                                                :name="image.creatorMeta.username"
+                                                :avatar="image.creatorMeta.avatar"
+                                                color="black"
+                                                @click="closeModal"
+                                                additionalClass="ellipsis"
+                                        />
+                                    </span>
+                                    <span class="creator owner">creator</span>
+                                </div>
+                                <div class="time">{{ utils.timeConverter(image.timestamp / 1000) }}</div>
+                                <div class="price-wrapper">
+                                </div>
+                            </div>
+                            <div class="trade" v-for="(trade, index) in trades" :key="index">
+                                <div class="index">{{ index + 2 }}.</div>
                                 <div class="buyer">
                                     <span @click="closeModal">
                                         <user-link
@@ -31,7 +52,7 @@
                                         />
                                     </span>
 
-                                    <span class="owner" v-if="index === 0">owner</span>
+                                    <span class="owner" v-if="index === trades.length - 1">owner</span>
                                 </div>
                                 <div class="time">{{ trade.time }}</div>
                                 <div class="price-wrapper">
@@ -39,24 +60,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="creator-wrapper">
-                            <separator />
-                            <span @click="closeModal">
-                                <user-link
-                                        :to="'/user/' + image.creator"
-                                        :name="image.creatorMeta.username"
-                                        :avatar="image.creatorMeta.avatar"
-                                        color="black"
-                                        @click="closeModal"
-                                />
-                            </span>
-                            <span class="creator">creator</span>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -64,6 +72,7 @@
   import { mapActions } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
   import { getImageTransferHistory } from 'services/ethereumService';
+  import utils from 'services/utils';
 
   export default {
     name: 'TransferHistory',
@@ -76,6 +85,7 @@
       fetchingTrades: false,
       fetchingTradesError: '',
       trades: [],
+      utils
     }),
     methods: {
       ...mapActions({
