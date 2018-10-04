@@ -12,7 +12,7 @@ const imageminPngquant = require('imagemin-pngquant');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://mainnet.infura.io/ce2cJSQZefTbWxpnI1dZ`));
 
-const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
+const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const rl = readline.createInterface({
