@@ -43,7 +43,7 @@
       try {
         const numOfImages = parseInt(await getImageCount());
         this.imageIds = [...Array(parseInt(numOfImages)).keys()].reverse();
-        this.imagesOnSale = (await getImagesOnSale())[0];
+        this.imagesOnSale = (await getImagesOnSale())[0].reverse();
       } catch (e) {
         console.log(e);
       }
