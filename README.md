@@ -1,4 +1,4 @@
-# Cyptographics
+# Cryptographics
 
 ### About
 Cryptographics is a fully decentralized visual platform that allows users to create, store and trade unique randomly generated digital artwork on the blockchain. Artists, illustrators, photographers or other graphic designers, can create and upload their asset packs, making them available for Creators to buy and use.
