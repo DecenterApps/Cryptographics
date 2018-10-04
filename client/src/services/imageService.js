@@ -7,14 +7,15 @@ import {
 
 import utils from 'services/utils';
 import config from 'config/config.json';
+import clientConfig from 'config/clientConfig.json';
 import { ipfsNodePath } from 'config/constants';
 import * as helpers from 'services/helpers';
 import { preloadImages } from './helpers';
 
-const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks['42'].address;
+const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
 const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
-const assetManagerContractAddress = config.assetManagerContract.networks['42'].address;
+const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const DELAY = 150;
