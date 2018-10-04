@@ -43,7 +43,7 @@
         margin: 20px 0;
         font-size: 20px;
         line-height: 52px;
-        font-family: 'YoungSerif-Regular', serif;
+        text-align: center;
 
         a {
             text-decoration: underline;
