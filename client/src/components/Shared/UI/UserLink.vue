@@ -50,7 +50,7 @@ export default {
         flex: 1;
         border-radius: 50%;
         width: 33px;
-        height: 33px;
+        min-height: 33px;
         margin-right: 10px;
         &.white {
             background-color: #fff;
