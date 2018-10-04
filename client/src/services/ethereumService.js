@@ -657,13 +657,19 @@ export const fromWei = (value, decimals) => {
   return eth;
 };
 
-export const withdraw = async (fromCt, address) => {
-  const ct = fromCt === 'marketplace'
-    ? marketPlaceContract()
-    : assetManagerContract();
-  const account = await getAccounts();
-  return await ct.methods.withdraw().send({ from: account });
-};
+export const withdraw = (fromCt, address) =>
+  new Promise(async (resolve, reject) => {
+    const ct = fromCt === 'marketplace'
+      ? marketPlaceContract()
+      : assetManagerContract();
+    const account = await getAccounts();
+    const transactionPromise = ct.methods.withdraw().send({ from: account },
+      (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        resolve(() => transactionPromise);
+      });
+  });
 
 export const sendETHtoAddress = (from, to, value) => {
   try {

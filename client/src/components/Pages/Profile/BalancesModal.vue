@@ -11,7 +11,8 @@
                         button-style="secondary"
                         @click="withdraw('asset')"
                         :disabled="assetBalance === '0'"
-                >Withdraw</cg-button>
+                >Withdraw
+                </cg-button>
                 <span class="eth-wrapper">
                     <span>ETH:</span>
                     <span class="eth">{{assetBalance}}</span>
@@ -26,7 +27,8 @@
                         button-style="secondary"
                         @click="withdraw('marketplace')"
                         :disabled="marketplaceBalance === '0'"
-                >Withdraw</cg-button>
+                >Withdraw
+                </cg-button>
                 <span class="eth-wrapper">
                     <span>ETH:</span>
                     <span class="eth">{{marketplaceBalance}}</span>
@@ -45,6 +47,11 @@
     BALANCES,
     FETCH_BALANCES,
   } from 'store/user-config/types';
+  import {
+    SHOW_LOADING_MODAL,
+    HIDE_LOADING_MODAL,
+    CHANGE_LOADING_CONTENT,
+  } from 'store/modal/types';
 
   export default {
     name: 'BalancesModal',
@@ -67,9 +74,18 @@
     methods: {
       ...mapActions({
         fetchBalances: FETCH_BALANCES,
+        openLoadingModal: SHOW_LOADING_MODAL,
+        closeLoadingModal: HIDE_LOADING_MODAL,
+        changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       async withdraw(from) {
-        await withdraw(from);
+        this.openLoadingModal('Please confirm the transaction in MetaMask.');
+        const transactionPromise = await withdraw(from);
+        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your funds shortly.');
+        await transactionPromise();
+        this.closeLoadingModal();
+        this.openModal('Transaction successful! Please check your wallet balance.');
+
         setTimeout(() => this.fetchBalances(), 1000);
       }
     }

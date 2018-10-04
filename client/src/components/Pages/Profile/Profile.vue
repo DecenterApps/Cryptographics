@@ -14,7 +14,7 @@
                     </cg-button>
                 </div>
                 <div class="right button-group price-group">
-                    <price :value="totalBalance" />
+                    <price :show-if-free="true" :value="totalBalance" />
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
