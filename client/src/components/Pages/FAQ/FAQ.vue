@@ -33,7 +33,9 @@
                         <span>Generate cryptographic</span> where the Cryptographic DApp generates digital artwork with random assets from the selected Asset packs using a provably random algorithm. You, as the Creator, are free to try and Recompose the cryptographic as many times as you want before deciding to save it. You can also choose to use a square format canvas instead or add a white frame to your cryptographic.
                     </li>
                     <li>
-                        <span>Save cryptographic</span> where you name and describe your cryptographic, both in 20 characters or less, before clicking the Claim cryptographic button. This process will store your cryptographic to the blockchain and add the unique ERC-721 token to your MetaMask Ethereum account.
+                        <span>Save cryptographic</span> where you name and describe your cryptographic, before clicking
+                        the Claim cryptographic button. This process will store your cryptographic to the blockchain and
+                        add the unique ERC-721 token to your MetaMask Ethereum account.
                     </li>
                 </ol>
             </div>
