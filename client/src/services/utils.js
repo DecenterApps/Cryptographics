@@ -111,7 +111,7 @@ const isEmptyBytes = (string) => string === '0x000000000000000000000000000000000
  * @return {String}
  */
 const formatSmallNumber = (incomingOutput) => {
-  if (!incomingOutput) return incomingOutput.toString();
+  if (!incomingOutput || parseFloat(incomingOutput) > 0.000001) return incomingOutput.toString();
 
   let output = incomingOutput;
   let n = Math.log(output) / Math.LN10;
