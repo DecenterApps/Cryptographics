@@ -1,0 +1,5 @@
+{
+    "network": 1,
+    "provider": "https://mainnet.infura.io",
+    "deployBlockNumber": 6450000
+}

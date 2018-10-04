@@ -69,7 +69,7 @@ export const getFileContent = (hash) =>
   new Promise(async (resolve, reject) => {
     const ipfsTimeout = setTimeout(() => {
       reject('Couldn\'t fetch data. (TIMEOUT)');
-    }, 5000);
+    }, 20000);
     try {
       const file = await window.node.files.cat(hash);
       clearTimeout(ipfsTimeout);
