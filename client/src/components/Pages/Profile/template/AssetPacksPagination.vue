@@ -2,6 +2,7 @@
     <div>
         <div v-if="loading" class="loading-section">
             <loader />
+            <h3>Please be patient, we are loading asset packs from the blockchain and IPFS.</h3>
         </div>
         <div v-if="assetPacks !== false && this.loading === false" class="asset-packs" :class="grid">
             <div
@@ -231,7 +232,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-direction: column;
         background-color: #CECECE;
         margin-top: 30px;
+
+        .loader-content {
+            margin-bottom: 20px;
+        }
     }
 </style>
