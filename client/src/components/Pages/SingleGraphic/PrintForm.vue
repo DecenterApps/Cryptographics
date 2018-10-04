@@ -241,6 +241,7 @@ export default {
     }
     .graphic-controls {
         display: flex;
+        justify-content: space-between;
         .price {
             margin-left: 16px;
         }

@@ -1,13 +1,19 @@
 <template>
     <div class="graphic-details">
         <div class="graphic-meta">
-            <p v-if="image.usedAssets && backgroundAssets === 1">This cryptographic contains {{image.usedAssets.length}} assets, {{ backgroundAssets }} of which is a background.<br> The assets are from the following packs:</p>
+            <p v-if="image.usedAssets && backgroundAssets === 1">This cryptographic contains {{image.usedAssets.length}}
+                assets, {{ backgroundAssets }} of which is a background.<br> The assets are from the following packs:
+            </p>
 
-            <p v-if="image.usedAssets && backgroundAssets > 1">This cryptographic contains {{image.usedAssets.length}} assets, {{ backgroundAssets }} of which are backgrounds.<br> The assets are from the following packs:</p>
+            <p v-if="image.usedAssets && backgroundAssets > 1">This cryptographic contains {{image.usedAssets.length}}
+                assets, {{ backgroundAssets }} of which are backgrounds.<br> The assets are from the following packs:
+            </p>
 
-            <p v-if="image.usedAssets && backgroundAssets === 0">This cryptographic contains {{image.usedAssets.length}} assets, none of which are backgrounds.<br> The assets are from the following packs:</p>
+            <p v-if="image.usedAssets && backgroundAssets === 0">This cryptographic contains {{image.usedAssets.length}}
+                assets, none of which are backgrounds.<br> The assets are from the following packs:</p>
 
-            <p v-if="image.usedAssets.length === 1">This cryptographic contains {{image.usedAssets.length}} asset.<br> The asset is from the following pack:</p>
+            <p v-if="image.usedAssets.length === 1">This cryptographic contains {{image.usedAssets.length}} asset.<br>
+                The asset is from the following pack:</p>
 
             <div class="asset-packs">
                 <router-link
@@ -50,7 +56,6 @@
                 </div>
                 <div v-if="image.description.length > 0" class="description-label">Description:</div>
                 <p class="description">{{ image.description }}</p>
-
             </div>
             <div
                     v-if="isLogged && !isForSale"
@@ -62,7 +67,7 @@
                             button-style="secondary"
                             @click="openModal({ name: 'transferHistory', data: { image } })"
                     >
-                        Trade history
+                        Ownership history
                     </cg-button>
                     <div class="button-group">
                         <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
@@ -100,8 +105,10 @@
                     <div></div>
                     <div class="price-controls">
                         <price :value="image.price" />
-                        <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
-                        <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
+                        <cg-button button-style="secondary" class="remove-button" @click="removeFromMarketPlace">Cancel
+                            listing
+                        </cg-button>
+                        <cg-button @click="$emit('showPrintForm')">Order print</cg-button>
                     </div>
                 </div>
             </div>
@@ -114,7 +121,7 @@
                             button-style="secondary"
                             @click="openModal({ name: 'transferHistory', data: { image } })"
                     >
-                        Trade history
+                        Ownership history
                     </cg-button>
 
                     <div class="price-controls">
@@ -123,6 +130,20 @@
                             <cg-button @click="submitBuyImage">Buy</cg-button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div
+                    class="graphic-controls"
+                    v-if="!isForSale && !isLogged"
+            >
+                <separator></separator>
+                <div class="bottom-controls">
+                    <cg-button
+                            button-style="secondary"
+                            @click="openModal({ name: 'transferHistory', data: { image } })"
+                    >
+                        Ownership history
+                    </cg-button>
                 </div>
             </div>
         </div>
@@ -171,9 +192,9 @@
       }
     },
     created() {
-        this.image.usedAssetsInfo.forEach(asset => {
-            Math.floor((asset[2] / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
-        })
+      this.image.usedAssetsInfo.forEach(asset => {
+        Math.floor((asset[2] / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
+      });
     },
     methods: {
       ...mapActions({
@@ -259,6 +280,7 @@
     }
 
     .graphic-name {
+        width: 100%;
         .graphic-id {
             font-family: Roboto, sans-serif;
             font-size: 12px;
@@ -289,7 +311,6 @@
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            padding-left: 10px;
             padding-top: 10px;
             .user-link-wrapper {
                 position: relative;

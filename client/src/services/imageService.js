@@ -328,7 +328,16 @@ export const makeImage = (objs, c, width, height, frame = {
     context.fillStyle = '#fff';
     context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    if (assets.length === 0) return resolve('No assets provided.');
+    console.log('Number of assets ' + assets.length);
+    if (assets.length === 0) {
+      await drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+
+      if (frame.shouldDrawFrame) {
+        // DRAW FRAME
+        drawFrame(context, canvasHeight, canvasWidth, frame);
+      }
+      return resolve('No assets provided.');
+    }
 
     if (!assets[0].src && !assets[0].uploadSrc) {
       try {

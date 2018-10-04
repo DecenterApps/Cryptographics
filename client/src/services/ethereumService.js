@@ -233,7 +233,7 @@ export const getAvatar = async (address) => {
   return await digitalPrintImageContract().methods.getProfilePicture(address).call();
 };
 
-export const registerUser = (username, hashToProfilePicture, account) => 
+export const registerUser = (username, hashToProfilePicture, account) =>
   new Promise(async (resolve, reject) => {
     if (!web3.utils.isAddress(account)) return;
     try {
@@ -539,7 +539,7 @@ export const getAssetStats = async (id) => {
 export const getAssetInfo = async id => {
   let info = await assetManagerContract().methods.getAssetInfo(id).call();
   return info;
-}
+};
 
 export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets, width, height) => {
   // Hardcoded width & height because contract always uses 2:3 aspect
@@ -610,7 +610,7 @@ export const getImageTransferHistory = imageId =>
 
       const events = await contract.getPastEvents('ImageBought', {
         filter: { imageId },
-        fromBlock: 0
+        fromBlock: clientConfig.deployBlockNumber
       });
 
       const prices = events.map(event => web3.utils.fromWei(event.returnValues[2], 'ether'));
@@ -654,7 +654,7 @@ export const fromWei = (value, decimals) => {
     eth = Math.floor(eth / dec) * dec;
   }
   eth = web3.utils.fromWei(eth.toString(), 'ether');
-  return eth
+  return eth;
 };
 
 export const withdraw = async (fromCt, address) => {
@@ -670,9 +670,9 @@ export const sendETHtoAddress = (from, to, value) => {
     web3.eth.sendTransaction({
       from,
       to,
-      value: web3.utils.toWei(value, "ether")
+      value: web3.utils.toWei(value, 'ether')
     });
   } catch (err) {
     console.log(err);
   }
-}
+};
