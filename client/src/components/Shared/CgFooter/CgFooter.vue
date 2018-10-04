@@ -1,28 +1,34 @@
 <template>
     <footer class="footer">
         <div class="container footer-container">
-            <router-link tag="div" to="/" class="logo">
-                <logo />
-                <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
-            </router-link>
-            <div class="links-section">
-                <router-link to="/gallery" active-class="active">Gallery</router-link>
-                <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
-                <router-link to="/about" active-class="active">About</router-link>
-                <router-link to="/faq" active-class="active">FAQ</router-link>
+            <div class="row">
+                <router-link tag="div" to="/" class="logo">
+                    <logo />
+                    <div><strong>Cryptographics</strong><span>copyright 2018.</span></div>
+                </router-link>
+                <div class="links-section">
+                    <router-link to="/gallery" active-class="active">Gallery</router-link>
+                    <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
+                    <router-link to="/about" active-class="active">About</router-link>
+                    <router-link to="/faq" active-class="active">FAQ</router-link>
+                </div>
+                <div class="social">
+                    <ico-social
+                        v-for="(item, index) in social"
+                        :href="item.url"
+                        :social-media="item.name"
+                        :key="index" />
+                </div>
             </div>
-            <div class="social">
-                <ico-social
-                    v-for="(item, index) in social"
-                    :href="item.url"
-                    :social-media="item.name"
-                    :key="index" />
+            <div class="row">
+                <a href="https://www.decenter.com/" target="_blank" class="decenter-logo">
+                    <p>Developed by</p>
+                    <logo-decenter />
+                    <p>© 2018 Decenter. All rights reserved.</p>
+                </a>
             </div>
-            <a href="https://www.decenter.com/" target="_blank" class="decenter-logo">
-                <p>Developed by</p>
-                <logo-decenter />
-            </a>
         </div>
+        
     </footer>
 </template>
 
@@ -51,10 +57,13 @@
 <style scoped lang="scss">
     .footer {
         background-color: #000;
-        height: 210px;
+        height: 260px;
         display: flex;
         align-items: center;
         font-size: 12px;
+        @media screen and (max-width: 767px) {
+            height: auto;
+        }
         a {
             color: #fff;
             text-decoration: none;
@@ -62,13 +71,28 @@
         .footer-container {
             padding: 15px 0;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
             flex-wrap: wrap;
-            & div {
-                flex: 0 0 33%;
-            }
-            & > a {
-                flex: 1 0 100%;
+            width: 100%;
+            & > .row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                @media screen and (max-width: 767px) {
+                    & > div {
+                        margin-bottom: 40px;
+                    }
+                }
+                &:last-of-type {
+                    justify-content: center;
+                    margin-bottom: 0;
+                }
+                @media screen and (max-width: 767px) {
+                    flex-direction: column;
+                    align-items: center;
+                }
             }
             @media screen and (max-width: 767px) {
                 flex-direction: column;
@@ -102,14 +126,16 @@
                 }
             }
             .decenter-logo {
-                margin-top: 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                p {
-                    font-size: 9px;
+                svg {
+                    margin: 10px 0  30px;
+                }
+                p { 
+                    margin: 0;
+                    font-size: 12px;
                     color: #fff;
-                    margin-bottom: 3px;
                 }
             }
             .links-section {
