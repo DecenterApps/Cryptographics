@@ -11,7 +11,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-1.png" alt="">
                     </div>
-                    <p class="small-title">1. Select <br> Asset packs</p>
+                    <p class="small-title">Select <br> Asset packs</p>
                     <p class="secondary">
                         Random assets from the chosen packs will make it to your cryptographic.
                     </p>
@@ -21,7 +21,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-2.png" alt="">
                     </div>
-                    <p class="small-title">2. Generate a cryptographic</p>
+                    <p class="small-title">Generate a cryptographic</p>
                     <p class="secondary">
                         A provably random composition process creates your cryptographic.
                     </p>
@@ -31,7 +31,7 @@
                     <div class="image-wrapper">
                         <img src="./assets/step-3.png" alt="">
                     </div>
-                    <p class="small-title">3. Claim ownership</p>
+                    <p class="small-title">Claim <br> ownership</p>
                     <p class="secondary">
                         Saving your cryptographic lets you keep it forever or sell it in the Gallery
                     </p>
