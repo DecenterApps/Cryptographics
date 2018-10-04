@@ -105,8 +105,10 @@
                     <div></div>
                     <div class="price-controls">
                         <price :value="image.price" />
-                        <cg-button class="remove-button" @click="removeFromMarketPlace">Cancel listing</cg-button>
-                        <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
+                        <cg-button button-style="secondary" class="remove-button" @click="removeFromMarketPlace">Cancel
+                            listing
+                        </cg-button>
+                        <cg-button @click="$emit('showPrintForm')">Order print</cg-button>
                     </div>
                 </div>
             </div>
