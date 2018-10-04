@@ -86,7 +86,7 @@
                             :max-length="600"
                     />
                 </div>
-                <!--<separator></separator>-->
+                <separator></separator>
                 <div class="bottom-controls buy-screen">
                     <div>
                         <cg-button
