@@ -352,6 +352,7 @@
         }, 'image/jpeg');
       },
       changeStep(step) {
+        window.scrollTo(0, 0);
         this.$emit('stepChange', step);
       },
       toggleRatio(square) {
