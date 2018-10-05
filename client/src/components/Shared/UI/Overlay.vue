@@ -12,6 +12,7 @@
     transition: opacity .2s ease-in-out;
     opacity: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     .background {
@@ -31,6 +32,10 @@
         &:last-of-type {
             margin-right: 0;
         }
+    }
+    p {
+        z-index: 1;
+        color: white;
     }
 }
 </style>

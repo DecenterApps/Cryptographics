@@ -1,7 +1,17 @@
 <template>
     <div class="graphic-builder">
         <div class="left">
-            <Canvas :canvasData="canvasData"></Canvas>
+            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? renderCanvas() : download()">
+                <overlay v-if="currentStep === 2" key="1">
+                    <button-icon icon-type="download" />
+                    <p>Download</p>
+                </overlay>
+                <overlay v-if="currentStep === 1" key="2">
+                    <button-icon icon-type="recompose" />
+                    <p>Recompose</p>
+                </overlay>
+                <Canvas :canvasData="canvasData"></Canvas>
+            </div>
         </div>
         <!-- FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
         <div v-if="currentStep === 1" class="right">
@@ -22,6 +32,11 @@
                     <div @click="changeStep(0)" class="add-more">
                         +
                     </div>
+                </div>
+
+                <div class="help">
+                    <p>Use the + button above to add more asset packs or change your selection.</p>
+                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim ownership.</p>
                 </div>
             </div>
 
@@ -68,7 +83,17 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="help">
+                    <p>This is your cryptographic.</p>
+                    <p>You can simply click it and download an image file to your device.</p>
+                    <p>
+                        Claiming a cryptographic also means that the artists whose asset packs you used receive a
+                        payment for them, after which you can use them for any number of cryptographics in the future.
+                    </p>
+                </div>
             </div>
+
 
             <div class="controls">
                 <div class="top-controls buy-screen">
@@ -372,6 +397,28 @@
 
         .left {
             flex-shrink: 1;
+            .canvas-with-overlay-wrapper {
+                position: relative;
+                p {
+                    font-size: 16px;
+                    margin: 10px 0;
+                }
+                .overlay {
+                    transition: opacity .2s;
+                    animation: fade-out 1s;
+                    @keyframes fade-out {
+                        0% { opacity: 1; }
+                        60% { opacity: 1; }
+                        100% { opacity: 0; }
+                    }
+                }
+                &:hover {
+                    .overlay {
+                        opacity: 1;
+                        cursor: pointer;
+                    }
+                }
+            }
         }
         .right {
             display: flex;
@@ -436,8 +483,7 @@
 
                 .asset-pack-meta {
                     display: flex;
-                    /*align-items: flex-end;*/
-                    justify-content: flex-end;
+                    justify-content: center;
                     flex-direction: column;
                     margin-left: 15px;
 
@@ -489,7 +535,20 @@
         }
 
         .small-title {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .help {
+        padding: 10px 20px;
+        background-color: #e2e2e2;
+        p {
+            /*max-width: 400px;*/
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5em;
+            font-weight: 300;
+            margin: 10px 0;
         }
     }
 

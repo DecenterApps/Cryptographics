@@ -6,6 +6,11 @@
             <div class="tap-to-recompose desktop"><span>Click to recompose</span></div>
         </div>
         <div class="right">
+            <div class="button-group hero-mobile-cta">
+                <cg-button button-style="primary" icon-type="download" @click="openInEditor">
+                    Continue in Composer
+                </cg-button>
+            </div>
             <h2 class="large-title">This is a <br> cryptographic</h2>
             <div class="hero-text-content">
                 <p>A graphic created by you, with a little help from provably secure randomness. </p>
@@ -14,9 +19,6 @@
                 <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
             <div class="button-group hero-button-group">
-                <!--<cg-button button-style="primary" @click="renderCanvas">-->
-                    <!--Recompose-->
-                <!--</cg-button>-->
                 <cg-button button-style="primary" icon-type="download" @click="openInEditor">
                     Continue in Composer
                 </cg-button>
@@ -240,7 +242,19 @@
                 margin: 0;
             }
             @media screen and (max-width: 767px) {
-                /*.button-group { display: none; }*/
+                .button-group { display: none; }
+            }
+
+            .hero-mobile-cta {
+                text-align: center;
+                display: none;
+                position: absolute;
+                top: -80px;
+                left: 0;
+                right: 0;
+                @media screen and (max-width: 767px) {
+                    display: block;
+                }
             }
 
             .hero-button-group .button {
