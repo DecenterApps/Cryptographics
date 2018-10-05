@@ -5,7 +5,9 @@
             <div id="tooltip-1" class="hidden" v-tippy-html>
                 <p class="tooltip-content">Please select the asset packs that you want to include in your cryptographic. You can select as many asset packs as you want, but please note that a random number of assets will be included in a cryptographic, with the maximum always being 30. You only have to buy an Asset pack once and you can reuse it for any number of cryptographics afterwards.</p>
             </div>
-            <button
+            <button-icon
+                iconType="info"
+                classProp="info"
                 v-tippy="{
                     html: '#tooltip-1',
                     interactive : true,
@@ -17,8 +19,7 @@
                 }"
                 class="info-btn"
             >
-                <ico-info />
-            </button>
+            </button-icon>
         </div>
         <separator />
         <div class="selected-asset-packs">
@@ -88,7 +89,6 @@
 <script>
   import Decimal from 'decimal.js';
   import AssetPickerPagination from '../template/AssetPickerPagination.vue';
-  import IcoInfo from 'shared/UI/Icons/IcoInfo.vue';
   import {
     METAMASK_ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
@@ -110,7 +110,7 @@
       showPacks: 'all',
       loading: true,
     }),
-    components: { AssetPickerPagination, IcoInfo },
+    components: { AssetPickerPagination },
     computed: {
       ...mapGetters({
         createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
@@ -161,14 +161,6 @@
 <style scoped lang="scss">
     .asset-picker {
         width: 100%;
-    }
-
-    .info-btn {
-        border: none;
-        margin: 0;
-        padding: 0;
-        background: none;
-        cursor: pointer;
     }
 
     .line-separator {

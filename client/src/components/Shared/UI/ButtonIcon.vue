@@ -8,6 +8,7 @@
         <ico-close v-if="iconType === 'close'" :size="size" :color="color" />
         <ico-rotate v-if="iconType === 'rotate'" :width="width" :height="height" :color="color" />
         <ico-scale v-if="iconType === 'scale'" :size="size" :color="color" />
+        <ico-info v-if="iconType === 'info'" :size="size" :color="color"/>
     </button>
 </template>
 
@@ -17,6 +18,7 @@
   import IcoClose from './Icons/IcoClose.vue';
   import IcoRotate from './Icons/IcoRotate.vue';
   import IcoScale from './Icons/IcoScale.vue';
+  import IcoInfo from './Icons/IcoInfo.vue';  
 
   export default {
     name: 'ButtonIcon',
@@ -48,6 +50,7 @@
       IcoClose,
       IcoRotate,
       IcoScale,
+      IcoInfo
     }
   };
 </script>
@@ -60,7 +63,11 @@
         background: transparent;
         border: none;
         cursor: pointer;
+        &.info {
+          cursor: help;
+      }
     }
+    
 </style>
 
 
