@@ -59,17 +59,24 @@
       }),
       changeStep(step) {
         this.currentStep = step;
+        console.log('CHANGING STEP ', step);
+        const events = {
+          '0': 3,
+          '1': 4,
+          '2': 2,
+        };
+        if (window._paq) window._paq.push(['trackGoal', events[step]]);
       },
     },
     created() {
       if (window.sessionStorage.length > 0) {
-        this.currentStep = 1;
+        this.changeStep(1);
         const landingPacks = getLandingPacks();
         const packs = landingPacks.packs;
         packs.map(pack => this.toggleAsset(pack));
       }
-
-      if (this.$route.query.selected && this.selectedAssetPacks.length > 0) this.changeStep(1);
+      else if (this.$route.query.selected && this.selectedAssetPacks.length > 0) this.changeStep(1);
+      else this.changeStep(0);
     },
     beforeDestroy() {
       this.clearAssetPacks();
