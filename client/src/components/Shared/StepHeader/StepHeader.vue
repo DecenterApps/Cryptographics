@@ -82,6 +82,9 @@
 
         .logo {
             margin-right: 75px;
+            @media screen and (max-width: 767px) {
+                margin-right: 20px;
+            }
         }
     }
 </style>

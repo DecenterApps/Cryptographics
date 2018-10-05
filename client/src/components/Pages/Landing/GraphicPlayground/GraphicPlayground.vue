@@ -18,7 +18,7 @@
                     <!--Recompose-->
                 <!--</cg-button>-->
                 <cg-button button-style="primary" icon-type="download" @click="openInEditor">
-                    Customize and save
+                    Continue in Composer
                 </cg-button>
             </div>
         </div>
@@ -184,7 +184,7 @@
     .hero {
         /*background-color: #D9D9D9;*/
         position: relative;
-        background: url('../assets/home-header.png') center center no-repeat;
+        background: url('../assets/home-header.jpg') center center no-repeat;
         height: 566px;
         padding: 45px 0;
         @media screen and (max-width: 767px) {
@@ -196,7 +196,7 @@
 
         .right {
             position: absolute;
-            left: calc(50% + 256px);
+            left: calc(50% + 200px);
             text-align: left;
             display: flex;
             flex-direction: column;
@@ -217,7 +217,7 @@
             }
 
             .hero-text-content {
-                max-width: 250px;
+                max-width: 315px;
                 @media screen and (max-width: 767px) {
                     max-width: none;
                 }
