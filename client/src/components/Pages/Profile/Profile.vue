@@ -352,7 +352,7 @@
             align-items: center;
 
             .price {
-                max-width: 100px;
+                max-width: 200px;
                 margin-right: 10px;
                 &:before {
                     bottom: 2px;

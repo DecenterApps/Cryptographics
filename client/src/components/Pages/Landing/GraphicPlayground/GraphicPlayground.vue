@@ -14,10 +14,10 @@
                 <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
             <div class="button-group hero-button-group">
-                <cg-button button-style="primary" @click="renderCanvas">
-                    Recompose
-                </cg-button>
-                <cg-button button-style="tertiary" icon-type="download" @click="openInEditor">
+                <!--<cg-button button-style="primary" @click="renderCanvas">-->
+                    <!--Recompose-->
+                <!--</cg-button>-->
+                <cg-button button-style="primary" icon-type="download" @click="openInEditor">
                     Customize and save
                 </cg-button>
             </div>
@@ -240,7 +240,7 @@
                 margin: 0;
             }
             @media screen and (max-width: 767px) {
-                .button-group { display: none; }
+                /*.button-group { display: none; }*/
             }
 
             .hero-button-group .button {
