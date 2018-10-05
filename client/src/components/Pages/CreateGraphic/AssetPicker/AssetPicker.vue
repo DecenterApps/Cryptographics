@@ -199,6 +199,10 @@
                 margin-right: 18px;
             }
         }
+
+        @media screen and (max-width: 767px) {
+            min-width: auto;
+        }
         .asset-box {
             /*flex: 0 0 16%;*/
             margin-right: 26px;

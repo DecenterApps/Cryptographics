@@ -4,6 +4,13 @@
                 :currentStep="currentStep"
                 :steps="['Select Asset Packs', 'Generate cryptographic', 'Claim cryptographic']"
                 v-on:stepChange="changeStep"
+                class="main-steps"
+        />
+        <step-header
+                :currentStep="currentStep"
+                :steps="['Select', 'Generate', 'Claim']"
+                v-on:stepChange="changeStep"
+                class="mobile-steps"
         />
         <layout layout-style="full-screen">
             <asset-picker
@@ -78,5 +85,12 @@
     .create-art-wrapper {
         background-color: #D9D9D9;
         min-height: 100vh;
+    }
+    .mobile-steps {
+        display: none
+    }
+    @media screen and (max-width: 767px) {
+        .mobile-steps { display: flex; }
+        .main-steps { display: none; }
     }
 </style>

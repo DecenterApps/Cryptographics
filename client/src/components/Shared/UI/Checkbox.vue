@@ -33,7 +33,7 @@
 
     .checkbox {
         display: block;
-        margin-bottom: 8px;
+        padding: 4px 0;
         cursor: pointer;
         input {
             display: none;

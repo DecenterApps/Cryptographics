@@ -95,9 +95,11 @@
         canvas {
             /*max-width: 100%;*/
             height: calc(100vh - 145px);
-            /*@media screen and (max-width: 940px) {*/
-            /*height: auto;*/
-            /*}*/
+            @media screen and (max-width: 767px) {
+                height: auto;
+                max-height: none;
+                width: 100%;
+            }
             max-height: 810px;
         }
         &.square {
