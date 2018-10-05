@@ -187,6 +187,9 @@
         position: absolute;
         top: -68px;
         right: 0;
+        @media screen and (max-width: 767px) {
+            display: none !important;
+        }
     }
 
     .meta-info,

@@ -88,6 +88,10 @@
                     <p>This is your cryptographic.</p>
                     <p>You can simply click it and download an image file to your device.</p>
                     <p>
+                        However, in order to save it permanently on the blockchain and obtain true ownership, you
+                        need to claim the cryptographic.
+                    </p>
+                    <p>
                         Claiming a cryptographic also means that the artists whose asset packs you used receive a
                         payment for them, after which you can use them for any number of cryptographics in the future.
                     </p>
@@ -412,10 +416,12 @@
                         100% { opacity: 0; }
                     }
                 }
-                &:hover {
-                    .overlay {
-                        opacity: 1;
-                        cursor: pointer;
+                @media screen and (min-width: 768px) {
+                    &:hover {
+                        .overlay {
+                            opacity: 1;
+                            cursor: pointer;
+                        }
                     }
                 }
             }
