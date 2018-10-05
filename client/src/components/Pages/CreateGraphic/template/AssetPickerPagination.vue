@@ -176,7 +176,7 @@
     }
 
     button {
-        width: 85px;
+        min-width: 70px;
     }
 
     .line-separator {
