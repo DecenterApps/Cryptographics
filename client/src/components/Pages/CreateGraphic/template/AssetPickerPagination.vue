@@ -132,7 +132,6 @@
         this.loading = false;
       },
       setHover(assetPack) {
-        console.log(assetPack);
         this.$set(this, 'hovered', assetPack);
       }
     }

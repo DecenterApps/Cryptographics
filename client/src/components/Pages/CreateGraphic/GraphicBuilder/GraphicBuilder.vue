@@ -21,13 +21,13 @@
                 </h1>
                 <div class="pack-list">
                     <asset-box
-                            v-for="(assetPack, index) in selectedAssetPacks"
-                            :key="index"
-                            :assetPack="assetPack"
-                            :small="true"
-                            color="#eee"
-                            action="close"
-                            @click="changeStep(0)"
+                      v-for="(assetPack, index) in selectedAssetPacks"
+                      :key="index"
+                      :assetPack="assetPack"
+                      :small="true"
+                      color="#eee"
+                      action="close"
+                      @click="toggleAsset(assetPack)"
                     />
                     <div @click="changeStep(0)" class="add-more">
                         +
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="help">
-                    <p>Use the + button above to add more asset packs or change your selection.</p>
+                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and remove it from selection.</p>
                     <p>Once you compose a unique variation that you like, simply click Next to save it and claim ownership.</p>
                 </div>
             </div>
@@ -47,6 +47,7 @@
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas"
+                            :disabled="selectedAssetPacks.length === 0"
                             button-style="secondary">
                         Recompose
                     </cg-button>
@@ -58,6 +59,7 @@
                     <cg-button
                             :loading="isCanvasDrawing"
                             @click="changeStep(2)"
+                            :disabled="selectedAssetPacks.length === 0"
                     >
                         Next
                     </cg-button>
@@ -70,7 +72,7 @@
         <div v-if="currentStep === 2" class="right">
             <div class="selected-asset-packs">
                 <div class="final-pack-list">
-                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
+                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks" :key="index">
                         <asset-box
                                 :key="index"
                                 :assetPack="assetPack"
@@ -161,9 +163,9 @@
     SHOW_LOADING_MODAL,
     TOGGLE_LOADING_MODAL,
     CHANGE_LOADING_CONTENT,
-    HIDE_LOADING_MODAL
+    HIDE_LOADING_MODAL,
   } from 'store/modal/types';
-  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
+  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS, TOGGLE_ASSET_PACK } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -225,11 +227,11 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        toggleAsset: TOGGLE_ASSET_PACK,
         openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
-
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
           return 'created';
@@ -513,11 +515,10 @@
         .pack-list {
             display: flex;
             flex-wrap: wrap;
-
+            margin-bottom: 10px;
             .asset-box {
                 margin-right: 18px;
                 margin-bottom: 20px;
-
                 &:nth-child(5n) {
                     margin-right: 0;
                 }

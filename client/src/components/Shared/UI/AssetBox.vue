@@ -8,7 +8,7 @@
         <overlay>
             <div v-if="small" class="overlay-content">
                 <button-icon v-if="action === 'zoom'" size="16px" icon-type="zoom"/>
-                <button-icon v-if="action === 'close'" size="16px" icon-type="close"/>
+                <button-icon v-if="action === 'close'" color="white" size="16px" icon-type="close"/>
             </div>
             <div v-if="!small" class="overlay-content">
                 <p class="small-title pack-name">{{ assetPack.packName }}</p>
@@ -72,7 +72,11 @@
         &.small {
             height: 64px;
             width: 85px;
-
+            &:hover {
+                .overlay {
+                    opacity: 1;
+                }
+            }
             .overlay-content {
                 display: flex;
                 align-items: center;
