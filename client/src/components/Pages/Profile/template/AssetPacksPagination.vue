@@ -177,7 +177,7 @@
             }
             .image {
                 width: 100%;
-                height: auto;
+                height: 188px;
             }
             .meta {
                 padding: 10px 0;
