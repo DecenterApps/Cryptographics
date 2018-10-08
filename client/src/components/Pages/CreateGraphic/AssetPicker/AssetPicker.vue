@@ -119,8 +119,8 @@
       }),
       totalPrice() {
         const filteredPacks = this.selectedAssetPacks.filter(item => {
-          return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0 ||
-            this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === item.id) >= 0);
+          return !(this.createdPacksIDs.findIndex(id => parseInt(id, 10) === parseInt(item.id, 10)) >= 0 ||
+            this.boughtPacksIDs.findIndex(id => parseInt(id, 10) === parseInt(item.id, 10)) >= 0);
         });
         return filteredPacks.reduce((acc, item) => Decimal(acc).plus(item.price).toString(), '0');
       },

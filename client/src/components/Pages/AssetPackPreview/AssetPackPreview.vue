@@ -5,17 +5,19 @@
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
                     <user-link
-                        :to="'/user/' + assetPack.creator"
-                        :name="creator.username"
-                        :avatar="creator.avatar" />
+                            :to="'/user/' + assetPack.creator"
+                            :name="creator.username"
+                            :avatar="creator.avatar" />
                     <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
-                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
+                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+                        is a background
                     </p>
                     <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 1">
                         This asset pack contains {{ assetPack.assets.length }} asset and it is a background
                     </p>
                     <p class="small-title" v-if="backgroundAssets > 1">
-                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
+                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+                        are backgrounds
                     </p>
                     <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 0">
                         This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds
@@ -27,24 +29,24 @@
                 </div>
                 <div class="right-section">
                     <price
-                        size="medium"
-                        :value="this.assetPack.price"
-                        :showIfFree="true"/>
+                            size="medium"
+                            :value="this.assetPack.price"
+                            :showIfFree="true" />
                     <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
             </div>
             <div class="asset-list">
                 <div
-                    class="asset"
-                    v-for="(asset, index) in assetPack.assets"
-                    :key="index">
+                        class="asset"
+                        v-for="(asset, index) in assetPack.assets"
+                        :key="index">
                     <span
-                        v-if="Math.floor((asset.attribute / 100) % 10) === 1"
-                        class="asset-type">Background</span>
+                            v-if="Math.floor((asset.attribute / 100) % 10) === 1"
+                            class="asset-type">Background</span>
                     <span
-                        v-else
-                        class="asset-type">Asset</span>
+                            v-else
+                            class="asset-type">Asset</span>
                     <img :src="asset.src" alt="">
                 </div>
             </div>
@@ -84,12 +86,9 @@
       ...mapActions({
         selectSingleAssetPack: SELECT_SINGLE_ASSET_PACK,
       }),
-      composeWithAP () {
+      composeWithAP() {
         this.selectSingleAssetPack(this.assetPack);
-        this.$router.push({
-          name: 'create-cryptographic',
-          query: { selected: true },
-        })
+        this.$router.push('/create-cryptographic?selected=true');
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
@@ -97,11 +96,11 @@
     },
     async created() {
       this.assetPack = await getAssetPackData(this.$route.params.id);
-      this.creator = await getUserInfo(this.assetPack.creator)
+      this.creator = await getUserInfo(this.assetPack.creator);
       this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
       this.assetPack.assets.forEach(asset => {
         Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
-      })
+      });
       document.title = this.assetPack.packName + ' - Asset pack | Cryptographics';
     }
   };
