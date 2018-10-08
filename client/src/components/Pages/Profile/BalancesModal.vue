@@ -55,6 +55,7 @@
     SHOW_LOADING_MODAL,
     HIDE_LOADING_MODAL,
     CHANGE_LOADING_CONTENT,
+    TOGGLE_MODAL,
   } from 'store/modal/types';
 
   export default {
@@ -77,6 +78,7 @@
     },
     methods: {
       ...mapActions({
+        openModal: TOGGLE_MODAL,
         fetchBalances: FETCH_BALANCES,
         openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
@@ -86,11 +88,10 @@
         this.openLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await withdraw(from);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your funds shortly.');
-        await transactionPromise();
+        const result = await transactionPromise();
         this.closeLoadingModal();
         this.openModal('Transaction successful! Please check your wallet balance.');
-
-        setTimeout(() => this.fetchBalances(), 1000);
+        this.fetchBalances();
       }
     }
   };

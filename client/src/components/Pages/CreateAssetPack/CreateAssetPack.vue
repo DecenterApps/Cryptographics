@@ -92,7 +92,7 @@
                                         v-model="price"
                                         inputType="number"
                                         name="price"
-                                        placeholder="Value"
+                                        placeholder="Value in ETH"
                                 />
                             </div>
                         </div>
