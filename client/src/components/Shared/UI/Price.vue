@@ -7,9 +7,9 @@
         {{ formatNum(value) }}
     </span>
     <span
-            v-else-if="showIfFree && parseInt(value, 10) === 0"
-            class="price"
-            :class="[color, size]">
+        v-else-if="showIfFree && parseInt(value, 10) === 0"
+        class="price"
+        :class="[color, size]">
         {{ value }}
     </span>
 </template>

@@ -4,21 +4,32 @@
             <div class="asset-pack-header">
                 <div class="left-section">
                     <h1 class="large-title">{{ assetPack.packName }}</h1>
-                    <p class="small-title" v-if="backgroundAssets === 1">
-                        This cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
+                    <user-link
+                        :to="'/user/' + assetPack.creator"
+                        :name="creator.username"
+                        :avatar="creator.avatar" />
+                    <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
+                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which is a background
+                    </p>
+                    <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 1">
+                        This asset pack contains {{ assetPack.assets.length }} asset and it is a background
                     </p>
                     <p class="small-title" v-if="backgroundAssets > 1">
-                        This cryptographic contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
+                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which are backgrounds
                     </p>
-                    <p class="small-title" v-if="backgroundAssets === 0">
-                        This cryptographic contains {{ assetPack.assets.length }} assets, none of which are backgrounds
+                    <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 0">
+                        This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds
                     </p>
-                    <p class="small-title" v-if="assetPack.assets.length === 1">
-                        This cryptographic contains {{ assetPack.assets.length }} asset
+                    <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 0">
+                        This asset pack contains {{ assetPack.assets.length }} asset, none of which are backgrounds
                     </p>
                     <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
                 </div>
                 <div class="right-section">
+                    <price
+                        size="medium"
+                        :value="this.assetPack.price"
+                        :showIfFree="true"/>
                     <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
                     <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
                 </div>
@@ -42,7 +53,7 @@
 </template>
 
 <script>
-  import { buyAssetPack, getAssetPackData, checkAssetPermission } from 'services/ethereumService';
+  import { buyAssetPack, getAssetPackData, checkAssetPermission, getUserInfo } from 'services/ethereumService';
   import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
   import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
   import { mapGetters, mapActions } from 'vuex';
@@ -59,6 +70,7 @@
           packName: '',
           assets: []
         },
+        creator: '',
         alreadyBought: false,
         backgroundAssets: 0,
       };
@@ -81,12 +93,11 @@
       },
       async purchaseAssetPack() {
         const result = await buyAssetPack(this.userAddress, this.$route.params.id);
-        // HANDLE result from result.error
-        console.log(result);
       }
     },
     async created() {
       this.assetPack = await getAssetPackData(this.$route.params.id);
+      this.creator = await getUserInfo(this.assetPack.creator)
       this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
       this.assetPack.assets.forEach(asset => {
         Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
@@ -97,8 +108,7 @@
 
 <style scoped lang="scss">
     .large-title {
-        margin-top: 29px;
-        margin-bottom: 0;
+        margin-bottom: 15px;
     }
 
     .right-section {
@@ -121,10 +131,14 @@
     }
 
     .asset-pack-header {
+        padding-top: 30px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-
+        .price {
+            display: flex;
+            align-items: center;
+        }
         a {
             text-decoration: none;
         }

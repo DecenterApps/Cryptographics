@@ -10,7 +10,7 @@ export default {
     result: undefined
   },
   bannedIDs: {
-    assetPacks: [],
+    assetPacks: [25],
     cryptographics: [],
   },
   assets: {
