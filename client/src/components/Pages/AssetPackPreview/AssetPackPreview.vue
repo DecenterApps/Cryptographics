@@ -102,6 +102,7 @@
       this.assetPack.assets.forEach(asset => {
         Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
       })
+      document.title = this.assetPack.packName + ' - Asset pack | Cryptographics';
     }
   };
 </script>
