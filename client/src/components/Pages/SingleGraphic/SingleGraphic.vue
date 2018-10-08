@@ -184,6 +184,8 @@
       };
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;
+      console.log(this.image);
+      document.title = this.image.title + ' - cryptographic  | Cryptographics';
     }
   };
 </script>

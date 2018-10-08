@@ -287,6 +287,7 @@
     async created() {
       await this.onCreated();
       if (this.userProfile && this.userAddress) this.fetchBalances();
+      if (!this.userProfile) document.title = this.username + '\'s profile | Cryptographics';
     },
   };
 
