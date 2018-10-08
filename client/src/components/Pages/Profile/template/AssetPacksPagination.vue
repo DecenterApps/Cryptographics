@@ -14,7 +14,8 @@
                 <router-link
                         v-if="!overlay"
                         :to="'/asset-pack/' + assetPack.id">
-                    <img class="image" :src="assetPack.packCoverSrc" />
+                    <img class="image" :src="assetPack.packCoverSrc"
+                         @error="handleError" />
                     <div class="description">
                         <div class="meta">
                             <span class="name">{{ assetPack.packName }}</span>
@@ -24,7 +25,8 @@
                 <!-- With overlay -->
                 <template
                         v-if="overlay">
-                    <img class="image" :src="assetPack.packCoverSrc" />
+                    <img class="image" :src="assetPack.packCoverSrc"
+                         @error="handleError" />
                     <router-link class="name" :to="'/asset-pack/' + assetPack.id">
                         <overlay>
                             <div class="meta">
@@ -132,6 +134,11 @@
       },
     },
     methods: {
+      handleError(e) {
+        console.log('ERROR');
+        e.onerror = false;
+        e.target.src = require('assets/default-error.jpg');
+      },
       async changePage(currentPage) {
         this.loading = true;
         const selectedPacks = paginateArray(this.filteredIds, currentPage, this.showPerPage);
@@ -177,7 +184,6 @@
             }
             .image {
                 width: 100%;
-                height: auto;
             }
             .meta {
                 padding: 10px 0;
@@ -212,8 +218,12 @@
                         justify-content: space-between;
                         align-items: center;
 
-                        .user { max-width: 150px }
-                        .price { max-width: 75px; }
+                        .user {
+                            max-width: 150px
+                        }
+                        .price {
+                            max-width: 75px;
+                        }
                     }
                 }
             }
