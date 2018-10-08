@@ -406,7 +406,7 @@ export const getImageMetadata = (imageId) =>
       });
 
       let hexFinalSeed = web3.utils.toHex(finalSeed);
-      if (hexFinalSeed.length < 66) hexFinalSeed = '0x0' + hexFinalSeed.substr(2);
+      if (hexFinalSeed.length < 66) hexFinalSeed = '0x' + hexFinalSeed.substr(2).padStart(64, '0');
 
       if (!imageMetadata) reject();
       resolve({
