@@ -1,5 +1,11 @@
+import ipfsAPI from 'ipfs-api';
+
+const node = ipfsAPI('ipfs.decenter.com', '50001', { protocol: 'https' });
+
 const replicationNodes = [
   'https://ipfs.decenter.com',
+  'https://ipfs.io',
+  'https://ipfs.infura.io:5001',
 ];
 
 export const bootstrapNodes = [
@@ -8,7 +14,7 @@ export const bootstrapNodes = [
 
 export const getHash = async (data) =>
   new Promise((resolve, reject) => {
-    window.node.files.add([Buffer.from(data, 'base64')], { onlyHash: true }, (err, data) => {
+    node.files.add([Buffer.from(data, 'base64')], { onlyHash: true }, (err, data) => {
       if (err) {
         return reject(err);
       }
@@ -19,8 +25,7 @@ export const getHash = async (data) =>
 
 export const uploadFile = async (data) =>
   new Promise((resolve, reject) => {
-    window.node.files.add([Buffer.from(data, 'base64')], async (err, uploadedFile) => {
-      // window.node.files.add([Buffer.from(data)], (err, uploadedFile) => {
+    node.files.add([Buffer.from(data, 'base64')], async (err, uploadedFile) => {
       if (err) {
         return reject(err);
       }
@@ -32,8 +37,8 @@ export const uploadFile = async (data) =>
 
 export const uploadJSON = async (data) =>
   new Promise((resolve, reject) => {
-    // window.node.files.add([Buffer.from(data, 'base64')], (err, uploadedFile) => {
-    window.node.files.add([Buffer.from(data)], async (err, uploadedFile) => {
+    if (typeof data === 'object') data = JSON.stringify(data)
+    node.files.add([Buffer.from(data)], async (err, uploadedFile) => {
       if (err) {
         return reject(err);
       }
@@ -71,10 +76,19 @@ export const getFileContent = (hash) =>
       reject('Couldn\'t fetch data. (TIMEOUT)');
     }, 20000);
     try {
-      const file = await window.node.files.cat(hash);
+      const file = await node.files.cat(hash);
       clearTimeout(ipfsTimeout);
       resolve(new TextDecoder('utf-8').decode(file));
     } catch (e) {
       reject(e.message);
     }
   });
+
+
+window.testIpfs = async (_file) => {
+  const file = _file || {'test': '123'};
+  const hash = await uploadJSON(file);
+  console.log('test hash: ', hash);
+  const json = await getFileContent(hash);
+  console.log('test file: ', json);
+};
