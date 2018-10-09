@@ -30,45 +30,48 @@ export const uploadFile = async (data) =>
         return reject(err);
       }
       const { hash } = uploadedFile[0];
-      try { await replicate(hash, 'file') } catch (e) { reject(e) }
+      try { await replicate(hash, 'file'); } catch (e) { reject(e); }
       resolve(hash);
     });
   });
 
 export const uploadJSON = async (data) =>
   new Promise((resolve, reject) => {
-    if (typeof data === 'object') data = JSON.stringify(data)
+    if (typeof data === 'object') data = JSON.stringify(data);
     node.files.add([Buffer.from(data)], async (err, uploadedFile) => {
       if (err) {
         return reject(err);
       }
       const { hash } = uploadedFile[0];
-      try { await replicate(hash, 'file') } catch (e) { reject(e) }
+      try { await replicate(hash, 'file'); } catch (e) { reject(e); }
       resolve(hash);
     });
   });
 
-export const replicate = async (hash, type) => {
-  let successful = 0;
-  const replicationPromises = replicationNodes.map(node =>
-    new Promise((resolve, reject) => {
-      const url = `${node}${type === 'file' ?
-        '/api/v0/get?arg=' : '/api/v0/object/get?arg='}${hash}`;
+/*
+ Replicates given hash on at least one node
+ */
+export const replicate = async (hash, type) =>
+  new Promise((resolve, reject) => {
+    let successful = 0;
+    let failed = 0;
+    replicationNodes.map(node => {
+      const url = `${node}${type === 'file' ? '/api/v0/get?arg=' : '/api/v0/object/get?arg='}${hash}`;
       return fetch(url, { method: 'head', mode: 'no-cors' })
         .then(() => {
           successful += 1;
           console.log(`Successfully replicated ${type} with hash: ${hash} on ${successful}/${replicationNodes.length} nodes`);
-          resolve(true);
+          resolve(node);
         })
         .catch((error) => {
+          failed += 1;
           console.error(`Failed replicating ${type} with hash: ${hash} on a node ${url}`);
           console.error(error);
-          reject(new Error(`Failed replicating ${type} with hash: ${hash} on a node ${url}`));
+          if (failed === replicationNodes.length)
+            reject(new Error(`Failed replicating ${type} with hash: ${hash} on all nodes`));
         });
-    }),
-  );
-  return Promise.all(replicationPromises);
-};
+    });
+  });
 
 export const getFileContent = (hash) =>
   new Promise(async (resolve, reject) => {
@@ -84,9 +87,8 @@ export const getFileContent = (hash) =>
     }
   });
 
-
 window.testIpfs = async (_file) => {
-  const file = _file || {'test': '123'};
+  const file = _file || { 'test': '123' };
   const hash = await uploadJSON(file);
   console.log('test hash: ', hash);
   const json = await getFileContent(hash);
