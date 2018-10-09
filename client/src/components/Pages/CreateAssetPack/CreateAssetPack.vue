@@ -150,7 +150,7 @@
       description: '',
       price: '',
       stage: 'select',
-      maxAssets: 50,
+      maxAssets: 49,
       assets: [],
       errors: {
         name: false,
@@ -193,7 +193,9 @@
               const width = img.naturalWidth;
               const height = img.naturalHeight;
 
-              if (this.assets.length >= 50) return;
+              if (this.assets.length >= 49) {
+                return;
+              }
               if (width > 2480) {
                 fileErrors.push({ file: file.name, error: 'Assets width is larger than the allowed 2480px' });
                 return;
