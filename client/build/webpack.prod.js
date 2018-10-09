@@ -94,12 +94,6 @@ const config = {
       favicon: 'client/favicon.ico',
       hash: true,
     }),
-    new AddAssetHtmlPlugin([
-      {
-        filepath: require.resolve('../lib/ipfs.min.js'),
-        includeSourcemap: false,
-      },
-    ]),
     new VueLoaderPlugin()
   ],
 };
