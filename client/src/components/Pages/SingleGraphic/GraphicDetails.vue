@@ -33,7 +33,7 @@
         </div>
         <div class="graphic-meta">
             <div class="graphic-name">
-                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ padToFour(parseInt(image.id)) }}</span>
+                <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ utils.padToFour(parseInt(image.id)) }}</span>
                 </h3>
                 <div v-if="image.creatorMeta.username !== image.username" class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
@@ -152,6 +152,7 @@
 
 <script>
   import { getUserInfo, sellImage, cancelSell, buyImage } from 'services/ethereumService';
+  import utils from 'services/utils';
   import { mapActions } from 'vuex';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 
@@ -163,7 +164,8 @@
       errors: {
         sellPrice: false,
       },
-      backgroundAssets: 0
+      backgroundAssets: 0,
+      utils
     }),
     props: {
       image: {
@@ -203,7 +205,6 @@
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
-      padToFour(number) { return number <= 9999 ? ('000' + number).slice(-4) : number; },
       checkErrors(toCheck = '') {
         const checkAll = !toCheck;
 

@@ -97,7 +97,6 @@ const timeConverter = (UNIX_timestamp) => {
   const min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
   const sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
 
-
   return `${date}/${month}/${year}, ${hour}:${min}`;
 };
 
@@ -126,6 +125,8 @@ const formatSmallNumber = (incomingOutput) => {
   return output.toFixed(x);
 };
 
+const padToFour = (number) => { return number <= 9999 ? ('000' + number).slice(-4) : number; };
+
 module.exports = {
   encode,
   decode,
@@ -136,4 +137,5 @@ module.exports = {
   timeConverter,
   isEmptyBytes,
   formatSmallNumber,
+  padToFour,
 };

@@ -177,7 +177,7 @@
       this.loading = false;
       this.canvasData = {
         frame: this.image.hasFrame,
-        noBottomFrame: false,
+        finalFrameData: this.image,
         ratio: this.image.width === this.image.height ? '1:1' : '2:3',
         assets: assetsForCanvas,
         delay: 0,
