@@ -1,17 +1,15 @@
 <template>
     <span
-        :title="`${formatNum(value)}`"
+        :title="value"
         v-if="value > 0"
         class="price"
-        :class="[color, size]">
-        {{ formatNum(value) }}
-    </span>
+        :class="[color, size]"
+    >{{ formatNum(value) }}</span>
     <span
         v-else-if="showIfFree && parseInt(value, 10) === 0"
         class="price"
-        :class="[color, size]">
-        {{ value }}
-    </span>
+        :class="[color, size]"
+    >{{ value }}</span>
 </template>
 
 <script>
@@ -80,10 +78,9 @@
         font-size: .6em;
         position: relative;
         margin-right: 5px;
-        vertical-align: middle;
-        line-height: 19px;
+        vertical-align: bottom;
+        line-height: 1.5em;
         display: inline-block;
-        height: 19px;
     }
     
 }

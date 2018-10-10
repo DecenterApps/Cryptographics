@@ -636,7 +636,6 @@
 
             span {
                 margin-right: 17px;
-                font-weight: bold;
             }
 
             button {
@@ -645,10 +644,6 @@
 
             .price {
                 max-width: 85px;
-
-                &:before {
-                    bottom: 3px;
-                }
             }
 
             &.buy-screen {

@@ -110,21 +110,7 @@ const isEmptyBytes = (string) => string === '0x000000000000000000000000000000000
  * @param {Number} incomingOutput
  * @return {String}
  */
-const formatSmallNumber = (incomingOutput) => {
-  if (!incomingOutput || parseFloat(incomingOutput) > 0.000001) return incomingOutput.toString();
-
-  let output = incomingOutput;
-  let n = Math.log(output) / Math.LN10;
-  let decimalPoints = 0;
-  let m = 10 ** decimalPoints;
-
-  n = (n >= 0 ? Math.ceil(n * m) : Math.floor(n * m)) / m;
-
-  let x = 0 - Math.ceil(n);
-  if (x < 0) x = 0;
-
-  return output.toFixed(x);
-};
+const formatSmallNumber = (incomingOutput) => parseFloat(incomingOutput).toFixed(3).replace(/\.?0*$/g, '');
 
 function scientificToDecimal(num) {
   if(/\d+\.?\d*e[\+\-]*\d+/i.test(num)) {
