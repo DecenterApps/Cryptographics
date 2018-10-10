@@ -37,7 +37,7 @@ export const createImage = (randomHashIds, timestamp, iterations, potentialAsset
         ipfsHash,
         extraData,
       ).send({
-        value: parseInt(price),
+        value: utils.scientificToDecimal(parseInt(price)),
         from: account,
         to: digitalPrintImageContractAddress,
       }, (error, txHash) => {
