@@ -1,24 +1,41 @@
 <template>
-    <div :class="['pagination-controls', paginationStyle, showNext === false ? 'last-page' : '']" v-if="pages.length > 1">
-        <cg-button
-                button-style="pagination"
-                v-if="showPrev"
-                @click="onControls(newPage -= 1)">
-            {{ prevText }}
-        </cg-button>
+    <div
+      :class="['pagination-controls', paginationStyle, showNext === false ? 'last-page' : '']"
+      v-if="pages.length > 1"
+    >
+      <cg-button
+        button-style="pagination"
+        v-if="showPrev"
+        @click="onControls(newPage -= 1)">
+        {{ prevText }}
+      </cg-button>
+      <template v-if="showFirst">
         <span
-                v-for="(page, index) in pages"
-                :key="index"
-                @click="onPageClick"
-                :class="{ active: page === newPage }">
-			{{ page }}
-		</span>
-        <cg-button
-                button-style="pagination last"
-                v-if="showNext"
-                @click="onControls(newPage += 1)">
-            {{ nextText }}
-        </cg-button>
+          @click="onPageClick">
+          1
+        </span>
+        <span class="dots">...</span>
+      </template>
+      <span
+        v-for="(page, index) in pages"
+        :key="index"
+        @click="onPageClick"
+        :class="{ active: page === newPage }">
+        {{ page }}
+      </span>
+      <template v-if="showLast">
+        <span class="dots">...</span>
+        <span
+          @click="onPageClick">
+          {{ Math.ceil(total / perPage) }}
+        </span>
+      </template>
+      <cg-button
+        button-style="pagination"
+        v-if="showNext"
+        @click="onControls(newPage += 1)">
+        {{ nextText }}
+      </cg-button>
     </div>
 </template>
 
@@ -45,12 +62,22 @@
       nextText: {
         type: String,
         default: 'Next'
+      },
+      firstText: {
+        type: String,
+        default: 'First'
+      },
+      lastText: {
+        type: String,
+        default: 'Last'
       }
     },
     data() {
       return {
-        showNext: false,
         showPrev: false,
+        showNext: false,
+        showFirst: false,
+        showLast: false,
         newPage: 1
       };
     },
@@ -70,26 +97,34 @@
         let pages = Math.ceil(total / perPage);
         const allPages = pages;
         const newPage = Number(this.newPage);
-        let showNext = true;
         let showPrev = false;
+        let showNext = true;
+        let showFirst = false;
+        let showLast = pages > 5;
 
         let pagesArray = [];
 
         if (pages > 5) {
 
           pages = 5;
+          const breakingPage = Math.ceil(pages / 2);
 
-          if (newPage > pages) {
-            for (let i = 1; i <= newPage; i++) {
+          if (newPage > breakingPage) {
+            for (let i = 1; i <= newPage + 2; i++) {
               pagesArray.push(i);
             }
-            pagesArray = pagesArray.slice(newPage - pages, newPage);
+            if (pagesArray.length < allPages) {
+              pagesArray = pagesArray.slice(newPage - breakingPage, newPage + breakingPage);
+            } else {
+              pagesArray = pagesArray.slice(newPage - pages + (allPages - newPage), newPage + (allPages - newPage));
+            }
           } else {
             for (let i = 1; i <= pages; i++) {
               pagesArray.push(i);
             }
           }
-
+          newPage === allPages || newPage >= allPages - 2 ? showLast = false : null;
+          newPage > breakingPage ? showFirst = true : null;
           newPage > 1 ? showPrev = true : showPrev = false;
           newPage === allPages ? showNext = false : showNext = true;
         } else {
@@ -100,8 +135,10 @@
           newPage === pages ? showNext = false : showNext = true;
         }
 
-        this.showNext = showNext;
         this.showPrev = showPrev;
+        this.showNext = showNext;
+        this.showFirst = showFirst;
+        this.showLast = showLast;
 
         return pagesArray;
       },
@@ -128,6 +165,9 @@
 
         &.left {
             text-align: left;
+        }
+        .dots {
+          cursor: default;
         }
     }
 </style>
