@@ -3,29 +3,37 @@
         <div class="container">
             <div class="asset-pack-header">
                 <div class="left-section">
-                    <h1 class="large-title">{{ assetPack.packName }}</h1>
-                    <user-link
+                    <div class="meta-info">
+                        <h1 class="large-title">{{ assetPack.packName }}</h1>
+                        <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
+                            This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+                            is a background
+                        </p>
+                        <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 1">
+                            This asset pack contains {{ assetPack.assets.length }} asset and it is a background
+                        </p>
+                        <p class="small-title" v-if="backgroundAssets > 1">
+                            This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+                            are backgrounds
+                        </p>
+                        <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 0">
+                            This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds
+                        </p>
+                        <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 0">
+                            This asset pack contains {{ assetPack.assets.length }} asset, none of which are backgrounds
+                        </p>
+                    </div>
+                    <div class="meta-info">
+                        <p class="small-title">Created by:</p>
+                        <user-link
                             :to="'/user/' + assetPack.creator"
                             :name="creator.username"
                             :avatar="creator.avatar" />
-                    <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
-                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
-                        is a background
-                    </p>
-                    <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 1">
-                        This asset pack contains {{ assetPack.assets.length }} asset and it is a background
-                    </p>
-                    <p class="small-title" v-if="backgroundAssets > 1">
-                        This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
-                        are backgrounds
-                    </p>
-                    <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 0">
-                        This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds
-                    </p>
-                    <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 0">
-                        This asset pack contains {{ assetPack.assets.length }} asset, none of which are backgrounds
-                    </p>
-                    <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
+                    </div>
+                    <div class="meta-info" v-if="assetPack.packDescription">
+                        <p class="small-title">Description:</p>
+                        <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
+                    </div>
                 </div>
                 <div class="right-section">
                     <price
@@ -115,9 +123,14 @@
         display: flex;
         justify-content: center;
     }
-
+    .meta-info {
+        margin-bottom: 25px;
+        &:last-of-type {
+            margin-bottom: 35px;
+        }
+    }
     .small-title {
-        margin: 16px 16px 29px 0;
+        margin-bottom: 8px;
         font-size: 12px;
         font-family: Roboto, sans-serif;
     }
