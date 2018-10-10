@@ -327,15 +327,19 @@
           console.log('iteration: ' + this.iterations);
           this.potentialAssets = selectedAssets;
           let picked = [];
+
           for (let i = 0; i < this.canvasData.assets.length; i++) {
             picked.push(this.canvasData.assets[i].id);
           }
+
           let price = await calculatePrice(picked, this.userAddress);
 
           if (selectedAssets.length === 0) {
             this.imagePrice = 0;
           }
-          this.imagePrice = parseFloat(price);
+
+          this.imagePrice = utils.scientificToDecimal(parseFloat(price));
+          
           console.log('PRICE : ' + this.imagePrice);
         } catch (e) {
           this.gettingImageData = false;
