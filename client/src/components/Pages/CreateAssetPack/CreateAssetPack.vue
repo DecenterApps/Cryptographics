@@ -240,11 +240,9 @@
         if (this.checkErrors()) return;
         if (!this.userAddress) {
             const { userAgent: ua } = navigator;
-            const { currentProvider: cp } = window.web3;
-            const isHttpProvider = window.web3.currentProvider.constructor.name === 'HttpProvider';
             const isMobile = ua.includes('Android', 'iPad', 'iPhone');
-            if (isMobile && isHttpProvider) return this.openModal('coinbaseInfo');
-            if (!isMobile && isHttpProvider) return this.openModal('metaMaskInfo');
+            if (isMobile) return this.openModal('coinbaseInfo');
+            if (!isMobile) return this.openModal('metaMaskInfo');
         }
 
         let hashes = [];
