@@ -8,7 +8,7 @@
             <edit-profile
                 v-if="content === 'editProfile'" />
             <edit-pack-price
-                v-if="content && content.name === 'editPackPrice'"
+                v-else-if="content && content.name === 'editPackPrice'"
                 v-bind="content.data" />
             <set-username
                 v-else-if="content === 'setUsername'" />
