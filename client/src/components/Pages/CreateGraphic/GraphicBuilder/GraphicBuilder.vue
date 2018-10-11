@@ -257,7 +257,14 @@
 
       async buyImage() {
         if (!this.checkTitle()) return;
-        if (!this.userAddress) return this.openModal('metaMaskInfo');
+        if (!this.userAddress) {
+            const { userAgent: ua } = navigator;
+            const { currentProvider: cp } = window.web3;
+            const isHttpProvider = window.web3.currentProvider.constructor.name === 'HttpProvider';
+            const isMobile = ua.includes('Android', 'iPad', 'iPhone');
+            if (isMobile && isHttpProvider) return this.openModal('coinbaseInfo');
+            if (!isMobile && isHttpProvider) return this.openModal('metaMaskInfo');
+        }
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
