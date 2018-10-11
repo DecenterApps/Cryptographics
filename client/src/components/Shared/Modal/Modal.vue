@@ -6,6 +6,7 @@
                 icon-type="close"
                 @click="closeModal" />
             <edit-profile v-if="content === 'editProfile'" />
+            <edit-pack-price v-if="content && content.name === 'editPackPrice'" v-bind="content.data" />
             <set-username v-else-if="content === 'setUsername'" />
             <meta-mask-info v-else-if="content === 'metaMaskInfo'" :hasMetaMask="hasMetaMask" />
             <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
@@ -24,6 +25,7 @@
   import { TOGGLE_MODAL } from 'store/modal/types';
 
   import EditProfile from 'shared/EditProfile/EditProfile.vue';
+  import EditPackPrice from 'shared/EditPackPrice/EditPackPrice.vue';
   import SetUsername from 'shared/SetUsername/SetUsername.vue';
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
   import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
@@ -45,6 +47,7 @@
       SuccessMessage,
       SetUsername,
       EditProfile,
+      EditPackPrice,
       TransferHistory,
       BalancesModal,
       MetaMaskInfo,

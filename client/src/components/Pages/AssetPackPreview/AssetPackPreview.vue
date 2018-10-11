@@ -40,8 +40,22 @@
                             size="medium"
                             :value="this.assetPack.price"
                             :showIfFree="true" />
-                    <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
-                    <cg-button v-if="alreadyBought === false" @click="purchaseAssetPack">Buy</cg-button>
+                    <cg-button
+                        @click="composeWithAP"
+                        buttonStyle="secondary">
+                        Compose with this Asset Pack
+                    </cg-button>
+                    <cg-button
+                        v-if="!alreadyBought && !isPackUsers"
+                        @click="purchaseAssetPack">
+                        Buy
+                    </cg-button>
+                    <cg-button
+                        v-if="isPackUsers"
+                        buttonStyle="secondary"
+                        @click="openChangePriceModal">
+                        Change Price
+                    </cg-button>
                 </div>
             </div>
             <div class="asset-list">
@@ -63,55 +77,77 @@
 </template>
 
 <script>
-  import { buyAssetPack, getAssetPackData, checkAssetPermission, getUserInfo } from 'services/ethereumService';
-  import { USERNAME, METAMASK_ADDRESS, AVATAR } from 'store/user-config/types';
-  import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
-  import { mapGetters, mapActions } from 'vuex';
-  import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
+import { mapGetters, mapActions } from 'vuex';
+import {
+  buyAssetPack,
+  getAssetPackData,
+  checkAssetPermission,
+  getUserInfo
+} from 'services/ethereumService';
+import {
+  USERNAME,
+  METAMASK_ADDRESS,
+  AVATAR } from 'store/user-config/types';
+import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
+import { TOGGLE_MODAL } from 'store/modal/types';
+import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
 
-  export default {
-    name: 'AssetPackPreview',
-    components: {
-      AssetsPackPagination
-    },
-    data() {
-      return {
-        assetPack: {
-          packName: '',
-          assets: []
-        },
-        creator: '',
-        alreadyBought: false,
-        backgroundAssets: 0,
-      };
-    },
-    computed: {
-      ...mapGetters({
-        userAddress: METAMASK_ADDRESS,
-      })
-    },
-    methods: {
-      ...mapActions({
-        selectSingleAssetPack: SELECT_SINGLE_ASSET_PACK,
-      }),
-      composeWithAP() {
-        this.selectSingleAssetPack(this.assetPack);
-        this.$router.push('/create-cryptographic?selected=true');
+export default {
+  name: 'AssetPackPreview',
+  components: {
+    AssetsPackPagination
+  },
+  data() {
+    return {
+      assetPack: {
+        packName: '',
+        assets: []
       },
-      async purchaseAssetPack() {
-        const result = await buyAssetPack(this.userAddress, this.$route.params.id);
-      }
-    },
-    async created() {
-      this.assetPack = await getAssetPackData(this.$route.params.id);
-      this.creator = await getUserInfo(this.assetPack.creator);
-      this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
-      this.assetPack.assets.forEach(asset => {
-        Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
+      creator: '',
+      alreadyBought: false,
+      backgroundAssets: 0,
+      isPackUsers: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      userAddress: METAMASK_ADDRESS,
+    })
+  },
+  methods: {
+    ...mapActions({
+      selectSingleAssetPack: SELECT_SINGLE_ASSET_PACK,
+      openModal: TOGGLE_MODAL,
+    }),
+    openChangePriceModal() {
+      this.openModal({
+        name: 'editPackPrice',
+        data: {
+          assetPackId: parseInt(this.assetPack.id),
+          price: this.assetPack.price,
+          thumbnail: this.assetPack.packCoverSrc
+        }
       });
-      document.title = this.assetPack.packName + ' - Asset pack | Cryptographics';
+    },
+    composeWithAP() {
+      this.selectSingleAssetPack(this.assetPack);
+      this.$router.push('/create-cryptographic?selected=true');
+    },
+    async purchaseAssetPack() {
+      const result = await buyAssetPack(this.userAddress, this.$route.params.id);
     }
-  };
+  },
+  async created() {
+    this.assetPack = await getAssetPackData(this.$route.params.id);
+    this.creator = await getUserInfo(this.assetPack.creator);
+    this.isPackUsers = this.assetPack.creator === this.userAddress;
+    this.alreadyBought = await checkAssetPermission(this.userAddress, this.$route.params.id);
+    this.assetPack.assets.forEach(asset => {
+      Math.floor((asset.attribute / 100) % 10) === 1 ? this.backgroundAssets += 1 : null;
+    });
+    document.title = this.assetPack.packName + ' - Asset pack | Cryptographics';
+  }
+};
 </script>
 
 <style scoped lang="scss">
