@@ -76,7 +76,7 @@
         const { userAgent: ua } = navigator;
         this.hasMetaMask = !!cp.isMetaMask;
         this.isAndroid = ua.includes('Android');
-        this.isApple = ua.includes('iPad', 'iPhone');
+        this.isApple = ua.includes('iPhone') || ua.includes('iPad');
     },
     methods: {
       ...mapActions({

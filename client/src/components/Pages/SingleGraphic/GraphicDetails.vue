@@ -242,7 +242,7 @@
       async submitBuyImage() {
         if (!this.userAddress ||  this.userAddress === '0x0') {
             const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android', 'iPad', 'iPhone');
+            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
             if (isMobile) return this.openModal('coinbaseInfo');
             if (!isMobile) return this.openModal('metaMaskInfo');
         }

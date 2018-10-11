@@ -240,7 +240,7 @@
         if (this.checkErrors()) return;
         if (!this.userAddress) {
             const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android', 'iPad', 'iPhone');
+            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
             if (isMobile) return this.openModal('coinbaseInfo');
             if (!isMobile) return this.openModal('metaMaskInfo');
         }
