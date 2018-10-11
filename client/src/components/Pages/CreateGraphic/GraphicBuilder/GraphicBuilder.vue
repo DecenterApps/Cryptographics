@@ -1,7 +1,7 @@
 <template>
     <div class="graphic-builder">
         <div class="left">
-            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? renderCanvas() : download()">
+            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? (renderCanvas() && track('Recompose')): (download())">
                 <overlay v-if="currentStep === 2" key="1">
                     <button-icon icon-type="download" />
                     <p>Download</p>
@@ -42,11 +42,11 @@
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="toggleRatio(); track('Toggle format')" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
-                            @click="renderCanvas"
+                            @click="renderCanvas(); track('Recompose')"
                             :disabled="selectedAssetPacks.length === 0"
                             button-style="secondary">
                         Recompose
@@ -131,7 +131,7 @@
                         <price size="medium" :value="displayPrice()" />
                         <cg-button
                                 :loading="isCanvasDrawing"
-                                @click="buyImage"
+                                @click="buyImage(); track('Claim')"
                         >
                             Claim cryptographic
                         </cg-button>
@@ -361,6 +361,7 @@
           link.setAttribute('href', window.URL.createObjectURL(blob));
           link.click();
         }, 'image/jpeg');
+        this.track('Download');
       },
       changeStep(step) {
         window.scrollTo(0, 0);
@@ -372,7 +373,10 @@
       displayPrice() {
         if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
         return web3.utils.fromWei(this.imagePrice.toString(), 'ether');
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
+      },
     },
     async created() {
       this.selectedAssets = this.selectedAssetPacks.map(assetPack =>

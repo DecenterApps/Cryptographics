@@ -22,7 +22,7 @@
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
-                            @click="openModal('balances')"
+                            @click="openModal('balances'); track('Open withdraw')"
                     >
                         Withdraw
                     </cg-button>
@@ -282,7 +282,10 @@
       },
       changeTab(type) {
         this.currentTab = type;
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Profile', event]);
+      },
     },
     async created() {
       await this.onCreated();

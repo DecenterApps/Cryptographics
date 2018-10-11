@@ -144,7 +144,13 @@
         const selectedPacks = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.assetPacks = await getPackInformation(selectedPacks);
         this.loading = false;
-      }
+        this.track('Change page', currentPage)
+      },
+      track(event, value) {
+        if (!window._paq) return;
+        if (value) return window._paq.push(['trackEvent', 'Asset Packs', event, event, value]);
+        window._paq.push(['trackEvent', 'Asset Packs', event]);
+      },
     }
   };
 </script>
