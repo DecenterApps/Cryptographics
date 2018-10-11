@@ -11,6 +11,7 @@ import CreateGraphic from 'pages/CreateGraphic/CreateGraphic.vue';
 import CreateAssetPack from 'pages/CreateAssetPack/CreateAssetPack.vue';
 import AssetPackPreview from 'pages/AssetPackPreview/AssetPackPreview.vue';
 import FAQ from 'pages/FAQ/FAQ.vue';
+import ActivityLog from 'pages/ActivityLog/ActivityLog.vue';
 import UIShowcase from 'shared/UI/UIShowcase.vue';
 
 Vue.use(VueRouter);
@@ -28,6 +29,7 @@ const router = new VueRouter({
     { path: '/asset-pack/:id', component: AssetPackPreview },
     { path: '/profile', component: Profile, props: { userProfile: true }, meta: { title: 'Profile | Cryptographics' } },
     { path: '/user/:userId', component: Profile, props: { userProfile: false } },
+    { path: '/activity-log', component: ActivityLog, meta: { title: 'Activity log | Cryptographics' } },
     // { path: '/ui-test', component: UIShowcase },
     { path: '/faq', component: FAQ, meta: { title: 'FAQ | Cryptographics' } },
   ],

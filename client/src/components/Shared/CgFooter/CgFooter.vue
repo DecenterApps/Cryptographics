@@ -11,6 +11,7 @@
                     <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
                     <router-link to="/about" active-class="active">About</router-link>
                     <router-link to="/faq" active-class="active">FAQ</router-link>
+                    <router-link to="/activity-log" active-class="active">Activity log</router-link>
                 </div>
                 <div class="social">
                     <ico-social
@@ -157,10 +158,12 @@
                 }
             }
             .social {
+                width: 157px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                a {
+
+                a:not(:last-child) {
                     margin-right: 20px;
                 }
             }

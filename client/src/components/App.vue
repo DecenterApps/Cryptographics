@@ -10,6 +10,7 @@
                                 '/profile',
                                 '/asset-pack/:id',
                                 '/user/:userId',
+                                '/activity-log',
                             ].indexOf($route.matched[0].path) >= 0" />
         </keep-alive>
         <router-view :key="$route.fullPath"/>
