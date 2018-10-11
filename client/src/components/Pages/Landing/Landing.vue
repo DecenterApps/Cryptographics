@@ -2,7 +2,7 @@
     <div>
         <graphic-playground />
         <div class="fab">
-            <button-link to="/create-cryptographic" button-style="primary">Compose</button-link>
+            <button-link to="/create-cryptographic" button-style="primary" @click.native="track('Compose Floating CTA')">Compose</button-link>
         </div>
         <div class="how-it-works">
             <h1 class="large-title">How it Works</h1>
@@ -93,7 +93,7 @@
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
                     receive earnings every time a new Creator uses it.
                 </p>
-                <button-link to="/create-asset-pack">Create asset pack</button-link>
+                <button-link to="/create-asset-pack" @click.native="track('Create AP')">Create asset pack</button-link>
             </div>
         </div>
         <asset-carousel />
@@ -128,6 +128,11 @@
     data: () => ({
       imageIds: [],
     }),
+    methods: {
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
+      },
+    },
     async created() {
       try {
         let numOfImages = parseInt(await getImageCount());

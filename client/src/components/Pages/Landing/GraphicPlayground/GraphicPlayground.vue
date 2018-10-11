@@ -1,13 +1,13 @@
 <template>
     <div class="hero">
-        <div class="canvas-holder-wrapper" @click="renderCanvas">
+        <div class="canvas-holder-wrapper" @click="renderCanvas(); track('Recompose')">
             <Canvas :canvasData="canvasData" />
             <div class="tap-to-recompose mobile"><span>Tap to recompose</span></div>
             <div class="tap-to-recompose desktop"><span>Click to recompose</span></div>
         </div>
         <div class="right">
             <div class="button-group hero-mobile-cta">
-                <cg-button button-style="primary" icon-type="download" @click="openInEditor">
+                <cg-button button-style="primary" @click="openInEditor(); track('Continue in Composer')">
                     Continue in Composer
                 </cg-button>
             </div>
@@ -19,7 +19,7 @@
                 <p>Try creating another one and save your favorite on the blockchain.</p>
             </div>
             <div class="button-group hero-button-group">
-                <cg-button button-style="primary" icon-type="download" @click="openInEditor">
+                <cg-button button-style="primary" @click="openInEditor(); track('Continue in Composer')">
                     Continue in Composer
                 </cg-button>
             </div>
@@ -105,6 +105,9 @@
           link.setAttribute('href', window.URL.createObjectURL(blob));
           link.click();
         }, 'image/jpeg');
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
       },
     },
     async created() {
