@@ -1,13 +1,17 @@
 <template>
     <div class="graphic-builder">
         <div class="left">
-            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? (renderCanvas() && track('Recompose')): (download())">
+            <div class="canvas-with-overlay-wrapper"
+                @click="(currentStep === 1)
+                    ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
+                    : (download())">
                 <overlay v-if="currentStep === 2" key="1">
                     <button-icon icon-type="download" />
                     <p>Download</p>
                 </overlay>
                 <overlay v-if="currentStep === 1" key="2">
-                    <button-icon icon-type="recompose" />
+                    isCanvasDrawing || gettingImageData
+                    <button-icon icon-type="recompose"/>
                     <p>Recompose</p>
                 </overlay>
                 <Canvas :canvasData="canvasData"></Canvas>
