@@ -10,7 +10,6 @@
                     <p>Download</p>
                 </overlay>
                 <overlay v-if="currentStep === 1" key="2">
-                    isCanvasDrawing || gettingImageData
                     <button-icon icon-type="recompose"/>
                     <p>Recompose</p>
                 </overlay>
