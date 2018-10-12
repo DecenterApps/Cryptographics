@@ -46,7 +46,7 @@
             <div class="controls">
                 <div class="top-controls">
                     <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio(); track('Toggle format')" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas(); track('Recompose')"
