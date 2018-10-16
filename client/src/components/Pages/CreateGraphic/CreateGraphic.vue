@@ -75,7 +75,7 @@
         const packs = landingPacks.packs;
         packs.map(pack => this.toggleAsset(pack));
       }
-      else if (window.location.hash.length > 5) this.changeStep(1);
+      else if (window.location.search.length > 5) this.changeStep(1);
       else if (this.$route.query.selected && this.selectedAssetPacks.length > 0) this.changeStep(1);
       else this.changeStep(0);
     },

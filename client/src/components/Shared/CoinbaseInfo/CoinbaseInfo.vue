@@ -9,10 +9,16 @@
                 <a href="https://itunes.apple.com/app/coinbase-wallet/id1278383455" target="_blank">
                     <img class="coinbase-logo" :src="CoinbaseLogo" alt="">
                 </a>
+                <a :href="`https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=${deeplink}`" target="_blank">
+                    <img class="trust-logo" :src="TrustLogo" alt="">
+                </a>
             </div>
             <div v-if="isAndroid">
                 <a href="https://play.google.com/store/apps/details?id=org.toshi" target="_blank">
                     <img class="coinbase-logo" :src="CoinbaseLogo" alt=""> 
+                </a>
+                <a :href="`https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=${deeplink}`" target="_blank">
+                    <img class="trust-logo" :src="TrustLogo" alt="">
                 </a>
             </div>
         </div>
@@ -23,7 +29,8 @@
   import { mapActions } from 'vuex';
   import { TOGGLE_MODAL } from 'store/modal/types';
   import IcoError from '../../Shared/UI/Icons/IcoError';
-  import CoinbaseLogo from './coinbase-wallet-logo.png'
+  import CoinbaseLogo from './coinbase-wallet-logo.png';
+  import TrustLogo from './trust-wallet-logo.png';
 
   export default {
     name: 'CoinbaseInfo',
@@ -31,14 +38,19 @@
     data: () => ({
       showMoreInfo: false,
       CoinbaseLogo,
+      TrustLogo,
     }),
     props: {
-        isApple: {
-            type: Boolean
-        },
-        isAndroid: {
-            type: Boolean
-        }
+      isApple: {
+        type: Boolean
+      },
+      isAndroid: {
+        type: Boolean
+      },
+      deeplink: {
+        type: String,
+        default: 'https://cryptographics.app/',
+      },
     }
   };
 </script>
@@ -60,6 +72,10 @@
         }
         .coinbase-logo {
             width: 280px;
+            height: auto;
+        }
+        .trust-logo {
+            width: 260px;
             height: auto;
         }
     }

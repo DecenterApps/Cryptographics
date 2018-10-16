@@ -16,7 +16,8 @@
                 v-else-if="content === 'metaMaskInfo'"
                 :hasMetaMask="hasMetaMask" />
             <coinbase-info
-                v-else-if="content === 'coinbaseInfo'"
+                v-else-if="content && content.name === 'coinbaseInfo'"
+                v-bind="content.data"
                 :isApple="isApple"
                 :isAndroid="isAndroid"/>
             <transfer-history

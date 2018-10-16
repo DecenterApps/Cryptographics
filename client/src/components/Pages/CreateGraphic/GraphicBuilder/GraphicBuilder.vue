@@ -278,7 +278,7 @@
         if (!this.userAddress) {
             const { userAgent: ua } = navigator;
             const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal('coinbaseInfo');
+            if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
             if (!isMobile) return this.openModal('metaMaskInfo');
         }
 
@@ -341,7 +341,7 @@
           let selectedAssets = this.selectedAssets;
 
           // Don't shuffle if user came from home page
-          if (window.sessionStorage.length <= 0 && window.location.hash.length < 5) {
+          if (window.sessionStorage.length <= 0 && window.location.search.length < 5) {
             selectedAssets = shuffleArray(selectedAssets);
           }
           selectedAssets = selectedAssets.slice(0, 30);
@@ -429,10 +429,11 @@
           selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
         };
         const hash = `randomHashIds=[${data.randomHashIds.join(',')}]&iterations=${data.iterations}&timestamp=${data.timestamp}&randomSeed=${data.randomSeed}&potentialAssets=[${data.potentialAssets.join(',')}]&ratio=${data.ratio}&frame=${data.frame}&selectedAssetPacks=[${data.selectedAssetPacks.join(',')}]`;
-        return btoa(hash).replace(/=$/g, '')
+        console.log(btoa(hash))
+        return btoa(hash).replace(/=*$/g, '')
       },
       getLink() {
-        return window.location.host + window.location.pathname + '#' + this.imageToUrlHash();
+        return window.location.host + window.location.pathname + '?image=' + this.imageToUrlHash();
       },
     },
     async created() {
@@ -454,12 +455,12 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
-      } else if (window.location.hash.length > 5) {
-        const urlData = atob(window.location.hash.substr(1))
+      } else if (window.location.search.length > 5) {
+        const urlData = atob(decodeURI(window.location.search.substr(7)))
           .split('&')
           .map(a => a.split('='))
           .reduce((acc, val) => {
-            acc[val[0]] = decodeURI(val[1]);
+            acc[val[0]] = val[1];
             return acc;
           }, {});
         console.log(urlData);
@@ -475,7 +476,7 @@
         const selectedAssetPacks = await getSelectedAssetPacksWithAssetData(JSON.parse(urlData.selectedAssetPacks));
         await this.renderCanvas();
         this.setSelectedAssetPacks(selectedAssetPacks);
-        window.location.hash = '';
+        this.$router.push('/create-cryptographic')
       } else {
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
