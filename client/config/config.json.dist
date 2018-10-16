@@ -118,6 +118,9 @@
         "networks": {
             "1": {
                 "address": "0x87e911929709b3b1f308905cc5427813ca7846d5"
+            },
+            "42": {
+                "address": "0x27ec7b3ca61cc4bdf5c13a7fd7dce3fcdf4d4f1e"
             }
         }
     },
