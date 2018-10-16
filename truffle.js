@@ -12,6 +12,13 @@ module.exports = {
       network_id: '42',
       gasPrice: 12000000000
     },
+    mainnet: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, `https://mainnet.decenter.com/`);
+      },
+      network_id: '1',
+      gasPrice: 5000000000
+    },
     rinkeby: {
       provider: function() {
         return new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/');
