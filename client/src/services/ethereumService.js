@@ -9,8 +9,8 @@ import { getAccounts } from './helpers';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
-const cryptographicsGetterContractAddress = config.cryptographicsGetter.networks[clientConfig.network].address;
-const getterContract = () => new web3.eth.Contract(config.cryptographicsGetter.abi, cryptographicsGetterContractAddress);
+const cryptographicsGetterContractAddress = config.CryptographicsGetter.networks[clientConfig.network].address;
+const getterContract = () => new web3.eth.Contract(config.CryptographicsGetter.abi, cryptographicsGetterContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
@@ -36,24 +36,24 @@ export const checkAssetPermission = async (address, assetPackId) => {
   return await assetManagerContract().methods.checkHasPermissionForPack(address, assetPackId).call();
 };
 
-export const changeAssetPackPrice = async (assetPackId, newPrice, address) => 
+export const changeAssetPackPrice = async (assetPackId, newPrice, address) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(address)) return;
-    const wei = web3.utils.toWei(newPrice, 'ether');
-    try {
-      const transactionPromise = assetManagerContract().methods.changeAssetPackPrice(assetPackId, wei).send({
-        from: address
-      }, (error, txHash) => {
-        console.log(error, txHash);
-        if (error) return reject(new Error(error));
-        resolve(() => transactionPromise);
-      });
-    } catch (e) {
-      console.log(e)
-      throw new Error('Could not change asset pack price.');
+      if (!web3.utils.isAddress(address)) return;
+      const wei = web3.utils.toWei(newPrice, 'ether');
+      try {
+        const transactionPromise = assetManagerContract().methods.changeAssetPackPrice(assetPackId, wei).send({
+          from: address
+        }, (error, txHash) => {
+          console.log(error, txHash);
+          if (error) return reject(new Error(error));
+          resolve(() => transactionPromise);
+        });
+      } catch (e) {
+        console.log(e);
+        throw new Error('Could not change asset pack price.');
+      }
     }
-  }
-  )
+  );
 
 export const buyAssetPack = async (address, assetPackId, price) => {
   if (!web3.utils.isAddress(address)) return { error: 'Address is not valid!' };
@@ -371,7 +371,12 @@ export const getImagePrice = async (imageId) => {
 
 export const getCreatedGraphics = async (address) => {
   return await getterContract().methods.getImagesCreatedByAddress(address).call();
-}
+};
+
+export const getCreatorCount = async () => {
+  const creators = await getterContract().methods.getAllCreators().call();
+  return creators.length;
+};
 
 export const getGalleryImage = async (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
