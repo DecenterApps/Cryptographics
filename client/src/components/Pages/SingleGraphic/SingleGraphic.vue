@@ -143,6 +143,7 @@
           link.setAttribute('href', window.URL.createObjectURL(blob));
           link.click();
         }, 'image/jpeg');
+        this.track('Download');
       },
       async getData() {
         isImageForSale(this.$route.params.id)
@@ -164,7 +165,10 @@
           return;
         }
         this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
+      },
     },
     async created() {
       if (this.bannedIDs.indexOf(parseInt(this.$route.params.id)) > -1) {
