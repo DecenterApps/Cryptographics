@@ -100,6 +100,9 @@
                         Claiming a cryptographic also means that the artists whose asset packs you used receive a
                         payment for them, after which you can use them for any number of cryptographics in the future.
                     </p>
+                    <p>
+                        You can also claim your graphic later by using <a :href="getLink()">this link</a>.
+                    </p>
                 </div>
             </div>
 
@@ -153,6 +156,7 @@
     calculateFirstSeed,
     convertSeed,
     getImage,
+    getSelectedAssetPacksWithAssetData,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
@@ -168,7 +172,12 @@
     CHANGE_LOADING_CONTENT,
     HIDE_LOADING_MODAL,
   } from 'store/modal/types';
-  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS, TOGGLE_ASSET_PACK } from 'store/canvas/types';
+  import {
+    CANVAS_DRAWING,
+    SELECTED_ASSET_PACKS,
+    TOGGLE_ASSET_PACK,
+    SET_SELECTED_ASSET_PACKS,
+  } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -224,6 +233,11 @@
         if (val !== '' && val !== 'Anon' && this.claimPressed) {
           this.buyImage();
         }
+      },
+      currentStep(newStep) {
+        if (newStep === 2) {
+          this.saveImageToLS()
+        }
       }
     },
     methods: {
@@ -234,6 +248,7 @@
         openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
+        setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -326,8 +341,7 @@
           let selectedAssets = this.selectedAssets;
 
           // Don't shuffle if user came from home page
-          console.log(window.sessionStorage.length);
-          if (window.sessionStorage.length <= 0) {
+          if (window.sessionStorage.length <= 0 && window.location.hash.length < 5) {
             selectedAssets = shuffleArray(selectedAssets);
           }
           selectedAssets = selectedAssets.slice(0, 30);
@@ -350,6 +364,7 @@
           
           console.log('PRICE : ' + this.imagePrice);
         } catch (e) {
+          console.error(e);
           this.gettingImageData = false;
         }
         this.gettingImageData = false;
@@ -380,6 +395,45 @@
       track(event) {
         if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
       },
+      saveImageToLS() {
+        const createdGraphic = {
+          randomHashIds: this.randomHashIds,
+          iterations: this.iterations - 1,
+          timestamp: this.timestamp,
+          randomSeed: this.randomSeed,
+          potentialAssets: this.potentialAssets,
+          ratio: this.canvasData.ratio,
+          frame: this.canvasData.frame,
+          selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
+          savedOn: Date.now(),
+        };
+        let savedGraphics = localStorage.getItem(`${this.userAddress}-graphics`);
+        savedGraphics = savedGraphics ? JSON.parse(savedGraphics) : [];
+        if (savedGraphics.filter(graphic =>
+          graphic.randomSeed === createdGraphic.randomSeed &&
+          graphic.iterations === createdGraphic.iterations &&
+          graphic.timestamp === createdGraphic.timestamp
+        ).length) return;
+        savedGraphics.push(createdGraphic);
+        localStorage.setItem(`${this.userAddress}-graphics`, JSON.stringify(savedGraphics));
+      },
+      imageToUrlHash(_data) {
+        const data = _data || {
+          randomHashIds: this.randomHashIds,
+          iterations: this.iterations - 1,
+          timestamp: this.timestamp,
+          randomSeed: this.randomSeed,
+          potentialAssets: this.potentialAssets,
+          ratio: this.canvasData.ratio,
+          frame: this.canvasData.frame,
+          selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
+        };
+        const hash = `randomHashIds=[${data.randomHashIds.join(',')}]&iterations=${data.iterations}&timestamp=${data.timestamp}&randomSeed=${data.randomSeed}&potentialAssets=[${data.potentialAssets.join(',')}]&ratio=${data.ratio}&frame=${data.frame}&selectedAssetPacks=[${data.selectedAssetPacks.join(',')}]`;
+        return btoa(hash).replace(/=$/g, '')
+      },
+      getLink() {
+        return window.location.host + window.location.pathname + '#' + this.imageToUrlHash();
+      },
     },
     async created() {
       this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
@@ -400,6 +454,28 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
+      } else if (window.location.hash.length > 5) {
+        const urlData = atob(window.location.hash.substr(1))
+          .split('&')
+          .map(a => a.split('='))
+          .reduce((acc, val) => {
+            acc[val[0]] = decodeURI(val[1]);
+            return acc;
+          }, {});
+        console.log(urlData);
+        this.randomHashIds = JSON.parse(urlData.randomHashIds);
+        this.selectedAssets = JSON.parse(urlData.potentialAssets);
+        // selectedAssets is filled with all assets when selectedAssetPacks is changed so this should be ok
+        this.timestamp = urlData.timestamp;
+        this.iterations = parseInt(urlData.iterations);
+        const firstSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
+        this.randomSeed = await convertSeed(firstSeed);
+        this.canvasData.frame = urlData.frame === 'true';
+        this.canvasData.ratio = urlData.ratio;
+        const selectedAssetPacks = await getSelectedAssetPacksWithAssetData(JSON.parse(urlData.selectedAssetPacks));
+        await this.renderCanvas();
+        this.setSelectedAssetPacks(selectedAssetPacks);
+        window.location.hash = '';
       } else {
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
