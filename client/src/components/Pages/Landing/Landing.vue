@@ -2,10 +2,62 @@
     <div>
         <graphic-playground />
         <div class="fab">
-            <button-link to="/create-cryptographic" button-style="primary" @click.native="track('Compose Floating CTA')">Compose</button-link>
+            <button-link to="/create-cryptographic" button-style="primary"
+                         @click.native="track('Compose Floating CTA')">Compose
+            </button-link>
         </div>
-        <div class="how-it-works">
-            <h1 class="large-title">How it Works</h1>
+        <div class="stats-section">
+            <div class="large-title">
+                Cryptographics stats
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ numOfCreators }}
+                    </div>
+                    <div class="stat-label">
+                        Creators
+                    </div>
+                </div>
+                <!--<div class="stat">-->
+                <!--<div class="stat-number">-->
+                <!--18-->
+                <!--</div>-->
+                <!--<div class="stat-label">-->
+                <!--Total ETH earned by users-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ numOfImages }}
+                    </div>
+                    <div class="stat-label">
+                        Cryptographics
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ numOfAssetPacks }}
+                    </div>
+                    <div class="stat-label">
+                        Asset packs
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ numOfAssets }}
+                    </div>
+                    <div class="stat-label">
+                        Assets
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="landing-section how-it-works inverted">
+            <h1 class="section-title">How</h1>
+            <div class="title-section">
+                <h1 class="large-title">it Works</h1>
+            </div>
             <div class="steps">
                 <div class="step">
                     <div class="image-wrapper">
@@ -38,7 +90,8 @@
                 </div>
             </div>
             <div class="container">
-                <p class="steps-bottom">Each cryptographic is stored on the blockchain forever as a unique ERC-721 token.</p>
+                <p class="steps-bottom">Each cryptographic is stored on the blockchain forever as a unique ERC-721
+                    token.</p>
             </div>
         </div>
         <div class="landing-section gallery-section">
@@ -52,7 +105,8 @@
                     It’s the place where you can discover, buy and sell cryptographics.
                 </p>
             </div>
-            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true" :show-per-page="12" centered />
+            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true"
+                               :show-per-page="12" centered />
         </div>
         <div class="landing-section inverted">
             <h1 class="section-title">Create</h1>
@@ -104,7 +158,7 @@
   import IcoArrow from 'shared/UI/Icons/IcoArrow';
   import AssetCarousel from './AssetCarousel/AssetCarousel';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImageCount } from 'services/ethereumService';
+  import { getImageCount, getNumberOfAssetPacks, getNumberOfAssets, getCreatorCount } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 
@@ -127,15 +181,35 @@
     },
     data: () => ({
       imageIds: [],
+      numOfImages: 0,
+      numOfAssetPacks: 0,
+      numOfAssets: 0,
+      numOfCreators: 0,
     }),
     methods: {
       track(event) {
         if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
       },
+      getData() {
+        getNumberOfAssetPacks()
+          .then(data => {
+            this.numOfAssetPacks = data;
+          });
+        getNumberOfAssets()
+          .then(data => {
+            this.numOfAssets = data;
+          });
+        getCreatorCount()
+          .then(data => {
+            this.numOfCreators = data;
+          });
+      }
     },
     async created() {
       try {
+        this.getData();
         let numOfImages = parseInt(await getImageCount());
+        this.numOfImages = numOfImages;
         let imageIds = [...Array(numOfImages).keys()].reverse();
         if (numOfImages > 12) imageIds = imageIds.slice(0, 12);
         this.imageIds = imageIds;
@@ -186,10 +260,66 @@
         color: #000;
     }
 
-    .how-it-works {
-        padding-top: 70px;
-        padding-bottom: 200px;
+    .stats-section {
+        background-color: #d9d9d9;
         text-align: center;
+        box-sizing: border-box;
+        padding-top: 70px;
+        padding-bottom: 250px;
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 70px;
+
+            .stat {
+                margin-right: 60px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+            }
+
+            .stat-number {
+                font-family: YoungSerif-Regular, sans-serif;
+                font-size: 50px;
+                color: #000000;
+            }
+
+            .stat-label {
+                margin-top: 20px;
+                font-family: Roboto, sans-serif;
+                font-size: 21px;
+                color: #000000;
+                opacity: 0.3;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            & {
+                padding-bottom: 100px;
+            }
+
+            .stats {
+                .stat {
+                    width: 100%;
+                    margin-right: 0;
+                    margin-top: 50px;
+                }
+            }
+
+        }
+    }
+
+    .how-it-works {
+        text-align: center;
+
+        &.landing-section.inverted {
+            padding-bottom: 200px;
+        }
     }
 
     p {
@@ -265,7 +395,6 @@
             width: 18px;
         }
     }
-
 
     .steps-bottom {
         font-size: 15px;
