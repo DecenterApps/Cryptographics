@@ -16,7 +16,7 @@
             <div class="meta-info">
                 <div class="hover-info">
                     <h1 class="small-title" v-if="this.hovered">{{this.hovered.packName}} —
-                        <price size="inherit" :show-if-free="true" :value="this.hovered.price" />
+                        <price size="medium" :show-if-free="true" :value="this.hovered.price" />
                     </h1>
                 </div>
 
@@ -34,7 +34,7 @@
         <div class="bottom-controls">
             <div class="price-section">
                 <h1 v-if="totalPrice > 0" class="small-title">Total price —
-                    <price size="inherit" :value="totalPrice" />
+                    <price :value="totalPrice" size="medium" />
                 </h1>
             </div>
 
@@ -132,7 +132,6 @@
         this.loading = false;
       },
       setHover(assetPack) {
-        console.log(assetPack);
         this.$set(this, 'hovered', assetPack);
       }
     }
@@ -215,24 +214,12 @@
                 line-height: 25px;
             }
             span {
-                font-weight: bold;
-                font-size: 25px;
-                display: flex;
-                align-items: center;
                 margin-left: 5px;
             }
         }
 
         .price-section .small-title, .hover-info, .small-title {
             display: flex;
-
-            .price {
-                /*max-width: 55px;*/
-
-                &:before {
-                    top: 2px;
-                }
-            }
         }
     }
 

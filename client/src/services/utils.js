@@ -97,7 +97,6 @@ const timeConverter = (UNIX_timestamp) => {
   const min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
   const sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
 
-
   return `${date}/${month}/${year}, ${hour}:${min}`;
 };
 
@@ -110,21 +109,30 @@ const isEmptyBytes = (string) => string === '0x000000000000000000000000000000000
  * @param {Number} incomingOutput
  * @return {String}
  */
-const formatSmallNumber = (incomingOutput) => {
-  if (!incomingOutput || parseFloat(incomingOutput) > 0.000001) return incomingOutput.toString();
+const formatSmallNumber = (incomingOutput) => parseFloat(incomingOutput).toFixed(3).replace(/\.?0*$/g, '');
 
-  let output = incomingOutput;
-  let n = Math.log(output) / Math.LN10;
-  let decimalPoints = 0;
-  let m = 10 ** decimalPoints;
-
-  n = (n >= 0 ? Math.ceil(n * m) : Math.floor(n * m)) / m;
-
-  let x = 0 - Math.ceil(n);
-  if (x < 0) x = 0;
-
-  return output.toFixed(x);
+function scientificToDecimal(num) {
+  if(/\d+\.?\d*e[\+\-]*\d+/i.test(num)) {
+    let zero = '0',
+        parts = String(num).toLowerCase().split('e'),
+        e = parts.pop(),
+        l = Math.abs(e),
+        sign = e/l,
+        coeff_array = parts[0].split('.');
+    if(sign === -1) {
+        coeff_array[0] = Math.abs(coeff_array[0]);
+        num = '-'+zero + '.' + new Array(l).join(zero) + coeff_array.join('');
+    }
+    else {
+        let dec = coeff_array[1];
+        if(dec) l = l - dec.length;
+        num = coeff_array.join('') + new Array(l+1).join(zero);
+    }
+  }
+  return num;
 };
+
+const padToFour = (number) => { return number <= 9999 ? ('000' + number).slice(-4) : number; };
 
 module.exports = {
   encode,
@@ -136,4 +144,6 @@ module.exports = {
   timeConverter,
   isEmptyBytes,
   formatSmallNumber,
+  padToFour,
+  scientificToDecimal
 };

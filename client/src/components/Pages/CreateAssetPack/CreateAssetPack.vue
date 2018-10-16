@@ -150,7 +150,7 @@
       description: '',
       price: '',
       stage: 'select',
-      maxAssets: 50,
+      maxAssets: 49,
       assets: [],
       errors: {
         name: false,
@@ -193,7 +193,9 @@
               const width = img.naturalWidth;
               const height = img.naturalHeight;
 
-              if (this.assets.length >= 50) return;
+              if (this.assets.length >= 49) {
+                return;
+              }
               if (width > 2480) {
                 fileErrors.push({ file: file.name, error: 'Assets width is larger than the allowed 2480px' });
                 return;
@@ -236,7 +238,12 @@
       },
       async uploadToIpfs() {
         if (this.checkErrors()) return;
-        if (!this.userAddress) return this.openModal('metaMaskInfo');
+        if (!this.userAddress) {
+            const { userAgent: ua } = navigator;
+            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+            if (isMobile) return this.openModal('coinbaseInfo');
+            if (!isMobile) return this.openModal('metaMaskInfo');
+        }
 
         let hashes = [];
         let canvas = document.getElementById('thumbnail-canvas');

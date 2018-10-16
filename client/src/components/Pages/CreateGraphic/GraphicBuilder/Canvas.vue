@@ -32,6 +32,7 @@
         const rect = canvas.parentNode.getBoundingClientRect();
         const size = getSize(rect.width, rect.height, this.canvasData.ratio);
         const frame = this.canvasData.frame || false;
+        const finalFrameData = this.canvasData.finalFrameData || false;
         canvas.width = size.canvasWidth;
         canvas.height = size.canvasHeight;
         canvas.style.width = this.width + 'px';
@@ -44,6 +45,7 @@
           top: BORDER_WIDTH,
           ratio: this.canvasData.ratio,
           shouldDrawFrame: frame,
+          finalFrameData,
         };
         this.startDrawing();
         try {

@@ -10,13 +10,13 @@ import {
 import { preloadAssets } from '../../../services/helpers';
 
 export default {
-  [START_CANVAS_DRAWING]: ({ commit, state }, content) => {
+  [START_CANVAS_DRAWING]: ({ commit }) => {
     commit(MUTATE_CANVAS_DRAWING, true);
   },
-  [FINISH_CANVAS_DRAWING]: ({ commit, state }, content) => {
+  [FINISH_CANVAS_DRAWING]: ({ commit }) => {
     commit(MUTATE_CANVAS_DRAWING, false);
   },
-  [CLEAR_ASSET_PACKS]: ({ commit, state }) => {
+  [CLEAR_ASSET_PACKS]: ({ commit }) => {
     commit(MUTATE_SELECTED_ASSET_PACKS, []);
   },
   [TOGGLE_ASSET_PACK]: ({ commit, state }, assetPack) => {

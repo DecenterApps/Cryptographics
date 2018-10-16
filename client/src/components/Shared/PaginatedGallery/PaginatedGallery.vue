@@ -44,7 +44,7 @@
                 :total="filteredIds === null ? 0 : filteredIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
-        <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
+        <button-link @click.native="track('See more')" button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
@@ -134,7 +134,13 @@
         const selectedImages = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.images = await getGalleryImages(selectedImages, true);
         this.loading = false;
-      }
+        this.track('Change page', currentPage)
+      },
+      track(event, value) {
+        if (!window._paq) return;
+        if (value) return window._paq.push(['trackEvent', 'Gallery', event, event, value]);
+        window._paq.push(['trackEvent', 'Gallery', event]);
+      },
     }
   };
 </script>

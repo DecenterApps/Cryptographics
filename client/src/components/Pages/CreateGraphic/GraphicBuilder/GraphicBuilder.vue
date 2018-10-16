@@ -1,13 +1,16 @@
 <template>
     <div class="graphic-builder">
         <div class="left">
-            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? renderCanvas() : download()">
+            <div class="canvas-with-overlay-wrapper"
+                @click="(currentStep === 1)
+                    ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
+                    : (download())">
                 <overlay v-if="currentStep === 2" key="1">
                     <button-icon icon-type="download" />
                     <p>Download</p>
                 </overlay>
                 <overlay v-if="currentStep === 1" key="2">
-                    <button-icon icon-type="recompose" />
+                    <button-icon icon-type="recompose"/>
                     <p>Recompose</p>
                 </overlay>
                 <Canvas :canvasData="canvasData"></Canvas>
@@ -21,13 +24,13 @@
                 </h1>
                 <div class="pack-list">
                     <asset-box
-                            v-for="(assetPack, index) in selectedAssetPacks"
-                            :key="index"
-                            :assetPack="assetPack"
-                            :small="true"
-                            color="#eee"
-                            action="close"
-                            @click="changeStep(0)"
+                      v-for="(assetPack, index) in selectedAssetPacks"
+                      :key="index"
+                      :assetPack="assetPack"
+                      :small="true"
+                      color="#eee"
+                      action="close"
+                      @click="toggleAsset(assetPack)"
                     />
                     <div @click="changeStep(0)" class="add-more">
                         +
@@ -35,18 +38,19 @@
                 </div>
 
                 <div class="help">
-                    <p>Use the + button above to add more asset packs or change your selection.</p>
+                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and remove it from selection.</p>
                     <p>Once you compose a unique variation that you like, simply click Next to save it and claim ownership.</p>
                 </div>
             </div>
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white frame</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
-                            @click="renderCanvas"
+                            @click="renderCanvas(); track('Recompose')"
+                            :disabled="selectedAssetPacks.length === 0"
                             button-style="secondary">
                         Recompose
                     </cg-button>
@@ -58,6 +62,7 @@
                     <cg-button
                             :loading="isCanvasDrawing"
                             @click="changeStep(2)"
+                            :disabled="selectedAssetPacks.length === 0"
                     >
                         Next
                     </cg-button>
@@ -70,7 +75,7 @@
         <div v-if="currentStep === 2" class="right">
             <div class="selected-asset-packs">
                 <div class="final-pack-list">
-                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks">
+                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks" :key="index">
                         <asset-box
                                 :key="index"
                                 :assetPack="assetPack"
@@ -129,7 +134,7 @@
                         <price size="medium" :value="displayPrice()" />
                         <cg-button
                                 :loading="isCanvasDrawing"
-                                @click="buyImage"
+                                @click="buyImage(); track('Claim')"
                         >
                             Claim cryptographic
                         </cg-button>
@@ -161,9 +166,9 @@
     SHOW_LOADING_MODAL,
     TOGGLE_LOADING_MODAL,
     CHANGE_LOADING_CONTENT,
-    HIDE_LOADING_MODAL
+    HIDE_LOADING_MODAL,
   } from 'store/modal/types';
-  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
+  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS, TOGGLE_ASSET_PACK } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -225,11 +230,11 @@
       ...mapActions({
         openModal: TOGGLE_MODAL,
         toggleLoadingModal: TOGGLE_LOADING_MODAL,
+        toggleAsset: TOGGLE_ASSET_PACK,
         openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
-
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
           return 'created';
@@ -255,7 +260,12 @@
 
       async buyImage() {
         if (!this.checkTitle()) return;
-        if (!this.userAddress) return this.openModal('metaMaskInfo');
+        if (!this.userAddress) {
+            const { userAgent: ua } = navigator;
+            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+            if (isMobile) return this.openModal('coinbaseInfo');
+            if (!isMobile) return this.openModal('metaMaskInfo');
+        }
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
@@ -325,15 +335,19 @@
           console.log('iteration: ' + this.iterations);
           this.potentialAssets = selectedAssets;
           let picked = [];
+
           for (let i = 0; i < this.canvasData.assets.length; i++) {
             picked.push(this.canvasData.assets[i].id);
           }
+
           let price = await calculatePrice(picked, this.userAddress);
 
           if (selectedAssets.length === 0) {
             this.imagePrice = 0;
           }
-          this.imagePrice = parseFloat(price);
+
+          this.imagePrice = utils.scientificToDecimal(parseFloat(price));
+          
           console.log('PRICE : ' + this.imagePrice);
         } catch (e) {
           this.gettingImageData = false;
@@ -350,6 +364,7 @@
           link.setAttribute('href', window.URL.createObjectURL(blob));
           link.click();
         }, 'image/jpeg');
+        this.track('Download');
       },
       changeStep(step) {
         window.scrollTo(0, 0);
@@ -361,7 +376,10 @@
       displayPrice() {
         if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
         return web3.utils.fromWei(this.imagePrice.toString(), 'ether');
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
+      },
     },
     async created() {
       this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
@@ -513,11 +531,10 @@
         .pack-list {
             display: flex;
             flex-wrap: wrap;
-
+            margin-bottom: 10px;
             .asset-box {
                 margin-right: 18px;
                 margin-bottom: 20px;
-
                 &:nth-child(5n) {
                     margin-right: 0;
                 }
@@ -631,7 +648,6 @@
 
             span {
                 margin-right: 17px;
-                font-weight: bold;
             }
 
             button {
@@ -640,10 +656,6 @@
 
             .price {
                 max-width: 85px;
-
-                &:before {
-                    bottom: 3px;
-                }
             }
 
             &.buy-screen {

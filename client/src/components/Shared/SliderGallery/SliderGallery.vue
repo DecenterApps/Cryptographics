@@ -2,11 +2,12 @@
     <div class="header-slider-wrapper">
         <div class="slider">
             <slick ref="slick" :options="slickOptions" @afterChange="handleAfterChange">
-                <div class="slide" v-for="slide in slides">
+                <div class="slide" v-for="(slide, index) in slides" :key="index">
                     <div class="slide-bg" :style="'background-image: url(\'' + slide.image + '\')'"></div>
                     <div class="used-assets-wrapper">
                         <router-link
-                                v-for="ap in slide.assetPacks"
+                                v-for="(ap, index) in slide.assetPacks"
+                                :key="index"
                                 class="asset-pack"
                                 :to="'/asset-pack/' + ap.id"
                                 :style="'background-image: url(\'' + ap.image + '\')'"
@@ -20,7 +21,7 @@
             <div class="text-slider" :class="{hide: isProfilePage}">
                 <h3>Cryptographics are...</h3>
                 <slick :options="textSliderOptions" ref="textSlider">
-                    <h2 v-for="word in textSliderWords">{{word}}</h2>
+                    <h2 v-for="(word, index) in textSliderWords" :key="index">{{word}}</h2>
                 </slick>
             </div>
         </div>

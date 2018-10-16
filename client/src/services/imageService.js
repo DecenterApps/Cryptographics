@@ -37,7 +37,7 @@ export const createImage = (randomHashIds, timestamp, iterations, potentialAsset
         ipfsHash,
         extraData,
       ).send({
-        value: parseInt(price),
+        value: utils.scientificToDecimal(parseInt(price)),
         from: account,
         to: digitalPrintImageContractAddress,
       }, (error, txHash) => {
@@ -191,14 +191,21 @@ const drawFrame = (context, canvasHeight, canvasWidth, frame) => {
 
 const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) =>
   new Promise((resolve) => {
-    let { bottom, left } = frame;
+    let { bottom, left, finalFrameData } = frame;
+
+    const centerOfBottomFrame = canvasHeight - bottom / 2;
 
     context.strokeStyle = '#FFF';
     context.beginPath();
-    context.moveTo(0, canvasHeight - bottom / 2);
+    context.moveTo(0, centerOfBottomFrame);
     context.lineWidth = bottom;
-    context.lineTo(canvasWidth, canvasHeight - bottom / 2);
+    context.lineTo(canvasWidth, centerOfBottomFrame);
     context.stroke();
+
+    if (finalFrameData) {
+      drawPersonalizedData(context, canvasHeight, canvasWidth, frame, centerOfBottomFrame);
+      return resolve();
+    }
 
     let image = new Image();
     image.crossOrigin = 'Anonymous';
@@ -237,6 +244,30 @@ const drawLoadedImage = async (context, asset, canvasWidth, canvasHeight, frame,
       canvasWidth,
       canvasHeight
     });
+};
+
+export const drawPersonalizedData = (context, canvasHeight, canvasWidth, frame, centerOfBottomFrame) => {
+  let { bottom, left, right, finalFrameData } = frame;
+  const posXRight = canvasWidth - right;
+  const positionY = (canvasHeight - bottom) + left;
+  const titleText = '40px YoungSerif-Regular';
+  const regularText = '30px Roboto';
+  const textOffset = 55;
+  context.textBaseline = 'top';
+  context.textAlign = 'left';
+  context.font = titleText;
+  context.fillStyle = '#000';
+  context.fillText(finalFrameData.title, left, positionY);
+  context.font = regularText;
+  context.fillText(`no.${utils.padToFour(parseInt(finalFrameData.id))}`, left, positionY + textOffset);
+
+  context.textAlign = 'right';
+  context.font = titleText;
+  context.fillText(finalFrameData.creatorMeta.username, posXRight, positionY);
+  const offset = context.measureText(finalFrameData.creatorMeta.username).width;
+  context.font = regularText;
+  context.fillText('Cryptographic by  ', posXRight - offset, positionY + 12);
+  context.fillText(finalFrameData.creator, posXRight, positionY + textOffset);
 };
 
 export const makeCoverImage = (isHome, assets, c, width, height, frame = {
@@ -388,7 +419,9 @@ export const makeImage = (objs, c, width, height, frame = {
 
             await drawLoadedImage(context, assets[i], canvasWidth, canvasHeight, frame, i, delay);
 
-            await drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+            if (delay > 0) {
+              await drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+            }
 
             if (frame.shouldDrawFrame) {
               // DRAW FRAME
@@ -396,6 +429,9 @@ export const makeImage = (objs, c, width, height, frame = {
             }
           }
           if (i === assets.length - 1) {
+            if (delay === 0) {
+              await drawBottomFrame(context, canvasHeight, canvasWidth, frame);
+            }
             resolve({ message: 'Success' });
           }
         }

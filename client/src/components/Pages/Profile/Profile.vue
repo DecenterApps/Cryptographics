@@ -22,7 +22,7 @@
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
-                            @click="openModal('balances')"
+                            @click="openModal('balances'); track('Open withdraw')"
                     >
                         Withdraw
                     </cg-button>
@@ -112,6 +112,7 @@
     getBoughtAssetPacks,
     fromWei,
     getImageOwnerAndCreator,
+    getCreatedGraphics
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
@@ -149,6 +150,7 @@
         currentTab: 'gallery',
         imageIds: [],
         boughtImageIds: [],
+        createdImageIds: [],
         assetPackIds: [],
         userAddress: '0x0',
         username: '',
@@ -177,11 +179,12 @@
         return fromWei(total, 3);
       },
       shownImageIds() {
+        if (this.showGraphics === 'all')
+          return [...this.boughtImageIds, ...this.createdImageIds].sort((a, b) => b - a);
         if (this.showGraphics === 'bought')
           return this.boughtImageIds.slice().reverse();
         if (this.showGraphics === 'created')
-          return this.imageIds.filter(id => this.boughtImageIds.indexOf(id) === -1).slice().reverse();
-        return this.imageIds.slice().reverse();
+          return this.createdImageIds.slice().reverse();
       }
     },
     watch: {
@@ -250,6 +253,7 @@
         const imageIds = await getUserImages(this.userAddress);
         const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
         this.imageIds = imageIds;
+        this.createdImageIds = await getCreatedGraphics(this.userAddress);
         this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
       },
       async getAssetPacks() {
@@ -282,7 +286,10 @@
       },
       changeTab(type) {
         this.currentTab = type;
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Profile', event]);
+      },
     },
     async created() {
       await this.onCreated();
