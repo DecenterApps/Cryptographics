@@ -10,10 +10,6 @@ contract('Functions', async (accounts) => {
     before(async () => {
         dpm = await DigitalPrintImage.deployed();
         functions = await Functions.deployed()
-
-        await advanceToBlock(web3.eth.blockNumber+105);
-
-        await functions.fillWithHashes();
     });
 
     

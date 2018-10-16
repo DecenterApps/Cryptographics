@@ -9,6 +9,9 @@ import { getAccounts } from './helpers';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
+const cryptographicsGetterContractAddress = config.cryptographicsGetter.networks[clientConfig.network].address;
+const getterContract = () => new web3.eth.Contract(config.cryptographicsGetter.abi, cryptographicsGetterContractAddress);
+
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
@@ -365,6 +368,10 @@ export const getImagePrice = async (imageId) => {
   const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
   return marketplaceAd.active ? web3.utils.fromWei(marketplaceAd.price, 'ether') : 0;
 };
+
+export const getCreatedGraphics = async (address) => {
+  return await getterContract().methods.getImagesCreatedByAddress(address).call();
+}
 
 export const getGalleryImage = async (imageId, getPrice) =>
   new Promise(async (resolve, reject) => {
