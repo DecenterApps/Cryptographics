@@ -343,7 +343,7 @@
             }
         }
 
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             & {
                 padding-bottom: 100px;
             }
@@ -378,7 +378,7 @@
     .steps {
         display: flex;
         justify-content: center;
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             display: block;
         }
 
@@ -430,7 +430,7 @@
             margin: 0 30px;
             position: relative;
             top: 200px;
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 display: none;
             }
         }
@@ -514,7 +514,7 @@
 
         .button {
             margin: 50px 0 50px 0;
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 display: none;
             }
         }
@@ -524,7 +524,7 @@
             position: relative;
             top: -29px;
             margin-bottom: 20px;
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 top: 10px;
             }
 
@@ -554,9 +554,9 @@
         transform: translateX(200%);
         transition: all .2s;
         z-index: 200;
-        @media screen and (max-width: 767px) {
-            display: none;
-        }
+        // @media screen and (max-width: 768px) {
+            // display: none;
+        // }
         @media screen and (max-width: 1200px) {
             bottom: 20px;
             right: 20px;

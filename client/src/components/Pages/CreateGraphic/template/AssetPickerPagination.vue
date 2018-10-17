@@ -169,7 +169,7 @@
             }
         }
 
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             min-width: auto;
         }
     }
@@ -186,7 +186,7 @@
         position: absolute;
         top: -68px;
         right: 0;
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             display: none !important;
         }
     }

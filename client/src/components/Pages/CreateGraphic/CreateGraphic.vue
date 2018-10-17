@@ -96,7 +96,7 @@
     .mobile-steps {
         display: none
     }
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 768px) {
         .mobile-steps { display: flex; }
         .main-steps { display: none; }
     }

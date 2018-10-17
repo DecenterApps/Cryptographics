@@ -148,7 +148,7 @@
             }
         }
 
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 1024px) {
             margin-bottom: 427px;
         }
 
@@ -179,7 +179,7 @@
                 100% { opacity: 0; }
             }
             &.mobile { display: none; }
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 1024px) {
                 &.desktop { display: none; }
                 &.mobile { display: flex; }
             }
@@ -189,12 +189,11 @@
 
 <style scoped lang="scss">
     .hero {
-        /*background-color: #D9D9D9;*/
         position: relative;
         background: url('../assets/home-header.jpg') center center no-repeat;
         height: 566px;
         padding: 45px 0;
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 1024px) {
             background-position: 50% -50px;
             padding-top: 0;
             height: 836px;
@@ -213,7 +212,7 @@
             top: 0;
             bottom: 0;
             min-width: 300px;
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 1024px) {
                 position: relative;
                 left: 0;
                 top: 530px;
@@ -225,7 +224,7 @@
 
             .hero-text-content {
                 max-width: 315px;
-                @media screen and (max-width: 767px) {
+                @media screen and (max-width: 1024px) {
                     max-width: none;
                 }
                 p {
@@ -246,7 +245,7 @@
             .button-group button {
                 margin: 0;
             }
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 1024px) {
                 .button-group { display: none; }
             }
 
@@ -257,7 +256,7 @@
                 top: -80px;
                 left: 0;
                 right: 0;
-                @media screen and (max-width: 767px) {
+                @media screen and (max-width: 1024px) {
                     display: block;
                 }
             }

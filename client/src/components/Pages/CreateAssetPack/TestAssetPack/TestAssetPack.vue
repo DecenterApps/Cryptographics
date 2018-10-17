@@ -121,7 +121,7 @@
             min-width: 300px;
             width: 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
             .left {
                 margin-bottom: 30px;

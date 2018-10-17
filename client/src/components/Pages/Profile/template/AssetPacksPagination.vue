@@ -237,7 +237,7 @@
         .pagination-controls {
             flex: 0 0 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
         }
     }

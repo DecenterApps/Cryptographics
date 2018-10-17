@@ -63,6 +63,8 @@
 
     .header-wrapper {
         height: 70px;
+        z-index: 999;
+        position: relative;
     }
     .header {
         position: fixed;
@@ -87,7 +89,7 @@
                 margin-left: 4px;
                 transition: opacity .2s;
                 opacity: 0;
-                @media screen and (max-width: 767px) {
+                @media screen and (max-width: 768px) {
                     opacity: 1;
                 }
             }
@@ -103,13 +105,10 @@
             .mobile-menu-toggle {
                 display: none;
             }
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 margin: 0;
                 flex-direction: column;
                 align-items: center;
-                // .logo {
-                //     margin-bottom: 30px;
-                // }
                 .mobile-menu-toggle {
                     cursor: pointer;
                     display: inline-flex;
@@ -152,7 +151,7 @@
                     text-decoration: underline;
                 }
             }
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 font-size: 14px;
                 font-weight: 100;
                 background-color: #000;
