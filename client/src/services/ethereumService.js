@@ -633,6 +633,23 @@ export const getUserInfo = address =>
     }
   });
 
+export const getTotalProfits = () =>
+  new Promise(async (resolve, reject) => {
+    const contract = await assetManagerContract();
+    const events = await contract.getPastEvents('AssetPackBought', {
+      filter: {},
+      fromBlock: clientConfig.deployBlockNumber
+    });
+    const promises = events.map(event => web3.eth.getTransaction(event.transactionHash));
+
+    Promise.all(promises)
+      .then((transactions) => {
+        const sum = transactions
+          .reduce((acc, item) => acc + parseFloat(web3.utils.fromWei(item.value, 'ether')), 0);
+        resolve(sum);
+      });
+  });
+
 export const getImageTransferHistory = imageId =>
   new Promise(async (resolve, reject) => {
     try {

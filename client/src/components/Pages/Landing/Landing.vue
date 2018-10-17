@@ -19,14 +19,14 @@
                         Creators
                     </div>
                 </div>
-                <!--<div class="stat">-->
-                <!--<div class="stat-number">-->
-                <!--18-->
-                <!--</div>-->
-                <!--<div class="stat-label">-->
-                <!--Total ETH earned by users-->
-                <!--</div>-->
-                <!--</div>-->
+                <div class="stat">
+                    <div class="stat-number eth">
+                        {{ totalEthEarned }}
+                    </div>
+                    <div class="stat-label">
+                        Total ETH earned <br> by creators
+                    </div>
+                </div>
                 <div class="stat">
                     <div class="stat-number">
                         {{ numOfImages }}
@@ -56,7 +56,7 @@
         <div class="landing-section how-it-works inverted">
             <h1 class="section-title">How</h1>
             <div class="title-section">
-                <h1 class="large-title">it Works</h1>
+                <h1 class="large-title">It works</h1>
             </div>
             <div class="steps">
                 <div class="step">
@@ -94,21 +94,7 @@
                     token.</p>
             </div>
         </div>
-        <div class="landing-section gallery-section">
-            <h1 class="section-title">
-                Cryptographics
-            </h1>
-            <div class="title-section">
-                <h1 class="large-title">Gallery</h1>
-                <p>
-                    The Gallery showcases all cryptographics that have been stored on the blockchain.
-                    It’s the place where you can discover, buy and sell cryptographics.
-                </p>
-            </div>
-            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true"
-                               :show-per-page="12" centered />
-        </div>
-        <div class="landing-section inverted">
+        <div class="landing-section create-asset-pack">
             <h1 class="section-title">Create</h1>
             <div class="title-section">
                 <h1 class="large-title">Asset Packs</h1>
@@ -143,14 +129,48 @@
                 <br>
                 <br>
                 <p class="wider">
+                    All visual artists are welcome to create and upload their asset packs.
+                </p>
+                <br>
+                <br>
+                <p class="wider">
                     Each asset pack can contain up to 50 different elements, at least one of which should be a
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
                     receive earnings every time a new Creator uses it.
                 </p>
-                <button-link to="/create-asset-pack" @click.native="track('Create AP')">Create asset pack</button-link>
+                <button-link button-style="primary thin-text" to="/create-asset-pack"
+                             @click.native="track('Create AP')">Create asset pack
+                </button-link>
+                <br>
+                <p class="wider">
+                    Are you an Artist but not sure how to submit asset packs?<br>
+                    Reach out and we'll help you out.
+                </p>
+                <button-link
+                        button-style="primary-inverted thin-text"
+                        to="/"
+                        @click.native="openMail"
+                >
+                    Contact us
+                </button-link>
             </div>
         </div>
-        <asset-carousel />
+
+        <div class="landing-section gallery-section inverted">
+            <h1 class="section-title">
+                Cryptographics
+            </h1>
+            <div class="title-section">
+                <h1 class="large-title">Gallery</h1>
+                <p>
+                    The Gallery showcases all cryptographics that have been stored on the blockchain.
+                    It’s the place where you can discover, buy and sell cryptographics.
+                </p>
+            </div>
+            <paginated-gallery :imageIds="imageIds" :display-filters="false" :display-overlay="true" :see-more="true"
+                               :show-per-page="12" centered />
+        </div>
+        <!--<asset-carousel />-->
     </div>
 </template>
 
@@ -158,7 +178,13 @@
   import IcoArrow from 'shared/UI/Icons/IcoArrow';
   import AssetCarousel from './AssetCarousel/AssetCarousel';
   import GraphicPlayground from 'pages/Landing/GraphicPlayground/GraphicPlayground';
-  import { getImageCount, getNumberOfAssetPacks, getNumberOfAssets, getCreatorCount } from 'services/ethereumService';
+  import {
+    getImageCount,
+    getNumberOfAssetPacks,
+    getNumberOfAssets,
+    getCreatorCount,
+    getTotalProfits,
+  } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
 
@@ -185,12 +211,17 @@
       numOfAssetPacks: 0,
       numOfAssets: 0,
       numOfCreators: 0,
+      totalEthEarned: 0,
     }),
     methods: {
       track(event) {
         if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
       },
       getData() {
+        getTotalProfits()
+          .then(data => {
+            this.totalEthEarned = data.toFixed(2);
+          });
         getNumberOfAssetPacks()
           .then(data => {
             this.numOfAssetPacks = data;
@@ -203,7 +234,10 @@
           .then(data => {
             this.numOfCreators = data;
           });
-      }
+      },
+      openMail() {
+        window.location.href = 'mailto:info@decenter.com';
+      },
     },
     async created() {
       try {
@@ -261,7 +295,7 @@
     }
 
     .stats-section {
-        background-color: #d9d9d9;
+        background-color: #eeeeee;
         text-align: center;
         box-sizing: border-box;
         padding-top: 70px;
@@ -270,7 +304,7 @@
         .stats {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             margin-top: 70px;
 
@@ -284,9 +318,20 @@
             }
 
             .stat-number {
+                position: relative;
                 font-family: YoungSerif-Regular, sans-serif;
                 font-size: 50px;
                 color: #000000;
+
+                &.eth::after {
+                    content: 'ETH';
+                    position: absolute;
+                    right: -10px;
+                    font-family: Roboto, sans-serif;
+                    font-size: 21px;
+                    color: #000000;
+                    opacity: 0.3;
+                }
             }
 
             .stat-label {
@@ -419,11 +464,11 @@
 
     .landing-section {
         position: relative;
-        background-color: #d9d9d9;
+        background-color: #eeeeee;
         z-index: 1;
         text-align: center;
 
-        &.gallery-section {
+        &.gallery-section, &.create-asset-pack {
             padding-bottom: 100px;
         }
 
@@ -442,7 +487,7 @@
             top: -9.5vw;
             font-size: 11vw;
             // line-height: 160px;
-            color: #d9d9d9;
+            color: #eeeeee;
             font-family: YoungSerif-Regular, sans-serif;
             left: 50%;
             transform: translateX(-50%);
@@ -464,7 +509,7 @@
         }
 
         .button {
-            margin: 70px 0 100px 0;
+            margin: 50px 0 50px 0;
             @media screen and (max-width: 767px) {
                 display: none;
             }
@@ -486,7 +531,7 @@
     }
 
     .artist-cta {
-        background-color: #D9D9D9;
+        background-color: #eeeeee;
         padding: 70px 0;
         .container {
             width: 100%;
