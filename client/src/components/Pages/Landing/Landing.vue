@@ -353,6 +353,10 @@
                     width: 100%;
                     margin-right: 0;
                     margin-top: 50px;
+                    & .eth::after {
+                        right: auto;
+                        margin-left: 10px;
+                    }
                 }
             }
 
