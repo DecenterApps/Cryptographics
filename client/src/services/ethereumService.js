@@ -9,8 +9,8 @@ import { getAccounts } from './helpers';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
-const cryptographicsGetterContractAddress = config.CryptographicsGetter.networks[clientConfig.network].address;
-const getterContract = () => new web3.eth.Contract(config.CryptographicsGetter.abi, cryptographicsGetterContractAddress);
+const cryptographicsGetterContractAddress = config.cryptographicsGetter.networks[clientConfig.network].address;
+const getterContract = () => new web3.eth.Contract(config.cryptographicsGetter.abi, cryptographicsGetterContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);

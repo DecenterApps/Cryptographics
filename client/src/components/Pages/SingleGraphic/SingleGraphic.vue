@@ -141,7 +141,9 @@
           const title = this.image.title || 'cryptographic';
           link.setAttribute('download', title + '.jpeg');
           link.setAttribute('href', window.URL.createObjectURL(blob));
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
         }, 'image/jpeg');
         this.track('Download');
       },
