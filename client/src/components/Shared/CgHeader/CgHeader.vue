@@ -7,7 +7,10 @@
                         <logo /> <span>Cryptographics</span>
                     </router-link>
                 </div>
-                <div class="links-section">
+                <div class="mobile-menu-toggle" @click="showMenu = !showMenu"></div>
+                <div
+                    class="links-section"
+                    :class="{'show-menu' : showMenu }">
                     <div class="links">
                         <router-link to="/gallery" active-class="active">Gallery</router-link>
                         <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
@@ -44,6 +47,7 @@
     data() {
       return {
         ipfsNodePath,
+        showMenu: false
       };
     },
     computed: {
@@ -95,33 +99,44 @@
             padding: 15px 0;
             display: flex;
             justify-content: space-between;
+            position: relative;
+            .mobile-menu-toggle {
+                display: none;
+            }
             @media screen and (max-width: 767px) {
+                margin: 0;
                 flex-direction: column;
                 align-items: center;
-                .logo {
-                    margin-bottom: 30px;
+                // .logo {
+                //     margin-bottom: 30px;
+                // }
+                .mobile-menu-toggle {
+                    cursor: pointer;
+                    display: inline-flex;
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    padding: 16px;
+                    &:after {
+                        content: "\2630";
+                        font-family: Roboto, sans-serif;
+                        font-size: 22px;
+                        color: #fff;
+                    }
                 }
                 .links-section {
                     width: 100%;
-                    justify-content: space-between;
                     .profile {
                         margin-left: 0;
-                    }
-                    @media screen and (max-width: 425px) {
-                        flex-direction: column-reverse;
-                        & > div {
-                            margin-bottom: 30px;
-                        }
                     }
                 }
             }
         }
         .links-section {
-            @media screen and (max-width: 767px) {
-                display: none;
-            }
             display: flex;
             align-items: center;
+            justify-content: space-between;
             .links a {
                 line-height: 40px;
                 font-size: 12px;
@@ -135,6 +150,49 @@
                 }
                 &.active {
                     text-decoration: underline;
+                }
+            }
+            @media screen and (max-width: 767px) {
+                font-size: 14px;
+                font-weight: 100;
+                background-color: #000;
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column-reverse;
+                justify-content: flex-end;
+                transition: all .2s ease;
+                &.show-menu {
+                    left: 0;
+                }
+                .profile {
+                    margin: 30px 0 90px;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 80%;
+                    font-size: inherit;
+                    font-weight: inherit;
+                    .button {
+                        font-size: inherit;
+                        font-weight: inherit;                        
+                    }
+                    .avatar {
+                        margin-right: 0;
+                    }
+                }
+                .links {
+                    flex-direction: column;
+                    display: flex;
+                    text-align: center;
+                    a {
+                        margin-right: 0;
+                        font-size: inherit;
+                        font-weight: inherit;
+                        margin-bottom: 20px;
+                    }
                 }
             }
         }
