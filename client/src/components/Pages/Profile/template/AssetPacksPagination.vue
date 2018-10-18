@@ -176,6 +176,12 @@
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
+                @media screen and (max-width: 1025px) {
+                    width: 47.4%;
+                }
+                @media screen and (max-width: 426px) {
+                    width: 100%;
+                }
             }
         }
         .asset-pack {
