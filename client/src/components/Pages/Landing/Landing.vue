@@ -416,13 +416,16 @@
 
         &.asset-packs {
             .image-wrapper {
-                height: 204px;
+                height: 160px;
+                & img {
+                    width: 130px;
+                }
             }
 
             svg {
                 position: relative;
                 top: 230px;
-                margin: 0 50px;
+                // margin: 0 0px;
             }
         }
 
