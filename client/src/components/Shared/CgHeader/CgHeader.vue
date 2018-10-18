@@ -12,19 +12,19 @@
                     class="links-section"
                     :class="{'show-menu' : showMenu }">
                     <div class="links">
-                        <router-link to="/gallery" active-class="active">Gallery</router-link>
-                        <router-link to="/asset-packs" active-class="active">Asset Packs</router-link>
-                        <router-link to="/about" active-class="active">About</router-link>
-                        <router-link to="/faq" active-class="active">FAQ</router-link>
+                        <router-link to="/gallery" active-class="active" @click.native="showMenu = false">Gallery</router-link>
+                        <router-link to="/asset-packs" active-class="active" @click.native="showMenu = false">Asset Packs</router-link>
+                        <router-link to="/about" active-class="active" @click.native="showMenu = false">About</router-link>
+                        <router-link to="/faq" active-class="active" @click.native="showMenu = false">FAQ</router-link>
                     </div>
                     <div class="profile">
-                        <router-link class="profile-link" to="/profile">
+                        <router-link class="profile-link" to="/profile" @click.native="showMenu = false">
                             {{ username }}
                             <img
                                     class="avatar"
                                     :src="avatar">
                         </router-link>
-                        <button-link to="/create-cryptographic" button-style="secondary inverted">Compose</button-link>
+                        <button-link to="/create-cryptographic" button-style="secondary inverted" @click.native="showMenu = false">Compose</button-link>
                     </div>
                 </div>
             </div>
