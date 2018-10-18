@@ -535,6 +535,12 @@
                 margin-bottom: 40px;
             }
         }
+        &.gallery-section {
+            background-color: #d4d3d3;
+            .section-title {
+                color: #d4d3d3;
+            }
+        }
     }
 
     .artist-cta {
