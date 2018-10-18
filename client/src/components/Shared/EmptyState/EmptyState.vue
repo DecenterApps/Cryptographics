@@ -24,6 +24,8 @@
         <div v-if="type === 'profile-asset-packs-all'">This user doesn't own any asset packs yet.</div>
         <div v-if="type === 'profile-asset-packs-bought'">This user hasn't bought any asset packs yet. </div>
         <div v-if="type === 'profile-asset-packs-created'">This user hasn't created any asset packs yet.</div>
+
+        <div v-if="type === 'activityLog'">There has been no activity in the last 8 days.</div>
     </div>
 </template>
 

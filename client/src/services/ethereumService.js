@@ -10,16 +10,16 @@ import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
-const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+export const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
-const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+export const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const marketPlaceContractAddress = config.marketplaceContract.networks[clientConfig.network].address;
-const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
+export const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
 
 const functionsContractAddress = config.functionsContract.networks[clientConfig.network].address;
-const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
+export const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
 export const pickTenRandoms = () => {
   let randoms = [];
@@ -701,3 +701,14 @@ export const sendETHtoAddress = (from, to, value) => {
     console.log(err);
   }
 };
+
+export const getLatestEvents = (contractPromise, event, fromBlock) =>
+  new Promise(async (resolve, reject) => {
+    const contract = await contractPromise();
+
+    contract.getPastEvents(event, { fromBlock }, (error, eventResult) => {
+      if (error) return reject(error);
+
+      resolve(eventResult);
+    });
+  });
