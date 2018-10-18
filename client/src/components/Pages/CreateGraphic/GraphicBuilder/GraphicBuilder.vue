@@ -224,10 +224,6 @@
         this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
           assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
-        this.iterations = 0;
-        this.timestamp = new Date().getTime();
-        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
-        this.randomSeed = await convertSeed(this.randomSeed);
       },
       username: function (val) {
         if (val !== '' && val !== 'Anon' && this.claimPressed) {
