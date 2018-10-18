@@ -207,6 +207,7 @@
                 }
                 @media screen and (max-width: 768px) {
                     width: 31.3%;
+                    margin-bottom: 5%;
                     &:nth-of-type(3n) {
                         margin-right: 0;
                     }
