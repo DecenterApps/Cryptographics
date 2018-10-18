@@ -25,7 +25,7 @@
         <div class="selected-asset-packs">
             <div class="large-title">Selected asset packs</div>
 
-            <div class="packs-wrapper" v-if="selectedAssetPacks.length > 0">
+            <div class="packs-wrapper row-6" v-if="selectedAssetPacks.length > 0">
                 <asset-box
                         :assetPack="assetPack"
                         :selected="isSelected(assetPack)"
@@ -38,7 +38,8 @@
 
             <div class="empty-packs-wrapper" v-if="selectedAssetPacks.length === 0">
                 <div class="empty-asset-box">
-                    <div></div>
+                    <div class="cover"></div>
+                    <img src="https://ipfs.decenter.com/ipfs/QmYmu9gxQ6wbQXQmtBakTM3XifMs5u4gBrFQYNq8kVMhGh" />
                 </div>
             </div>
 
@@ -66,7 +67,7 @@
         <div class="content" v-if="loading === false">
             <asset-picker-pagination
                     assets-pack-type="all"
-                    grid="row-5"
+                    grid="row-6"
                     :show-per-page="12"
                     :overlay="true"
                     :isSelected="isSelected.bind(this)"
@@ -182,26 +183,44 @@
 
     .selected-asset-packs {
         margin-bottom: 20px;
-        min-width: 768px;
-
-        @media screen and (max-width: 1120px) {
-            min-width: 720px;
-
+        .row-6 {
             .asset-box {
-                margin-right: 18px;
-            }
-        }
-
-        @media screen and (max-width: 767px) {
-            min-width: auto;
-        }
-        .asset-box {
-            /*flex: 0 0 16%;*/
-            margin-right: 26px;
-            margin-bottom: 20px;
-
-            &:nth-child(6n) {
-                margin-right: 0;
+                width: 14.1%;
+                margin-right: 3%;
+                margin-bottom: 3%;
+                height: auto;
+                &:nth-of-type(6n) {
+                    margin-right: 0 !important;
+                }
+                &:nth-of-type(12n) {
+                    margin-right: 0 !important;
+                }
+                @media screen and (max-width: 1025px) {
+                    width: 22.7%;
+                    &:nth-of-type(4n) {
+                        margin-right: 0;
+                    }
+                    &:nth-of-type(6n) {
+                        margin-right: 3% !important;
+                        
+                    }
+                }
+                @media screen and (max-width: 768px) {
+                    width: 31.3%;
+                    margin-bottom: 5%;
+                    &:nth-of-type(3n) {
+                        margin-right: 0;
+                    }
+                    &:nth-of-type(4n) {
+                        margin-right: 3%;
+                    }
+                    &:nth-of-type(6n) {
+                        margin-right: 0% !important;
+                    }
+                }
+                &:nth-of-type(12n) {
+                    margin-right: 0 !important;
+                }
             }
         }
 
@@ -211,24 +230,35 @@
             line-height: normal;
             font-size: 15px;
             text-decoration-line: underline;
-
             color: #000000;
         }
 
-        .packs-wrapper, .empty-packs-wrapper {
-            margin-bottom: 20px;
-        }
-
         .empty-packs-wrapper {
-
+            position: relative;
+            .cover {
+                position: absolute;
+                background-color: #D9D9D9;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
             .empty-asset-box {
-                height: 120px;
-                width: 165px;
-                border: 4px solid #D9D9D9;
-
-                div {
+                position: relative;
+                height: 59%;
+                width: 14.1%;
+                margin-right: 3%;
+                margin-bottom: 3%;
+                border: 1px solid black;
+                img {
+                    width: 100%;
                     height: 100%;
-                    border: 1px solid black;
+                }
+                @media screen and (max-width: 1025px) {
+                    width: 22.7%;
+                }
+                @media screen and (max-width: 768px) {
+                    width: 31.3%;
                 }
             }
         }

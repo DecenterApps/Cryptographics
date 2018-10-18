@@ -176,6 +176,12 @@
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
+                @media screen and (max-width: 1025px) {
+                    width: 47.4%;
+                }
+                @media screen and (max-width: 426px) {
+                    width: 100%;
+                }
             }
         }
         .asset-pack {
@@ -237,7 +243,7 @@
         .pagination-controls {
             flex: 0 0 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
         }
     }

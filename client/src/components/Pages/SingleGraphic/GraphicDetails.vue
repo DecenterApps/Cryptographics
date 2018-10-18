@@ -101,14 +101,40 @@
                     class="graphic-controls"
             >
                 <separator></separator>
-                <div class="bottom-controls">
+                <div class="bottom-controls" v-if="!changePrice">
                     <div></div>
                     <div class="price-controls">
                         <price :value="image.price" />
-                        <cg-button button-style="secondary" class="remove-button" @click="removeFromMarketPlace">Cancel
-                            listing
+                        <cg-button button-style="secondary" class="remove-button" @click="removeFromMarketPlace">
+                            Cancel listing
+                        </cg-button>
+                        <cg-button button-style="secondary" class="remove-button" @click="changePrice = true">
+                            Change price
                         </cg-button>
                         <cg-button @click="$emit('showPrintForm')">Order print</cg-button>
+                    </div>
+                </div>
+                <div class="bottom-controls" v-else>
+                    <div></div>
+                    <div class="price-controls">
+                        Current price
+                        <price :value="image.price" />
+                        <cg-button button-style="secondary" class="remove-button" @click="() => {
+                            this.errors.sellPrice = false;
+                            this.changePrice = !this.changePrice;
+                        }">Cancel
+                        </cg-button>
+                        <cg-input
+                                v-on:input="checkErrors('sellPrice')"
+                                :inputStyle="errors.sellPrice ? 'input error' : 'input'"
+                                v-model="sellPrice"
+                                inputType="number"
+                                type="text"
+                                placeholder="Enter price in ETH"
+                        />
+                        <cg-button button-style="primary" class="remove-button" @click="submitImageForSale">
+                            Change price
+                        </cg-button>
                     </div>
                 </div>
             </div>
@@ -160,6 +186,7 @@
     name: 'GraphicDetails',
     data: () => ({
       sellGraphic: false,
+      changePrice: false,
       sellPrice: '',
       errors: {
         sellPrice: false,
@@ -219,6 +246,8 @@
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. ' +
           'Your cryptographic will be listed shortly.');
         const result = await transactionPromise();
+        this.sellGraphic = false;
+        this.changePrice = false;
         const id = result.events.SellingImage.returnValues.imageId;
         this.closeLoadingModal();
         // this.$router.push(`/cryptographic/${id}`);

@@ -142,7 +142,7 @@
                     padding: 35px 20px;
                 }
             }
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 .container {
                     flex-direction: column;
                     align-items: center;

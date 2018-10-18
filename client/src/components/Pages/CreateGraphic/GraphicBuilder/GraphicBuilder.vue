@@ -377,7 +377,9 @@
           const title = this.title || 'cryptographic';
           link.setAttribute('download', title + '.jpeg');
           link.setAttribute('href', window.URL.createObjectURL(blob));
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
         }, 'image/jpeg');
         this.track('Download');
       },
@@ -532,7 +534,7 @@
             min-width: 300px;
             width: 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
             .left {
                 margin-bottom: 30px;
