@@ -12,7 +12,7 @@
     "start": "node server.js",
     "prod": "webpack --config client/build/webpack.prod.js -p",
     "build": "webpack --config client/build/webpack.prod.js -p",
-    "dev": "webpack-dev-server --history-api-fallback --mode=development --open --port 3300 --compress --config ./client/build/webpack.config.js",
+    "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host=0.0.0.0 --port 3300 --compress --config ./client/build/webpack.config.js",
     "generatePacks": "node client/config/generatePacks.js 0",
     "copyConfig": "cp client/config/config.json.dist client/config/config.json && cp client/config/clientConfig.json.dev client/config/clientConfig.json"
   },

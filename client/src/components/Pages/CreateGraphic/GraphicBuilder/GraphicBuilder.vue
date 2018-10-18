@@ -435,7 +435,7 @@
         return btoa(hash).replace(/=*$/g, '')
       },
       getLink() {
-        return window.location.host + window.location.pathname + '?image=' + this.imageToUrlHash();
+        return window.location.origin + window.location.pathname + '?image=' + this.imageToUrlHash();
       },
     },
     async created() {
