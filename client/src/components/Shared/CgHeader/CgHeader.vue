@@ -50,6 +50,12 @@
         showMenu: false
       };
     },
+    watch: {
+        showMenu: function (val) {
+            const html = document.querySelector('html');
+            val ? html.classList.add('no-scroll') : html.classList.remove('no-scroll') 
+        }
+    },
     computed: {
       ...mapGetters({
         username: USERNAME,
@@ -107,16 +113,15 @@
             }
             @media screen and (max-width: 768px) {
                 margin: 0;
-                flex-direction: column;
                 align-items: center;
+                .logo {
+                    padding: 0 25px;
+                }
                 .mobile-menu-toggle {
                     cursor: pointer;
                     display: inline-flex;
-                    position: absolute;
-                    right: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    padding: 16px;
+                    padding: 10px;
+                    margin: 0 15px;
                     &:after {
                         content: "\2630";
                         font-family: Roboto, sans-serif;
@@ -168,15 +173,16 @@
                     left: 0;
                 }
                 .profile {
-                    margin: 30px 0 90px;
+                    margin: 30px 0 50px;
+                    padding: 0 25px;
+                    width: 100%;
                     align-items: center;
                     justify-content: space-between;
-                    width: 80%;
                     font-size: inherit;
                     font-weight: inherit;
                     .button {
                         font-size: inherit;
-                        font-weight: inherit;                        
+                        font-weight: inherit;
                     }
                     .avatar {
                         margin-right: 0;

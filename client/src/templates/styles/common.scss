@@ -117,6 +117,10 @@ a {
   }
 }
 
+.no-scroll {
+  overflow: hidden !important;
+}
+
 .vb-content {
   display: flex !important;
   flex-wrap: wrap;
