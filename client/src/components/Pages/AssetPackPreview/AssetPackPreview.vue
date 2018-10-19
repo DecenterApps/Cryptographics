@@ -184,6 +184,33 @@ export default {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+            .left-section {
+                width: 100%;
+                .asset-pack-description {
+                    max-width: none;
+                }
+            }
+            .right-section {
+                margin-bottom: 60px;
+                @media screen and (max-width: 430px) {
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                    .price {
+                        margin-bottom: 20px;
+                    }
+                    .button {
+                        margin: 0;
+                        margin-bottom: 20px;
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
         .price {
             display: flex;
             align-items: center;
@@ -200,22 +227,23 @@ export default {
 
     .asset-list {
         margin-bottom: 120px;
-
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(208px, 1fr));
+        grid-auto-rows: minmax(208px, 1fr);
+        grid-auto-flow: row;
+        grid-gap: 20px;
         .asset {
             position: relative;
-            display: inline-block;
             text-align: center;
             background-color: #ECECEC;
             padding: 30px 10px;
             box-sizing: border-box;
-            width: 19%;
-            max-height: 19%;
-            height: 213px;
-            margin: 0 1.25% 1.25% 0;
-            vertical-align: top;
-            &:nth-child(5n) {
-                margin-right: 0;
-            }
+            width: 100%;
+            height: 100%;
+            justify-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             &:hover {
                 .asset-type {
                     opacity: 1;
