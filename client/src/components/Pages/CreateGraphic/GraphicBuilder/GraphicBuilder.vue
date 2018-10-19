@@ -369,7 +369,6 @@
         this.track('Download');
       },
       changeStep(step) {
-        window.scrollTo(0, 0);
         this.$emit('stepChange', step);
       },
       toggleRatio(square) {
@@ -453,9 +452,11 @@
             justify-content: space-between;
             flex-grow: 1;
             margin-left: 50px;
-            /*max-width: 400px;*/
             min-width: 300px;
             width: 100%;
+            @media screen and (max-width: 326px) { 
+                min-width: auto;
+            }
         }
         @media screen and (max-width: 768px) {
             flex-direction: column;

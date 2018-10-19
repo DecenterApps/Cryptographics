@@ -58,6 +58,7 @@
         clearAssetPacks: CLEAR_ASSET_PACKS,
       }),
       changeStep(step) {
+        window.scrollTo(0, 0);
         this.currentStep = step;
         console.log('CHANGING STEP ', step);
         const events = {
@@ -69,6 +70,8 @@
       },
     },
     created() {
+      const html = document.querySelector('html');
+      html.classList.remove('no-scroll') 
       if (window.sessionStorage.length > 0) {
         this.changeStep(1);
         const landingPacks = getLandingPacks();
@@ -94,7 +97,7 @@
         min-height: 100vh;
     }
     .mobile-steps {
-        display: none
+        display: none;
     }
     @media screen and (max-width: 768px) {
         .mobile-steps { display: flex; }

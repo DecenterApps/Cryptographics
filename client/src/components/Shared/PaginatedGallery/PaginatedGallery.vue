@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery" :class="{centered: centered}">
+    <div class="gallery" :class="{centered: centered, centered: images.length > 3}">
         <div v-if="loading" class="loading-section">
             <loader />
             <h3>Please wait, we are loading cryptographics from the blockchain and IPFS.</h3>
@@ -178,12 +178,16 @@
         .item {
             width: 307px;
             margin-bottom: 30px;
+            @media screen and (max-width: 376px) {
+                width: 250px;
+            }
             .artwork {
                 /*padding: 14px 14px 40px 14px;*/
                 background-color: #fff;
                 position: relative;
                 img {
                     max-width: 100%;
+                    height: auto;
                 }
                 .artwork-description {
                     font-size: 5px;
@@ -204,6 +208,9 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    @media screen and (max-width: 376px) {
+                        left: 270px;
+                    }
                 }
                 &:hover {
                     .overlay {
