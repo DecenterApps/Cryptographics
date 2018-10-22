@@ -117,6 +117,7 @@
             max-width: 1120px;
             padding: 90px;
             background-color: #C4C4C4;
+            margin: 30px;
             @media screen and (max-width: 768px) {
                 max-width: 767px;
             }
