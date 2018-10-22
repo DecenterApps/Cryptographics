@@ -12,19 +12,24 @@
                     class="links-section"
                     :class="{'show-menu' : showMenu }">
                     <div class="links">
-                        <router-link to="/gallery" active-class="active" @click.native="showMenu = false">Gallery</router-link>
-                        <router-link to="/asset-packs" active-class="active" @click.native="showMenu = false">Asset Packs</router-link>
-                        <router-link to="/about" active-class="active" @click.native="showMenu = false">About</router-link>
-                        <router-link to="/faq" active-class="active" @click.native="showMenu = false">FAQ</router-link>
+                        <router-link to="/gallery" active-class="active" @click.native="closeMenu">Gallery</router-link>
+                        <router-link to="/asset-packs" active-class="active" @click.native="closeMenu">Asset Packs</router-link>
+                        <router-link to="/about" active-class="active" @click.native="closeMenu">About</router-link>
+                        <router-link to="/faq" active-class="active" @click.native="closeMenu">FAQ</router-link>
                     </div>
                     <div class="profile">
-                        <router-link class="profile-link" to="/profile" @click.native="showMenu = false">
+                        <router-link class="profile-link" to="/profile" @click.native="closeMenu">
                             {{ username }}
                             <img
-                                    class="avatar"
-                                    :src="avatar">
+                                class="avatar"
+                                :src="avatar">
                         </router-link>
-                        <button-link to="/create-cryptographic" button-style="secondary inverted" @click.native="showMenu = false">Compose</button-link>
+                        <button-link
+                            to="/create-cryptographic"
+                            button-style="secondary inverted"
+                            @click.native="closeMenu">
+                            Compose
+                        </button-link>
                     </div>
                 </div>
             </div>
@@ -50,11 +55,22 @@
         showMenu: false
       };
     },
+    watch: {
+        showMenu: function (val) {
+            const html = document.querySelector('html');
+            val ? html.classList.add('no-scroll') : html.classList.remove('no-scroll') 
+        }
+    },
     computed: {
       ...mapGetters({
         username: USERNAME,
         avatar: AVATAR
       })
+    },
+    methods: {
+        closeMenu() {
+            this.showMenu = false
+        }
     }
   };
 </script>
@@ -107,16 +123,15 @@
             }
             @media screen and (max-width: 768px) {
                 margin: 0;
-                flex-direction: column;
                 align-items: center;
+                .logo {
+                    padding: 0 25px;
+                }
                 .mobile-menu-toggle {
                     cursor: pointer;
                     display: inline-flex;
-                    position: absolute;
-                    right: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    padding: 16px;
+                    padding: 10px;
+                    margin: 0 15px;
                     &:after {
                         content: "\2630";
                         font-family: Roboto, sans-serif;
@@ -168,15 +183,16 @@
                     left: 0;
                 }
                 .profile {
-                    margin: 30px 0 90px;
+                    margin: 30px 0 50px;
+                    padding: 0 25px;
+                    width: 100%;
                     align-items: center;
                     justify-content: space-between;
-                    width: 80%;
                     font-size: inherit;
                     font-weight: inherit;
                     .button {
                         font-size: inherit;
-                        font-weight: inherit;                        
+                        font-weight: inherit;
                     }
                     .avatar {
                         margin-right: 0;

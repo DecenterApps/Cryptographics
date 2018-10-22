@@ -274,6 +274,8 @@
         flex-direction: column;
         background-color: #CECECE;
         margin-top: 30px;
+        text-align: center;
+        padding: 10px;
         .loader-content {
             margin-bottom: 20px;
         }
