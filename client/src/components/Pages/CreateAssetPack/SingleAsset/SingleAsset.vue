@@ -6,24 +6,26 @@
         <img :src="asset.path" />
         <overlay>
             <div class="overlay-icons">
-                <span>
-                    <button-icon
-                            icon-type="scale"
-                            :color="'#fff'"
-                            :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
-                            @click.native="toggleAttribute(index, 0)"
-                    />
-                    <span class="description">{{ isAttributeSelected(asset, 2) ? 'Disable' : 'Enable' }} asset scaling</span>
-                </span>
-                <span>
-                    <button-icon
-                            icon-type="rotate"
-                            :color="'#fff'"
-                            :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
-                            @click.native="toggleAttribute(index, 1)"
-                    />
-                    <span class="description">{{ isAttributeSelected(asset, 1) ? 'Disable' : 'Enable' }} asset rotation</span>
-                </span>
+                <template v-if="!isAttributeSelected(asset, 0)">
+                    <span>
+                        <button-icon
+                                icon-type="scale"
+                                :color="'#fff'"
+                                :classProp="isAttributeSelected(asset, 2) ? 'selected' : ''"
+                                @click.native="toggleAttribute(index, 0)"
+                        />
+                        <span class="description">{{ isAttributeSelected(asset, 2) ? 'Disable' : 'Enable' }} asset scaling</span>
+                    </span>
+                    <span>
+                        <button-icon
+                                icon-type="rotate"
+                                :color="'#fff'"
+                                :classProp="isAttributeSelected(asset, 1) ? 'selected' : ''"
+                                @click.native="toggleAttribute(index, 1)"
+                        />
+                        <span class="description">{{ isAttributeSelected(asset, 1) ? 'Disable' : 'Enable' }} asset rotation</span>
+                    </span>
+                </template>
                 <span>
                     <ico-background
                             :ico-color="'#fff'"
@@ -72,6 +74,7 @@
         for (let i = 0; i < attribute.length; i++) {
           if (attribute.charAt(i) === '1') {
             attributes.push(words[i]);
+            if (i === 0) break;
           }
         }
         return attributes.join(' — ');

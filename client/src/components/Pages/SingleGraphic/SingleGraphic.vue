@@ -16,6 +16,7 @@
                         id="518"
                         :image="image"
                         :canvasData="canvasData"
+                        :isFake="isFake"
                         year="2018"
                         @download="download"
                 />
@@ -129,6 +130,13 @@
         }, 'image/png');
         // this.isFake = hash.toLowerCase() !== this.image.ipfsHash.toLowerCase();
       },
+      checkAssetAmount() {
+        const amountOfAssets = this.assetPacksUsed.reduce((amountOfAssets, assetPack) => amountOfAssets + assetPack.assets.length, 0);
+        if (amountOfAssets >= 30 && this.image.potentialAssets.length < 30) {
+          this.isFake = true;
+        }
+        console.log(amountOfAssets, this.image.potentialAssets.length);
+      },
       async download() {
         const canvas = document.getElementById('canvas');
         while (!(this.canvasDataLoaded && !this.isCanvasDrawing)) {
@@ -190,6 +198,7 @@
       };
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;
+      this.checkAssetAmount();
       console.log(this.image);
       document.title = this.image.title + ' - cryptographic  | Cryptographics';
     }
