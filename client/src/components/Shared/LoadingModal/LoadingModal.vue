@@ -11,9 +11,14 @@
                 Ok
             </cg-button>
 
-            <cg-button @click="backToGallery" button-style="secondary" v-if="!hasError">
-                Back to gallery
-            </cg-button>
+            <div class="button-group" v-if="!hasError">
+                <cg-button @click="dismiss" button-style="secondary">
+                    Dismiss
+                </cg-button>
+                <cg-button @click="backToGallery" button-style="secondary">
+                    Back to gallery
+                </cg-button>
+            </div>
         </div>
     </div>
 </template>
@@ -41,7 +46,10 @@
       }),
       backToGallery() {
         this.closeModal();
-        this.$router.push('/gallery')
+        this.$router.push('/gallery');
+      },
+      dismiss() {
+        this.closeModal();
       }
     }
   };
