@@ -219,7 +219,6 @@
         if (fileErrors.length > 0) {
           this.openModal({ name: 'assetPackUploadError', data: { errors: fileErrors } });
         }
-        x.value = '';
       },
 
       renderCanvas() {
