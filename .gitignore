@@ -24,3 +24,6 @@ client/src/assets/landingart
 build/*
 .vscode
 public/
+dataServer/logs/
+dataServer/yarn.lock
+dataServer/node_modules
