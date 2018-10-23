@@ -6,7 +6,7 @@ const express = require('express');
 // const pagination = require('./pagination');
 
 // Controllers
-// const activityController = require('./activity/controller');
+const activityController = require('./activity/controller');
 
 const apiRoutes = express.Router();
 const v1Routes = express.Router();
@@ -14,6 +14,6 @@ const v1Routes = express.Router();
 // Set v1 routes as subgroup/middleware to apiRoutes
 apiRoutes.use('/v1', v1Routes);
 
-// v1Routes.get('/activity-log', activityController.getActivity);
+v1Routes.get('/activity/list', activityController.getActivity);
 
 module.exports = apiRoutes;

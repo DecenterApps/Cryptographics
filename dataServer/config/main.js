@@ -6,7 +6,7 @@ module.exports = {
     mainnet: process.env.RPC_ENDPOINT || 'https://mainnet.infura.io'
   },
   dbConnection: {
-    mainnet: process.env.DB_CONNECTION || 'mongodb://localhost:27017/shark_data_test_db'
+    mainnet: process.env.DB_CONNECTION || 'mongodb://localhost:27017/cryptographics'
   },
   domain: process.env.API_DOMAIN || 'http://localhost:3030',
   lastEndpointVersion: '0.0.1',
