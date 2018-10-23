@@ -82,9 +82,6 @@ export default {
         const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
         this.openLoadingModal(message, true);
       }
-      
-
-      // this.openModal('Cryptographic successfully submitted for sale.');
     }
   }
 };
@@ -126,5 +123,21 @@ export default {
               }
             }
         }
+        @media screen and (max-width: 426px) {
+        flex-direction: column;
+        .left {
+          margin-bottom: 20px;
+          margin-right: 0;
+        }
+        & .left, & .right {
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+    .large-title {
+      @media screen and (max-width: 426px) {
+        text-align: center;
+      }
     }
 </style>

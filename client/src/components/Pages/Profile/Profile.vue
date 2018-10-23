@@ -165,6 +165,11 @@
       this[SET_CREATED_ASSETS_PACKS_IDS]();
       this[SET_BOUGHT_ASSETS_PACKS_IDS]();
     },
+    async created() {
+      await this.onCreated();
+      if (this.userProfile && this.userAddress) this.fetchBalances();
+      if (!this.userProfile) document.title = this.username + '\'s profile | Cryptographics';
+    },
     computed: {
       ...mapGetters({
         currentUserAddress: METAMASK_ADDRESS,
@@ -250,11 +255,11 @@
       },
       async getImages() {
         if (!this.userAddress) return;
-        const imageIds = await getUserImages(this.userAddress);
-        const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
-        this.imageIds = imageIds;
-        this.createdImageIds = await getCreatedGraphics(this.userAddress);
-        this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
+          const imageIds = await getUserImages(this.userAddress);
+          const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
+          this.imageIds = imageIds;
+          this.createdImageIds = await getCreatedGraphics(this.userAddress);
+          this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
       },
       async getAssetPacks() {
         if (this.userProfile) {
@@ -290,12 +295,7 @@
       track(event) {
         if (window._paq) window._paq.push(['trackEvent', 'Profile', event]);
       },
-    },
-    async created() {
-      await this.onCreated();
-      if (this.userProfile && this.userAddress) this.fetchBalances();
-      if (!this.userProfile) document.title = this.username + '\'s profile | Cryptographics';
-    },
+    }
   };
 
 </script>
@@ -306,16 +306,18 @@
         flex-direction: column;
         position: relative;
         justify-content: flex-start !important;
-
         .line-separator {
             margin: 21px 0;
         }
         .tabs {
-
             .large-title {
                 margin: 0 41px 0 0;
+                @media screen and (max-width: 426px) {
+                  font-size: 25px;
+                  margin: 0;
+                  margin-bottom: 20px;
+                }
             }
-
             .current-tabs {
                 button {
                     border: 0;
@@ -380,18 +382,23 @@
             .header {
                 padding-left: 0;
                 padding-top: 127px;
+                width: 100%;
                 .avatar {
                     left: 50%;
                     transform: translateX(-50%);
                 }
             }
         }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 426px) {
             .header {
                 flex-direction: column;
                 text-align: center;
                 .left {
-                    margin-bottom: 20px;
+                    margin-bottom: 40px;
+                    justify-content: center;
+                }
+                .right {
+                  justify-content: center;
                 }
             }
         }
