@@ -1,8 +1,26 @@
 <template>
     <div class="graphic-builder">
+        <!-- Tooltip for the price, needs to be out of context to be used in several areas -->
+        <div id="tooltip-1" class="hidden" v-tippy-html>
+            <div class="asset-pack-prices">
+                <div class="prices-list">
+                    <div>
+                        <div class="label">Asset pack name</div>
+                        <div class="label">Price in ETH</div>
+                    </div>
+                    <div v-for="(assetPack, index) in selectedAssetPacks" :key="index">
+                        <div>{{ assetPack.packName }}</div>
+                        <div>{{ customPrice(assetPack) }}</div>
+                    </div>
+                </div>
+                <separator></separator>
+                <div class="label">Total in ETH: <span>{{displayPrice()}}</span></div>
+            </div>
+        </div>
+
         <div class="left">
             <div class="canvas-with-overlay-wrapper"
-                @click="(currentStep === 1)
+                 @click="(currentStep === 1)
                     ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
                     : (download())">
                 <overlay v-if="currentStep === 2" key="1">
@@ -10,7 +28,7 @@
                     <p>Download</p>
                 </overlay>
                 <overlay v-if="currentStep === 1" key="2">
-                    <button-icon icon-type="recompose"/>
+                    <button-icon icon-type="recompose" />
                     <p>Recompose</p>
                 </overlay>
                 <Canvas :canvasData="canvasData"></Canvas>
@@ -24,13 +42,13 @@
                 </h1>
                 <div class="pack-list">
                     <asset-box
-                      v-for="(assetPack, index) in selectedAssetPacks"
-                      :key="index"
-                      :assetPack="assetPack"
-                      :small="true"
-                      color="#eee"
-                      action="close"
-                      @click="toggleAsset(assetPack)"
+                            v-for="(assetPack, index) in selectedAssetPacks"
+                            :key="index"
+                            :assetPack="assetPack"
+                            :small="true"
+                            color="#eee"
+                            action="close"
+                            @click="toggleAsset(assetPack)"
                     />
                     <div @click="changeStep(0)" class="add-more">
                         +
@@ -38,15 +56,21 @@
                 </div>
 
                 <div class="help">
-                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and remove it from selection.</p>
-                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim ownership.</p>
+                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and
+                        remove it from selection.</p>
+                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim
+                        ownership.</p>
                 </div>
             </div>
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white
+                        frame
+                    </cg-checkbox>
+                    <cg-checkbox v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
+                                 :disabled="isCanvasDrawing">Use square format
+                    </cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas(); track('Recompose')"
@@ -58,7 +82,19 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
-                    <price size="medium" :value="displayPrice()" />
+                    <price
+                            v-tippy="{
+                                html: '#tooltip-1',
+                                interactive : true,
+                                duration : 0,
+                                animation : 'fade',
+                                theme : 'cryptographics',
+                                placement: 'top-start',
+                                flipBehavior: ['left', 'bottom-end']
+                            }"
+                            size="medium"
+                            :value="displayPrice()"
+                    />
                     <cg-button
                             :loading="isCanvasDrawing"
                             @click="changeStep(2)"
@@ -131,7 +167,19 @@
                         </cg-button>
                     </div>
                     <div class="separate-controls">
-                        <price size="medium" :value="displayPrice()" />
+                        <price
+                                v-tippy="{
+                                html: '#tooltip-1',
+                                interactive : true,
+                                duration : 0,
+                                animation : 'fade',
+                                theme : 'cryptographics',
+                                placement: 'top-start',
+                                flipBehavior: ['left', 'bottom-end']
+                                }"
+                                size="medium"
+                                :value="displayPrice()"
+                        />
                         <cg-button
                                 :loading="isCanvasDrawing"
                                 @click="buyImage(); track('Claim')"
@@ -261,10 +309,10 @@
       async buyImage() {
         if (!this.checkTitle()) return;
         if (!this.userAddress) {
-            const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal('coinbaseInfo');
-            if (!isMobile) return this.openModal('metaMaskInfo');
+          const { userAgent: ua } = navigator;
+          const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+          if (isMobile) return this.openModal('coinbaseInfo');
+          if (!isMobile) return this.openModal('metaMaskInfo');
         }
 
         console.log(this.username);
@@ -347,7 +395,7 @@
           }
 
           this.imagePrice = utils.scientificToDecimal(parseFloat(price));
-          
+
           console.log('PRICE : ' + this.imagePrice);
         } catch (e) {
           this.gettingImageData = false;
@@ -431,9 +479,15 @@
                     transition: opacity .2s;
                     animation: fade-out 1s;
                     @keyframes fade-out {
-                        0% { opacity: 1; }
-                        60% { opacity: 1; }
-                        100% { opacity: 0; }
+                        0% {
+                            opacity: 1;
+                        }
+                        60% {
+                            opacity: 1;
+                        }
+                        100% {
+                            opacity: 0;
+                        }
                     }
                 }
                 @media screen and (min-width: 768px) {
@@ -454,7 +508,7 @@
             margin-left: 50px;
             min-width: 300px;
             width: 100%;
-            @media screen and (max-width: 326px) { 
+            @media screen and (max-width: 326px) {
                 min-width: auto;
             }
         }
@@ -678,6 +732,42 @@
             .large-title {
                 margin: 0 15px 0 0;
             }
+        }
+    }
+
+    .asset-pack-prices {
+        text-align: right;
+
+        .prices-list {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            color: #000;
+            div {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 2px;
+
+                .label {
+                    margin-bottom: 15px;
+                    &:first-child {
+                        margin-right: 40px;
+                    }
+                }
+            }
+        }
+
+        .label {
+            font-size: 12px;
+            color: #949494;
+
+            span {
+                color: #000;
+            }
+        }
+
+        .line-separator {
+            margin: 10px 0;
         }
     }
 </style>
