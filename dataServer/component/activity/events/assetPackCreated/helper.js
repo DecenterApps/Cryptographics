@@ -27,7 +27,6 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
       assetPackCreatedData.blockNumber = blockNumber;
 
       resolve(assetPackCreatedData);
-      console.log('assetPackCreatedData', assetPackCreatedData);
     } catch(err) {
       logger.error(err);
       reject('Error updating the asset pack created event', err);
