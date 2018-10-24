@@ -3,7 +3,7 @@ const { getGalleryImage, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const web3 = require('../../../web3Provider');
 
-const getAdditionalSellingImage = ({ imageId, price }, blockNumber) =>
+const getAdditionalSellingImageData = ({ imageId, price }, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
       const amount = web3.utils.fromWei(price, 'ether');
@@ -22,7 +22,7 @@ const getAdditionalSellingImage = ({ imageId, price }, blockNumber) =>
 const updateSellingImage = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
-      const sellingImageData = await getAdditionalSellingImage(event, blockNumber);
+      const sellingImageData = await getAdditionalSellingImageData(event, blockNumber);
       sellingImageData.txHash = txHash;
       sellingImageData.blockNumber = blockNumber;
 

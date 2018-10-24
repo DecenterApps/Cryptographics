@@ -6,6 +6,11 @@ const {
 
 const isEmptyBytes = (string) => string === '0x0000000000000000000000000000000000000000000000000000000000000000';
 
+const hex2dec = (seed) => {
+  let s = seed.toString().substr(2);
+  return new BigInt(s, 16).toString();
+};
+
 const getIpfsHashFromBytes32 = (bytes32Hex) => {
   // Add our default ipfs values for first 2 bytes:
   // function:0x12=sha2, size:0x20=256 bits
@@ -95,4 +100,5 @@ module.exports = {
   getDateDiff,
   decode,
   isEmptyBytes,
+  hex2dec,
 };

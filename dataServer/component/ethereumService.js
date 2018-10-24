@@ -1,9 +1,10 @@
+const { BigNumber } = require('bignumber.js');
 const web3 = require('./web3Provider');
 const clientConfig = require('../../client/config/clientConfig');
 const config = require('../../client/config/config');
 const logger = require('../config/logger');
 const { DEFAULT_AVATAR, ipfsNodePath } = require('./constants');
-const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes } = require('./utils');
+const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes, hex2dec } = require('./utils');
 const { getFileContent } = require('./ipfsService');
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
@@ -19,6 +20,53 @@ const functionsContractAddress = config.functionsContract.networks[clientConfig.
 const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
 const getBlock = bn => web3.eth.getBlock(bn);
+
+const getAssetsOrigins = async (assetIds) => {
+  const assetPacks = await assetManagerContract().methods.pickUniquePacks(assetIds).call();
+  return [...new Set(assetPacks)];
+};
+
+/**
+ * Calculates asset metaData based on the seed
+ *
+ * @param seed
+ * @param assetId
+ * @return {*}
+ */
+const getAssetMetadata = (seed, assetId) => {
+  seed = seed.toString();
+  let number = new BigNumber(seed);
+  if (parseInt(number.modulo(2), 10) === 0) {
+    let id = assetId;
+    let x_coordinate = parseInt(number.modulo(2480), 10);
+    let y_coordinate = parseInt(number.modulo(3508), 10);
+    let scale = parseInt(number.modulo(200), 10) + 800;
+    let rotation = parseInt(number.modulo(360), 10);
+    let layer = parseInt(number.modulo(1234567), 10);
+    return {
+      id,
+      x_coordinate,
+      y_coordinate,
+      scale,
+      rotation,
+      layer
+    };
+  }
+  return null;
+};
+
+/**
+ * @param random_seed
+ * @param iterations
+ * @return {string}
+ */
+const calculateFinalSeed = (random_seed, iterations) => {
+  let seed = web3.utils.soliditySha3(random_seed, iterations);
+  for (let i = 0; i < iterations; i++) {
+    seed = web3.utils.soliditySha3(seed, i);
+  }
+  return seed;
+};
 
 /**
  * Gets the graphic price if it is for sale
@@ -107,18 +155,17 @@ const getAssetInfo = id => assetManagerContract().methods.getAssetInfo(id).call(
  * Gets all needed data for an asset pack
  *
  * @param assetPackId
- * @return {Promise<{packName: string, packCoverIpfs: *, packCoverSrc: string, creator: *, price: *, id: *, assets: Array}>}
+ * @return {Promise<{packName: string, packCoverIpfs: *, packCoverSrc: string, creator: *, id: *, assets: Array}>}
  */
 const getAssetPackData = async (assetPackId) => {
-  const creator = response[1];
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
+  const creator = response[1];
   const packCoverIpfs = getIpfsHashFromBytes32(response[0]);
 
   return {
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     id: assetPackId,
-    price: web3.utils.fromWei(price, 'ether'),
     creator,
   };
 };
@@ -165,6 +212,25 @@ const getImageMetadata = imageId =>
   });
 
 /**
+ * Gets data for selected asset packs ids
+ *
+ * @param assetPackIds
+ * @return {Promise<any>}
+ */
+const getSelectedAssetPacksWithAssetData = (assetPackIds) =>
+  new Promise(async (resolve, reject) => {
+    let assetPackPromises = assetPackIds.map(assetPackId => getAssetPackData(assetPackId));
+
+    Promise.all(assetPackPromises)
+      .then(assetPacks => {
+        resolve(assetPacks);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+
+/**
  * Calls provided contract and gets all events for the provided event a returns a formatted version
  *
  * @param contractPromise
@@ -202,4 +268,6 @@ module.exports = {
   getUserInfo,
   getAssetPackData,
   getGalleryImage,
+  getSelectedAssetPacksWithAssetData,
+  getAssetsOrigins,
 };
