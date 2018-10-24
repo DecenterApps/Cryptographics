@@ -20,13 +20,12 @@ const getAdditionalAssetPackBoughtData = ({ id, buyer }, blockNumber) =>
 
 const updateAssetPackBought = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
-
     try {
-      const assetPackCreatedData = await getAdditionalAssetPackBoughtData(event, blockNumber);
-      assetPackCreatedData.txHash = txHash;
-      assetPackCreatedData.blockNumber = blockNumber;
+      const assetPackBoughtData = await getAdditionalAssetPackBoughtData(event, blockNumber);
+      assetPackBoughtData.txHash = txHash;
+      assetPackBoughtData.blockNumber = blockNumber;
 
-      resolve(assetPackCreatedData);
+      resolve(assetPackBoughtData);
     } catch(err) {
       logger.error(err);
       reject('Error updating the asset pack created event', err);

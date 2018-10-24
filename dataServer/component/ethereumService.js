@@ -52,6 +52,7 @@ const getAssetInfo = id => assetManagerContract().methods.getAssetInfo(id).call(
  * @return {Promise<{packName: string, packCoverIpfs: *, packCoverSrc: string, creator: *, price: *, id: *, assets: Array}>}
  */
 const getAssetPackData = async (assetPackId) => {
+  const creator = response[1];
   let response = await assetManagerContract().methods.getAssetPackData(assetPackId).call();
   const packCoverIpfs = getIpfsHashFromBytes32(response[0]);
 
@@ -59,6 +60,8 @@ const getAssetPackData = async (assetPackId) => {
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     id: assetPackId,
+    price: web3.utils.fromWei(price, 'ether'),
+    creator,
   };
 };
 

@@ -2,6 +2,7 @@ const web3 = require('../web3Provider');
 const clientConfig = require('../../../client/config/clientConfig');
 const { updateAssetPackCreated } = require('./events/assetPackCreated/helper');
 const { updateAssetPackBought } = require('./events/assetPackBought/helper');
+const { updateImageBought } = require('./events/imageBought/helper');
 const {
   getLatestEvents,
   assetManagerContract,
@@ -12,8 +13,8 @@ const {
 const addPastActivityEvents = async () => {
   const meta = [
     // { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
-    { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
-    // { contract: marketPlaceContract, event: 'ImageBought' },
+    // { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
+    { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
     // { contract: marketPlaceContract, event: 'SellingImage' },
     // { contract: digitalPrintImageContract, event: 'ImageCreated' },
   ];
