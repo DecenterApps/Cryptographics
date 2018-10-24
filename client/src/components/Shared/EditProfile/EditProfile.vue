@@ -107,9 +107,18 @@
 <style lang="scss" scoped>
     .edit-profile-modal {
         display: flex;
-        width: 924px;
+        max-width: 672px;
+        width: 100%;
+        flex-wrap: wrap;
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+            .left {
+                margin-bottom: 50px;
+            }
+        }
+        
         .left {
-            flex: 0 0 50%;
+            flex: 0 0 30%;
             display: inline-flex;
             align-items: flex-end;
             .avatar {
@@ -138,12 +147,27 @@
                     }
                 }
             }
+            @media screen and (max-width: 525px) {
+                flex-direction: column;
+                align-items: center;
+                .avatar {
+                    margin-bottom: 20px;
+                }
+                .input-group {
+                    margin-left: 0;
+                }
+            }
         }
         .right {
-            flex: 0 0 50%;
+            flex: 1 0 auto;
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
+        }
+    }
+    .large-title {
+        @media screen and (max-width: 525px) {
+            text-align: center;
         }
     }
 </style>

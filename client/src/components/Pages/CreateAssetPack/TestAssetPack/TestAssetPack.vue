@@ -19,6 +19,12 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <cg-button
+                            button-style="secondary"
+                            @click="changeStep(0)"
+                    >
+                        Back
+                    </cg-button>
+                    <cg-button
                             :loading="isCanvasDrawing"
                             @click="changeStep(2)"
                     >
@@ -190,7 +196,7 @@
         .bottom-controls {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             padding-top: 20px;
 
             span {

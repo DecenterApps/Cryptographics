@@ -15,6 +15,7 @@
                                 accept="image/png, image/jpeg"
                                 id="files"
                                 button-style="secondary"
+                                @click="$event.target.value = null"
                                 @change="uploadAssets">
                             <span>Upload multiple assets</span>
                             <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
@@ -42,8 +43,8 @@
                 <separator></separator>
                 <div class="bottom-content">
                     <cg-button
-                        :disabled="assets.length === 0"
-                        @click="changeStep(1)">
+                            :disabled="assets.length === 0"
+                            @click="changeStep(1)">
                         Next
                     </cg-button>
                 </div>
@@ -99,9 +100,9 @@
                         <div class="input-group">
                             <label class="small-title">Description</label>
                             <cg-textarea
-                                v-model="description"
-                                placeholder="Describe your asset pack"
-                                :max-length="600"></cg-textarea>
+                                    v-model="description"
+                                    placeholder="Describe your asset pack"
+                                    :max-length="600"></cg-textarea>
                         </div>
                     </div>
                 </div>
@@ -212,14 +213,13 @@
               });
             };
           } else {
-            fileErrors.push({ file: file.name, error: 'Assets size is larger than the allowed 2.5MB' })
+            fileErrors.push({ file: file.name, error: 'Assets size is larger than the allowed 2.5MB' });
           }
         }
 
         if (fileErrors.length > 0) {
-          this.openModal({ name: 'assetPackUploadError', data: { errors: fileErrors } })
+          this.openModal({ name: 'assetPackUploadError', data: { errors: fileErrors } });
         }
-        x.value = '';
       },
 
       renderCanvas() {
