@@ -65,12 +65,14 @@
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }">Add white
-                        frame
-                    </cg-checkbox>
-                    <cg-checkbox v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
-                                 :disabled="isCanvasDrawing">Use square format
-                    </cg-checkbox>
+                    <cg-checkbox
+                            v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
+                            :disabled="isCanvasDrawing || gettingImageData"
+                    >Add white frame</cg-checkbox>
+                    <cg-checkbox
+                            v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
+                            :disabled="isCanvasDrawing || gettingImageData"
+                     >Use square format</cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas(); track('Recompose')"
@@ -96,7 +98,7 @@
                             :value="displayPrice()"
                     />
                     <cg-button
-                            :loading="isCanvasDrawing"
+                            :loading="isCanvasDrawing || gettingImageData"
                             @click="changeStep(2)"
                             :disabled="selectedAssetPacks.length === 0"
                     >
@@ -225,6 +227,7 @@
     SELECTED_ASSET_PACKS,
     TOGGLE_ASSET_PACK,
     SET_SELECTED_ASSET_PACKS,
+    START_CANVAS_DRAWING,
   } from 'store/canvas/types';
 
   export default {
@@ -256,7 +259,7 @@
       potentialAssets: [],
       selectedAssets: [],
       claimPressed: false,
-      gettingImageData: false,
+      gettingImageData: true,
     }),
     computed: {
       ...mapGetters({
@@ -293,6 +296,7 @@
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
         setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
+        startDrawing: START_CANVAS_DRAWING,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -407,11 +411,12 @@
           this.imagePrice = utils.scientificToDecimal(parseFloat(price));
 
           console.log('PRICE : ' + this.imagePrice);
+          this.gettingImageData = false;
+          this.startDrawing();
         } catch (e) {
           console.error(e);
           this.gettingImageData = false;
         }
-        this.gettingImageData = false;
       },
       download() {
         const canvas = document.getElementById('canvas');
