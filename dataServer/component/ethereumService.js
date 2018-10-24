@@ -2,7 +2,9 @@ const web3 = require('./web3Provider');
 const clientConfig = require('../../client/config/clientConfig');
 const config = require('../../client/config/config');
 const logger = require('../config/logger');
-const { decode, mapUserInfo, getIpfsHashFromBytes32 } = require('./utils');
+const { DEFAULT_AVATAR, ipfsNodePath } = require('./constants');
+const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes } = require('./utils');
+const { getFileContent } = require('./ipfsService');
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
@@ -17,6 +19,62 @@ const functionsContractAddress = config.functionsContract.networks[clientConfig.
 const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
 const getBlock = bn => web3.eth.getBlock(bn);
+
+/**
+ * Gets the graphic price if it is for sale
+ *
+ * @param imageId
+ * @return {Promise<any>}
+ */
+const getImagePrice = async (imageId) => {
+  const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
+  return marketplaceAd.active ? web3.utils.fromWei(marketplaceAd.price, 'ether') : 0;
+};
+
+/**
+ * Gets graphic data from the contract
+ *
+ * @param imageId
+ * @param getPrice
+ * @return {Promise<any>}
+ */
+const getGalleryImage = async (imageId, getPrice) =>
+  new Promise(async (resolve) => {
+    const image = await digitalPrintImageContract().methods.getGalleryData(imageId).call();
+    if (!image) resolve({});
+    const price = !getPrice ? undefined : await getImagePrice(imageId);
+    let metadata = {
+      'title': 'Failed fetching metadata',
+      'description': 'Failed fetching metadata',
+      'frame': 0,
+      'width': 2480,
+      'height': 3508
+    };
+    try {
+      const metadataIpfs = await getFileContent(image[5]);
+      metadata = JSON.parse(metadataIpfs);
+    } catch (e) {
+      console.error('Error getting ipfs metadata for image with ID: ', imageId);
+      console.error(e);
+    }
+    const hasFrame = parseInt(metadata.frame) === 1;
+    const userAvatar = isEmptyBytes(image[3]) ? DEFAULT_AVATAR : `${ipfsNodePath}${getIpfsHashFromBytes32(image[3])}`;
+    resolve({
+      id: imageId,
+      creator: image[0],
+      owner: image[1],
+      username: image[2],
+      avatar: userAvatar,
+      ipfsHash: image[4],
+      src: `${ipfsNodePath}${image[4]}`,
+      hasFrame,
+      width: metadata.width,
+      height: metadata.height,
+      title: metadata.title,
+      description: metadata.description,
+      price,
+    });
+  });
 
 /**
  * Gets metadata about a user
@@ -143,4 +201,5 @@ module.exports = {
   getImageMetadata,
   getUserInfo,
   getAssetPackData,
+  getGalleryImage,
 };

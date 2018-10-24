@@ -1,21 +1,20 @@
 const { getDateDiff } = require('../../../utils');
 const { getGalleryImage, getUserInfo, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
+const web3 = require('../../../web3Provider');
 
 // event ImageBought(uint indexed imageId, address indexed newOwner, uint price);
 
 const getAdditionalImageBoughtData = ({ imageId, newOwner, price }, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
-      const ammount = web3.utils.fromWei(price, 'ether');
-
-      const graphicData = await getGalleryImage(imageId);
-      const ownerData = await getUserInfo(newOwner);
+      const amount = web3.utils.fromWei(price, 'ether');
+      const graphicData = await getGalleryImage(imageId, false);
 
       const block = await getBlock(blockNumber);
       const timeDiff = getDateDiff(block.timestamp);
 
-      resolve({ ...graphicData, ...ownerData, timestamp: timeDiff, ammount });
+      resolve({ ...graphicData, timestamp: timeDiff, amount });
     } catch(err) {
       logger.error(err);
       reject(err);

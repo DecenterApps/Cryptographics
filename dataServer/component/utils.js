@@ -94,4 +94,5 @@ module.exports = {
   getIpfsHashFromBytes32,
   getDateDiff,
   decode,
+  isEmptyBytes,
 };
