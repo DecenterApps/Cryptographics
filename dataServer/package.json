@@ -8,7 +8,9 @@
     "add-past-activity": "export NODE_ENV=mainnet && node ./component/activity/addPastEvents.js"
   },
   "dependencies": {
+    "big-integer": "^1.6.36",
     "body-parser": "^1.18.3",
+    "bs58": "^4.0.1",
     "express": "^4.16.4",
     "helmet": "^3.14.0",
     "http": "^0.0.0",
