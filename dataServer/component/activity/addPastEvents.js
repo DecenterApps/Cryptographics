@@ -3,6 +3,7 @@ const clientConfig = require('../../../client/config/clientConfig');
 const { updateAssetPackCreated } = require('./events/assetPackCreated/helper');
 const { updateAssetPackBought } = require('./events/assetPackBought/helper');
 const { updateImageBought } = require('./events/imageBought/helper');
+const { updateSellingImage } = require('./events/sellingImage/helper');
 const {
   getLatestEvents,
   assetManagerContract,
@@ -14,13 +15,13 @@ const addPastActivityEvents = async () => {
   const meta = [
     // { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
     // { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
-    { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
-    // { contract: marketPlaceContract, event: 'SellingImage' },
+    // { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
+    { contract: marketPlaceContract, event: 'SellingImage', handler: updateSellingImage },
     // { contract: digitalPrintImageContract, event: 'ImageCreated' },
   ];
 
-  const fromBlock = await web3.eth.getBlockNumber() - 50000;
-  // const fromBlock = clientConfig.deployBlockNumber;
+  // const fromBlock = await web3.eth.getBlockNumber() - 100000;
+  const fromBlock = clientConfig.deployBlockNumber;
 
   const promises = meta.map(({ contract, event, handler }) =>
     getLatestEvents(contract, event, fromBlock, handler));

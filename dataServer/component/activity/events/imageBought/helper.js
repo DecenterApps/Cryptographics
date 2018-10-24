@@ -1,9 +1,7 @@
 const { getDateDiff } = require('../../../utils');
-const { getGalleryImage, getUserInfo, getBlock } = require('../../../ethereumService');
+const { getGalleryImage, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const web3 = require('../../../web3Provider');
-
-// event ImageBought(uint indexed imageId, address indexed newOwner, uint price);
 
 const getAdditionalImageBoughtData = ({ imageId, newOwner, price }, blockNumber) =>
   new Promise(async (resolve, reject) => {
@@ -31,7 +29,7 @@ const updateImageBought = (event, txHash, blockNumber) =>
       resolve(imageBoughtData);
     } catch(err) {
       logger.error(err);
-      reject('Error updating the asset pack created event', err);
+      reject('Error updating the image bought event', err);
     }
   });
 

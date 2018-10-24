@@ -28,7 +28,7 @@ const updateAssetPackBought = (event, txHash, blockNumber) =>
       resolve(assetPackBoughtData);
     } catch(err) {
       logger.error(err);
-      reject('Error updating the asset pack created event', err);
+      reject('Error updating the asset pack bought event', err);
     }
   });
 
