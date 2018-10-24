@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "export NODE_ENV=mainnet && nodemon index.js --trace-sync-io"
+    "start": "export NODE_ENV=mainnet && nodemon index.js --trace-sync-io",
+    "add-past-activity": "export NODE_ENV=mainnet && node ./component/activity/addPastEvents.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -15,6 +16,7 @@
     "mongoose": "^5.3.5",
     "morgan": "^1.9.1",
     "socket.io": "^2.1.1",
+    "web3": "^1.0.0-beta.35",
     "winston": "^2.4.2"
   }
 }
