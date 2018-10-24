@@ -15,6 +15,7 @@
                                 accept="image/png, image/jpeg"
                                 id="files"
                                 button-style="secondary"
+                                @click="$event.target.value = null"
                                 @change="uploadAssets">
                             <span>Upload multiple assets</span>
                             <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
