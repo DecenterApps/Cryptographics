@@ -43,7 +43,7 @@ app.use(function (req, res) {
   logger.info('Wrong end point: ' + req.originalUrl);
   res.status(httpStatus.OK);
   res.json({
-    'api_endpoint': config.domain + '/api/' + config.lastEndpointVersion,
+    'api_endpoint': config.domain + '/api/',
     'version': config.version,
     'request': req.originalUrl
   })
