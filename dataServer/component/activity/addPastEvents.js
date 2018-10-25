@@ -18,12 +18,12 @@ const addPastActivityEvents = async () => {
     // { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
     // { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
     // { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
-    { contract: marketPlaceContract, event: 'SellingImage', handler: updateSellingImage },
-    // { contract: digitalPrintImageContract, event: 'ImageCreated', handler: updateImageCreated },
+    // { contract: marketPlaceContract, event: 'SellingImage', handler: updateSellingImage },
+    { contract: digitalPrintImageContract, event: 'ImageCreated', handler: updateImageCreated },
   ];
 
-  // const fromBlock = await web3.eth.getBlockNumber() - 50000;
-  const fromBlock = clientConfig.deployBlockNumber;
+  const fromBlock = await web3.eth.getBlockNumber() - 90000;
+  // const fromBlock = clientConfig.deployBlockNumber;
 
   try {
     const promises = meta.map(({ contract, event, handler }) => getLatestEvents(contract, event, fromBlock, handler));
