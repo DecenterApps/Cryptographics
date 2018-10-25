@@ -8,6 +8,10 @@ const assetPackBoughtSchema = new Schema({
       type: Number,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     packCoverSrc: {
       type: String,
       required: true,

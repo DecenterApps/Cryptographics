@@ -4,7 +4,7 @@ const clientConfig = require('../../client/config/clientConfig');
 const config = require('../../client/config/config');
 const logger = require('../config/logger');
 const { DEFAULT_AVATAR, ipfsNodePath } = require('./constants');
-const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes, hex2dec } = require('./utils');
+const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes } = require('./utils');
 const { getFileContent } = require('./ipfsService');
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
@@ -162,7 +162,19 @@ const getAssetPackData = async (assetPackId) => {
   const creator = response[1];
   const packCoverIpfs = getIpfsHashFromBytes32(response[0]);
 
+  let metadata;
+  try {
+    const metadataIpfs = await getFileContent(response[6]);
+    metadata = JSON.parse(metadataIpfs);
+  } catch (e) {
+    metadata = {
+      name: '',
+      description: '',
+    };
+  }
+
   return {
+    title: metadata.name,
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     id: assetPackId,

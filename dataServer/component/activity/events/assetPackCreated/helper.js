@@ -25,6 +25,7 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
       const query = { txHash };
       const update = {
         id: assetPackCreatedData.id,
+        title: assetPackBoughtData.title,
         packCoverSrc: assetPackCreatedData.packCoverSrc,
         creatorAddress: assetPackCreatedData.creator,
         creatorUsername: assetPackCreatedData.username,

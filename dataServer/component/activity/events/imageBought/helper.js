@@ -1,7 +1,7 @@
-const { getDateDiff } = require('../../../utils');
 const { getGalleryImage, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const web3 = require('../../../web3Provider');
+const ImageBought = require('./model');
 
 const getAdditionalImageBoughtData = ({ imageId, newOwner, price }, blockNumber) =>
   new Promise(async (resolve, reject) => {
@@ -10,12 +10,11 @@ const getAdditionalImageBoughtData = ({ imageId, newOwner, price }, blockNumber)
       const graphicData = await getGalleryImage(imageId, false);
 
       const block = await getBlock(blockNumber);
-      const timeDiff = getDateDiff(block.timestamp);
 
-      resolve({ ...graphicData, timestamp: timeDiff, amount });
+      resolve({ ...graphicData, timestamp: block.timestamp, amount });
     } catch(err) {
       logger.error(err);
-      reject(err);
+      reject('getAdditionalImageBoughtData', err);
     }
   });
 
@@ -23,8 +22,24 @@ const updateImageBought = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
       const imageBoughtData = await getAdditionalImageBoughtData(event, blockNumber);
-      imageBoughtData.txHash = txHash;
-      imageBoughtData.blockNumber = blockNumber;
+
+      const query = { txHash };
+      const update = {
+        id: imageBoughtData.id,
+        title: imageBoughtData.title,
+        ownerAddress: imageBoughtData.owner,
+        ownerUsername: imageBoughtData.username,
+        ownerAvatar: imageBoughtData.avatar,
+        timestamp: imageBoughtData.timestamp,
+        graphicSrc: imageBoughtData.src,
+        amount: imageBoughtData.amount,
+        txHash,
+        blockNumber,
+      };
+
+      const entry = await ImageBought.updateOne(query, { $set: update }, { upsert: true, setDefaultsOnInsert: true });
+
+      resolve(entry);
 
       resolve(imageBoughtData);
     } catch(err) {
