@@ -15,8 +15,8 @@ const {
 
 const addPastActivityEvents = async () => {
   const meta = [
-    { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
-    // { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
+    // { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
+    { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
     // { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
     // { contract: marketPlaceContract, event: 'SellingImage', handler: updateSellingImage },
     // { contract: digitalPrintImageContract, event: 'ImageCreated', handler: updateImageCreated },

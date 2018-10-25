@@ -1,6 +1,6 @@
 const { getAssetPackData, getUserInfo, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
-const AssetPack = require('./model');
+const AssetPackCreated = require('./model');
 
 const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
   new Promise(async (resolve, reject) => {
@@ -13,13 +13,12 @@ const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
       resolve({ ...assetPackData, ...ownerData, timestamp: block.timestamp });
     } catch(err) {
       logger.error(err);
-      reject(err);
+      reject('getAdditionalAssetPackCreatedData', err);
     }
   });
 
 const updateAssetPackCreated = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
-
     try {
       const assetPackCreatedData = await getAdditionalAssetPackCreatedData(event, blockNumber);
 
@@ -35,7 +34,7 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
         blockNumber,
       };
 
-      const entry = await AssetPack.updateOne(query, { $set: update }, { upsert: true, setDefaultsOnInsert: true });
+      const entry = await AssetPackCreated.updateOne(query, { $set: update }, { upsert: true, setDefaultsOnInsert: true });
 
       resolve(entry);
     } catch(err) {
