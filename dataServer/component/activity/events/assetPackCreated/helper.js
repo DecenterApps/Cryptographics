@@ -1,6 +1,6 @@
-const { getDateDiff } = require('../../../utils');
 const { getAssetPackData, getUserInfo, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
+const AssetPack = require('./model');
 
 const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
   new Promise(async (resolve, reject) => {
@@ -9,9 +9,8 @@ const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
       const ownerData = await getUserInfo(owner);
 
       const block = await getBlock(blockNumber);
-      const timeDiff = getDateDiff(block.timestamp);
 
-      resolve({ ...assetPackData, ...ownerData, timestamp: timeDiff });
+      resolve({ ...assetPackData, ...ownerData, timestamp: block.timestamp });
     } catch(err) {
       logger.error(err);
       reject(err);
@@ -23,10 +22,22 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
 
     try {
       const assetPackCreatedData = await getAdditionalAssetPackCreatedData(event, blockNumber);
-      assetPackCreatedData.txHash = txHash;
-      assetPackCreatedData.blockNumber = blockNumber;
 
-      resolve(assetPackCreatedData);
+      const query = { txHash };
+      const update = {
+        id: assetPackCreatedData.id,
+        packCoverSrc: assetPackCreatedData.packCoverSrc,
+        creatorAddress: assetPackCreatedData.creator,
+        creatorUsername: assetPackCreatedData.username,
+        creatorAvatar: assetPackCreatedData.avatar,
+        timestamp: assetPackCreatedData.timestamp,
+        txHash,
+        blockNumber,
+      };
+
+      const entry = await AssetPack.updateOne(query, { $set: update }, { upsert: true, setDefaultsOnInsert: true });
+
+      resolve(entry);
     } catch(err) {
       logger.error(err);
       reject('Error updating the asset pack created event', err);

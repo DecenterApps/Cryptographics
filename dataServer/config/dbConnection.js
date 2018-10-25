@@ -26,4 +26,4 @@ process.on('unhandledRejection', (err) => {
 
 mongoose.db = db;
 
-module.exports = mongoo;
+module.exports = mongoose;
