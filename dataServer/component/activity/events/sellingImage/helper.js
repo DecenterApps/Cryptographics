@@ -1,17 +1,15 @@
-const { getGalleryImage, getBlock } = require('../../../ethereumService');
+const { getGalleryImage } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const web3 = require('../../../web3Provider');
 const SellingImage = require('./model');
 
-const getAdditionalSellingImageData = ({ imageId, price }, blockNumber) =>
+const getAdditionalSellingImageData = ({ imageId, price }) =>
   new Promise(async (resolve, reject) => {
     try {
       const amount = web3.utils.fromWei(price, 'ether');
       const graphicData = await getGalleryImage(imageId, false);
 
-      const block = await getBlock(blockNumber);
-
-      resolve({ ...graphicData, timestamp: block.timestamp, amount });
+      resolve({ ...graphicData, amount });
     } catch(err) {
       logger.error(err);
       reject('getAdditionalSellingImageData', err);
@@ -21,7 +19,7 @@ const getAdditionalSellingImageData = ({ imageId, price }, blockNumber) =>
 const updateSellingImage = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
-      const sellingImageData = await getAdditionalSellingImageData(event, blockNumber);
+      const sellingImageData = await getAdditionalSellingImageData(event);
 
       const query = { txHash };
       const update = {
@@ -30,7 +28,6 @@ const updateSellingImage = (event, txHash, blockNumber) =>
         ownerAddress: sellingImageData.owner,
         ownerUsername: sellingImageData.username,
         ownerAvatar: sellingImageData.avatar,
-        timestamp: sellingImageData.timestamp,
         graphicSrc: sellingImageData.src,
         amount: sellingImageData.amount,
         txHash,

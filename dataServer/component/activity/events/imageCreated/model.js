@@ -32,10 +32,6 @@ const imageCreatedSchema = new Schema({
       id: Number,
       packCoverSrc: String
     }],
-    timestamp: {
-      type: Number,
-      required: true,
-    },
     txHash: {
       type: String,
       required: true,

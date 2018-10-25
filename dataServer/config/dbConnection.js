@@ -9,7 +9,7 @@ process.env.NODE_ENV = env.mainnet;
 
 // Service Database
 logger.info('Connecting to the Mongo DB: ' + config.dbConnection[process.env.NODE_ENV]);
-mongoose.connect(config.dbConnection[process.env.NODE_ENV]);
+mongoose.connect(config.dbConnection[process.env.NODE_ENV], { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', (err) => {

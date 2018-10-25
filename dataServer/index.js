@@ -13,8 +13,6 @@ const server = require('./config/socket')(app);
 const config = require('./config/main');
 const routes = require('./component/router');
 const logger = require('./config/logger');
-// const initScript = require('./component/initScript');
-// const parserRunner = require('./component/parserRunner');
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = config.environments.mainnet
@@ -59,23 +57,5 @@ server.listen(port, () => {
   logger.info('Cryptographics API. Server listening on port %s', port);
   logger.info('Domain: %s', config.domain)
 });
-
-// initScript.init().then((done, err) => {
-//   if (err) {
-//     logger.error('Problem with data initialization!')
-//     logger.error(err)
-//     return
-//   }
-//
-//   logger.info(done)
-// })
-//
-// parserRunner.isActive().then((done) => {
-//   if (done) {
-//     logger.info('Data parser is active!')
-//     return
-//   }
-//   logger.info('Data parsing disabled! Check ./config/main/parsing_active setting')
-// })
 
 module.exports = app;

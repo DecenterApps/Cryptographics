@@ -28,10 +28,6 @@ const assetPackBoughtSchema = new Schema({
       type: String,
       required: true,
     },
-    timestamp: {
-      type: String,
-      required: true,
-    },
     txHash: {
       type: String,
       required: true,

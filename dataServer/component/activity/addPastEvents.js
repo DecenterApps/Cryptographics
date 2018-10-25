@@ -1,32 +1,14 @@
-const web3 = require('../web3Provider');
 const logger = require('../../config/logger');
 const clientConfig = require('../../../client/config/clientConfig');
-const { updateAssetPackCreated } = require('./events/assetPackCreated/helper');
-const { updateAssetPackBought } = require('./events/assetPackBought/helper');
-const { updateImageBought } = require('./events/imageBought/helper');
-const { updateSellingImage } = require('./events/sellingImage/helper');
-const { updateImageCreated } = require('./events/imageCreated/helper');
-const {
-  getLatestEvents,
-  assetManagerContract,
-  marketPlaceContract,
-  digitalPrintImageContract,
-} = require('../ethereumService');
+const ACTIVITY_EVENTS_META = require('./activityEventsMeta');
+const { getLatestEvents } = require('../ethereumService');
 
 const addPastActivityEvents = async () => {
-  const meta = [
-    // { contract: assetManagerContract, event: 'AssetPackCreated', handler: updateAssetPackCreated },
-    // { contract: assetManagerContract, event: 'AssetPackBought', handler: updateAssetPackBought },
-    // { contract: marketPlaceContract, event: 'ImageBought', handler: updateImageBought },
-    // { contract: marketPlaceContract, event: 'SellingImage', handler: updateSellingImage },
-    { contract: digitalPrintImageContract, event: 'ImageCreated', handler: updateImageCreated },
-  ];
-
-  const fromBlock = await web3.eth.getBlockNumber() - 90000;
-  // const fromBlock = clientConfig.deployBlockNumber;
+  // ADD that the from block is the oldest event from a set of latest events (1 for each event type)
+  const fromBlock = clientConfig.deployBlockNumber;
 
   try {
-    const promises = meta.map(({ contract, event, handler }) => getLatestEvents(contract, event, fromBlock, handler));
+    const promises = ACTIVITY_EVENTS_META.map(({ contract, event, handler }) => getLatestEvents(contract, event, fromBlock, handler));
 
     await Promise.all(promises);
 

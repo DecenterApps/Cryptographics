@@ -19,8 +19,6 @@ const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContra
 const functionsContractAddress = config.functionsContract.networks[clientConfig.network].address;
 const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
-const getBlock = bn => web3.eth.getBlock(bn);
-
 const getAssetsOrigins = async (assetIds) => {
   const assetPacks = await assetManagerContract().methods.pickUniquePacks(assetIds).call();
   return [...new Set(assetPacks)];
@@ -270,8 +268,43 @@ const getLatestEvents = (contractPromise, event, fromBlock, formatter) =>
     }
   });
 
+/**
+ * Calls provided contract and subscribes to the provided event
+ *
+ * @param contractPromise
+ * @param event
+ * @param callback
+ * @return {Promise<any>}
+ */
+const listenToEvent = (contractPromise, event, callback) =>
+  new Promise(async (resolve, reject) => {
+    const contract = await contractPromise();
+
+    try {
+      const subscription = contract.events[event]((err) => {
+        if (err) {
+          logger.error('Listen to event error', err);
+          reject(err);
+          return;
+        }
+      });
+
+      subscription.on('data', (event) => {
+        callback(event.returnValues, event.transactionHash, event.blockNumber)
+      });
+
+      subscription.on('error', (e) => {
+        logger.error('Listen to event error', event, e);
+      });
+
+      resolve(true);
+    } catch (e) {
+      logger.error('Listen to event error', event, e);
+      reject(e);
+    }
+  });
+
 module.exports = {
-  getBlock,
   getLatestEvents,
   assetManagerContract,
   marketPlaceContract,
@@ -282,4 +315,5 @@ module.exports = {
   getGalleryImage,
   getSelectedAssetPacksWithAssetData,
   getAssetsOrigins,
+  listenToEvent,
 };

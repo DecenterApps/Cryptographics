@@ -32,10 +32,6 @@ const sellingImageSchema = new Schema({
       type: Number,
       required: true,
     },
-    timestamp: {
-      type: Number,
-      required: true,
-    },
     txHash: {
       type: String,
       required: true,

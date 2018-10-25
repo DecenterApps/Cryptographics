@@ -1,10 +1,10 @@
 const logger = require('../../../../config/logger');
 const {
-  getGalleryImage, getBlock, getImageMetadata, getAssetsOrigins, getSelectedAssetPacksWithAssetData,
+  getGalleryImage, getImageMetadata, getAssetsOrigins, getSelectedAssetPacksWithAssetData,
 } = require('../../../ethereumService');
 const ImageCreated = require('./model');
 
-const getAdditionalImageCreatedData = ({ imageId }, blockNumber) =>
+const getAdditionalImageCreatedData = ({ imageId }) =>
   new Promise(async (resolve, reject) => {
     try {
       const graphicData = await getGalleryImage(imageId, false);
@@ -13,9 +13,7 @@ const getAdditionalImageCreatedData = ({ imageId }, blockNumber) =>
       let assets = await getAssetsOrigins(metadata.usedAssets);
       assets = await getSelectedAssetPacksWithAssetData(assets);
 
-      const block = await getBlock(blockNumber);
-
-      resolve({ ...graphicData, assets, timestamp: block.timestamp });
+      resolve({ ...graphicData, assets });
     } catch(err) {
       logger.error(err);
       reject('getAdditionalImageCreatedData', err);
@@ -25,7 +23,7 @@ const getAdditionalImageCreatedData = ({ imageId }, blockNumber) =>
 const updateImageCreated = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
-      const imageCreatedData = await getAdditionalImageCreatedData(event, blockNumber);
+      const imageCreatedData = await getAdditionalImageCreatedData(event);
 
       const query = { txHash };
       const update = {
@@ -34,7 +32,6 @@ const updateImageCreated = (event, txHash, blockNumber) =>
         ownerAddress: imageCreatedData.owner,
         ownerUsername: imageCreatedData.username,
         ownerAvatar: imageCreatedData.avatar,
-        timestamp: imageCreatedData.timestamp,
         graphicSrc: imageCreatedData.src,
         assetPacks: imageCreatedData.assets.map(({ id, packCoverSrc }) => ({ id, packCoverSrc })),
         txHash,

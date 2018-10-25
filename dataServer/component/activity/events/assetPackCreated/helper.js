@@ -1,16 +1,14 @@
-const { getAssetPackData, getUserInfo, getBlock } = require('../../../ethereumService');
+const { getAssetPackData, getUserInfo } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const AssetPackCreated = require('./model');
 
-const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
+const getAdditionalAssetPackCreatedData = ({ id, owner }) =>
   new Promise(async (resolve, reject) => {
     try {
       const assetPackData = await getAssetPackData(id);
       const ownerData = await getUserInfo(owner);
 
-      const block = await getBlock(blockNumber);
-
-      resolve({ ...assetPackData, ...ownerData, timestamp: block.timestamp });
+      resolve({ ...assetPackData, ...ownerData });
     } catch(err) {
       logger.error(err);
       reject('getAdditionalAssetPackCreatedData', err);
@@ -20,17 +18,16 @@ const getAdditionalAssetPackCreatedData = ({ id, owner }, blockNumber) =>
 const updateAssetPackCreated = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
-      const assetPackCreatedData = await getAdditionalAssetPackCreatedData(event, blockNumber);
+      const assetPackCreatedData = await getAdditionalAssetPackCreatedData(event);
 
       const query = { txHash };
       const update = {
         id: assetPackCreatedData.id,
-        title: assetPackBoughtData.title,
+        title: assetPackCreatedData.title,
         packCoverSrc: assetPackCreatedData.packCoverSrc,
         creatorAddress: assetPackCreatedData.creator,
         creatorUsername: assetPackCreatedData.username,
         creatorAvatar: assetPackCreatedData.avatar,
-        timestamp: assetPackCreatedData.timestamp,
         txHash,
         blockNumber,
       };
