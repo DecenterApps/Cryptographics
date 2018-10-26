@@ -19,6 +19,12 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <cg-button
+                            button-style="secondary"
+                            @click="changeStep(0)"
+                    >
+                        Back
+                    </cg-button>
+                    <cg-button
                             :loading="isCanvasDrawing"
                             @click="changeStep(2)"
                     >
@@ -121,7 +127,7 @@
             min-width: 300px;
             width: 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
             .left {
                 margin-bottom: 30px;
@@ -190,7 +196,7 @@
         .bottom-controls {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             padding-top: 20px;
 
             span {

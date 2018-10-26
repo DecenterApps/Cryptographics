@@ -1,7 +1,28 @@
 <template>
     <div class="graphic-builder">
+        <!-- Tooltip for the price, needs to be out of context to be used in several areas -->
+        <div id="tooltip-1" class="hidden" v-tippy-html>
+            <div class="asset-pack-prices">
+                <div class="prices-list">
+                    <div>
+                        <div class="label">Asset pack name</div>
+                        <div class="label">Price in ETH</div>
+                    </div>
+                    <div v-for="(assetPack, index) in selectedAssetPacks" :key="index">
+                        <div>{{ assetPack.packName }}</div>
+                        <div>{{ customPrice(assetPack) }}</div>
+                    </div>
+                </div>
+                <separator></separator>
+                <div class="label">Total in ETH: <span>{{displayPrice()}}</span></div>
+            </div>
+        </div>
+
         <div class="left">
-            <div class="canvas-with-overlay-wrapper" @click="(currentStep === 1) ? renderCanvas() : download()">
+            <div class="canvas-with-overlay-wrapper"
+                 @click="(currentStep === 1)
+                    ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
+                    : (download())">
                 <overlay v-if="currentStep === 2" key="1">
                     <button-icon icon-type="download" />
                     <p>Download</p>
@@ -21,13 +42,13 @@
                 </h1>
                 <div class="pack-list">
                     <asset-box
-                      v-for="(assetPack, index) in selectedAssetPacks"
-                      :key="index"
-                      :assetPack="assetPack"
-                      :small="true"
-                      color="#eee"
-                      action="close"
-                      @click="toggleAsset(assetPack)"
+                            v-for="(assetPack, index) in selectedAssetPacks"
+                            :key="index"
+                            :assetPack="assetPack"
+                            :small="true"
+                            color="#eee"
+                            action="close"
+                            @click="toggleAsset(assetPack)"
                     />
                     <div @click="changeStep(0)" class="add-more">
                         +
@@ -35,18 +56,26 @@
                 </div>
 
                 <div class="help">
-                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and remove it from selection.</p>
-                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim ownership.</p>
+                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and
+                        remove it from selection.</p>
+                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim
+                        ownership.</p>
                 </div>
             </div>
 
             <div class="controls">
                 <div class="top-controls">
-                    <cg-checkbox v-on:checked="(val) => canvasData.frame = val">Add white frame</cg-checkbox>
-                    <cg-checkbox v-on:checked="toggleRatio" :disabled="isCanvasDrawing">Use square format</cg-checkbox>
+                    <cg-checkbox
+                            v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
+                            :disabled="isCanvasDrawing || gettingImageData"
+                    >Add white frame</cg-checkbox>
+                    <cg-checkbox
+                            v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
+                            :disabled="isCanvasDrawing || gettingImageData"
+                     >Use square format</cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
-                            @click="renderCanvas"
+                            @click="renderCanvas(); track('Recompose')"
                             :disabled="selectedAssetPacks.length === 0"
                             button-style="secondary">
                         Recompose
@@ -55,9 +84,21 @@
                 <separator></separator>
                 <div class="bottom-controls">
                     <!--<cg-button @click="buyImage">Submit</cg-button>-->
-                    <price size="medium" :value="displayPrice()" />
+                    <price
+                            v-tippy="{
+                                html: '#tooltip-1',
+                                interactive : true,
+                                duration : 0,
+                                animation : 'fade',
+                                theme : 'cryptographics',
+                                placement: 'top-start',
+                                flipBehavior: ['left', 'bottom-end']
+                            }"
+                            size="medium"
+                            :value="displayPrice()"
+                    />
                     <cg-button
-                            :loading="isCanvasDrawing"
+                            :loading="isCanvasDrawing || gettingImageData"
                             @click="changeStep(2)"
                             :disabled="selectedAssetPacks.length === 0"
                     >
@@ -97,6 +138,9 @@
                         Claiming a cryptographic also means that the artists whose asset packs you used receive a
                         payment for them, after which you can use them for any number of cryptographics in the future.
                     </p>
+                    <p>
+                        You can also claim your graphic later by using <a :href="getLink()">this link</a>.
+                    </p>
                 </div>
             </div>
 
@@ -128,10 +172,22 @@
                         </cg-button>
                     </div>
                     <div class="separate-controls">
-                        <price size="medium" :value="displayPrice()" />
+                        <price
+                                v-tippy="{
+                                html: '#tooltip-1',
+                                interactive : true,
+                                duration : 0,
+                                animation : 'fade',
+                                theme : 'cryptographics',
+                                placement: 'top-start',
+                                flipBehavior: ['left', 'bottom-end']
+                                }"
+                                size="medium"
+                                :value="displayPrice()"
+                        />
                         <cg-button
                                 :loading="isCanvasDrawing"
-                                @click="buyImage"
+                                @click="buyImage(); track('Claim')"
                         >
                             Claim cryptographic
                         </cg-button>
@@ -150,6 +206,7 @@
     calculateFirstSeed,
     convertSeed,
     getImage,
+    getSelectedAssetPacksWithAssetData,
   } from 'services/ethereumService';
   import Canvas from './Canvas.vue';
   import * as utils from 'services/utils';
@@ -165,7 +222,13 @@
     CHANGE_LOADING_CONTENT,
     HIDE_LOADING_MODAL,
   } from 'store/modal/types';
-  import { CANVAS_DRAWING, SELECTED_ASSET_PACKS, TOGGLE_ASSET_PACK } from 'store/canvas/types';
+  import {
+    CANVAS_DRAWING,
+    SELECTED_ASSET_PACKS,
+    TOGGLE_ASSET_PACK,
+    SET_SELECTED_ASSET_PACKS,
+    START_CANVAS_DRAWING,
+  } from 'store/canvas/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -196,7 +259,7 @@
       potentialAssets: [],
       selectedAssets: [],
       claimPressed: false,
-      gettingImageData: false,
+      gettingImageData: true,
     }),
     computed: {
       ...mapGetters({
@@ -212,14 +275,15 @@
         this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
           assetPack.assets.map(asset => parseInt(asset.id)))
           .reduce((a, b) => a.concat(b), []);
-        this.iterations = 0;
-        this.timestamp = new Date().getTime();
-        this.randomSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
-        this.randomSeed = await convertSeed(this.randomSeed);
       },
       username: function (val) {
         if (val !== '' && val !== 'Anon' && this.claimPressed) {
           this.buyImage();
+        }
+      },
+      currentStep(newStep) {
+        if (newStep === 2) {
+          this.saveImageToLS()
         }
       }
     },
@@ -231,6 +295,8 @@
         openLoadingModal: SHOW_LOADING_MODAL,
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
+        setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
+        startDrawing: START_CANVAS_DRAWING,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -257,7 +323,12 @@
 
       async buyImage() {
         if (!this.checkTitle()) return;
-        if (!this.userAddress) return this.openModal('metaMaskInfo');
+        if (!this.userAddress) {
+            const { userAgent: ua } = navigator;
+            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+            if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
+            if (!isMobile) return this.openModal('metaMaskInfo');
+        }
 
         console.log(this.username);
         if (this.username === '' || this.username === 'Anon') {
@@ -318,8 +389,7 @@
           let selectedAssets = this.selectedAssets;
 
           // Don't shuffle if user came from home page
-          console.log(window.sessionStorage.length);
-          if (window.sessionStorage.length <= 0) {
+          if (window.sessionStorage.length <= 0 && window.location.search.length < 5) {
             selectedAssets = shuffleArray(selectedAssets);
           }
           selectedAssets = selectedAssets.slice(0, 30);
@@ -339,12 +409,14 @@
           }
 
           this.imagePrice = utils.scientificToDecimal(parseFloat(price));
-          
+
           console.log('PRICE : ' + this.imagePrice);
+          this.gettingImageData = false;
+          this.startDrawing();
         } catch (e) {
+          console.error(e);
           this.gettingImageData = false;
         }
-        this.gettingImageData = false;
       },
       download() {
         const canvas = document.getElementById('canvas');
@@ -354,11 +426,13 @@
           const title = this.title || 'cryptographic';
           link.setAttribute('download', title + '.jpeg');
           link.setAttribute('href', window.URL.createObjectURL(blob));
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
         }, 'image/jpeg');
+        this.track('Download');
       },
       changeStep(step) {
-        window.scrollTo(0, 0);
         this.$emit('stepChange', step);
       },
       toggleRatio(square) {
@@ -367,7 +441,50 @@
       displayPrice() {
         if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
         return web3.utils.fromWei(this.imagePrice.toString(), 'ether');
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
+      },
+      saveImageToLS() {
+        const createdGraphic = {
+          randomHashIds: this.randomHashIds,
+          iterations: this.iterations - 1,
+          timestamp: this.timestamp,
+          randomSeed: this.randomSeed,
+          potentialAssets: this.potentialAssets,
+          ratio: this.canvasData.ratio,
+          frame: this.canvasData.frame,
+          selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
+          savedOn: Date.now(),
+        };
+        let savedGraphics = localStorage.getItem(`${this.userAddress}-graphics`);
+        savedGraphics = savedGraphics ? JSON.parse(savedGraphics) : [];
+        if (savedGraphics.filter(graphic =>
+          graphic.randomSeed === createdGraphic.randomSeed &&
+          graphic.iterations === createdGraphic.iterations &&
+          graphic.timestamp === createdGraphic.timestamp
+        ).length) return;
+        savedGraphics.push(createdGraphic);
+        localStorage.setItem(`${this.userAddress}-graphics`, JSON.stringify(savedGraphics));
+      },
+      imageToUrlHash(_data) {
+        const data = _data || {
+          randomHashIds: this.randomHashIds,
+          iterations: this.iterations - 1,
+          timestamp: this.timestamp,
+          randomSeed: this.randomSeed,
+          potentialAssets: this.potentialAssets,
+          ratio: this.canvasData.ratio,
+          frame: this.canvasData.frame,
+          selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
+        };
+        const hash = `randomHashIds=[${data.randomHashIds.join(',')}]&iterations=${data.iterations}&timestamp=${data.timestamp}&randomSeed=${data.randomSeed}&potentialAssets=[${data.potentialAssets.join(',')}]&ratio=${data.ratio}&frame=${data.frame}&selectedAssetPacks=[${data.selectedAssetPacks.join(',')}]`;
+        console.log(btoa(hash))
+        return btoa(hash).replace(/=*$/g, '')
+      },
+      getLink() {
+        return window.location.origin + window.location.pathname + '?image=' + this.imageToUrlHash();
+      },
     },
     async created() {
       this.selectedAssets = this.selectedAssetPacks.map(assetPack =>
@@ -388,6 +505,28 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
+      } else if (window.location.search.length > 5) {
+        const urlData = atob(decodeURI(window.location.search.substr(7)))
+          .split('&')
+          .map(a => a.split('='))
+          .reduce((acc, val) => {
+            acc[val[0]] = val[1];
+            return acc;
+          }, {});
+        console.log(urlData);
+        this.randomHashIds = JSON.parse(urlData.randomHashIds);
+        this.selectedAssets = JSON.parse(urlData.potentialAssets);
+        // selectedAssets is filled with all assets when selectedAssetPacks is changed so this should be ok
+        this.timestamp = urlData.timestamp;
+        this.iterations = parseInt(urlData.iterations);
+        const firstSeed = await calculateFirstSeed(this.timestamp, this.randomHashIds);
+        this.randomSeed = await convertSeed(firstSeed);
+        this.canvasData.frame = urlData.frame === 'true';
+        this.canvasData.ratio = urlData.ratio;
+        const selectedAssetPacks = await getSelectedAssetPacksWithAssetData(JSON.parse(urlData.selectedAssetPacks));
+        await this.renderCanvas();
+        this.setSelectedAssetPacks(selectedAssetPacks);
+        this.$router.push('/create-cryptographic')
       } else {
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
@@ -418,9 +557,15 @@
                     transition: opacity .2s;
                     animation: fade-out 1s;
                     @keyframes fade-out {
-                        0% { opacity: 1; }
-                        60% { opacity: 1; }
-                        100% { opacity: 0; }
+                        0% {
+                            opacity: 1;
+                        }
+                        60% {
+                            opacity: 1;
+                        }
+                        100% {
+                            opacity: 0;
+                        }
                     }
                 }
                 @media screen and (min-width: 768px) {
@@ -439,11 +584,13 @@
             justify-content: space-between;
             flex-grow: 1;
             margin-left: 50px;
-            /*max-width: 400px;*/
             min-width: 300px;
             width: 100%;
+            @media screen and (max-width: 326px) {
+                min-width: auto;
+            }
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
             .left {
                 margin-bottom: 30px;
@@ -663,6 +810,42 @@
             .large-title {
                 margin: 0 15px 0 0;
             }
+        }
+    }
+
+    .asset-pack-prices {
+        text-align: right;
+
+        .prices-list {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            color: #000;
+            div {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 2px;
+
+                .label {
+                    margin-bottom: 15px;
+                    &:first-child {
+                        margin-right: 40px;
+                    }
+                }
+            }
+        }
+
+        .label {
+            font-size: 12px;
+            color: #949494;
+
+            span {
+                color: #000;
+            }
+        }
+
+        .line-separator {
+            margin: 10px 0;
         }
     }
 </style>

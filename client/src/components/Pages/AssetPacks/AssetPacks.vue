@@ -6,7 +6,7 @@
                 <button-link to="/create-asset-pack">Create Asset Pack</button-link>
             </div>
             <p class="asset-pack-description">
-                Asset packs are collections of graphical elements created and uploaded by the same Aritst. Each
+                Asset packs are collections of graphical elements created and uploaded by the same Artist. Each
                 asset pack has its price, but you only need to pay for each asset pack once.
             </p>
             <separator />

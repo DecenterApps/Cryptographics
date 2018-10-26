@@ -14,9 +14,15 @@ contract('DigitalPrintImage', async (accounts) => {
         assetManager = await AssetManager.deployed();
         functions = await Functions.deployed();
 
-        await advanceToBlock(web3.eth.blockNumber + 105);
-
-        await functions.fillWithHashes();
+        try {
+            let bt = await functions.randomHashes(0);
+            console.log("Already has hashes");
+        }
+        catch (e) {
+            await advanceToBlock(web3.eth.blockNumber + 105);
+            await functions.fillWithHashes();
+            console.log("Filled with hashes");
+        }
 
         let ipfsHashes = [];
         let attributes = [];

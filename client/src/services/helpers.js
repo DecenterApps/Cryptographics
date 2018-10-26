@@ -21,14 +21,26 @@ export const resizeCanvas = (oldCanvas, width, height) => {
 export function checkProvider() {
   if (typeof web3 !== 'undefined') {
     window.web3 = new Web3(window.web3.currentProvider);
-    if (window.web3.currentProvider.isMetaMask) {
-      console.log('Succesfully using MetaMask');
+    console.log(`Using injected web3 from ${inbrowserProviderName()}`);
+    if (window._paq) {
+      window._paq.push(['trackEvent', 'Landing', 'Web3 enabled', 'Web3 enabled', inbrowserProviderName()]);
     }
   } else {
     window.web3 = new Web3(new Web3.providers.HttpProvider(clientConfig.provider));
-    console.log('Please install MetaMask');
+    console.log('No web3 provider detected');
+    if (window._paq) {
+      window._paq.push(['trackEvent', 'Landing', 'Web3 not detected']);
+    }
   }
 }
+
+export const inbrowserProviderName = () => {
+  if (window.web3.currentProvider.isMetaMask) return 'Metamask';
+  if (window.web3.currentProvider.isStatus) return 'Status';
+  if (window.web3.currentProvider.isTrust) return 'Trust';
+  if (window.web3.currentProvider.isToshi) return 'Coinbase';
+  return 'Other'
+};
 
 export function getNetwork() {
   return new Promise((resolve, reject) => {

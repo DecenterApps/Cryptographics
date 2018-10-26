@@ -11,6 +11,7 @@ import CreateGraphic from 'pages/CreateGraphic/CreateGraphic.vue';
 import CreateAssetPack from 'pages/CreateAssetPack/CreateAssetPack.vue';
 import AssetPackPreview from 'pages/AssetPackPreview/AssetPackPreview.vue';
 import FAQ from 'pages/FAQ/FAQ.vue';
+import Tutorial from 'pages/Tutorial/Tutorial.vue';
 import ActivityLog from 'pages/ActivityLog/ActivityLog.vue';
 import UIShowcase from 'shared/UI/UIShowcase.vue';
 
@@ -19,19 +20,43 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: Landing, meta: { title: 'Cryptographics | Unique digital artwork on the blockchain' } },
+    {
+      path: '/',
+      component: Landing,
+      meta: { title: 'Cryptographics | Unique digital artwork on the blockchain' }
+    },
     { path: '/about', component: About, meta: { title: 'About | Cryptographics' } },
     { path: '/cryptographic/:id', component: SingleGraphic },
-    { path: '/create-cryptographic', component: CreateGraphic, name: 'create-cryptographic', meta: { title: 'Create cryptographic | Cryptographics' } },
-    { path: '/gallery', component: GalleryPage, meta: { title: 'Gallery | Cryptographics' }  },
-    { path: '/create-asset-pack', component: CreateAssetPack, name: 'create-asset-pack', meta: { title: 'Create asset pack | Cryptographics' } },
-    { path: '/asset-packs', component: AssetPacks, meta: { title: 'Asset Packs | Cryptographics' } },
+    {
+      path: '/create-cryptographic',
+      component: CreateGraphic,
+      name: 'create-cryptographic',
+      meta: { title: 'Create cryptographic | Cryptographics' }
+    },
+    { path: '/gallery', component: GalleryPage, meta: { title: 'Gallery | Cryptographics' } },
+    {
+      path: '/create-asset-pack',
+      component: CreateAssetPack,
+      name: 'create-asset-pack',
+      meta: { title: 'Create asset pack | Cryptographics' }
+    },
+    {
+      path: '/asset-packs',
+      component: AssetPacks,
+      meta: { title: 'Asset Packs | Cryptographics' }
+    },
     { path: '/asset-pack/:id', component: AssetPackPreview },
-    { path: '/profile', component: Profile, props: { userProfile: true }, meta: { title: 'Profile | Cryptographics' } },
+    {
+      path: '/profile',
+      component: Profile,
+      props: { userProfile: true },
+      meta: { title: 'Profile | Cryptographics' }
+    },
     { path: '/user/:userId', component: Profile, props: { userProfile: false } },
-    { path: '/activity-log', component: ActivityLog, meta: { title: 'Activity log | Cryptographics' } },
     // { path: '/ui-test', component: UIShowcase },
     { path: '/faq', component: FAQ, meta: { title: 'FAQ | Cryptographics' } },
+    { path: '/tutorial', component: Tutorial, meta: { title: 'Tutorial | Cryptographics' } },
+    { path: '/activity-log', component: ActivityLog, meta: { title: 'Activity log | Cryptographics' } },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };
@@ -39,8 +64,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.title) document.title = to.meta.title;
-  next()
-})
+  if (to.meta.title) document.title = to.meta.title;
+  next();
+});
 
 export default router;

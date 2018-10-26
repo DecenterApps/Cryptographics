@@ -6,6 +6,7 @@ import {
   MUTATE_SELECTED_ASSET_PACKS,
   SELECT_SINGLE_ASSET_PACK,
   CLEAR_ASSET_PACKS,
+  SET_SELECTED_ASSET_PACKS,
 } from './types';
 import { preloadAssets } from '../../../services/helpers';
 
@@ -32,5 +33,8 @@ export default {
   },
   [SELECT_SINGLE_ASSET_PACK]: ({ commit, state }, assetPack) => {
     commit(MUTATE_SELECTED_ASSET_PACKS, [assetPack]);
+  },
+  [SET_SELECTED_ASSET_PACKS]: ({ commit, state }, assetPacks) => {
+    commit(MUTATE_SELECTED_ASSET_PACKS, [...assetPacks]);
   },
 };

@@ -5,14 +5,31 @@
             <button-icon
                 icon-type="close"
                 @click="closeModal" />
-            <edit-profile v-if="content === 'editProfile'" />
-            <edit-pack-price v-if="content && content.name === 'editPackPrice'" v-bind="content.data" />
-            <set-username v-else-if="content === 'setUsername'" />
-            <meta-mask-info v-else-if="content === 'metaMaskInfo'" :hasMetaMask="hasMetaMask" />
-            <transfer-history v-else-if="content && content.name === 'transferHistory'" v-bind="content.data" />
-            <asset-pack-upload-error v-else-if="content && content.name === 'assetPackUploadError'" v-bind="content.data" />
-            <balances-modal v-else-if="content === 'balances'" />
-            <success-message v-else :content="content" />
+            <edit-profile
+                v-if="content === 'editProfile'" />
+            <edit-pack-price
+                v-else-if="content && content.name === 'editPackPrice'"
+                v-bind="content.data" />
+            <set-username
+                v-else-if="content === 'setUsername'" />
+            <meta-mask-info
+                v-else-if="content === 'metaMaskInfo'"
+                :hasMetaMask="hasMetaMask" />
+            <coinbase-info
+                v-else-if="content && content.name === 'coinbaseInfo'"
+                v-bind="content.data"
+                :isApple="isApple"
+                :isAndroid="isAndroid"/>
+            <transfer-history
+                v-else-if="content && content.name === 'transferHistory'"
+                v-bind="content.data" />
+            <asset-pack-upload-error
+                v-else-if="content && content.name === 'assetPackUploadError'"
+                v-bind="content.data" />
+            <balances-modal
+                v-else-if="content === 'balances'" />
+            <success-message
+                v-else :content="content" />
             <div v-else>
                 <slot />
             </div>
@@ -30,6 +47,7 @@
   import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
   import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
   import MetaMaskInfo from 'shared/MetaMaskInfo/MetaMaskInfo.vue';
+  import CoinbaseInfo from 'shared/CoinbaseInfo/CoinbaseInfo.vue';
   import AssetPackUploadError from 'shared/AssetPackUploadError/AssetPackUploadError.vue';
   import BalancesModal from 'pages/Profile/BalancesModal.vue';
 
@@ -51,10 +69,15 @@
       TransferHistory,
       BalancesModal,
       MetaMaskInfo,
+      CoinbaseInfo,
       AssetPackUploadError,
     },
     created() {
-        this.hasMetaMask = window.web3.eth.accounts.currentProvider.constructor.name === 'MetamaskInpageProvider';
+        const { currentProvider: cp } = window.web3;
+        const { userAgent: ua } = navigator;
+        this.hasMetaMask = !!cp.isMetaMask;
+        this.isAndroid = ua.includes('Android');
+        this.isApple = ua.includes('iPhone') || ua.includes('iPad');
     },
     methods: {
       ...mapActions({
@@ -76,12 +99,11 @@
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 99;
+        z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: center;
         max-height: 100vh;
-
         .overlay {
             position: absolute;
             top: 0;
@@ -95,6 +117,15 @@
             max-width: 1120px;
             padding: 90px;
             background-color: #C4C4C4;
+            margin: 30px;
+            @media screen and (max-width: 768px) {
+                max-width: 767px;
+            }
+            @media screen and (max-width: 425px) {
+                max-width: 425px;
+                width: 100%;
+                padding: 45px 15px;
+            }
 
             &.small-padding {
                 padding: 45px;

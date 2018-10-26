@@ -2,6 +2,7 @@
     <div>
         <div v-if="loading" class="loading-section">
             <loader />
+            <h3>Please wait, we are loading asset packs from the blockchain and IPFS.</h3>
         </div>
 
         <div class="asset-packs" v-if="assetPacks !== false && this.loading === false" :class="grid">
@@ -67,7 +68,7 @@
       },
       grid: {
         type: String,
-        default: 'row-2'
+        default: 'row-6'
       },
       overlay: {
         type: Boolean,
@@ -141,37 +142,73 @@
 <style scoped lang="scss">
     .asset-packs, .selected-asset-packs .packs-wrapper {
         position: relative;
-        min-width: 768px;
-        display: flex;
-        flex-wrap: wrap;
-
-        .asset-box {
-            /*flex: 0 0 16%;*/
-            margin-right: 26px;
-            margin-bottom: 20px;
-
-            &:nth-child(6n) {
-                margin-right: 0;
-            }
-        }
-
-        @media screen and (max-width: 1300px) {
+        &.row-6 {
             .asset-box {
-                margin-right: 18px;
+                width: 14.1%;
+                margin-right: 3%;
+                margin-bottom: 3%;
+                height: auto;
+                &:nth-of-type(6n) {
+                    margin-right: 0 !important;
+                }
+                &:nth-of-type(12n) {
+                    margin-right: 0 !important;
+                }
+                @media screen and (max-width: 1025px) {
+                    width: 22.7%;
+                    &:nth-of-type(4n) {
+                        margin-right: 0;
+                    }
+                    &:nth-of-type(6n) {
+                        margin-right: 3% !important;
+                        
+                    }
+                }
+                @media screen and (max-width: 768px) {
+                    width: 31.3%;
+                    margin-bottom: 5%;
+                    &:nth-of-type(3n) {
+                        margin-right: 0;
+                    }
+                    &:nth-of-type(4n) {
+                        margin-right: 3%;
+                    }
+                    &:nth-of-type(6n) {
+                        margin-right: 0% !important;
+                    }
+                }
+                &:nth-of-type(12n) {
+                    margin-right: 0 !important;
+                }
             }
         }
+        // .asset-box {
+        //     /*flex: 0 0 16%;*/
+        //     margin-right: 26px;
+        //     margin-bottom: 20px;
 
-        @media screen and (max-width: 1120px) {
-            min-width: 720px;
-            justify-content: space-between;
-            .asset-box {
-                margin-right: 0;
-            }
-        }
+        //     &:nth-child(6n) {
+        //         margin-right: 0;
+        //     }
+        // }
 
-        @media screen and (max-width: 767px) {
-            min-width: auto;
-        }
+        // @media screen and (max-width: 1300px) {
+        //     .asset-box {
+        //         margin-right: 18px;
+        //     }
+        // }
+
+        // @media screen and (max-width: 1120px) {
+        //     min-width: 720px;
+        //     justify-content: space-between;
+        //     .asset-box {
+        //         margin-right: 0;
+        //     }
+        // }
+
+        // @media screen and (max-width: 768px) {
+        //     min-width: auto;
+        // }
     }
 
     button {
@@ -186,7 +223,7 @@
         position: absolute;
         top: -68px;
         right: 0;
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             display: none !important;
         }
     }
@@ -234,7 +271,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-direction: column;
         background-color: #CECECE;
         margin-top: 30px;
+        text-align: center;
+        padding: 10px;
+        .loader-content {
+            margin-bottom: 20px;
+        }
     }
 </style>

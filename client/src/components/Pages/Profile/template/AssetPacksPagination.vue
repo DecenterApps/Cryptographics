@@ -144,7 +144,13 @@
         const selectedPacks = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.assetPacks = await getPackInformation(selectedPacks);
         this.loading = false;
-      }
+        this.track('Change page', currentPage)
+      },
+      track(event, value) {
+        if (!window._paq) return;
+        if (value) return window._paq.push(['trackEvent', 'Asset Packs', event, event, value]);
+        window._paq.push(['trackEvent', 'Asset Packs', event]);
+      },
     }
   };
 </script>
@@ -169,6 +175,12 @@
                 margin-bottom: 2.6%;
                 &:nth-child(4n) {
                     margin-right: 0;
+                }
+                @media screen and (max-width: 1025px) {
+                    width: 47.4%;
+                }
+                @media screen and (max-width: 426px) {
+                    width: 100%;
                 }
             }
         }
@@ -231,7 +243,7 @@
         .pagination-controls {
             flex: 0 0 100%;
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 768px) {
             flex-direction: column;
         }
     }
@@ -245,7 +257,8 @@
         flex-direction: column;
         background-color: #CECECE;
         margin-top: 30px;
-
+        text-align: center;
+        padding: 10px;
         .loader-content {
             margin-bottom: 20px;
         }

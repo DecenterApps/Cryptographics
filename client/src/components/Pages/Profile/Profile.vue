@@ -22,7 +22,7 @@
                     <cg-button
                             button-style="primary"
                             v-if="userAddress && userProfile"
-                            @click="openModal('balances')"
+                            @click="openModal('balances'); track('Open withdraw')"
                     >
                         Withdraw
                     </cg-button>
@@ -112,6 +112,7 @@
     getBoughtAssetPacks,
     fromWei,
     getImageOwnerAndCreator,
+    getCreatedGraphics
   } from 'services/ethereumService';
   import { ipfsNodePath } from 'config/constants';
   import { mapActions, mapGetters } from 'vuex';
@@ -149,6 +150,7 @@
         currentTab: 'gallery',
         imageIds: [],
         boughtImageIds: [],
+        createdImageIds: [],
         assetPackIds: [],
         userAddress: '0x0',
         username: '',
@@ -162,6 +164,11 @@
     beforeMount() {
       this[SET_CREATED_ASSETS_PACKS_IDS]();
       this[SET_BOUGHT_ASSETS_PACKS_IDS]();
+    },
+    async created() {
+      await this.onCreated();
+      if (this.userProfile && this.userAddress) this.fetchBalances();
+      if (!this.userProfile) document.title = this.username + '\'s profile | Cryptographics';
     },
     computed: {
       ...mapGetters({
@@ -177,11 +184,12 @@
         return fromWei(total, 3);
       },
       shownImageIds() {
+        if (this.showGraphics === 'all')
+          return [...this.boughtImageIds, ...this.createdImageIds].sort((a, b) => b - a);
         if (this.showGraphics === 'bought')
           return this.boughtImageIds.slice().reverse();
         if (this.showGraphics === 'created')
-          return this.imageIds.filter(id => this.boughtImageIds.indexOf(id) === -1).slice().reverse();
-        return this.imageIds.slice().reverse();
+          return this.createdImageIds.slice().reverse();
       }
     },
     watch: {
@@ -247,10 +255,11 @@
       },
       async getImages() {
         if (!this.userAddress) return;
-        const imageIds = await getUserImages(this.userAddress);
-        const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
-        this.imageIds = imageIds;
-        this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
+          const imageIds = await getUserImages(this.userAddress);
+          const imageInfo = await Promise.all(imageIds.map(getImageOwnerAndCreator));
+          this.imageIds = imageIds;
+          this.createdImageIds = await getCreatedGraphics(this.userAddress);
+          this.boughtImageIds = imageInfo.filter(image => image[0] !== image[1]).map(image => image.id);
       },
       async getAssetPacks() {
         if (this.userProfile) {
@@ -282,13 +291,11 @@
       },
       changeTab(type) {
         this.currentTab = type;
-      }
-    },
-    async created() {
-      await this.onCreated();
-      if (this.userProfile && this.userAddress) this.fetchBalances();
-      if (!this.userProfile) document.title = this.username + '\'s profile | Cryptographics';
-    },
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Profile', event]);
+      },
+    }
   };
 
 </script>
@@ -299,16 +306,18 @@
         flex-direction: column;
         position: relative;
         justify-content: flex-start !important;
-
         .line-separator {
             margin: 21px 0;
         }
         .tabs {
-
             .large-title {
                 margin: 0 41px 0 0;
+                @media screen and (max-width: 426px) {
+                  font-size: 25px;
+                  margin: 0;
+                  margin-bottom: 20px;
+                }
             }
-
             .current-tabs {
                 button {
                     border: 0;
@@ -373,18 +382,23 @@
             .header {
                 padding-left: 0;
                 padding-top: 127px;
+                width: 100%;
                 .avatar {
                     left: 50%;
                     transform: translateX(-50%);
                 }
             }
         }
-        @media screen and (max-width: 767px) {
+        @media screen and (max-width: 426px) {
             .header {
                 flex-direction: column;
                 text-align: center;
                 .left {
-                    margin-bottom: 20px;
+                    margin-bottom: 40px;
+                    justify-content: center;
+                }
+                .right {
+                  justify-content: center;
                 }
             }
         }

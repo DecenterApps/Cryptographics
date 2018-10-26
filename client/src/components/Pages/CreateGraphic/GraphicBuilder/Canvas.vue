@@ -28,6 +28,7 @@
         return document.getElementById('canvas');
       },
       async drawCanvas(assets, delay) {
+        this.startDrawing();
         let canvas = document.getElementById('canvas');
         const rect = canvas.parentNode.getBoundingClientRect();
         const size = getSize(rect.width, rect.height, this.canvasData.ratio);
@@ -47,15 +48,13 @@
           shouldDrawFrame: frame,
           finalFrameData,
         };
-        this.startDrawing();
         try {
           await makeImage(assets, canvas, canvas.width, canvas.height, FRAME_BOUNDARIES, delay);
         } catch (e) {
           console.error(e);
           return this.finishDrawing();
         }
-        if (assets.length > 0) this.$emit('canvasDrawn');
-        this.finishDrawing();
+        if (assets.length > 0) this.finishDrawing();
       }
     },
     computed: {
@@ -97,7 +96,7 @@
         canvas {
             /*max-width: 100%;*/
             height: calc(100vh - 145px);
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 height: auto;
                 max-height: none;
                 width: 100%;

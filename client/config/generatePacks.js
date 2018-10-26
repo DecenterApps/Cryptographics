@@ -15,11 +15,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider(`https://mainnet.infura.io
 const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 const getFileContent = async (hash) => {
   // const ipfsTimeout = setTimeout(() => {
   //   throw Error('Couldn\'t fetch data. (TIMEOUT)');
@@ -86,6 +81,10 @@ const getAssetPackData = async (assetPackId) => {
 
 const getAssetPackIds = () =>
   new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
     rl.question('Enter asset pack IDs (number) separated by a space: ', (answer) => {
       const assetPacks = answer.split(' ').filter(item => item !== '').map(item => parseInt(item, 10));
       console.log('Packs selected: ', assetPacks);
@@ -161,7 +160,6 @@ const buildConfig = async () => {
   if (assetPackIds.length === 0) {
     assetPackIds = await getAssetPackIds();
   }
-  rl.close();
   console.log('Downloading images...');
   const promises = assetPackIds.map(async assetPackId => await downloadAssetPack(assetPackId));
   const assetPackData = await Promise.all(promises);

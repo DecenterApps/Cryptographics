@@ -16,6 +16,7 @@
                         id="518"
                         :image="image"
                         :canvasData="canvasData"
+                        :isFake="isFake"
                         year="2018"
                         @download="download"
                 />
@@ -129,6 +130,13 @@
         }, 'image/png');
         // this.isFake = hash.toLowerCase() !== this.image.ipfsHash.toLowerCase();
       },
+      checkAssetAmount() {
+        const amountOfAssets = this.assetPacksUsed.reduce((amountOfAssets, assetPack) => amountOfAssets + assetPack.assets.length, 0);
+        if (amountOfAssets >= 30 && this.image.potentialAssets.length < 30) {
+          this.isFake = true;
+        }
+        console.log(amountOfAssets, this.image.potentialAssets.length);
+      },
       async download() {
         const canvas = document.getElementById('canvas');
         while (!(this.canvasDataLoaded && !this.isCanvasDrawing)) {
@@ -141,8 +149,11 @@
           const title = this.image.title || 'cryptographic';
           link.setAttribute('download', title + '.jpeg');
           link.setAttribute('href', window.URL.createObjectURL(blob));
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
         }, 'image/jpeg');
+        this.track('Download');
       },
       async getData() {
         isImageForSale(this.$route.params.id)
@@ -164,7 +175,10 @@
           return;
         }
         this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
-      }
+      },
+      track(event) {
+        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
+      },
     },
     async created() {
       if (this.bannedIDs.indexOf(parseInt(this.$route.params.id)) > -1) {
@@ -184,6 +198,7 @@
       };
       this.assetPacksUsed = await getSelectedAssetPacksWithAssetData(packsUsed);
       this.canvasDataLoaded = true;
+      this.checkAssetAmount();
       console.log(this.image);
       document.title = this.image.title + ' - cryptographic  | Cryptographics';
     }
@@ -217,6 +232,8 @@
         justify-content: center;
         /*background-color: #CECECE;*/
         margin-top: 30px;
+        text-align: center;
+        padding: 10px;
         & .loader-content {
             margin-bottom: 20px;
         }

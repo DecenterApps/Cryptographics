@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery" :class="{centered: centered}">
+    <div class="gallery" :class="{centered: centered, centered: images.length > 3}">
         <div v-if="loading" class="loading-section">
             <loader />
             <h3>Please wait, we are loading cryptographics from the blockchain and IPFS.</h3>
@@ -44,7 +44,7 @@
                 :total="filteredIds === null ? 0 : filteredIds.length"
                 :per-page="showPerPage"
                 @updatePage="changePage" />
-        <button-link button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
+        <button-link @click.native="track('See more')" button-style="primary see-more" v-if="seeMore" to="gallery">See more</button-link>
     </div>
 </template>
 
@@ -134,7 +134,13 @@
         const selectedImages = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.images = await getGalleryImages(selectedImages, true);
         this.loading = false;
-      }
+        this.track('Change page', currentPage)
+      },
+      track(event, value) {
+        if (!window._paq) return;
+        if (value) return window._paq.push(['trackEvent', 'Gallery', event, event, value]);
+        window._paq.push(['trackEvent', 'Gallery', event]);
+      },
     }
   };
 </script>
@@ -172,12 +178,16 @@
         .item {
             width: 307px;
             margin-bottom: 30px;
+            @media screen and (max-width: 376px) {
+                width: 250px;
+            }
             .artwork {
                 /*padding: 14px 14px 40px 14px;*/
                 background-color: #fff;
                 position: relative;
                 img {
                     max-width: 100%;
+                    height: auto;
                 }
                 .artwork-description {
                     font-size: 5px;
@@ -198,6 +208,9 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    @media screen and (max-width: 376px) {
+                        left: 270px;
+                    }
                 }
                 &:hover {
                     .overlay {
@@ -243,7 +256,8 @@
             justify-content: center;
             background-color: #CECECE;
             margin-top: 0px;
-
+            text-align: center;
+            padding: 10px;
             .loader-content {
                 margin-bottom: 20px;
             }

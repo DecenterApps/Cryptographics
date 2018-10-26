@@ -54,9 +54,19 @@
         font-family: Roboto, sans-serif;
         font-size: 14px;
         color: #000000;
+        @media screen and (max-width: 321px) {
+            height: 100px;
+        }
 
         .container {
             display: flex;
+            @media screen and (max-width: 321px) {
+                flex-direction: column;
+                align-items: center;
+                .logo {
+                    margin-bottom: 10px;
+                }
+            }
         }
 
         .steps {
@@ -82,7 +92,7 @@
 
         .logo {
             margin-right: 75px;
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 768px) {
                 margin-right: 20px;
             }
         }
