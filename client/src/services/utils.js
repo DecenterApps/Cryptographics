@@ -134,6 +134,13 @@ function scientificToDecimal(num) {
 
 const padToFour = (number) => { return number <= 9999 ? ('000' + number).slice(-4) : number; };
 
+const encodeQueryString = (params) => {
+  const keys = Object.keys(params).filter(key => params[key]);
+  return keys.length
+    ? `?${keys.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&')}`
+    : '';
+};
+
 module.exports = {
   encode,
   decode,
@@ -145,5 +152,6 @@ module.exports = {
   isEmptyBytes,
   formatSmallNumber,
   padToFour,
-  scientificToDecimal
+  scientificToDecimal,
+  encodeQueryString,
 };

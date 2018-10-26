@@ -17,7 +17,11 @@
             <div v-else-if="!loading && !gettingEventsError" class="transactions-wrapper">
                 <empty-state v-if="events.length === 0" :type="'activityLog'" />
                 <div v-else class="transactions-content">
-                    EVENTS
+                    <div class="event" v-for="(event, index) in events" :key="index">
+                        <div>{{ event.type }}</div>
+                        <div>{{ event.txHash }}</div>
+                        <div>{{ event.blockNumber }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,16 +29,9 @@
 </template>
 
 <script>
-import { METAMASK_ADDRESS } from 'store/user-config/types';
+import { API_PATH } from 'config/constants';
+import { encodeQueryString } from 'services/utils';
 import EmptyState from 'shared/EmptyState/EmptyState.vue';
-//
-// const meta = [
-//   { contract: assetManagerContract, event: 'AssetPackCreated' },
-//   { contract: assetManagerContract, event: 'AssetPackBought' },
-//   { contract: marketPlaceContract, event: 'ImageBought' },
-//   { contract: marketPlaceContract, event: 'SellingImage' },
-//   { contract: digitalPrintImageContract, event: 'ImageCreated' },
-// ];
 
 export default {
     name: 'ActivityLog',
@@ -42,33 +39,47 @@ export default {
     data: () => ({
       loading: true,
       gettingEventsError: false,
-      subscriptions: [],
+      subscription: null,
       events: [],
     }),
     methods: {
-    //     async getLastEvents() {
-    //       const fromBlock = await web3.eth.getBlockNumber() - 50000;
-    //
-    //       const promises = meta.map(({ contract, event }) => getLatestEvents(contract, event, fromBlock));
-    //
-    //       try {
-    //         this.events = await Promise.all(promises);
-    //       } catch(err) {
-    //         this.gettingEventsError = 'There was an error fetching past activity, please try again';
-    //       }
-    //
-    //       this.loading = false;
-    //     },
-    //   async subscribeToNewEvents() {
-    //
-    //   }
-    // },
-    // created() {
-    //     this.getLastEvents();
-    //     this.subscribeToNewEvents();
-    // },
-    // beforeDestroy() {
-    //   this.subscriptions.forEach(subscription => { subscription.unsubscribe(); });
+        async getLastEvents(blockNumberFrom, onLoad = false, exactBlock = false) {
+          try {
+            let res = await fetch(`${API_PATH}/activity/events${encodeQueryString({ blockNumberFrom, exactBlock })}`);
+            res = await res.json();
+
+            this.events = [...res, ...this.events];
+          } catch(err) {
+            this.gettingEventsError = 'There was an error fetching past activity, please try again';
+          }
+
+          if (onLoad) this.loading = false;
+        },
+        subscribeToBlocks() {
+          this.subscription = web3.eth.subscribe('newBlockHeaders', (error, result) => {
+            if (error) {
+              console.log('Getting block error', error);
+              return;
+            }
+
+            setTimeout(() => {
+              this.getLastEvents(result.number, false, true);
+            }, 1000)
+          })
+        }
+    },
+    async created() {
+        const blockNumber = await web3.eth.getBlockNumber();
+        const blocksToSearch = 50000;
+
+        this.getLastEvents(blockNumber - blocksToSearch, true);
+        this.subscribeToBlocks();
+    },
+    beforeDestroy() {
+      this.subscription.unsubscribe((error) => {
+        if (error) console.log('Unsubscribe from block listener error', error);
+        else console.log('Successfully unsubscribed from the block listener!');
+      });
     }
 };
 </script>
