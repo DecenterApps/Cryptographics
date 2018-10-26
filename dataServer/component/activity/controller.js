@@ -6,18 +6,29 @@ const ImageBought = require('./events/imageBought/model');
 const ImageCreated = require('./events/imageCreated/model');
 const SellingImage = require('./events/sellingImage/model');
 const ACTIVITY_EVENTS_META = require('./activityEventsMeta');
+const web3 = require('../web3Provider');
 
 const models = { AssetPackBought, AssetPackCreated, ImageBought, ImageCreated, SellingImage };
 
+async function getBlock (req, res) {
+  try {
+    const blockNumber = await web3.eth.getBlockNumber();
+    return res.json({ blockNumber })
+  } catch (err) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error: err })
+  }
+}
+
 async function getActivity (req, res) {
   const blockNumberFrom = req.query.blockNumberFrom;
-  const exactBlock = req.query.exactBlock;
-
-  const mongoQuery = exactBlock ? '$eq' : '$gte';
+  const blockNumberTo = req.query.blockNumberTo;
 
   try {
     const promises = ACTIVITY_EVENTS_META.map(({ event }) =>
-      models[event].find({'blockNumber': { [mongoQuery]: blockNumberFrom }})
+      models[event].find({'blockNumber': {
+          $gte: blockNumberFrom,
+          $lte: blockNumberTo,
+        }})
     );
 
     let data = await Promise.all(promises);
@@ -38,4 +49,5 @@ async function getActivity (req, res) {
 
 module.exports = {
   getActivity,
+  getBlock,
 };

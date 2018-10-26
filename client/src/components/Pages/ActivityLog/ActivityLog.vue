@@ -43,7 +43,7 @@
 
                                 <div class="event-amount" v-if="event.type === 'SellingImage' || event.type === 'ImageBought'">
                                     <span>for</span>
-                                    <price :value="event.amount" />
+                                    <price :value="event.amount.toString()" />
                                 </div>
 
                                 <a
@@ -92,14 +92,16 @@ export default {
       loading: true,
       defaultAvatar: DEFAULT_AVATAR,
       gettingEventsError: false,
-      subscription: null,
       events: [],
       network: config.network,
+      lastCheckedBlock: 0,
     }),
     methods: {
-        async getLastEvents(blockNumberFrom, onLoad = false, exactBlock = false) {
+        async getLastEvents(blockNumberFrom, blockNumberTo, onLoad = false) {
+          this.lastCheckedBlock = blockNumberTo;
+
           try {
-            let res = await fetch(`${API_PATH}/activity/events${encodeQueryString({ blockNumberFrom, exactBlock })}`);
+            let res = await fetch(`${API_PATH}/activity/events${encodeQueryString({ blockNumberFrom, blockNumberTo })}`);
             res = await res.json();
 
             this.events = [...res, ...this.events];
@@ -110,30 +112,24 @@ export default {
           if (onLoad) this.loading = false;
         },
         subscribeToBlocks() {
-          this.subscription = web3.eth.subscribe('newBlockHeaders', (error, result) => {
-            if (error) {
-              console.log('Getting block error', error);
-              return;
-            }
+          setInterval(async () => {
+            let res = await fetch(`${API_PATH}/block`);
+            res = await res.json();
 
-            setTimeout(() => {
-              this.getLastEvents(result.number, false, true);
-            }, 1000)
-          })
+            if (res.blockNumber === this.lastCheckedBlock) return;
+
+            this.getLastEvents(this.lastCheckedBlock + 1, res.blockNumber, false, true);
+          }, 2000);
         }
     },
     async created() {
-        const blockNumber = await web3.eth.getBlockNumber();
+        let res = await fetch(`${API_PATH}/block`);
+        res = await res.json();
+
         const blocksToSearch = 50000;
 
-        this.getLastEvents(blockNumber - blocksToSearch, true);
+        this.getLastEvents(res.blockNumber - blocksToSearch, res.blockNumber, true);
         this.subscribeToBlocks();
-    },
-    beforeDestroy() {
-      this.subscription.unsubscribe((error) => {
-        if (error) console.log('Unsubscribe from block listener error', error);
-        else console.log('Successfully unsubscribed from the block listener!');
-      });
     }
 };
 </script>

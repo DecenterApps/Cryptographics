@@ -5,8 +5,6 @@ const config = require('./main');
 const env = require('./main').environments;
 const logger = require('./logger');
 
-process.env.NODE_ENV = env.mainnet;
-
 // Service Database
 logger.info('Connecting to the Mongo DB: ' + config.dbConnection[process.env.NODE_ENV]);
 mongoose.connect(config.dbConnection[process.env.NODE_ENV], { useNewUrlParser: true });

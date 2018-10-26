@@ -10,5 +10,6 @@ const v1Routes = express.Router();
 apiRoutes.use('/v1', v1Routes);
 
 v1Routes.get('/activity/events', activityController.getActivity);
+v1Routes.get('/block', activityController.getBlock);
 
 module.exports = apiRoutes;
