@@ -16,15 +16,15 @@ const assetPackCreatedSchema = new Schema({
       type: String,
       required: true,
     },
-    creatorAddress: {
+    ownerAddress: {
       type: String,
       required: true,
     },
-    creatorUsername: {
+    ownerUsername: {
       type: String,
       required: true,
     },
-    creatorAvatar: {
+    ownerAvatar: {
       type: String,
       required: true,
     },

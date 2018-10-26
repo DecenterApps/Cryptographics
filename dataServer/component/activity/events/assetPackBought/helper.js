@@ -25,9 +25,9 @@ const updateAssetPackBought = (event, txHash, blockNumber) =>
         id: assetPackBoughtData.id,
         title: assetPackBoughtData.title,
         packCoverSrc: assetPackBoughtData.packCoverSrc,
-        creatorAddress: assetPackBoughtData.creator,
-        creatorUsername: assetPackBoughtData.username,
-        creatorAvatar: assetPackBoughtData.avatar,
+        ownerAddress: assetPackBoughtData.creator,
+        ownerUsername: assetPackBoughtData.username,
+        ownerAvatar: assetPackBoughtData.avatar,
         txHash,
         blockNumber,
       };
