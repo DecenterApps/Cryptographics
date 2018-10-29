@@ -152,7 +152,6 @@
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-on:input="checkTitle"
                             v-model="title"
-                            :max-length="20"
                     />
                     <div class="small-title">Description</div>
                     <cg-textarea
@@ -316,7 +315,7 @@
           return true;
         }
 
-        if (this.title === '' || this.title.length > 20) {
+        if (this.title === '') {
           this.errors.push('Title required.');
         }
       },
