@@ -125,6 +125,9 @@
             > a {
                 margin: 0 !important;
                 cursor: pointer;
+                @media screen and (max-width: 768px) {
+                    display: none;
+                }
                 &:after {
                     margin-left: 7px !important;
                     content: '▼';
@@ -134,19 +137,22 @@
                 }
             }
             div {
-                width: auto;
-                display: none;
-                position: absolute;
-                right: -30px;
+                @media screen and (min-width: 769px) {
+                    position: absolute;
+                    display: none;
+                    right: -30px;
+                }
                 a {
                     height: 32px;
                     width: 120px;
                     background-color: black;
                     display: block;
                     opacity: 1 !important;
-                    padding: 0 20px;
-                    text-align: right;
                     line-height: 32px !important;
+                    padding: 0 20px;
+                    @media screen and (min-width: 769px) {
+                        text-align: right;
+                    }
                     &:hover {
                         background-color: #393939;
                     }
