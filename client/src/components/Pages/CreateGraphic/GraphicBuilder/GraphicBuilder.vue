@@ -389,7 +389,7 @@
           let selectedAssets = this.selectedAssets;
 
           // Don't shuffle if user came from home page
-          if (window.sessionStorage.length <= 0 && window.location.search.length < 5) {
+          if (window.sessionStorage.length <= 0 && window.location.search.indexOf('image') === -1) {
             selectedAssets = shuffleArray(selectedAssets);
           }
           selectedAssets = selectedAssets.slice(0, 30);
@@ -505,7 +505,7 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
-      } else if (window.location.search.length > 5) {
+      } else if (window.location.search.indexOf('image') >= 0) {
         const urlData = atob(decodeURI(window.location.search.substr(7)))
           .split('&')
           .map(a => a.split('='))
