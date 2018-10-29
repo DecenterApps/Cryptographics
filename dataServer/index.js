@@ -27,7 +27,12 @@ app.use(morgan('dev', { 'stream': logger.stream }));
 
 // Enable CORS from client-side
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
+  const allowedOrigins = ['https://cryptographics.app', 'http://localhost:3300'];
+
+  if (allowedOrigins.indexOf(req.headers.origin) > -1) {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+  }
+
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials');
   res.header('Access-Control-Allow-Credentials', 'true');
