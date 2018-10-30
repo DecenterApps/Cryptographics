@@ -36,18 +36,18 @@
                 </div>
                 <p class="medium-width">
                     The cryptographic above contains these two background assets. Note that the cryptographic canvas has
-                    a resolution of 2480 by 3508 pixels. In order to fill the whole canvas, you should use this exact
+                    a <b>resolution of 2480 by 3508 pixels</b>. In order to fill the whole canvas, you should use this exact
                     resolution, as background assets will not be stretched to fit.
                     We don’t recommend uploading smaller or larger background assets than this, but, in case you do,
-                    please be aware that their starting position will be locked to the top left corner of the canvas.
-                    Background assets can be uploaded in .jpg and .png formats and in the latter case they can be partly
-                    transparent, such as this one on the right. Please note that the maximum file size per asset is
-                    2.5MB.
+                    please be aware that their <b>starting position will be locked to the top left corner</b> of the canvas.
+                    Background assets can be uploaded in <b>.jpg and .png formats</b> and in the latter case they can be partly
+                    transparent, such as this one on the right. Please note that the <b>maximum file size per asset is
+                    2.5MB</b>.
                 </p>
                 <br><br>
                 <div class="large-image-section">
                     <div class="image-wrapper">
-                        <img src="./assets/image-2.png" alt="">
+                        <img src="./assets/image-2.jpg" alt="" width="330">
                         <div class="image-description">
                             <div class="large-title">
                                 Full size background asset
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="image-wrapper">
-                        <img src="./assets/image-3.png" alt="">
+                        <img src="./assets/image-3.png" alt="" width="330">
                         <div class="image-description">
                             <div class="large-title">
                                 Full size background asset with transparency
@@ -98,28 +98,28 @@
                     cover that in the next step.
                     For now, while preparing the actual graphic files, you should know that their resolution is
                     completely up to you, just bear in mind that their size on the final canvas depends on it.
-                    Standard assets can also be uploaded in .jpg and .png formats at up to 2.5MB per asset.
+                    Standard assets can also be uploaded in <b>.jpg and .png formats at up to 2.5MB</b> per asset.
                 </p>
                 <div class="small-image-section">
-                    <div class="image-wrapper">
-                        <img src="./assets/image-4.png" alt="">
+                    <div class="image-wrapper checkered-bg">
+                        <img src="./assets/image-4.png" alt="" width="157">
                         <div class="image-description">
                             <p><span>File size:</span></p>
-                            <p>600x600px</p>
+                            <p>1136 x 1136 px</p>
                         </div>
                     </div>
-                    <div class="image-wrapper">
-                        <img src="./assets/image-5.png" alt="">
+                    <div class="image-wrapper checkered-bg">
+                        <img src="./assets/image-5.png" alt="" width="136">
                         <div class="image-description">
                             <p><span>File size:</span></p>
-                            <p>500x500px</p>
+                            <p>1024 x 1008 px</p>
                         </div>
                     </div>
-                    <div class="image-wrapper">
-                        <img src="./assets/image-6.png" alt="">
+                    <div class="image-wrapper checkered-bg">
+                        <img src="./assets/image-6.png" alt="" width="126">
                         <div class="image-description">
                             <p><span>File size:</span></p>
-                            <p>450x450px</p>
+                            <p>1020 x 1013 px</p>
                         </div>
                     </div>
                 </div>
@@ -196,11 +196,11 @@
                     </div>
                 </div>
                 <div class="large-title">Asset pack specifications</div>
-                <p>One asset pack can contain a maximum of <span>50</span> assets.</p>
-                <p>Assets can be uploaded only in the following image file formats: <span>JPG, JPEG, PNG.</span></p>
+                <p>One asset pack can contain a <b>maximum of 50 assets</b>.</p>
+                <p>Assets can be uploaded only in the following image file formats: <b>JPG/JPEG and PNG.</b></p>
                 <p>
-                    Maximum asset resolution is <span>2480x3508px</span> and maximum file size per asset is
-                    <span>2.5MB.</span>
+                    Maximum asset resolution is <b>2480x3508px</b> and maximum file size per asset is
+                    <b>2.5MB.</b>
                 </p>
                 <separator></separator>
                 <div class="large-title">Uploading assets</div>
@@ -219,11 +219,11 @@
                         <p class="medium-width">
                             There are multiple options you can apply to assets in order to change their behaviour during
                             the composition process.
-                            If you want your assets to be scalable, simply leave asset scaling enabled, but please note
+                            If you want your <b>assets to be scalable</b>, simply leave asset scaling enabled, but please note
                             that they will only scale to smaller, in order to preserve quality. Additionally, keeping
-                            asset rotation enabled will allow the algorithm to rotate the asset before it appears on the
+                            <b>asset rotation</b> enabled will allow the algorithm to rotate the asset before it appears on the
                             canvas.
-                            Finally, if some of your uploaded assets are meant to be backgrounds, simple enable the “Use
+                            Finally, if some of your uploaded assets are meant to be <b>backgrounds</b>, simple enable the “Use
                             as background” option, which will automatically disable scaling and rotation for those
                             assets.
                         </p>
@@ -262,8 +262,8 @@
                 <separator></separator>
                 <div class="large-title">Submitting your asset pack</div>
                 <p class="medium-width">
-                    This is the last step of the asset pack submission process. You should name and describe your asset
-                    pack, as well as set the price in ETH. With those done, you can also generate a new thumbnail for
+                    This is the last step of the asset pack submission process. You should <b>name and describe your asset
+                    pack</b>, as well as <b>set the price in ETH</b>. With those done, you can also generate a new thumbnail for
                     your asset pack that will be shown in the asset packs gallery. Feel free to click the Generate
                     button until you are satisfied with the result.
                 </p>
@@ -274,7 +274,7 @@
                             With those done, you can also generate a new thumbnail for your asset pack that will be
                             shown in the asset packs gallery. Feel free to click the Generate button until you are
                             satisfied with the result.
-                            Once you have everything set up, the final step is to click the Submit button. This will
+                            Once you have everything set up, the final step is to <b>click the Submit button</b>. This will
                             trigger a transaction in MetaMask in order to store your asset pack on the Ethereum
                             blockchain and IPFS. Note that you will need to pay for the gas for this transaction.
                             MetaMask usually sets a good recommended gas value, but you can check ETH Gas Station to
@@ -308,10 +308,10 @@
 
     p {
         font-size: 15px;
-        line-height: 32px;
+        line-height: 26px;
 
-        span {
-            color: #000;
+        b, span {
+            color: #333;
             font-weight: 500;
         }
 
@@ -468,6 +468,9 @@
                 display: flex;
                 justify-content: flex-end;
                 flex-direction: column;
+                &.checkered-bg img {
+                    background-image: url("./assets/checkered.png");
+                }
                 .image-description {
                     p {
                         font-size: 15px;
@@ -477,8 +480,8 @@
                         &:first-child {
                             margin-top: 20px;
                         }
-                        span {
-                            color: #000;
+                        b, span {
+                            color: #333;
                             font-weight: 500;
                         }
                     }

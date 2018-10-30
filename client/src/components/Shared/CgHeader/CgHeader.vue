@@ -15,7 +15,13 @@
                         <router-link to="/gallery" active-class="active" @click.native="closeMenu">Gallery</router-link>
                         <router-link to="/asset-packs" active-class="active" @click.native="closeMenu">Asset Packs</router-link>
                         <router-link to="/about" active-class="active" @click.native="closeMenu">About</router-link>
-                        <router-link to="/faq" active-class="active" @click.native="closeMenu">FAQ</router-link>
+                        <div class="has-dropdown">
+                            <a>Help</a>
+                            <div>
+                                <router-link to="/faq" active-class="active" @click.native="closeMenu">FAQ</router-link>
+                                <router-link to="/tutorial" active-class="active" @click.native="closeMenu">Tutorial</router-link>
+                            </div>
+                        </div>
                     </div>
                     <div class="profile">
                         <router-link class="profile-link" to="/profile" @click.native="closeMenu">
@@ -113,6 +119,52 @@
                 opacity: 1;
             }
         }
+        .has-dropdown {
+            display: inline-block;
+            position: relative;
+            > a {
+                margin: 0 !important;
+                cursor: pointer;
+                @media screen and (max-width: 768px) {
+                    display: none;
+                }
+                &:after {
+                    margin-left: 7px !important;
+                    content: '▼';
+                    font-size: 7px;
+                    vertical-align: top;
+                    line-height: 43px;
+                }
+            }
+            div {
+                @media screen and (min-width: 769px) {
+                    position: absolute;
+                    display: none;
+                    right: -30px;
+                }
+                a {
+                    height: 32px;
+                    width: 120px;
+                    background-color: black;
+                    display: block;
+                    opacity: 1 !important;
+                    line-height: 32px !important;
+                    padding: 0 20px;
+                    @media screen and (min-width: 769px) {
+                        text-align: right;
+                    }
+                    &:hover {
+                        background-color: #393939;
+                    }
+                }
+            }
+            &:hover {
+                /*> a:after { content: '▲'; }*/
+                div {
+                    display: block;
+                }
+            }
+        }
         .header-container {
             padding: 15px 0;
             display: flex;
@@ -159,7 +211,7 @@
                 &:hover {
                     opacity: .8;
                 }
-                &:last-of-type {
+                &:last-child {
                     margin-right: 0;
                 }
                 &.active {
