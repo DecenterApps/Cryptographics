@@ -215,7 +215,14 @@
   import * as ipfsService from 'services/ipfsService';
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
-  import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
+  import {
+    METAMASK_ADDRESS,
+    USERNAME,
+    BOUGHT_ASSETS_PACKS_IDS,
+    NOTIFICATIONS,
+    PUSH_NOTIFICATION,
+    REMOVE_NOTIFICATION
+  } from 'store/user-config/types';
   import {
     TOGGLE_MODAL,
     SHOW_LOADING_MODAL,
@@ -230,7 +237,6 @@
     SET_SELECTED_ASSET_PACKS,
     START_CANVAS_DRAWING,
   } from 'store/canvas/types';
-  import { PUSH_NOTIFICATION } from 'store/user-config/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -270,6 +276,7 @@
         isCanvasDrawing: CANVAS_DRAWING,
         boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
         selectedAssetPacks: SELECTED_ASSET_PACKS,
+        notifications: NOTIFICATIONS
       })
     },
     watch: {
@@ -300,6 +307,7 @@
         setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
         startDrawing: START_CANVAS_DRAWING,
         pushNotification: PUSH_NOTIFICATION,
+        removeNotification: REMOVE_NOTIFICATION,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -381,12 +389,14 @@
           });
           const result = await transactionPromise();
           const id = result.events.ImageCreated.returnValues.imageId;
+          this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'success',
             message: `Cryptographic successfully saved to the blockchain forever. <router-link to="/cryptographic/${id}">Here it is.</router-link>`
           });
         } catch (e) {
           const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+          this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'error',
             message: 'The transaction is taking too long to execute, or an error occurred.'

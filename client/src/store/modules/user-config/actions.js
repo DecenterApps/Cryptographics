@@ -22,12 +22,8 @@ import {
   MUTATE_BALANCES,
   PUSH_NOTIFICATION, MUTATE_NOTIFICATIONS, REMOVE_NOTIFICATION,
 } from './types';
-import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
+import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
-
-import {
-  TOGGLE_MODAL
-} from '../modal/types';
 
 import { getAccounts, getNetwork } from 'services/helpers';
 import * as utils from 'services/utils';
@@ -120,38 +116,46 @@ export default {
     }
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
-    dispatch(TOGGLE_LOADING_MODAL, 'Please confirm the transaction in MetaMask.');
-    await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
-    if (!state.changeUsername.isExisting) {
-      if (newUsername === '') {
-        newUsername = state.username;
-      }
-      if (newAvatarBytes32 === '') {
-        if (state.avatar === DEFAULT_AVATAR) {
-          const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
-          newAvatarBytes32 = initialAvatarBytes32;
+      try {
+        dispatch(TOGGLE_MODAL, 'editProfile')
+        dispatch(TOGGLE_LOADING_MODAL, 'Please confirm the transaction in MetaMask.');
+        await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
+        if (!state.changeUsername.isExisting) {
+          if (newUsername === '') {
+            newUsername = state.username;
+          }
+          if (newAvatarBytes32 === '') {
+            if (state.avatar === DEFAULT_AVATAR) {
+              const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
+              newAvatarBytes32 = initialAvatarBytes32;
+            }
+            if (state.avatar !== DEFAULT_AVATAR) {
+              newAvatarBytes32 = await getAvatar(state.metamaskAddress);
+            }
+          }
         }
-        if (state.avatar !== DEFAULT_AVATAR) {
-          newAvatarBytes32 = await getAvatar(state.metamaskAddress);
-        }
+        const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
+        dispatch(HIDE_LOADING_MODAL);
+        dispatch(PUSH_NOTIFICATION, {
+          status: 'loading',
+          message: 'Please wait while the transaction is written to the blockchain. Your profile will be updated shortly.'
+        });
+        const result = await transactionPromise();
+        dispatch(REMOVE_NOTIFICATION, state.notification.length - 1);
+        dispatch(PUSH_NOTIFICATION, {
+          status: 'success',
+          message: 'Your profile has been updated successfully.'
+        });
+        commit(MUTATE_EDIT_PROFILE_RESULT, result);
+        await dispatch(SET_USER_CONFIG);
+        setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
+      } catch (e) {
+        dispatch(REMOVE_NOTIFICATION, state.notifications.length - 1);
+        dispatch(PUSH_NOTIFICATION, {
+          status: 'error',
+          message: 'The transaction is taking too long to execute, or an error occurred.'
+        });
       }
-      const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
-      dispatch(CHANGE_LOADING_CONTENT, 'Please wait while the transaction is written to the blockchain. ' +
-        'Your profile will be updated shortly.');
-      const isRegistred = await transactionPromise();
-      console.log(isRegistred);
-      let result = true;
-      commit(MUTATE_EDIT_PROFILE_RESULT, result);
-      dispatch(HIDE_LOADING_MODAL);
-      await dispatch(TOGGLE_MODAL);
-      dispatch(TOGGLE_MODAL, 'Your profile has been updated successfully.');
-      await dispatch(SET_USER_CONFIG);
-      setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
-    } else {
-      let result = false;
-      commit(MUTATE_EDIT_PROFILE_RESULT, result);
-      dispatch(HIDE_LOADING_MODAL);
-    }
   },
   [FETCH_BALANCES]: async ({ commit, state }) => {
     const balances = await userBalances(state.metamaskAddress);

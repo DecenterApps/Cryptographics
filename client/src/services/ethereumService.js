@@ -55,24 +55,26 @@ export const changeAssetPackPrice = async (assetPackId, newPrice, address) =>
     }
   );
 
-export const buyAssetPack = async (address, assetPackId, price) => {
-  if (!web3.utils.isAddress(address)) return { error: 'Address is not valid!' };
-  try {
+export const buyAssetPack = async (address, assetPackId) =>
+  new Promise(async (resolve, reject) => {
+    if (!web3.utils.isAddress(address)) return;
     const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
-    return await assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
-      from: address,
-      value: price
-    }, (error, res) => {
-      if (error) {
-        return { error: 'Could not buy asset pack' };
-      }
-      console.log(error, res);
-    });
-  } catch (e) {
-    console.log(e);
-    throw { error: 'Could not buy asset pack' };
+    try {
+      const transactionPromise = assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
+        from: address,
+        value: price
+      }, (error, txHash) => {
+        console.log(error, txHash);
+        if (error) return reject(new Error(error));
+        resolve(() => transactionPromise);
+      });
+    } catch (e) {
+      console.log(e);
+      throw new Error('Could not buy asset pack.');
+    }
   }
-};
+);
+
 
 export const getAllAssetPacks = async (assetPackIDs) => {
   return await assetManagerContract().methods.assetPacks(assetPackIDs).call();

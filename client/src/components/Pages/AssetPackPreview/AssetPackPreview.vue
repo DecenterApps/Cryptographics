@@ -87,10 +87,15 @@ import {
 import {
   USERNAME,
   METAMASK_ADDRESS,
-  AVATAR } from 'store/user-config/types';
+  AVATAR,
+  NOTIFICATIONS,
+  PUSH_NOTIFICATION,
+  REMOVE_NOTIFICATION
+} from 'store/user-config/types';
 import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
-import { TOGGLE_MODAL } from 'store/modal/types';
+import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
+
 
 export default {
   name: 'AssetPackPreview',
@@ -112,12 +117,17 @@ export default {
   computed: {
     ...mapGetters({
       userAddress: METAMASK_ADDRESS,
+      notifications: NOTIFICATIONS
     })
   },
   methods: {
     ...mapActions({
+      toggleLoadingModal: TOGGLE_LOADING_MODAL,
+      closeLoadingModal: HIDE_LOADING_MODAL,
       selectSingleAssetPack: SELECT_SINGLE_ASSET_PACK,
       openModal: TOGGLE_MODAL,
+      pushNotification: PUSH_NOTIFICATION,
+      removeNotification: REMOVE_NOTIFICATION,
     }),
     openChangePriceModal() {
       this.openModal({
@@ -134,7 +144,28 @@ export default {
       this.$router.push('/create-cryptographic?selected=true');
     },
     async purchaseAssetPack() {
-      const result = await buyAssetPack(this.userAddress, this.$route.params.id);
+    try {
+        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+        const transactionPromise =  await buyAssetPack(this.userAddress, this.$route.params.id);
+        this.closeLoadingModal();
+        this.$router.push('/');
+        this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. Asset pack will be bought shortly.'
+        });
+        const result = await transactionPromise();
+        this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'success',
+            message: `Cryptographic successfully submitted for sale.`
+          });
+    } catch (e) {
+        this.removeNotification(this.notifications.length - 1);
+        this.pushNotification({
+        status: 'error',
+        message: 'The transaction is taking too long to execute, or an error occurred.'
+        });
+    }
     }
   },
   async created() {
