@@ -1,6 +1,7 @@
 <template>
-    <div class="loader-content">
-        <img :src="logo" alt="">
+    <div :class="['loader-content', loaderStyle]">
+        <img v-if="loaderStyle === ''" :src="logo" alt="">
+        <logo v-if="loaderStyle !== ''" :size="14"></logo>
         <div class="loader">
             <div></div>
             <div></div>
@@ -12,9 +13,17 @@
 
 <script>
   import logo from 'assets/cg-logo-no-text.png';
+  import Logo from './Logo';
 
   export default {
     name: 'Loader',
+    components: { Logo },
+    props: {
+      loaderStyle: {
+        type: String,
+        default: ''
+      }
+    },
     data: () => ({
       logo,
     }),
@@ -27,15 +36,18 @@
         height: 100px;
         width: 100px;
 
-        img {
-            height: 37px;
-            width: 40px;
+        img, svg {
             display: block;
             position: absolute;
             top: 53%;
             left: 50%;
             margin-left: -20px;
             margin-top: -20px;
+        }
+
+        img {
+            height: 37px;
+            width: 40px;
         }
     }
 
@@ -77,6 +89,28 @@
         }
         100% {
             transform: rotate(360deg);
+        }
+    }
+
+    .loader-content.white {
+        height: 28px;
+        width: 28px;
+
+        .loader {
+            height: 28px;
+            width: 28px;
+        }
+        .loader div {
+            height: 28px;
+            width: 28px;
+            border: 1px solid #fff;
+            border-color: #fff transparent transparent transparent;
+            animation-duration: 1.1s;
+        }
+
+        img, svg {
+            margin-left: -6px;
+            margin-top: -6px;
         }
     }
 

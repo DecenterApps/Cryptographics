@@ -18,7 +18,9 @@ import {
   SET_NEW_USERNAME,
   SET_NETWORK,
   MUTATE_NETWORK,
-  FETCH_BALANCES, MUTATE_BALANCES,
+  FETCH_BALANCES,
+  MUTATE_BALANCES,
+  PUSH_NOTIFICATION, MUTATE_NOTIFICATIONS, REMOVE_NOTIFICATION,
 } from './types';
 import { TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
@@ -135,7 +137,7 @@ export default {
       }
       const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
       dispatch(CHANGE_LOADING_CONTENT, 'Please wait while the transaction is written to the blockchain. ' +
-      'Your profile will be updated shortly.');
+        'Your profile will be updated shortly.');
       const isRegistred = await transactionPromise();
       console.log(isRegistred);
       let result = true;
@@ -151,8 +153,19 @@ export default {
       dispatch(HIDE_LOADING_MODAL);
     }
   },
-  [FETCH_BALANCES]: async ({commit, state}) => {
+  [FETCH_BALANCES]: async ({ commit, state }) => {
     const balances = await userBalances(state.metamaskAddress);
-    commit(MUTATE_BALANCES, balances)
+    commit(MUTATE_BALANCES, balances);
+  },
+  [PUSH_NOTIFICATION]: async ({ commit, state }, notification) => {
+    const notifications = [notification, ...state.notifications];
+    commit(MUTATE_NOTIFICATIONS, notifications);
+  },
+  [REMOVE_NOTIFICATION]: async ({ commit, state }, index) => {
+    const notifications = [
+      ...state.notifications.slice(0, index),
+      ...state.notifications.slice(index + 1)
+    ];
+    commit(MUTATE_NOTIFICATIONS, notifications);
   }
 };

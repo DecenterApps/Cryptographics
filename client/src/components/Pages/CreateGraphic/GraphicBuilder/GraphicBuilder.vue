@@ -68,11 +68,13 @@
                     <cg-checkbox
                             v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
                             :disabled="isCanvasDrawing || gettingImageData"
-                    >Add white frame</cg-checkbox>
+                    >Add white frame
+                    </cg-checkbox>
                     <cg-checkbox
                             v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
                             :disabled="isCanvasDrawing || gettingImageData"
-                     >Use square format</cg-checkbox>
+                    >Use square format
+                    </cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas(); track('Recompose')"
@@ -229,6 +231,7 @@
     SET_SELECTED_ASSET_PACKS,
     START_CANVAS_DRAWING,
   } from 'store/canvas/types';
+  import { PUSH_NOTIFICATION } from 'store/user-config/types';
 
   export default {
     name: 'GraphicBuilder',
@@ -283,7 +286,7 @@
       },
       currentStep(newStep) {
         if (newStep === 2) {
-          this.saveImageToLS()
+          this.saveImageToLS();
         }
       }
     },
@@ -297,6 +300,7 @@
         changeLoadingContent: CHANGE_LOADING_CONTENT,
         setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
         startDrawing: START_CANVAS_DRAWING,
+        pushNotification: PUSH_NOTIFICATION,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -324,10 +328,10 @@
       async buyImage() {
         if (!this.checkTitle()) return;
         if (!this.userAddress) {
-            const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
-            if (!isMobile) return this.openModal('metaMaskInfo');
+          const { userAgent: ua } = navigator;
+          const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+          if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
+          if (!isMobile) return this.openModal('metaMaskInfo');
         }
 
         console.log(this.username);
@@ -370,15 +374,24 @@
             ipfsHash,
             extraData,
           );
-          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.');
+          this.closeLoadingModal();
+          this.$router.push(`/`);
+          this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.'
+          });
           const result = await transactionPromise();
           const id = result.events.ImageCreated.returnValues.imageId;
-          this.closeLoadingModal();
-          this.$router.push(`cryptographic/${id}`);
-          this.openModal('Cryptographic successfully saved to the blockchain forever.');
+          this.pushNotification({
+            status: 'success',
+            message: `Cryptographic successfully saved to the blockchain forever. <router-link to="/cryptographic/${id}">Here it is.</router-link>`
+          });
         } catch (e) {
           const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
-          this.openLoadingModal(message, true);
+          this.pushNotification({
+            status: 'error',
+            message: 'The transaction is taking too long to execute, or an error occurred.'
+          });
         }
       },
       async renderCanvas() {
@@ -479,8 +492,8 @@
           selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
         };
         const hash = `randomHashIds=[${data.randomHashIds.join(',')}]&iterations=${data.iterations}&timestamp=${data.timestamp}&randomSeed=${data.randomSeed}&potentialAssets=[${data.potentialAssets.join(',')}]&ratio=${data.ratio}&frame=${data.frame}&selectedAssetPacks=[${data.selectedAssetPacks.join(',')}]`;
-        console.log(btoa(hash))
-        return btoa(hash).replace(/=*$/g, '')
+        console.log(btoa(hash));
+        return btoa(hash).replace(/=*$/g, '');
       },
       getLink() {
         return window.location.origin + window.location.pathname + '?image=' + this.imageToUrlHash();
@@ -526,7 +539,7 @@
         const selectedAssetPacks = await getSelectedAssetPacksWithAssetData(JSON.parse(urlData.selectedAssetPacks));
         await this.renderCanvas();
         this.setSelectedAssetPacks(selectedAssetPacks);
-        this.$router.push('/create-cryptographic')
+        this.$router.push('/create-cryptographic');
       } else {
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;
