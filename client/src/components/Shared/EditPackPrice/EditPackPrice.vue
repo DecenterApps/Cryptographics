@@ -36,7 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { changeAssetPackPrice } from 'services/ethereumService';
 import { TOGGLE_MODAL, SHOW_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT }from 'store/modal/types';
-import { METAMASK_ADDRESS } from 'store/user-config/types';
+import { METAMASK_ADDRESS, NOTIFICATIONS, PUSH_NOTIFICATION, REMOVE_NOTIFICATION } from 'store/user-config/types';
 
 export default {
   name: 'EditPackPrice',
@@ -59,7 +59,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      address: METAMASK_ADDRESS
+      address: METAMASK_ADDRESS,
+      notifications: NOTIFICATIONS
     })
   },
   methods: {
@@ -68,19 +69,32 @@ export default {
         closeLoadingModal: HIDE_LOADING_MODAL,
         changeLoadingContent: CHANGE_LOADING_CONTENT,
         openModal: TOGGLE_MODAL,
+        pushNotification: PUSH_NOTIFICATION,
+        removeNotification: REMOVE_NOTIFICATION,
     }),
     async changePrice() {
       try {
+        this.openModal('');
         this.openLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await changeAssetPackPrice(parseInt(this.assetPackId), this.newPrice, this.address);
-        this.changeLoadingContent('Please wait while the transaction is written to the blockchain. The asset pack price will be changed shortly');
-        const result = await transactionPromise();
         this.closeLoadingModal();
-        this.openModal('');
-        this.openModal('Asset pack price was changed successfully.');
+        this.$router.push('/');
+        this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. The asset pack price will be changed shortly.'
+        });
+        const result = await transactionPromise();
+        this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'success',
+            message: `The asset pack price has been changed.`
+          });
       } catch (e) {
-        const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
-        this.openLoadingModal(message, true);
+        this.removeNotification(this.notifications.length - 1);
+        this.pushNotification({
+          status: 'error',
+          message: 'The transaction is taking too long to execute, or an error occurred.'
+        });
       }
     }
   }

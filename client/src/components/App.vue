@@ -13,13 +13,14 @@
                                 '/activity-log',
                             ].indexOf($route.matched[0].path) >= 0" />
         </keep-alive>
-        <router-view :key="$route.path"/>
+        <router-view :key="$route.path" />
         <cg-footer v-if="fullScreenPages.indexOf($route.name) === -1" />
         <modal v-if="showModal" :content="content" />
         <loading-modal v-if="showLoadingModal" />
         <error-bar v-if="network && deployedNetwork !== network"
                    :error="`Wrong network, please switch to the ${networksDisplay[deployedNetwork]}.`"
         />
+        <notifications />
     </main>
 </template>
 
@@ -33,10 +34,12 @@
   import ErrorBar from './Shared/ErrorBar/ErrorBar';
   import clientConfig from 'config/clientConfig.json';
   import { networksDisplay } from 'config/constants';
+  import Notifications from './Shared/Notifications/Notifications';
 
   export default {
     name: 'App',
     components: {
+      Notifications,
       ErrorBar,
       CgHeader,
       CgFooter

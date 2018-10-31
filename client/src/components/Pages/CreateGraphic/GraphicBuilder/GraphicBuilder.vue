@@ -68,11 +68,13 @@
                     <cg-checkbox
                             v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
                             :disabled="isCanvasDrawing || gettingImageData"
-                    >Add white frame</cg-checkbox>
+                    >Add white frame
+                    </cg-checkbox>
                     <cg-checkbox
                             v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
                             :disabled="isCanvasDrawing || gettingImageData"
-                     >Use square format</cg-checkbox>
+                    >Use square format
+                    </cg-checkbox>
                     <cg-button
                             :loading="isCanvasDrawing || gettingImageData"
                             @click="renderCanvas(); track('Recompose')"
@@ -152,7 +154,6 @@
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-on:input="checkTitle"
                             v-model="title"
-                            :max-length="20"
                     />
                     <div class="small-title">Description</div>
                     <cg-textarea
@@ -214,7 +215,14 @@
   import * as ipfsService from 'services/ipfsService';
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
-  import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
+  import {
+    METAMASK_ADDRESS,
+    USERNAME,
+    BOUGHT_ASSETS_PACKS_IDS,
+    NOTIFICATIONS,
+    PUSH_NOTIFICATION,
+    REMOVE_NOTIFICATION
+  } from 'store/user-config/types';
   import {
     TOGGLE_MODAL,
     SHOW_LOADING_MODAL,
@@ -268,6 +276,7 @@
         isCanvasDrawing: CANVAS_DRAWING,
         boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
         selectedAssetPacks: SELECTED_ASSET_PACKS,
+        notifications: NOTIFICATIONS
       })
     },
     watch: {
@@ -283,7 +292,7 @@
       },
       currentStep(newStep) {
         if (newStep === 2) {
-          this.saveImageToLS()
+          this.saveImageToLS();
         }
       }
     },
@@ -297,6 +306,8 @@
         changeLoadingContent: CHANGE_LOADING_CONTENT,
         setSelectedAssetPacks: SET_SELECTED_ASSET_PACKS,
         startDrawing: START_CANVAS_DRAWING,
+        pushNotification: PUSH_NOTIFICATION,
+        removeNotification: REMOVE_NOTIFICATION,
       }),
       customPrice(assetPack) {
         if (this.userAddress === assetPack.creator) {
@@ -316,7 +327,7 @@
           return true;
         }
 
-        if (this.title === '' || this.title.length > 20) {
+        if (this.title === '') {
           this.errors.push('Title required.');
         }
       },
@@ -324,10 +335,10 @@
       async buyImage() {
         if (!this.checkTitle()) return;
         if (!this.userAddress) {
-            const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
-            if (!isMobile) return this.openModal('metaMaskInfo');
+          const { userAgent: ua } = navigator;
+          const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+          if (isMobile) return this.openModal({ name: 'coinbaseInfo', data: { deeplink: this.getLink() } });
+          if (!isMobile) return this.openModal('metaMaskInfo');
         }
 
         console.log(this.username);
@@ -370,15 +381,26 @@
             ipfsHash,
             extraData,
           );
-          this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.');
+          this.closeLoadingModal();
+          this.$router.push(`/`);
+          this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. You will receive your cryptographic\'s token shortly.'
+          });
           const result = await transactionPromise();
           const id = result.events.ImageCreated.returnValues.imageId;
-          this.closeLoadingModal();
-          this.$router.push(`cryptographic/${id}`);
-          this.openModal('Cryptographic successfully saved to the blockchain forever.');
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'success',
+            message: `Cryptographic successfully saved to the blockchain forever. <router-link to="/cryptographic/${id}">Here it is.</router-link>`
+          });
         } catch (e) {
           const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
-          this.openLoadingModal(message, true);
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'error',
+            message: 'The transaction is taking too long to execute, or an error occurred.'
+          });
         }
       },
       async renderCanvas() {
@@ -389,7 +411,7 @@
           let selectedAssets = this.selectedAssets;
 
           // Don't shuffle if user came from home page
-          if (window.sessionStorage.length <= 0 && window.location.search.length < 5) {
+          if (window.sessionStorage.length <= 0 && window.location.search.indexOf('image') === -1) {
             selectedAssets = shuffleArray(selectedAssets);
           }
           selectedAssets = selectedAssets.slice(0, 30);
@@ -479,8 +501,8 @@
           selectedAssetPacks: this.selectedAssetPacks.map(pack => pack.id),
         };
         const hash = `randomHashIds=[${data.randomHashIds.join(',')}]&iterations=${data.iterations}&timestamp=${data.timestamp}&randomSeed=${data.randomSeed}&potentialAssets=[${data.potentialAssets.join(',')}]&ratio=${data.ratio}&frame=${data.frame}&selectedAssetPacks=[${data.selectedAssetPacks.join(',')}]`;
-        console.log(btoa(hash))
-        return btoa(hash).replace(/=*$/g, '')
+        console.log(btoa(hash));
+        return btoa(hash).replace(/=*$/g, '');
       },
       getLink() {
         return window.location.origin + window.location.pathname + '?image=' + this.imageToUrlHash();
@@ -505,7 +527,7 @@
         console.log('Timestamp : ' + this.timestamp);
         await this.renderCanvas();
         window.sessionStorage.clear();
-      } else if (window.location.search.length > 5) {
+      } else if (window.location.search.indexOf('image') >= 0) {
         const urlData = atob(decodeURI(window.location.search.substr(7)))
           .split('&')
           .map(a => a.split('='))
@@ -526,7 +548,7 @@
         const selectedAssetPacks = await getSelectedAssetPacksWithAssetData(JSON.parse(urlData.selectedAssetPacks));
         await this.renderCanvas();
         this.setSelectedAssetPacks(selectedAssetPacks);
-        this.$router.push('/create-cryptographic')
+        this.$router.push('/create-cryptographic');
       } else {
         this.randomHashIds = pickTenRandoms();
         this.iterations = 0;

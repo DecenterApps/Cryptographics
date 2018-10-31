@@ -6,6 +6,7 @@
                 :type="inputType"
                 v-bind="$attrs"
                 v-model="content"
+                step="0.000000000000000001"
                 :maxlength="maxLength"
                 @input="handleInput">
         <span v-if="maxLength > 0">
@@ -81,6 +82,7 @@
         display: inline-block;
         height: 35px;
         span {
+            pointer-events: none;
             position: absolute;
             right: 10px;
             top: 11px;

@@ -24,5 +24,6 @@ export default {
   balances: {
     assetsBalance: 0,
     marketplaceBalance: 0,
-  }
+  },
+  notifications: []
 };

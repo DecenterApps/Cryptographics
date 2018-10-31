@@ -10,6 +10,7 @@ import {
   BALANCES,
   BANNED_ASSET_PACK_IDS,
   BANNED_CRYPTOGRAPHIC_IDS,
+  NOTIFICATIONS,
 } from './types';
 
 export default {
@@ -45,5 +46,8 @@ export default {
   },
   [BANNED_CRYPTOGRAPHIC_IDS]: state => {
     return state.bannedIDs.cryptographics;
+  },
+  [NOTIFICATIONS]: state => {
+    return state.notifications;
   }
 };

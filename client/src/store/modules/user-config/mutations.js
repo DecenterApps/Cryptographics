@@ -8,6 +8,7 @@ import {
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
   MUTATE_NETWORK,
   MUTATE_BALANCES,
+  MUTATE_NOTIFICATIONS,
 } from './types';
 
 export default {
@@ -38,6 +39,9 @@ export default {
   [MUTATE_BALANCES]: (state, balances) => {
     state.balances = balances;
   },
+  [MUTATE_NOTIFICATIONS]: (state, notifications) => {
+    state.notifications = notifications;
+  }
 };
 
 
