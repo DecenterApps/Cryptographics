@@ -136,7 +136,8 @@ export default {
 
 <style scoped lang="scss">
     .activity-log-wrapper {
-        margin: 30px 0;
+        background-color: #EEEEEE;
+        padding: 30px 0;
 
         .loading-section {
             width: 100%;
