@@ -12,14 +12,16 @@ mongoose.connect(config.dbConnection[process.env.NODE_ENV], { useNewUrlParser: t
 const db = mongoose.connection;
 db.on('error', (err) => {
   logger.error('Error connecting to Mongo DB');
-  logger.error(err)
+  logger.error(err);
+  process.exit(1);
 });
 db.once('open', () => {
   logger.info('Connection to API service DB ok!')
 });
 
 process.on('unhandledRejection', (err) => {
-  logger.error(err)
+  logger.error(err);
+  process.exit(1);
 });
 
 mongoose.db = db;

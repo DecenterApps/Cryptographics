@@ -285,21 +285,25 @@ const listenToEvent = (contractPromise, event, callback) =>
         if (err) {
           logger.error('Listen to event error', err);
           reject(err);
+          process.exit(1);
           return;
         }
       });
 
       subscription.on('data', (event) => {
-        callback(event.returnValues, event.transactionHash, event.blockNumber)
+        callback(event.returnValues, event.transactionHash, event.blockNumber);
       });
 
       subscription.on('error', (e) => {
         logger.error('Listen to event error', event, e);
+        process.exit(1);
+        reject(e);
       });
 
       resolve(true);
     } catch (e) {
       logger.error('Listen to event error', event, e);
+      process.exit(1);
       reject(e);
     }
   });
