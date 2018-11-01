@@ -213,7 +213,7 @@
   import * as utils from 'services/utils';
   import * as imageService from 'services/imageService';
   import * as ipfsService from 'services/ipfsService';
-  import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
+  import { parseError, resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapActions, mapGetters } from 'vuex';
   import {
     METAMASK_ADDRESS,
@@ -392,14 +392,15 @@
           this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'success',
-            message: `Cryptographic successfully saved to the blockchain forever. <router-link to="/cryptographic/${id}">Here it is.</router-link>`
+            message: 'Cryptographic successfully saved to the blockchain forever.',
+            linkTo: `/cryptographic/${id}`,
           });
         } catch (e) {
-          const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+          console.error(e);
           this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'error',
-            message: 'The transaction is taking too long to execute, or an error occurred.'
+            message: parseError(e)
           });
         }
       },

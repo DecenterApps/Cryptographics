@@ -15,9 +15,6 @@
                 <cg-button @click="dismiss" button-style="secondary">
                     Dismiss
                 </cg-button>
-                <cg-button @click="backToGallery" button-style="secondary">
-                    Back to gallery
-                </cg-button>
             </div>
         </div>
     </div>

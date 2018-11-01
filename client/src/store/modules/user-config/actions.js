@@ -25,7 +25,7 @@ import {
 import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
-import { getAccounts, getNetwork } from 'services/helpers';
+import { getAccounts, getNetwork, parseError } from 'services/helpers';
 import * as utils from 'services/utils';
 import {
   getUsername,
@@ -150,10 +150,11 @@ export default {
         await dispatch(SET_USER_CONFIG);
         setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
       } catch (e) {
+        console.error(e)
         dispatch(REMOVE_NOTIFICATION, state.notifications.length - 1);
         dispatch(PUSH_NOTIFICATION, {
           status: 'error',
-          message: 'The transaction is taking too long to execute, or an error occurred.'
+          message: parseError(e)
         });
       }
   },
@@ -162,6 +163,7 @@ export default {
     commit(MUTATE_BALANCES, balances);
   },
   [PUSH_NOTIFICATION]: async ({ commit, state }, notification) => {
+    notification.time = Date.now() + notification.status;
     const notifications = [notification, ...state.notifications];
     commit(MUTATE_NOTIFICATIONS, notifications);
   },
