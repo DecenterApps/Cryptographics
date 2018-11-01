@@ -21,4 +21,4 @@ export const networksDisplay = {
 
 export const PRINT_ORDERS_ADDRESS = '0x6e11fd408290293c0bf3be9e7fc405bace52e36b'; // TODO change to real address, this is aleksandars just for testing purpose
 
-export const API_PATH = 'http://localhost:3030/api/v1/';
+export const API_PATH = 'https://cryptographics-data.decenter.com/api/v1';
