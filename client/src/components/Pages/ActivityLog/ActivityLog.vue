@@ -31,9 +31,9 @@
                                         color="gray"
                                 />
                                 <div class="event-title">
-                                    <span v-if="event.type === 'ImageCreated'">Created cryptograhpic:</span>
-                                    <span v-if="event.type === 'SellingImage'">Selling cryptograhpic:</span>
-                                    <span v-if="event.type === 'ImageBought'">Bought cryptograhpic:</span>
+                                    <span v-if="event.type === 'ImageCreated'">Created cryptographic:</span>
+                                    <span v-if="event.type === 'SellingImage'">Selling cryptographic:</span>
+                                    <span v-if="event.type === 'ImageBought'">Bought cryptographic:</span>
                                     <span v-if="event.type === 'AssetPackCreated'">Created asset pack:</span>
                                     <span v-if="event.type === 'AssetPackBought'">Bought asset pack:</span>
 
