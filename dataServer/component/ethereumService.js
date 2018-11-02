@@ -4,7 +4,7 @@ const clientConfig = require('../../client/config/clientConfig');
 const config = require('../../client/config/config');
 const logger = require('../config/logger');
 const { DEFAULT_AVATAR, ipfsNodePath } = require('./constants');
-const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes } = require('./utils');
+const { decode, mapUserInfo, getIpfsHashFromBytes32, isEmptyBytes, wait } = require('./utils');
 const { getFileContent } = require('./ipfsService');
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
@@ -308,6 +308,23 @@ const listenToEvent = (contractPromise, event, callback) =>
     }
   });
 
+/**
+ * Recursively tries to get block if it is not available at the moment
+ *
+ * @param blockNumber
+ * @return {Promise<*>}
+ */
+const getBlock = async (blockNumber) => {
+  const block = await web3.eth.getBlock(blockNumber);
+
+  if (!block) {
+    await wait(500);
+    return await getBlock(blockNumber)
+  }
+
+  return block;
+};
+
 module.exports = {
   getLatestEvents,
   assetManagerContract,
@@ -320,4 +337,5 @@ module.exports = {
   getSelectedAssetPacksWithAssetData,
   getAssetsOrigins,
   listenToEvent,
+  getBlock,
 };

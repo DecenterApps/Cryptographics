@@ -1,4 +1,4 @@
-const { getAssetPackData, getUserInfo } = require('../../../ethereumService');
+const { getAssetPackData, getUserInfo, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const AssetPackCreated = require('./model');
 
@@ -19,6 +19,7 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
       const assetPackCreatedData = await getAdditionalAssetPackCreatedData(event);
+      const block = await getBlock(blockNumber);
 
       const query = { txHash };
       const update = {
@@ -28,6 +29,7 @@ const updateAssetPackCreated = (event, txHash, blockNumber) =>
         ownerAddress: assetPackCreatedData.creator,
         ownerUsername: assetPackCreatedData.username,
         ownerAvatar: assetPackCreatedData.avatar,
+        timestamp: block.timestamp,
         txHash,
         blockNumber,
       };

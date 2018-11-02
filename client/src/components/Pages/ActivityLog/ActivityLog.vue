@@ -46,12 +46,20 @@
                                     <price :value="event.amount.toString()" />
                                 </div>
 
-                                <a
-                                        target="_blank" rel="noopener noreferrer" class="event-tx"
-                                        :href="`https://${network === 42 ? 'kovan.' : ''}etherscan.io/tx/${event.txHash}`"
-                                >
-                                    [VIEW TX]
-                                </a>
+                                <div class="time-ago">
+                                    <span
+                                            v-if="event.timestamp"
+                                            class="time-ago-label">
+                                        {{ utils.getDateDiff(event.timestamp) }}
+                                    </span>
+
+                                    <a
+                                            target="_blank" rel="noopener noreferrer" class="event-tx"
+                                            :href="`https://${network === 42 ? 'kovan.' : ''}etherscan.io/tx/${event.txHash}`"
+                                    >
+                                        [VIEW TX]
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="event-packs" v-if="event.type === 'ImageCreated'">
@@ -84,6 +92,7 @@ import { API_PATH, DEFAULT_AVATAR } from 'config/constants';
 import { encodeQueryString, getDateDiff } from 'services/utils';
 import EmptyState from 'shared/EmptyState/EmptyState.vue';
 import config from 'config/clientConfig.json';
+import utils from 'services/utils';
 
 export default {
     name: 'ActivityLog',
@@ -95,6 +104,8 @@ export default {
       events: [],
       network: config.network,
       lastCheckedBlock: 0,
+      interval: null,
+      utils,
     }),
     methods: {
         async getLastEvents(blockNumberFrom, blockNumberTo, onLoad = false) {
@@ -112,14 +123,14 @@ export default {
           if (onLoad) this.loading = false;
         },
         subscribeToBlocks() {
-          setInterval(async () => {
+          this.interval = setInterval(async () => {
             let res = await fetch(`${API_PATH}/block`);
             res = await res.json();
 
             if (res.blockNumber === this.lastCheckedBlock) return;
 
             this.getLastEvents(this.lastCheckedBlock + 1, res.blockNumber, false, true);
-          }, 2000);
+          }, 10000);
         }
     },
     async created() {
@@ -130,6 +141,9 @@ export default {
 
         this.getLastEvents(res.blockNumber - blocksToSearch, res.blockNumber, true);
         this.subscribeToBlocks();
+    },
+    beforeDestroy() {
+        if (this.interval) clearInterval(this.interval);
     }
 };
 </script>
@@ -186,7 +200,7 @@ export default {
 
                     span {
                         font-size: 14px;
-                        margin-right: 9px;
+                        margin-right: 2px;
                     }
 
                     a {
@@ -201,9 +215,20 @@ export default {
                     justify-content: space-between;
                 }
 
-                .event-tx {
-                    font-size: 14px;
-                    color: #F55800;;
+                .time-ago {
+                    display: flex;
+                    align-items: center;
+
+                    .time-ago-label {
+                        color: #858585;
+                        font-size: 12px;
+                        margin-right: 5px;
+                    }
+
+                    .event-tx {
+                        font-size: 10px;
+                        color: #F55800;;
+                    }
                 }
 
                 .event-amount {

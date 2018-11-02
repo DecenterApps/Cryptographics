@@ -36,6 +36,10 @@ const assetPackBoughtSchema = new Schema({
       type: Number,
       required: true,
     },
+    timestamp: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

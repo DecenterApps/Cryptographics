@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start-server": "export NODE_ENV=kovan && nodemon index.js --trace-sync-io",
-    "add-past-activity": "export NODE_ENV=kovan && node ./component/activity/addPastEvents.js",
-    "listen-to-events": "export NODE_ENV=kovan && node ./component/activity/listenToEvents.js"
+    "start-server": "export NODE_ENV=mainnet && nodemon index.js --trace-sync-io",
+    "add-past-activity": "export NODE_ENV=mainnet && node ./component/activity/addPastEvents.js",
+    "listen-to-events": "export NODE_ENV=mainnet && node ./component/activity/listenToEvents.js"
   },
   "dependencies": {
     "big-integer": "^1.6.36",

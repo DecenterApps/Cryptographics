@@ -1,4 +1,4 @@
-const { getGalleryImage } = require('../../../ethereumService');
+const { getGalleryImage, getBlock } = require('../../../ethereumService');
 const logger = require('../../../../config/logger');
 const web3 = require('../../../web3Provider');
 const SellingImage = require('./model');
@@ -20,6 +20,7 @@ const updateSellingImage = (event, txHash, blockNumber) =>
   new Promise(async (resolve, reject) => {
     try {
       const sellingImageData = await getAdditionalSellingImageData(event);
+      const block = await getBlock(blockNumber);
 
       const query = { txHash };
       const update = {
@@ -30,6 +31,7 @@ const updateSellingImage = (event, txHash, blockNumber) =>
         ownerAvatar: sellingImageData.avatar,
         graphicSrc: sellingImageData.src,
         amount: sellingImageData.amount,
+        timestamp: block.timestamp,
         txHash,
         blockNumber,
       };
