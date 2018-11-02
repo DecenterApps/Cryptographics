@@ -95,6 +95,7 @@ import {
 import { SELECT_SINGLE_ASSET_PACK } from 'store/canvas/types';
 import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
 import AssetsPackPagination from '../Profile/template/AssetPacksPagination.vue';
+import { parseError } from '../../../services/helpers';
 
 
 export default {
@@ -144,28 +145,29 @@ export default {
       this.$router.push('/create-cryptographic?selected=true');
     },
     async purchaseAssetPack() {
-    try {
+      try {
         this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-        const transactionPromise =  await buyAssetPack(this.userAddress, this.$route.params.id);
+        const transactionPromise = await buyAssetPack(this.userAddress, this.$route.params.id);
         this.closeLoadingModal();
         this.$router.push('/');
         this.pushNotification({
-            status: 'loading',
-            message: 'Please wait while the transaction is written to the blockchain. Asset pack will be bought shortly.'
+          status: 'loading',
+          message: 'Please wait while the transaction is written to the blockchain. Asset pack will be bought shortly.'
         });
         const result = await transactionPromise();
         this.removeNotification(this.notifications.length - 1);
-          this.pushNotification({
-            status: 'success',
-            message: `Cryptographic successfully submitted for sale.`
-          });
-    } catch (e) {
+        this.pushNotification({
+          status: 'success',
+          message: `Cryptographic successfully submitted for sale.`
+        });
+      } catch (e) {
+        console.error(e);
         this.removeNotification(this.notifications.length - 1);
         this.pushNotification({
-        status: 'error',
-        message: 'The transaction is taking too long to execute, or an error occurred.'
+          status: 'error',
+          message: parseError(e)
         });
-    }
+      }
     }
   },
   async created() {

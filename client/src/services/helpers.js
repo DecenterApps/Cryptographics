@@ -158,3 +158,14 @@ export function paginateArray(arrayItems, currentPage, showPerPage) {
   let end = start + showPerPage;
   return arrayItems.slice(start, end);
 };
+
+export const parseError = (error) => {
+  const message = error.message || error;
+
+  if (message.includes('not mined within 50 blocks'))
+    return 'The transaction is taking too long to mine, but will eventually be executed. ';
+
+  return 'Error: ' + message.replace('Returned error: ', '').replace(/Error: /g, '')
+
+  // return 'The transaction is taking too long to execute, or an error occurred.'
+};

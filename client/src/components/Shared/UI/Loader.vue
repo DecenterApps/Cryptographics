@@ -113,5 +113,9 @@
             margin-top: -6px;
         }
     }
-
+    .loader-content.double-width {
+        .loader div {
+            border-width: 2px;
+        }
+    }
 </style>

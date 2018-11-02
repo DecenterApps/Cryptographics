@@ -186,6 +186,7 @@
     PUSH_NOTIFICATION,
     REMOVE_NOTIFICATION
     } from 'store/user-config/types';
+  import { parseError } from '../../../services/helpers';
 
   export default {
     name: 'GraphicDetails',
@@ -254,94 +255,96 @@
       async submitImageForSale() {
         if (this.checkErrors()) return;
         try {
-        this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-        
-        const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
-        this.closeLoadingModal();
-        this.$router.push('/');
-        this.pushNotification({
+          this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+
+          const transactionPromise = await sellImage(this.userAddress, this.image.id, this.sellPrice);
+          this.closeLoadingModal();
+          this.$router.push('/');
+          this.pushNotification({
             status: 'loading',
             message: 'Please wait while the transaction is written to the blockchain. Your cryptographic will be listed shortly.'
-        });
-        const result = await transactionPromise();
-        this.sellGraphic = false;
-        this.changePrice = false;
-        const id = result.events.SellingImage.returnValues.imageId;
-        this.getData();
-         this.removeNotification(this.notifications.length - 1);
+          });
+          const result = await transactionPromise();
+          this.sellGraphic = false;
+          this.changePrice = false;
+          const id = result.events.SellingImage.returnValues.imageId;
+          this.getData();
+          this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'success',
             message: `Cryptographic successfully submitted for sale.`
           });
-        this.$emit('updateUI');
+          this.$emit('updateUI');
         } catch (e) {
-          const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
+          console.error(e);
           this.removeNotification(this.notifications.length - 1);
           this.pushNotification({
             status: 'error',
-            message: 'The transaction is taking too long to execute, or an error occurred.'
+            message: parseError(e)
           });
         }
       },
       async removeFromMarketPlace() {
         try {
-            this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-            const transactionPromise = await cancelSell(this.userAddress, this.image.id);
-            this.closeLoadingModal();
-            this.$router.push('/');
-            this.pushNotification({
-                status: 'loading',
-                message: 'Please wait while the transaction is written to the blockchain. Your cryptographic\'s sale will be canceled shortly.'
-            });
-            const result = await transactionPromise();
-            console.log(result);
-            this.getData();
-            this.removeNotification(this.notifications.length - 1);
-            this.pushNotification({
-                status: 'success',
-                message: `Cryptographic successfully removed from the marketplace.`
-            });
-            this.$emit('updateUI');
+          this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+          const transactionPromise = await cancelSell(this.userAddress, this.image.id);
+          this.closeLoadingModal();
+          this.$router.push('/');
+          this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. Your cryptographic\'s sale will be canceled shortly.'
+          });
+          const result = await transactionPromise();
+          console.log(result);
+          this.getData();
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'success',
+            message: `Cryptographic successfully removed from the marketplace.`
+          });
+          this.$emit('updateUI');
         } catch (e) {
-            this.removeNotification(this.notifications.length - 1);
-            this.pushNotification({
-                status: 'error',
-                message: 'The transaction is taking too long to execute, or an error occurred.'
-            });
+          console.error(e);
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'error',
+            message: parseError(e)
+          });
         }
       },
       async submitBuyImage() {
-        if (!this.userAddress ||  this.userAddress === '0x0') {
-            const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal({ name: 'coinbaseInfo' });
-            if (!isMobile) return this.openModal('metaMaskInfo');
+        if (!this.userAddress || this.userAddress === '0x0') {
+          const { userAgent: ua } = navigator;
+          const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
+          if (isMobile) return this.openModal({ name: 'coinbaseInfo' });
+          if (!isMobile) return this.openModal('metaMaskInfo');
         }
         try {
-            this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
-            const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
-            this.closeLoadingModal();
-            this.$router.push('/');
-            this.pushNotification({
-                status: 'loading',
-                message: 'Please wait while the transaction is written to the blockchain. ' +
-            'Your will receive this cryptographic shortly.'
-            });
-            const result = await transactionPromise();
-            const id = result.events.ImageBought.returnValues.imageId;
-            this.getData();
-            this.removeNotification(this.notifications.length - 1);
-            this.pushNotification({
-                status: 'success',
-                message: `Cryptographic successfully bought.`
-            });
-            this.$emit('updateUI');
+          this.toggleLoadingModal('Please confirm the transaction in MetaMask.');
+          const transactionPromise = await buyImage(this.userAddress, this.image.id, this.image.price);
+          this.closeLoadingModal();
+          this.$router.push('/');
+          this.pushNotification({
+            status: 'loading',
+            message: 'Please wait while the transaction is written to the blockchain. ' +
+              'Your will receive this cryptographic shortly.'
+          });
+          const result = await transactionPromise();
+          const id = result.events.ImageBought.returnValues.imageId;
+          this.getData();
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'success',
+            message: `Cryptographic successfully bought.`
+          });
+          this.$emit('updateUI');
         } catch (e) {
-            this.removeNotification(this.notifications.length - 1);
-            this.pushNotification({
-                status: 'error',
-                message: 'The transaction is taking too long to execute, or an error occurred.'
-            });
+          console.error(e);
+          this.removeNotification(this.notifications.length - 1);
+          this.pushNotification({
+            status: 'error',
+            message: parseError(e)
+          });
         }
       },
     },
