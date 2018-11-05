@@ -57,24 +57,23 @@ export const changeAssetPackPrice = async (assetPackId, newPrice, address) =>
 
 export const buyAssetPack = async (address, assetPackId) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(address)) return;
-    const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
-    try {
-      const transactionPromise = assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
-        from: address,
-        value: price
-      }, (error, txHash) => {
-        console.log(error, txHash);
-        if (error) return reject(new Error(error));
-        resolve(() => transactionPromise);
-      });
-    } catch (e) {
-      console.log(e);
-      throw new Error('Could not buy asset pack.');
+      if (!web3.utils.isAddress(address)) return;
+      const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
+      try {
+        const transactionPromise = assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
+          from: address,
+          value: price
+        }, (error, txHash) => {
+          console.log(error, txHash);
+          if (error) return reject(new Error(error));
+          resolve(() => transactionPromise);
+        });
+      } catch (e) {
+        console.log(e);
+        throw new Error('Could not buy asset pack.');
+      }
     }
-  }
-);
-
+  );
 
 export const getAllAssetPacks = async (assetPackIDs) => {
   return await assetManagerContract().methods.assetPacks(assetPackIDs).call();
@@ -635,21 +634,42 @@ export const getUserInfo = address =>
     }
   });
 
-export const getTotalProfits = () =>
+export const getAssetPackProfits = () =>
   new Promise(async (resolve, reject) => {
-    const contract = await assetManagerContract();
-    const events = await contract.getPastEvents('AssetPackBought', {
-      filter: {},
-      fromBlock: clientConfig.deployBlockNumber
-    });
-    const promises = events.map(event => web3.eth.getTransaction(event.transactionHash));
-
-    Promise.all(promises)
-      .then((transactions) => {
-        const sum = transactions
-          .reduce((acc, item) => acc + parseFloat(web3.utils.fromWei(item.value, 'ether')), 0);
-        resolve(sum);
+    try {
+      const contract = await assetManagerContract();
+      const events = await contract.getPastEvents('AssetPackBought', {
+        filter: {},
+        fromBlock: clientConfig.deployBlockNumber
       });
+      const promises = events.map(event => web3.eth.getTransaction(event.transactionHash));
+
+      Promise.all(promises)
+        .then((transactions) => {
+          const sum = transactions
+            .reduce((acc, item) => acc + parseFloat(web3.utils.fromWei(item.value, 'ether')), 0);
+          resolve(sum);
+        });
+    } catch (e) {
+      resolve(0);
+    }
+  });
+
+export const getSaleProfits = () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const imageContract = await marketPlaceContract();
+      const imageEvents = await imageContract.getPastEvents('ImageBought', {
+        filter: {},
+        fromBlock: clientConfig.deployBlockNumber
+      });
+      const sum = imageEvents
+        .reduce((acc, item) =>
+          acc + parseFloat(web3.utils.fromWei(item.returnValues.price, 'ether')), 0);
+      resolve(sum);
+    } catch (e) {
+      resolve(0);
+    }
   });
 
 export const getImageTransferHistory = imageId =>

@@ -1,5 +1,5 @@
 <template>
-    <div class="gallery" :class="{centered: centered, centered: images.length > 3}">
+    <div class="gallery" :class="{centered: centered, centered: images && images.length > 3}">
         <div v-if="loading" class="loading-section">
             <loader />
             <h3>Please wait, we are loading cryptographics from the blockchain and IPFS.</h3>

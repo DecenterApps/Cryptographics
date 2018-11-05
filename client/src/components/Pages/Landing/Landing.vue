@@ -183,7 +183,8 @@
     getNumberOfAssetPacks,
     getNumberOfAssets,
     getCreatorCount,
-    getTotalProfits,
+    getAssetPackProfits,
+    getSaleProfits,
   } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
@@ -218,9 +219,10 @@
         if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
       },
       getData() {
-        getTotalProfits()
-          .then(data => {
-            this.totalEthEarned = data.toFixed(2);
+        const profits = [getAssetPackProfits(), getSaleProfits()];
+        Promise.all(profits)
+          .then(([assetPackProfits, saleProfits]) => {
+            this.totalEthEarned += (assetPackProfits + saleProfits).toFixed(2);
           });
         getNumberOfAssetPacks()
           .then(data => {
@@ -564,7 +566,7 @@
         transition: all .2s;
         z-index: 200;
         // @media screen and (max-width: 768px) {
-            // display: none;
+        // display: none;
         // }
         @media screen and (max-width: 1200px) {
             bottom: 20px;
