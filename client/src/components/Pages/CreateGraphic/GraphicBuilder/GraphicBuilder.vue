@@ -154,6 +154,7 @@
                             :inputStyle="errors.length > 0 ? 'input error' : 'input'"
                             v-on:input="checkTitle"
                             v-model="title"
+                            :max-length="40"
                     />
                     <div class="small-title">Description</div>
                     <cg-textarea
