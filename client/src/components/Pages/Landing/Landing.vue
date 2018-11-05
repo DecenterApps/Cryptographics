@@ -222,7 +222,7 @@
         const profits = [getAssetPackProfits(), getSaleProfits()];
         Promise.all(profits)
           .then(([assetPackProfits, saleProfits]) => {
-            this.totalEthEarned += (assetPackProfits + saleProfits).toFixed(2);
+            this.totalEthEarned = (assetPackProfits + saleProfits).toFixed(2);
           });
         getNumberOfAssetPacks()
           .then(data => {
