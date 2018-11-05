@@ -31,11 +31,11 @@
                                         color="gray"
                                 />
                                 <div class="event-title">
-                                    <span v-if="event.type === 'ImageCreated'">Created cryptographic:</span>
-                                    <span v-if="event.type === 'SellingImage'">Listing for sale:</span>
-                                    <span v-if="event.type === 'ImageBought'">Bought cryptographic:</span>
-                                    <span v-if="event.type === 'AssetPackCreated'">Created asset pack:</span>
-                                    <span v-if="event.type === 'AssetPackBought'">Bought asset pack:</span>
+                                    <span v-if="event.type === 'ImageCreated'">Created a cryptographic:</span>
+                                    <span v-if="event.type === 'SellingImage'">Listed a cryptographic for sale:</span>
+                                    <span v-if="event.type === 'ImageBought'">Bought a cryptographic:</span>
+                                    <span v-if="event.type === 'AssetPackCreated'">Created an asset pack:</span>
+                                    <span v-if="event.type === 'AssetPackBought'">Bought an asset pack:</span>
 
                                     <router-link v-if="event.type === 'SellingImage' || event.type === 'ImageCreated' || event.type === 'ImageBought'" :to="`/cryptographic/${event.id}`">{{ event.title }}</router-link>
                                     <router-link v-if="event.type === 'AssetPackCreated' || event.type === 'AssetPackBought'" :to="`/asset-pack/${event.id}`">{{ event.title }}</router-link>
