@@ -27,3 +27,4 @@ public/
 dataServer/logs/
 dataServer/yarn.lock
 dataServer/node_modules
+.prettierignore
