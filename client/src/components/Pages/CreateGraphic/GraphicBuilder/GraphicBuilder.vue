@@ -301,7 +301,6 @@ export default {
       }
     },
     approvedMetamask: function(val) {
-      console.log(this.approvedMetamask);
       if (val && this.approvePressed) {
         this.buyImage();
       }
@@ -376,10 +375,12 @@ export default {
 
       if (this.username === "" || this.username === "Anon") {
         this.claimPressed = true;
+        await this.openModal("");
         return this.openModal("setUsername");
       }
 
       try {
+        await this.openModal("");
         const UPLOAD_WIDTH = 307 * 2;
         const UPLOAD_HEIGHT =
           this.canvasData.ratio === "1:1" ? UPLOAD_WIDTH : 434 * 2;

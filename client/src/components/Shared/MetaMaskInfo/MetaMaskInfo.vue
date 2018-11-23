@@ -31,7 +31,7 @@
             </div> 
             <cg-button @click="approve()">Connect</cg-button>
           </div>
-          <div v-else-if="isMetaMaskLocked">
+          <div v-else-if="isMetaMaskLocked && isMetamaskApproved">
             <div class="text-wrapper">
                 Your MetaMask account is locked, please log in.
             </div> 
@@ -69,13 +69,12 @@ export default {
   methods: {
     ...mapActions({
       openModal: TOGGLE_MODAL,
-      SET_APPROVAL
+      setApproval: SET_APPROVAL
     }),
     async approve() {
       try {
         await metamaskApprove();
-        await this[SET_APPROVAL]();
-        this.openModal("");
+        await this.setApproval();
       } catch (e) {
         console.log(e);
       }

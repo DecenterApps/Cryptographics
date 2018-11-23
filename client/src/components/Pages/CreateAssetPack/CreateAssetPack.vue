@@ -121,362 +121,421 @@
 </template>
 
 <script>
-  import * as ipfsService from 'services/ipfsService';
-  import { createAssetPack, makeCoverImage } from 'services/imageService';
-  import * as utils from 'services/utils';
-  import { METAMASK_ADDRESS } from 'store/user-config/types';
-  import { mapGetters, mapActions } from 'vuex';
-  import {
-    TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL, SHOW_LOADING_MODAL
-  } from 'store/modal/types';
+import * as ipfsService from "services/ipfsService";
+import { createAssetPack, makeCoverImage } from "services/imageService";
+import * as utils from "services/utils";
+import { METAMASK_ADDRESS, METAMASK_APPROVED } from "store/user-config/types";
+import { mapGetters, mapActions } from "vuex";
+import {
+  TOGGLE_MODAL,
+  TOGGLE_LOADING_MODAL,
+  CHANGE_LOADING_CONTENT,
+  HIDE_LOADING_MODAL,
+  SHOW_LOADING_MODAL
+} from "store/modal/types";
 
-  import StepHeader from 'shared/StepHeader/StepHeader';
-  import { preloadImages, resizeCanvas } from 'services/helpers';
-  import SingleAsset from './SingleAsset/SingleAsset';
-  import UploadDescription from './UploadDescription/UploadDescription';
-  import TestAssetPack from './TestAssetPack/TestAssetPack';
+import StepHeader from "shared/StepHeader/StepHeader";
+import {
+  preloadImages,
+  resizeCanvas,
+  isMetamaskApproved
+} from "services/helpers";
+import SingleAsset from "./SingleAsset/SingleAsset";
+import UploadDescription from "./UploadDescription/UploadDescription";
+import TestAssetPack from "./TestAssetPack/TestAssetPack";
 
-  export default {
-    name: 'CreateAssetPack',
-    components: {
-      TestAssetPack,
-      UploadDescription,
-      SingleAsset,
-      StepHeader
-    },
-    data: () => ({
-      steps: [],
-      currentStep: 0,
-      name: '',
-      description: '',
-      price: '',
-      stage: 'select',
-      maxAssets: 49,
-      assets: [],
-      errors: {
-        name: false,
-        price: false,
+export default {
+  name: "CreateAssetPack",
+  components: {
+    TestAssetPack,
+    UploadDescription,
+    SingleAsset,
+    StepHeader
+  },
+  data: () => ({
+    steps: [],
+    currentStep: 0,
+    name: "",
+    description: "",
+    price: "",
+    stage: "select",
+    maxAssets: 49,
+    assets: [],
+    errors: {
+      name: false,
+      price: false
+    }
+  }),
+
+  computed: {
+    ...mapGetters({
+      userAddress: METAMASK_ADDRESS,
+      approvedMetamask: METAMASK_APPROVED
+    })
+  },
+  watch: {
+    approvedMetamask: function(val) {
+      if (val && this.approvePressed) {
+        this.uploadToIpfs();
       }
+    }
+  },
+  methods: {
+    ...mapActions({
+      openModal: TOGGLE_MODAL,
+      toggleLoadingModal: TOGGLE_LOADING_MODAL,
+      closeLoadingModal: HIDE_LOADING_MODAL,
+      openLoadingModal: SHOW_LOADING_MODAL,
+      changeLoadingContent: CHANGE_LOADING_CONTENT
     }),
-
-    computed: {
-      ...mapGetters({
-        userAddress: METAMASK_ADDRESS,
-      })
+    changeStep(step) {
+      console.log(step);
+      if (step === 2) this.renderCanvas();
+      this.currentStep = step;
     },
+    uploadAssets() {
+      let x = document.getElementById("files");
+      const fileErrors = [];
 
-    methods: {
-      ...mapActions({
-        openModal: TOGGLE_MODAL,
-        toggleLoadingModal: TOGGLE_LOADING_MODAL,
-        closeLoadingModal: HIDE_LOADING_MODAL,
-        openLoadingModal: SHOW_LOADING_MODAL,
-        changeLoadingContent: CHANGE_LOADING_CONTENT,
-      }),
-      changeStep(step) {
-        console.log(step);
-        if (step === 2) this.renderCanvas();
-        this.currentStep = step;
-      },
-      uploadAssets() {
-        let x = document.getElementById('files');
-        const fileErrors = [];
+      for (let i = 0; i < x.files.length; i++) {
+        const file = x.files[i];
 
-        for (let i = 0; i < x.files.length; i++) {
-          const file = x.files[i];
+        if (file.size <= 2500000) {
+          const img = new Image();
+          const path = URL.createObjectURL(file);
+          img.src = path;
 
-          if (file.size <= 2500000) {
-            const img = new Image();
-            const path = URL.createObjectURL(file);
-            img.src = path;
+          img.onload = () => {
+            const width = img.naturalWidth;
+            const height = img.naturalHeight;
 
-            img.onload = () => {
-              const width = img.naturalWidth;
-              const height = img.naturalHeight;
-
-              if (this.assets.length >= 49) {
-                return;
-              }
-              if (width > 2480) {
-                fileErrors.push({ file: file.name, error: 'Assets width is larger than the allowed 2480px' });
-                return;
-              }
-              if (height > 3508) {
-                fileErrors.push({ file: file.name, error: 'Assets height is larger than the allowed 3508px' });
-                return;
-              }
-
-              this.assets.push({
-                path,
-                file: x.files[i],
-                attribute: 211,
+            if (this.assets.length >= 49) {
+              return;
+            }
+            if (width > 2480) {
+              fileErrors.push({
+                file: file.name,
+                error: "Assets width is larger than the allowed 2480px"
               });
-            };
-          } else {
-            fileErrors.push({ file: file.name, error: 'Assets size is larger than the allowed 2.5MB' });
-          }
-        }
+              return;
+            }
+            if (height > 3508) {
+              fileErrors.push({
+                file: file.name,
+                error: "Assets height is larger than the allowed 3508px"
+              });
+              return;
+            }
 
-        if (fileErrors.length > 0) {
-          this.openModal({ name: 'assetPackUploadError', data: { errors: fileErrors } });
-        }
-      },
-
-      renderCanvas() {
-        let canvas = document.getElementById('thumbnail-canvas');
-        canvas.width = 2480;
-        canvas.height = 1805;
-        const assets = this.assets.slice(0, 30);
-        makeCoverImage(false, assets, canvas, canvas.width, canvas.height);
-      },
-      checkErrors(toCheck = '') {
-        const checkAll = !toCheck;
-
-        if (toCheck === 'name' || checkAll) this.errors.name = !this.name || this.name.length > 20;
-        if (toCheck === 'price' || checkAll) this.errors.price = !this.price || this.price === 0;
-
-        return Object.keys(this.errors).filter(key => this.errors[key]).length > 0;
-      },
-      async uploadToIpfs() {
-        if (this.checkErrors()) return;
-        if (!this.userAddress) {
-            const { userAgent: ua } = navigator;
-            const isMobile = ua.includes('Android') || ua.includes('iPad') || ua.includes('iPhone');
-            if (isMobile) return this.openModal({ name: 'coinbaseInfo' });
-            if (!isMobile) return this.openModal('metaMaskInfo');
-        }
-
-        let hashes = [];
-        let canvas = document.getElementById('thumbnail-canvas');
-
-        const UPLOAD_WIDTH = 386 * 2;
-        const UPLOAD_HEIGHT = 281 * 2;
-        const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
-
-        try {
-          this.openLoadingModal('Uploading your asset pack to IPFS...');
-          let coverImage = canvasClone.toDataURL('image/png', 1);
-          let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
-          let metadata = {
-            name: this.name,
-            description: this.description,
-          };
-          let metadataIpfsHash = await ipfsService.uploadJSON(JSON.stringify(metadata));
-          console.log(metadataIpfsHash);
-          const price = this.price;
-          const images = [];
-          for (let i = 0; i < this.assets.length; i++) {
-            const file = {
-              image: new FileReader(),
-            };
-            file.image.readAsDataURL(this.assets[i].file);
-            images.push(file);
-          }
-
-          console.log('started');
-          preloadImages(images)
-            .done(async (loadedImages) => {
-              console.log(loadedImages, images);
-              for (let i = 0; i < this.assets.length; i++) {
-                try {
-                  let ipfsHash = await ipfsService.uploadFile(loadedImages[i].image.result.substr(22));
-                  hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
-                  if (i === this.assets.length - 1) {
-                    console.log(hashes);
-                    console.log(price);
-                    const attributes = this.assets.map(item => item.attribute);
-                    console.log(attributes);
-                    this.openLoadingModal('Please confirm the transaction in MetaMask.');
-                    const transactionPromise = await createAssetPack(
-                      utils.getBytes32FromIpfsHash(coverHash),
-                      attributes,
-                      hashes,
-                      price,
-                      this.userAddress,
-                      metadataIpfsHash,
-                    );
-                    this.changeLoadingContent('Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly.');
-                    const result = await transactionPromise();
-                    const id = result.events.AssetPackCreated.returnValues.id;
-                    this.closeLoadingModal();
-                    this.$router.push(`/asset-pack/${id}`);
-                    this.openModal('Asset pack successfully saved to the blockchain forever.');
-                    console.log(result, id);
-                  }
-                } catch (e) {
-                  const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
-                  this.openLoadingModal(message, true);
-                }
-              }
+            this.assets.push({
+              path,
+              file: x.files[i],
+              attribute: 211
             });
-        } catch (e) {
-          const message = 'Error: ' + e.message.replace('Returned error: ', '').replace(/Error: /g, '');
-          this.openLoadingModal(message, true);
+          };
+        } else {
+          fileErrors.push({
+            file: file.name,
+            error: "Assets size is larger than the allowed 2.5MB"
+          });
         }
-      },
-      remove(index) {
-        this.assets.splice(index, 1);
-        let x = document.getElementById('files');
-        x.value = '';
-      },
+      }
 
-      toggleAttribute(index, attributeType) {
-        const attribute = this.assets[index].attribute;
-        const digit = Math.floor((attribute / (10 ** attributeType)) % 10);
-        if (digit === 1) {
-          return this.assets[index].attribute += 10 ** attributeType;
-        }
-        this.assets[index].attribute -= 10 ** attributeType;
+      if (fileErrors.length > 0) {
+        this.openModal({
+          name: "assetPackUploadError",
+          data: { errors: fileErrors }
+        });
       }
     },
 
-  };
+    renderCanvas() {
+      let canvas = document.getElementById("thumbnail-canvas");
+      canvas.width = 2480;
+      canvas.height = 1805;
+      const assets = this.assets.slice(0, 30);
+      makeCoverImage(false, assets, canvas, canvas.width, canvas.height);
+    },
+    checkErrors(toCheck = "") {
+      const checkAll = !toCheck;
+
+      if (toCheck === "name" || checkAll)
+        this.errors.name = !this.name || this.name.length > 20;
+      if (toCheck === "price" || checkAll)
+        this.errors.price = !this.price || this.price === 0;
+
+      return (
+        Object.keys(this.errors).filter(key => this.errors[key]).length > 0
+      );
+    },
+    async uploadToIpfs() {
+      if (this.checkErrors()) return;
+      if (!this.userAddress) {
+        const { userAgent: ua } = navigator;
+        const isMobile =
+          ua.includes("Android") ||
+          ua.includes("iPad") ||
+          ua.includes("iPhone");
+        if (isMobile) return this.openModal({ name: "coinbaseInfo" });
+        this.approvedMetamask = await isMetamaskApproved();
+        if (!isMobile && !this.approvedMetamask) {
+          this.approvePressed = true;
+          return this.openModal("metaMaskInfo");
+        }
+      }
+
+      this.approvedMetamask = await isMetamaskApproved();
+      if (!this.approvedMetamask) {
+        this.approvePressed = true;
+        return this.openModal("metaMaskInfo");
+      }
+
+      let hashes = [];
+      let canvas = document.getElementById("thumbnail-canvas");
+
+      const UPLOAD_WIDTH = 386 * 2;
+      const UPLOAD_HEIGHT = 281 * 2;
+      const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
+
+      try {
+        await this.openModal("");
+        this.openLoadingModal("Uploading your asset pack to IPFS...");
+        let coverImage = canvasClone.toDataURL("image/png", 1);
+        let coverHash = await ipfsService.uploadFile(coverImage.substr(22));
+        let metadata = {
+          name: this.name,
+          description: this.description
+        };
+        let metadataIpfsHash = await ipfsService.uploadJSON(
+          JSON.stringify(metadata)
+        );
+        console.log(metadataIpfsHash);
+        const price = this.price;
+        const images = [];
+        for (let i = 0; i < this.assets.length; i++) {
+          const file = {
+            image: new FileReader()
+          };
+          file.image.readAsDataURL(this.assets[i].file);
+          images.push(file);
+        }
+
+        console.log("started");
+        preloadImages(images).done(async loadedImages => {
+          console.log(loadedImages, images);
+          for (let i = 0; i < this.assets.length; i++) {
+            try {
+              let ipfsHash = await ipfsService.uploadFile(
+                loadedImages[i].image.result.substr(22)
+              );
+              hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
+              if (i === this.assets.length - 1) {
+                console.log(hashes);
+                console.log(price);
+                const attributes = this.assets.map(item => item.attribute);
+                console.log(attributes);
+                this.openLoadingModal(
+                  "Please confirm the transaction in MetaMask."
+                );
+                const transactionPromise = await createAssetPack(
+                  utils.getBytes32FromIpfsHash(coverHash),
+                  attributes,
+                  hashes,
+                  price,
+                  this.userAddress,
+                  metadataIpfsHash
+                );
+                this.changeLoadingContent(
+                  "Please wait while the transaction is written to the blockchain. Your asset pack will be listed shortly."
+                );
+                const result = await transactionPromise();
+                const id = result.events.AssetPackCreated.returnValues.id;
+                this.closeLoadingModal();
+                this.$router.push(`/asset-pack/${id}`);
+                this.openModal(
+                  "Asset pack successfully saved to the blockchain forever."
+                );
+                console.log(result, id);
+              }
+            } catch (e) {
+              const message =
+                "Error: " +
+                e.message
+                  .replace("Returned error: ", "")
+                  .replace(/Error: /g, "");
+              this.openLoadingModal(message, true);
+            }
+          }
+        });
+      } catch (e) {
+        const message =
+          "Error: " +
+          e.message.replace("Returned error: ", "").replace(/Error: /g, "");
+        this.openLoadingModal(message, true);
+      }
+    },
+    remove(index) {
+      this.assets.splice(index, 1);
+      let x = document.getElementById("files");
+      x.value = "";
+    },
+
+    toggleAttribute(index, attributeType) {
+      const attribute = this.assets[index].attribute;
+      const digit = Math.floor((attribute / 10 ** attributeType) % 10);
+      if (digit === 1) {
+        return (this.assets[index].attribute += 10 ** attributeType);
+      }
+      this.assets[index].attribute -= 10 ** attributeType;
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
-    .create-asset-pack {
-        min-height: 100vh;
-        .page-wrapper {
-            min-height: calc(100vh - 66px);
-            background-color: #D9D9D9;
-        }
+.create-asset-pack {
+  min-height: 100vh;
+  .page-wrapper {
+    min-height: calc(100vh - 66px);
+    background-color: #d9d9d9;
+  }
+}
+
+.content-wrapper {
+  .container {
+    padding-top: 81px;
+  }
+}
+
+.line-separator {
+  margin-top: 35px;
+  margin-bottom: 20px;
+}
+
+.bottom-content {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.left,
+.left-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between !important;
+
+  &.first-screen {
+    max-height: 432px;
+    min-width: 300px;
+    max-width: 400px;
+  }
+
+  &.submit {
+    max-width: 400px;
+  }
+  .input-file {
+    margin-bottom: 30px;
+  }
+  .button-group {
+    display: inline-flex;
+
+    &.submit {
+      justify-content: space-between;
+    }
+    button {
+      margin: 0 5px;
+      width: 155px;
+      &:first-of-type {
+        margin-left: 0;
+      }
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+  .graphic-preview {
+    display: inline-flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    canvas {
+      background-color: white;
+      width: 386px;
+      height: 281px;
+    }
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+
+.left-content {
+  justify-content: normal !important;
+}
+
+.right-content {
+  flex: 1;
+  padding: 0 80px 0 20px;
+
+  .input-content {
+    height: 281px;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 155px;
+  }
+
+  p {
+    max-width: 240px;
+    line-height: 19px;
+  }
+
+  .inputs-wrapper {
+    display: flex;
+    margin-top: 62px;
+  }
+
+  .input-group {
+    flex-direction: column;
+    min-width: 180px;
+
+    &:first-child {
+      margin-right: 20px;
     }
 
-    .content-wrapper {
-        .container {
-            padding-top: 81px;
-        }
+    .small-title {
+      display: inline-block;
+      margin-bottom: 20px;
     }
-
-    .line-separator {
-        margin-top: 35px;
-        margin-bottom: 20px;
+    .input-wrapper {
+      margin-bottom: 20px;
     }
+  }
+}
 
-    .bottom-content {
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-    }
+.right {
+  justify-content: flex-end;
 
-    .left, .left-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between !important;
+  & > div {
+    width: 100% !important;
+    max-width: 688px !important;
+    max-height: 432px !important;
+    overflow: hidden !important;
+  }
+}
 
-        &.first-screen {
-            max-height: 432px;
-            min-width: 300px;
-            max-width: 400px;
-        }
+.submit-button {
+  display: flex;
+  justify-content: flex-end;
+}
 
-        &.submit {
-            max-width: 400px;
-        }
-        .input-file {
-            margin-bottom: 30px;
-        }
-        .button-group {
-            display: inline-flex;
+.pack-name {
+  width: 210px;
+  margin-right: 20px;
+}
 
-            &.submit {
-                justify-content: space-between;
-            }
-            button {
-                margin: 0 5px;
-                width: 155px;
-                &:first-of-type {
-                    margin-left: 0;
-                }
-                &:last-of-type {
-                    margin-right: 0;
-                }
-            }
-        }
-        .graphic-preview {
-            display: inline-flex;
-            align-items: flex-end;
-            margin-bottom: 20px;
-            canvas {
-                background-color: white;
-                width: 386px;
-                height: 281px;
-            }
-            button {
-                margin-left: 10px;
-            }
-        }
-    }
-
-    .left-content {
-        justify-content: normal !important;
-    }
-
-    .right-content {
-        flex: 1;
-        padding: 0 80px 0 20px;
-
-        .input-content {
-            height: 281px;
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 155px;
-        }
-
-        p {
-            max-width: 240px;
-            line-height: 19px;
-        }
-
-        .inputs-wrapper {
-            display: flex;
-            margin-top: 62px;
-
-        }
-
-        .input-group {
-            flex-direction: column;
-            min-width: 180px;
-
-            &:first-child {
-                margin-right: 20px;
-            }
-
-            .small-title {
-                display: inline-block;
-                margin-bottom: 20px;
-            }
-            .input-wrapper {
-                margin-bottom: 20px;
-            }
-        }
-    }
-
-    .right {
-        justify-content: flex-end;
-
-        & > div {
-            width: 100% !important;
-            max-width: 688px !important;
-            max-height: 432px !important;
-            overflow: hidden !important;
-        }
-    }
-
-    .submit-button {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .pack-name {
-        width: 210px;
-        margin-right: 20px;
-    }
-
-    .pack-price {
-        width: 92px;
-    }
+.pack-price {
+  width: 92px;
+}
 </style>
