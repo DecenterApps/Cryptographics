@@ -9,6 +9,7 @@ import {
   MUTATE_NETWORK,
   MUTATE_BALANCES,
   MUTATE_NOTIFICATIONS,
+  MUTATE_APPROVAL
 } from './types';
 
 export default {
@@ -41,6 +42,9 @@ export default {
   },
   [MUTATE_NOTIFICATIONS]: (state, notifications) => {
     state.notifications = notifications;
+  },
+  [MUTATE_APPROVAL]: (state, metamaskApproved) => {
+    state.metamaskApproved = metamaskApproved;
   }
 };
 

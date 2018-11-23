@@ -11,6 +11,7 @@ import {
   BANNED_ASSET_PACK_IDS,
   BANNED_CRYPTOGRAPHIC_IDS,
   NOTIFICATIONS,
+  METAMASK_APPROVED
 } from './types';
 
 export default {
@@ -49,5 +50,8 @@ export default {
   },
   [NOTIFICATIONS]: state => {
     return state.notifications;
+  },
+  [METAMASK_APPROVED]: state => {
+    return state.metamaskApproved;
   }
 };

@@ -5,6 +5,7 @@ import {
   SET_USER_CONFIG,
   SET_CREATED_ASSETS_PACKS_IDS,
   SET_BOUGHT_ASSETS_PACKS_IDS,
+  SET_APPROVAL,
   UPDATE_USER_CONFIG,
   CHECK_USERNAME_EXISTENCE,
   EDIT_PROFILE,
@@ -15,6 +16,7 @@ import {
   MUTATE_EDIT_PROFILE_RESULT,
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
+  MUTATE_APPROVAL,
   SET_NEW_USERNAME,
   SET_NETWORK,
   MUTATE_NETWORK,
@@ -25,7 +27,7 @@ import {
 import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT } from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 
-import { getAccounts, getNetwork, parseError } from 'services/helpers';
+import { getAccounts, getNetwork, parseError, isMetamaskApproved } from 'services/helpers';
 import * as utils from 'services/utils';
 import {
   getUsername,
@@ -36,6 +38,7 @@ import {
   getBoughtAssetPacks,
   userBalances,
 } from 'services/ethereumService';
+import { metamaskApprove } from '../../../services/helpers';
 
 export default {
   [SET_NETWORK]: async ({ commit }) => {
@@ -89,6 +92,10 @@ export default {
     let boughtIDs = await getBoughtAssetPacks(state.metamaskAddress);
     commit(MUTATE_BOUGHT_ASSETS_PACKS_IDS, boughtIDs.reverse());
   },
+  [SET_APPROVAL]: async ({ commit }) => {
+    const metamaskApproved = await isMetamaskApproved();
+    commit(MUTATE_APPROVAL, metamaskApproved);
+  },
   [SET_USER_CONFIG]: async ({ dispatch }) => {
     await dispatch(SET_METAMASK_ADDRESS);
     dispatch(SET_NETWORK);
@@ -96,6 +103,7 @@ export default {
     dispatch(SET_AVATAR);
     dispatch(SET_CREATED_ASSETS_PACKS_IDS);
     dispatch(SET_BOUGHT_ASSETS_PACKS_IDS);
+    dispatch(SET_APPROVAL);
   },
   [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
     setInterval(async function () {
@@ -116,47 +124,47 @@ export default {
     }
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
-      try {
-        dispatch(TOGGLE_MODAL, 'editProfile')
-        dispatch(TOGGLE_LOADING_MODAL, 'Please confirm the transaction in MetaMask.');
-        await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
-        if (!state.changeUsername.isExisting) {
-          if (newUsername === '') {
-            newUsername = state.username;
+    try {
+      dispatch(TOGGLE_MODAL, 'editProfile')
+      dispatch(TOGGLE_LOADING_MODAL, 'Please confirm the transaction in MetaMask.');
+      await dispatch(CHECK_USERNAME_EXISTENCE, newUsername);
+      if (!state.changeUsername.isExisting) {
+        if (newUsername === '') {
+          newUsername = state.username;
+        }
+        if (newAvatarBytes32 === '') {
+          if (state.avatar === DEFAULT_AVATAR) {
+            const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
+            newAvatarBytes32 = initialAvatarBytes32;
           }
-          if (newAvatarBytes32 === '') {
-            if (state.avatar === DEFAULT_AVATAR) {
-              const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
-              newAvatarBytes32 = initialAvatarBytes32;
-            }
-            if (state.avatar !== DEFAULT_AVATAR) {
-              newAvatarBytes32 = await getAvatar(state.metamaskAddress);
-            }
+          if (state.avatar !== DEFAULT_AVATAR) {
+            newAvatarBytes32 = await getAvatar(state.metamaskAddress);
           }
         }
-        const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
-        dispatch(HIDE_LOADING_MODAL);
-        dispatch(PUSH_NOTIFICATION, {
-          status: 'loading',
-          message: 'Please wait while the transaction is written to the blockchain. Your profile will be updated shortly.'
-        });
-        const result = await transactionPromise();
-        dispatch(REMOVE_NOTIFICATION, state.notification.length - 1);
-        dispatch(PUSH_NOTIFICATION, {
-          status: 'success',
-          message: 'Your profile has been updated successfully.'
-        });
-        commit(MUTATE_EDIT_PROFILE_RESULT, result);
-        await dispatch(SET_USER_CONFIG);
-        setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
-      } catch (e) {
-        console.error(e)
-        dispatch(REMOVE_NOTIFICATION, state.notifications.length - 1);
-        dispatch(PUSH_NOTIFICATION, {
-          status: 'error',
-          message: parseError(e)
-        });
       }
+      const transactionPromise = await registerUser(newUsername, newAvatarBytes32, state.metamaskAddress);
+      dispatch(HIDE_LOADING_MODAL);
+      dispatch(PUSH_NOTIFICATION, {
+        status: 'loading',
+        message: 'Please wait while the transaction is written to the blockchain. Your profile will be updated shortly.'
+      });
+      const result = await transactionPromise();
+      dispatch(REMOVE_NOTIFICATION, state.notification.length - 1);
+      dispatch(PUSH_NOTIFICATION, {
+        status: 'success',
+        message: 'Your profile has been updated successfully.'
+      });
+      commit(MUTATE_EDIT_PROFILE_RESULT, result);
+      await dispatch(SET_USER_CONFIG);
+      setTimeout(() => commit(MUTATE_EDIT_PROFILE_RESULT, !result), 10000);
+    } catch (e) {
+      console.error(e)
+      dispatch(REMOVE_NOTIFICATION, state.notifications.length - 1);
+      dispatch(PUSH_NOTIFICATION, {
+        status: 'error',
+        message: parseError(e)
+      });
+    }
   },
   [FETCH_BALANCES]: async ({ commit, state }) => {
     const balances = await userBalances(state.metamaskAddress);

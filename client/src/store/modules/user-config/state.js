@@ -4,6 +4,7 @@ export default {
   username: DEFAULT_USERNAME,
   network: undefined,
   metamaskAddress: undefined,
+  metamaskApproved: undefined,
   avatar: DEFAULT_AVATAR,
   changeUsername: {
     isExisting: undefined,

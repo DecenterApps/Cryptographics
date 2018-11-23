@@ -24,94 +24,123 @@
                 <p>Or if you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
             </div>
         </div>
-        <div v-else>
-           <div class="text-wrapper">
+        <div v-else-if="hasMetaMask && isMetamaskApproved || isMetaMaskLocked">
+          <div v-if="isMetaMaskLocked && !isMetamaskApproved">
+            <div class="text-wrapper secondary">
+                In order to continue you need to connect your MetaMask account to Cryptographics dApp.
+            </div> 
+            <cg-button @click="approve()">Connect</cg-button>
+          </div>
+          <div v-else-if="isMetaMaskLocked">
+            <div class="text-wrapper">
                 Your MetaMask account is locked, please log in.
             </div> 
+          </div>
         </div>
         <img class="round-logo" :src="roundLogo" alt="">
     </div>
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
-  import { TOGGLE_MODAL } from 'store/modal/types';
-  import roundLogo from 'assets/round-logo.png';
-  import IcoError from '../../Shared/UI/Icons/IcoError';
+import { mapActions } from "vuex";
+import { TOGGLE_MODAL, SET_APPROVAL } from "store/modal/types";
+import { metamaskApprove } from "services/helpers";
+import roundLogo from "assets/round-logo.png";
+import IcoError from "../../Shared/UI/Icons/IcoError";
 
-  export default {
-    name: 'MetaMaskInfo',
-    components: { IcoError },
-    data: () => ({
-      showMoreInfo: false,
-      roundLogo,
-    }),
-    props: {
-        hasMetaMask: {
-            type: Boolean
-        }
+export default {
+  name: "MetaMaskInfo",
+  components: { IcoError },
+  data: () => ({
+    showMoreInfo: false,
+    roundLogo
+  }),
+  props: {
+    hasMetaMask: {
+      type: Boolean
+    },
+    isMetaMaskLocked: {
+      type: Boolean
+    },
+    isMetamaskApproved: {
+      type: Boolean
     }
-  };
+  },
+  methods: {
+    ...mapActions({
+      openModal: TOGGLE_MODAL,
+      SET_APPROVAL
+    }),
+    async approve() {
+      try {
+        await metamaskApprove();
+        await this[SET_APPROVAL]();
+        this.openModal("");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">
-    @import "../UI/button-styles";
-    .meta-mask-info {
-        text-align: center;
-        .button {
-            margin-bottom: 15px;
-        }
-        svg {
-            display: block;
-            margin: auto;
-            margin-bottom: 27px;
-        }
+@import "../UI/button-styles";
+.meta-mask-info {
+  text-align: center;
+  .button {
+    margin-bottom: 15px;
+  }
+  svg {
+    display: block;
+    margin: auto;
+    margin-bottom: 27px;
+  }
 
-        h3 {
-            text-align: center;
-            cursor: pointer;
-            margin: 30px auto 0 auto;
-            font-size: 20px;
-            font-family: 'YoungSerif-Regular', serif;
-            transition: opacity .2s ease-in-out;
+  h3 {
+    text-align: center;
+    cursor: pointer;
+    margin: 30px auto 0 auto;
+    font-size: 20px;
+    font-family: "YoungSerif-Regular", serif;
+    transition: opacity 0.2s ease-in-out;
 
-            a {
-                color: black;
-                text-decoration: none;
-            }
-
-            &.link {
-
-            }
-
-            &:hover {
-                opacity: 0.6;
-            }
-        }
-
-        .text-wrapper {
-            text-align: center;
-            line-height: 24px;
-            font-size: 14px;
-            max-width: 390px;
-
-            span {
-                font-weight: bold;
-                margin: 0 3px;
-            }
-
-            &.secondary {
-                margin: 30px 0;
-            }
-        }
-
-        .round-logo {
-            position: absolute;
-            bottom: -28px;
-            height: 56px;
-            width: 56px;
-            left: 50%;
-            margin-left: -28px;
-        }
+    a {
+      color: black;
+      text-decoration: none;
     }
+
+    &.link {
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .text-wrapper {
+    text-align: center;
+    line-height: 24px;
+    font-size: 14px;
+    max-width: 390px;
+
+    span {
+      font-weight: bold;
+      margin: 0 3px;
+    }
+
+    &.secondary {
+      margin: 30px 0;
+    }
+  }
+
+  .round-logo {
+    position: absolute;
+    bottom: -28px;
+    height: 56px;
+    width: 56px;
+    left: 50%;
+    margin-left: -28px;
+  }
+}
 </style>

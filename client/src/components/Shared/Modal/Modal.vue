@@ -14,7 +14,9 @@
                 v-else-if="content === 'setUsername'" />
             <meta-mask-info
                 v-else-if="content === 'metaMaskInfo'"
-                :hasMetaMask="hasMetaMask" />
+                :hasMetaMask="hasMetaMask"
+                :isMetaMaskLocked="isMetaMaskLocked"
+                :isMetamaskApproved="approvedMetamask" />
             <coinbase-info
                 v-else-if="content && content.name === 'coinbaseInfo'"
                 v-bind="content.data"
@@ -38,108 +40,119 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
-  import { TOGGLE_MODAL } from 'store/modal/types';
+import { mapActions, mapGetters } from "vuex";
+import { TOGGLE_MODAL } from "store/modal/types";
+import { isMetaMaskLocked } from "services/helpers";
+import { METAMASK_APPROVED } from "store/user-config/types";
 
-  import EditProfile from 'shared/EditProfile/EditProfile.vue';
-  import EditPackPrice from 'shared/EditPackPrice/EditPackPrice.vue';
-  import SetUsername from 'shared/SetUsername/SetUsername.vue';
-  import SuccessMessage from 'shared/SuccessMessage/SuccessMessage.vue';
-  import TransferHistory from 'shared/TransferHistory/TransferHistory.vue';
-  import MetaMaskInfo from 'shared/MetaMaskInfo/MetaMaskInfo.vue';
-  import CoinbaseInfo from 'shared/CoinbaseInfo/CoinbaseInfo.vue';
-  import AssetPackUploadError from 'shared/AssetPackUploadError/AssetPackUploadError.vue';
-  import BalancesModal from 'pages/Profile/BalancesModal.vue';
+import EditProfile from "shared/EditProfile/EditProfile.vue";
+import EditPackPrice from "shared/EditPackPrice/EditPackPrice.vue";
+import SetUsername from "shared/SetUsername/SetUsername.vue";
+import SuccessMessage from "shared/SuccessMessage/SuccessMessage.vue";
+import TransferHistory from "shared/TransferHistory/TransferHistory.vue";
+import MetaMaskInfo from "shared/MetaMaskInfo/MetaMaskInfo.vue";
+import CoinbaseInfo from "shared/CoinbaseInfo/CoinbaseInfo.vue";
+import AssetPackUploadError from "shared/AssetPackUploadError/AssetPackUploadError.vue";
+import BalancesModal from "pages/Profile/BalancesModal.vue";
 
-  export default {
-    name: 'Modal',
-    data: () => ({
-        hasMetaMask: false,
-    }),
-    props: {
-      content: {
-        default: ''
-      }
-    },
-    components: {
-      SuccessMessage,
-      SetUsername,
-      EditProfile,
-      EditPackPrice,
-      TransferHistory,
-      BalancesModal,
-      MetaMaskInfo,
-      CoinbaseInfo,
-      AssetPackUploadError,
-    },
-    created() {
-        const { currentProvider: cp } = window.web3;
-        const { userAgent: ua } = navigator;
-        this.hasMetaMask = !!cp.isMetaMask;
-        this.isAndroid = ua.includes('Android');
-        this.isApple = ua.includes('iPhone') || ua.includes('iPad');
-    },
-    methods: {
-      ...mapActions({
-        closeModal: TOGGLE_MODAL
-      }),
-      smallerPadding(content) {
-        if (content === 'metaMaskInfo') return 'smaller-padding';
-
-        return ['Cryptographic', 'Asset pack'].indexOf(content) >= 0 ? 'small-padding' : 0;
-      }
+export default {
+  name: "Modal",
+  data: () => ({
+    hasMetaMask: false,
+    isMetaMaskLocked: false
+  }),
+  props: {
+    content: {
+      default: ""
     }
-  };
+  },
+  components: {
+    SuccessMessage,
+    SetUsername,
+    EditProfile,
+    EditPackPrice,
+    TransferHistory,
+    BalancesModal,
+    MetaMaskInfo,
+    CoinbaseInfo,
+    AssetPackUploadError
+  },
+  async created() {
+    const { currentProvider: cp } = window.web3;
+    const { userAgent: ua } = navigator;
+    this.hasMetaMask = !!cp.isMetaMask;
+    this.isAndroid = ua.includes("Android");
+    this.isApple = ua.includes("iPhone") || ua.includes("iPad");
+    this.isMetaMaskLocked = await isMetaMaskLocked();
+  },
+  computed: {
+    ...mapGetters({
+      approvedMetamask: METAMASK_APPROVED
+    })
+  },
+  methods: {
+    ...mapActions({
+      closeModal: TOGGLE_MODAL
+    }),
+    smallerPadding(content) {
+      if (content === "metaMaskInfo") return "smaller-padding";
+
+      return ["Cryptographic", "Asset pack"].indexOf(content) >= 0
+        ? "small-padding"
+        : 0;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    .modal {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-height: 100vh;
-        .overlay {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: fade-out(#000, .3);
-        }
-        .content {
-            position: relative;
-            max-width: 1120px;
-            padding: 90px;
-            background-color: #C4C4C4;
-            margin: 30px;
-            @media screen and (max-width: 768px) {
-                max-width: 767px;
-            }
-            @media screen and (max-width: 425px) {
-                max-width: 425px;
-                width: 100%;
-                padding: 45px 15px;
-            }
-
-            &.small-padding {
-                padding: 45px;
-            }
-
-            &.smaller-padding {
-                padding: 30px 60px 60px 60px;
-            }
-
-            .ico-button {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-            }
-        }
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 100vh;
+  .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: fade-out(#000, 0.3);
+  }
+  .content {
+    position: relative;
+    max-width: 1120px;
+    padding: 90px;
+    background-color: #c4c4c4;
+    margin: 30px;
+    @media screen and (max-width: 768px) {
+      max-width: 767px;
     }
+    @media screen and (max-width: 425px) {
+      max-width: 425px;
+      width: 100%;
+      padding: 45px 15px;
+    }
+
+    &.small-padding {
+      padding: 45px;
+    }
+
+    &.smaller-padding {
+      padding: 30px 60px 60px 60px;
+    }
+
+    .ico-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  }
+}
 </style>

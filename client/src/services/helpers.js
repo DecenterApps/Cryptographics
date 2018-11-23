@@ -18,9 +18,31 @@ export const resizeCanvas = (oldCanvas, width, height) => {
   return newCanvas;
 };
 
+export const isMetamaskApproved = async () => {
+  if (!window.ethereum) return true;
+  if (!window.ethereum.enable) return true;
+  if (!window.ethereum._metamask) return false;
+  if (!window.ethereum._metamask.isApproved) return false;
+  return window.ethereum._metamask.isApproved();
+}
+
+export const metamaskApprove = async () => {
+  try {
+    if (window.ethereum) return window.ethereum.enable();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const isMetaMaskLocked = async () => {
+  const accounts = await window.web3.eth.getAccounts();
+  if (!accounts.length) return true;
+  return false;
+};
+
 export function checkProvider() {
   if (typeof web3 !== 'undefined') {
-    window.web3 = new Web3(window.web3.currentProvider);
+    window.web3 = new Web3(window.ethereum);
     console.log(`Using injected web3 from ${inbrowserProviderName()}`);
     if (window._paq) {
       window._paq.push(['trackEvent', 'Landing', 'Web3 enabled', 'Web3 enabled', inbrowserProviderName()]);
@@ -128,7 +150,7 @@ export const preloadAssets = (assets) => {
 
 export const preloadImages = (arr) => {
   let loadedImages = 0;
-  let callback = () => {};
+  let callback = () => { };
 
   function imageloadpost() {
     loadedImages++;
