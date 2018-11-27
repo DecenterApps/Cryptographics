@@ -41,15 +41,21 @@ export const isMetaMaskLocked = async () => {
 };
 
 export function checkProvider() {
-  if (typeof web3 !== 'undefined') {
+  if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
     console.log(`Using injected web3 from ${inbrowserProviderName()}`);
     if (window._paq) {
       window._paq.push(['trackEvent', 'Landing', 'Web3 enabled', 'Web3 enabled', inbrowserProviderName()]);
     }
+  } else if (window.web3) {
+    window.web3 = new Web3(web3.currentProvider);
+    console.log(`Using injected web3 from ${inbrowserProviderName()}`);
+    if (window._paq) {
+      window._paq.push(['trackEvent', 'Landing', 'Web3 not detected']);
+    }
   } else {
     window.web3 = new Web3(new Web3.providers.HttpProvider(clientConfig.provider));
-    console.log('No web3 provider detected');
+    console.log(`Using injected web3 from Infura`);
     if (window._paq) {
       window._paq.push(['trackEvent', 'Landing', 'Web3 not detected']);
     }
