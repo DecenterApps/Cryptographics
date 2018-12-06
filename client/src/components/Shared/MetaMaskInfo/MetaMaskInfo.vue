@@ -1,49 +1,50 @@
 <template>
-    <div class="meta-mask-info">
-        <ico-error />
-        <div v-if="!hasMetaMask">
-            <div class="text-wrapper">
-                You don’t have <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
-                ownership of the cryptographics you create, or trade them. Please enable MetaMask or check if you
-                are logged in.
-            </div>
-            <h3>What is MetaMask?</h3>
-            <div>
-                <div class="text-wrapper secondary">
-                    MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
-                    blockchain. It manages your Ethereum account which keeps your Ether funds and unique cryptographics
-                    tokens.
-                </div>
-                <a
-                    target="_blank"
-                    class="button secondary"
-                    rel="noopener noreferrer"
-                    href="https://metamask.io/">
-                    Get MetaMask
-                </a>
-                <p>Or if you need help <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.</p>
-            </div>
+  <div class="meta-mask-info">
+    <ico-error/>
+    <div v-if="!hasMetaMask">
+      <div class="text-wrapper">
+        You don’t have
+        <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
+        ownership of the cryptographics you create, or trade them. Please enable MetaMask or check if you
+        are logged in.
+      </div>
+      <h3>What is MetaMask?</h3>
+      <div>
+        <div class="text-wrapper secondary">
+          MetaMask is a Web3.0 enabling extension that acts as a bridge between your browser and the Ethereum
+          blockchain. It manages your Ethereum account which keeps your Ether funds and unique cryptographics
+          tokens.
         </div>
-        <div v-else-if="hasMetaMask && isMetamaskApproved || isMetaMaskLocked">
-          <div v-if="isMetaMaskLocked && !isMetamaskApproved">
-            <div class="text-wrapper secondary">
-                In order to continue you need to connect your MetaMask account to Cryptographics dApp.
-            </div> 
-            <cg-button @click="approve()">Connect</cg-button>
-          </div>
-          <div v-else-if="isMetaMaskLocked && isMetamaskApproved">
-            <div class="text-wrapper">
-                Your MetaMask account is locked, please log in.
-            </div> 
-          </div>
-        </div>
-        <img class="round-logo" :src="roundLogo" alt="">
+        <a
+          target="_blank"
+          class="button secondary"
+          rel="noopener noreferrer"
+          href="https://metamask.io/"
+        >Get MetaMask</a>
+        <p>Or if you need help
+          <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.
+        </p>
+      </div>
     </div>
+    <div v-else-if="hasMetaMask && isMetamaskApproved || isMetaMaskLocked">
+      <div v-if="isMetaMaskLocked && !isMetamaskApproved">
+        <div
+          class="text-wrapper secondary"
+        >In order to continue you need to connect your MetaMask account to Cryptographics dApp.</div>
+        <cg-button @click="approve()">Connect</cg-button>
+      </div>
+      <div v-else-if="isMetaMaskLocked && isMetamaskApproved">
+        <div class="text-wrapper">Your MetaMask account is locked, please log in.</div>
+      </div>
+    </div>
+    <img class="round-logo" :src="roundLogo" alt>
+  </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import { TOGGLE_MODAL, SET_APPROVAL } from "store/modal/types";
+import { TOGGLE_MODAL } from "store/modal/types";
+import { SET_APPROVAL } from "store/user-config/types";
 import { metamaskApprove } from "services/helpers";
 import roundLogo from "assets/round-logo.png";
 import IcoError from "../../Shared/UI/Icons/IcoError";

@@ -1,64 +1,68 @@
 <template>
-    <div class="header-wrapper">
-        <header class="header">
-            <div class="header-container container">
-                <div class="logo">
-                    <router-link to="/">
-                        <logo /> <span>Cryptographics</span>
-                    </router-link>
-                </div>
-                <div class="mobile-menu-toggle" @click="showMenu = !showMenu"></div>
-                <div
-                    class="links-section"
-                    :class="{'show-menu' : showMenu }">
-                    <div class="links">
-                        <router-link to="/gallery" active-class="active" @click.native="closeMenu">Gallery</router-link>
-                        <router-link to="/asset-packs" active-class="active" @click.native="closeMenu">Asset Packs</router-link>
-                        <router-link to="/about" active-class="active" @click.native="closeMenu">About</router-link>
-                        <div class="has-dropdown">
-                            <a>Help</a>
-                            <div>
-                                <router-link to="/faq" active-class="active" @click.native="closeMenu">FAQ</router-link>
-                                <router-link to="/tutorial" active-class="active" @click.native="closeMenu">Tutorial</router-link>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile">
-                        <router-link
-                            v-if="approvedMetamask"
-                            class="profile-link" 
-                            to="/profile" 
-                            @click.native="closeMenu">
-                            {{ username }}
-                            <img
-                                class="avatar"
-                                :src="avatar">
-                        </router-link>
-                        <cg-button
-                            v-else-if="!approvedMetamask"
-                            button-style="transparent inverted"
-                            @click="approve()">
-                            Connect
-                        </cg-button>
-                        <button-link
-                            to="/create-cryptographic"
-                            button-style="secondary inverted"
-                            @click.native="closeMenu">
-                            Compose
-                        </button-link>
-                    </div>
-                </div>
+  <div class="header-wrapper">
+    <header class="header">
+      <div class="header-container container">
+        <div class="logo">
+          <router-link to="/">
+            <logo/>
+            <span>Cryptographics</span>
+          </router-link>
+        </div>
+        <div class="mobile-menu-toggle" @click="showMenu = !showMenu"></div>
+        <div class="links-section" :class="{'show-menu' : showMenu }">
+          <div class="links">
+            <router-link to="/gallery" active-class="active" @click.native="closeMenu">Gallery</router-link>
+            <router-link
+              to="/asset-packs"
+              active-class="active"
+              @click.native="closeMenu"
+            >Asset Packs</router-link>
+            <router-link to="/about" active-class="active" @click.native="closeMenu">About</router-link>
+            <div class="has-dropdown">
+              <a>Help</a>
+              <div>
+                <router-link to="/faq" active-class="active" @click.native="closeMenu">FAQ</router-link>
+                <router-link to="/tutorial" active-class="active" @click.native="closeMenu">Tutorial</router-link>
+              </div>
             </div>
-        </header>
-    </div>
+          </div>
+          <div class="profile">
+            <router-link
+              v-if="approvedMetamask"
+              class="profile-link"
+              to="/profile"
+              @click.native="closeMenu"
+            >
+              {{ username }}
+              <img class="avatar" :src="avatar">
+            </router-link>
+            <cg-button
+              v-else-if="!approvedMetamask"
+              button-style="transparent inverted"
+              @click="approve()"
+            >Connect</cg-button>
+            <button-link
+              to="/create-cryptographic"
+              button-style="secondary inverted"
+              @click.native="closeMenu"
+            >Compose</button-link>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { SET_APPROVAL } from "store/modal/types";
 import { ipfsNodePath } from "config/constants";
 import { metamaskApprove } from "services/helpers";
-import { USERNAME, AVATAR, METAMASK_APPROVED } from "store/user-config/types";
+import {
+  USERNAME,
+  AVATAR,
+  METAMASK_APPROVED,
+  SET_APPROVAL
+} from "store/user-config/types";
 
 import Logo from "../UI/Logo.vue";
 
