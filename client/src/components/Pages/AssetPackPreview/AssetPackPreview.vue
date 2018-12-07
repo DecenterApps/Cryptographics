@@ -1,79 +1,67 @@
 <template>
-    <div class="all-assets-page">
-        <div class="container">
-            <div class="asset-pack-header">
-                <div class="left-section">
-                    <div class="meta-info">
-                        <h1 class="large-title">{{ assetPack.packName }}</h1>
-                        <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
-                            This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
-                            is a background
-                        </p>
-                        <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 1">
-                            This asset pack contains {{ assetPack.assets.length }} asset and it is a background
-                        </p>
-                        <p class="small-title" v-if="backgroundAssets > 1">
-                            This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
-                            are backgrounds
-                        </p>
-                        <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 0">
-                            This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds
-                        </p>
-                        <p class="small-title" v-if="assetPack.assets.length === 1 && backgroundAssets === 0">
-                            This asset pack contains {{ assetPack.assets.length }} asset, none of which are backgrounds
-                        </p>
-                    </div>
-                    <div class="meta-info">
-                        <p class="small-title">Created by:</p>
-                        <user-link
-                            :to="'/user/' + assetPack.creator"
-                            :name="creator.username"
-                            :avatar="creator.avatar" />
-                    </div>
-                    <div class="meta-info" v-if="assetPack.packDescription">
-                        <p class="small-title">Description:</p>
-                        <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
-                    </div>
-                </div>
-                <div class="right-section">
-                    <price
-                            size="medium"
-                            :value="this.assetPack.price"
-                            :showIfFree="true" />
-                    <cg-button
-                        @click="composeWithAP"
-                        buttonStyle="secondary">
-                        Compose with this Asset Pack
-                    </cg-button>
-                    <cg-button
-                        v-if="!alreadyBought && !isPackUsers"
-                        @click="purchaseAssetPack">
-                        Buy
-                    </cg-button>
-                    <cg-button
-                        v-if="isPackUsers"
-                        buttonStyle="secondary"
-                        @click="openChangePriceModal">
-                        Change Price
-                    </cg-button>
-                </div>
-            </div>
-            <div class="asset-list">
-                <div
-                        class="asset"
-                        v-for="(asset, index) in assetPack.assets"
-                        :key="index">
-                    <span
-                            v-if="Math.floor((asset.attribute / 100) % 10) === 1"
-                            class="asset-type">Background</span>
-                    <span
-                            v-else
-                            class="asset-type">Asset</span>
-                    <img :src="asset.src" alt="">
-                </div>
-            </div>
+  <div class="all-assets-page">
+    <div class="container">
+      <div class="asset-pack-header">
+        <div class="left-section">
+          <div class="meta-info">
+            <h1 class="large-title">{{ assetPack.packName }}</h1>
+            <p class="small-title" v-if="assetPack.assets.length !== 1 && backgroundAssets === 1">
+              This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+              is a background
+            </p>
+            <p
+              class="small-title"
+              v-if="assetPack.assets.length === 1 && backgroundAssets === 1"
+            >This asset pack contains {{ assetPack.assets.length }} asset and it is a background</p>
+            <p class="small-title" v-if="backgroundAssets > 1">
+              This asset pack contains {{ assetPack.assets.length }} assets, {{ backgroundAssets }} of which
+              are backgrounds
+            </p>
+            <p
+              class="small-title"
+              v-if="assetPack.assets.length !== 1 && backgroundAssets === 0"
+            >This asset pack contains {{ assetPack.assets.length }} assets, none of which are backgrounds</p>
+            <p
+              class="small-title"
+              v-if="assetPack.assets.length === 1 && backgroundAssets === 0"
+            >This asset pack contains {{ assetPack.assets.length }} asset, none of which are backgrounds</p>
+          </div>
+          <div class="meta-info">
+            <p class="small-title">Created by:</p>
+            <user-link
+              :to="'/user/' + assetPack.creator"
+              :name="creator.username"
+              :avatar="creator.avatar"
+            />
+          </div>
+          <div class="meta-info" v-if="assetPack.packDescription">
+            <p class="small-title">Description:</p>
+            <p class="asset-pack-description">{{ assetPack.packDescription }}</p>
+          </div>
         </div>
+        <div class="right-section">
+          <price size="medium" :value="this.assetPack.price" :showIfFree="true"/>
+          <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
+          <cg-button
+            v-if="!alreadyBought && !isPackUsers && approvedMetamask"
+            @click="purchaseAssetPack"
+          >Buy</cg-button>
+          <cg-button
+            v-if="isPackUsers"
+            buttonStyle="secondary"
+            @click="openChangePriceModal"
+          >Change Price</cg-button>
+        </div>
+      </div>
+      <div class="asset-list">
+        <div class="asset" v-for="(asset, index) in assetPack.assets" :key="index">
+          <span v-if="Math.floor((asset.attribute / 100) % 10) === 1" class="asset-type">Background</span>
+          <span v-else class="asset-type">Asset</span>
+          <img :src="asset.src" alt>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -90,7 +78,8 @@ import {
   AVATAR,
   NOTIFICATIONS,
   PUSH_NOTIFICATION,
-  REMOVE_NOTIFICATION
+  REMOVE_NOTIFICATION,
+  METAMASK_APPROVED
 } from "store/user-config/types";
 import { SELECT_SINGLE_ASSET_PACK } from "store/canvas/types";
 import {
@@ -122,7 +111,8 @@ export default {
   computed: {
     ...mapGetters({
       userAddress: METAMASK_ADDRESS,
-      notifications: NOTIFICATIONS
+      notifications: NOTIFICATIONS,
+      approvedMetamask: METAMASK_APPROVED
     })
   },
   methods: {

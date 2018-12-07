@@ -35,6 +35,8 @@ import {
   SELECTED_ASSET_PACKS,
   CLEAR_ASSET_PACKS
 } from "store/canvas/types";
+import { TOGGLE_MODAL } from "store/modal/types";
+import { METAMASK_APPROVED } from "store/user-config/types";
 import { mapActions, mapGetters } from "vuex";
 import { getLandingPacks } from "services/ethereumService";
 import StepHeader from "shared/StepHeader/StepHeader";
@@ -48,19 +50,28 @@ export default {
   },
   data: () => ({
     steps: [],
-    currentStep: 0
+    currentStep: 0,
+    approvePressed: false
   }),
   computed: {
     ...mapGetters({
-      selectedAssetPacks: SELECTED_ASSET_PACKS
+      selectedAssetPacks: SELECTED_ASSET_PACKS,
+      approvedMetamask: METAMASK_APPROVED
     })
   },
   methods: {
     ...mapActions({
       toggleAsset: TOGGLE_ASSET_PACK,
-      clearAssetPacks: CLEAR_ASSET_PACKS
+      clearAssetPacks: CLEAR_ASSET_PACKS,
+      openModal: TOGGLE_MODAL
     }),
     changeStep(step) {
+      console.log();
+      if (!this.approvedMetamask) {
+        this.approvePressed = true;
+        return this.openModal("metaMaskInfo");
+      }
+
       window.scrollTo(0, 0);
       this.currentStep = step;
       console.log("CHANGING STEP ", step);

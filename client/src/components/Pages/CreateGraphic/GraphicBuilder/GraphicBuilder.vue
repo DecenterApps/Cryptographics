@@ -205,13 +205,7 @@ import Canvas from "./Canvas.vue";
 import * as utils from "services/utils";
 import * as imageService from "services/imageService";
 import * as ipfsService from "services/ipfsService";
-import {
-  parseError,
-  resizeCanvas,
-  shuffleArray,
-  uniq,
-  isMetamaskApproved
-} from "services/helpers";
+import { parseError, resizeCanvas, shuffleArray, uniq } from "services/helpers";
 import { mapActions, mapGetters } from "vuex";
 import {
   METAMASK_ADDRESS,
@@ -219,8 +213,7 @@ import {
   BOUGHT_ASSETS_PACKS_IDS,
   NOTIFICATIONS,
   PUSH_NOTIFICATION,
-  REMOVE_NOTIFICATION,
-  METAMASK_APPROVED
+  REMOVE_NOTIFICATION
 } from "store/user-config/types";
 import {
   TOGGLE_MODAL,
@@ -266,7 +259,6 @@ export default {
     potentialAssets: [],
     selectedAssets: [],
     claimPressed: false,
-    approvePressed: false,
     gettingImageData: true
   }),
   computed: {
@@ -276,8 +268,7 @@ export default {
       isCanvasDrawing: CANVAS_DRAWING,
       boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
       selectedAssetPacks: SELECTED_ASSET_PACKS,
-      notifications: NOTIFICATIONS,
-      approvedMetamask: METAMASK_APPROVED
+      notifications: NOTIFICATIONS
     })
   },
   watch: {
@@ -288,11 +279,6 @@ export default {
     },
     username: function(val) {
       if (val !== "" && val !== "Anon" && this.claimPressed) {
-        this.buyImage();
-      }
-    },
-    approvedMetamask: function(val) {
-      if (val && this.approvePressed) {
         this.buyImage();
       }
     },
@@ -351,17 +337,6 @@ export default {
             name: "coinbaseInfo",
             data: { deeplink: this.getLink() }
           });
-        this.approvedMetamask = await isMetamaskApproved();
-        if (!isMobile && !this.approvedMetamask) {
-          this.approvePressed = true;
-          return this.openModal("metaMaskInfo");
-        }
-      }
-
-      this.approvedMetamask = await isMetamaskApproved();
-      if (!this.approvedMetamask) {
-        this.approvePressed = true;
-        return this.openModal("metaMaskInfo");
       }
 
       if (this.username === "" || this.username === "Anon") {
