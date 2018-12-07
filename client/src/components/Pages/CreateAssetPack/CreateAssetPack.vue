@@ -1,123 +1,113 @@
 <template>
-    <!-- FIRST STEP -->
-    <div class="create-asset-pack">
-        <step-header
-                :currentStep="currentStep"
-                :steps="['Upload Assets', 'Test Asset Pack', 'Submit Asset Pack']"
-                v-on:stepChange="changeStep"
-        />
-        <div class="page-wrapper" v-show="currentStep === 0">
-            <layout layout-style="full-screen">
-                <div class="left first-screen">
-                    <div class="top-content">
-                        <h1 class="large-title">Select assets</h1>
-                        <input-file
-                                accept="image/png, image/jpeg"
-                                id="files"
-                                button-style="secondary"
-                                @click="$event.target.value = null"
-                                @change="uploadAssets">
-                            <span>Upload multiple assets</span>
-                            <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
-                        </input-file>
-                        <upload-description v-if="assets.length > 0" />
-                    </div>
-                </div>
-                <div class="right">
-                    <upload-description v-if="assets.length === 0" />
-                    <div v-bar="{ preventParentScroll: true }">
-                        <div>
-                            <single-asset
-                                    v-for="(asset, index) in assets"
-                                    :remove="remove.bind(this, index)"
-                                    :index="index"
-                                    :toggleAttribute="toggleAttribute.bind(this)"
-                                    :asset="asset"
-                                    :key="index"
-                            ></single-asset>
-                        </div>
-                    </div>
-                </div>
-            </layout>
-            <div class="container">
-                <separator></separator>
-                <div class="bottom-content">
-                    <cg-button
-                            :disabled="assets.length === 0"
-                            @click="changeStep(1)">
-                        Next
-                    </cg-button>
-                </div>
+  <!-- FIRST STEP -->
+  <div class="create-asset-pack">
+    <step-header
+      :currentStep="currentStep"
+      :steps="['Upload Assets', 'Test Asset Pack', 'Submit Asset Pack']"
+      v-on:stepChange="changeStep"
+    />
+    <div class="page-wrapper" v-show="currentStep === 0">
+      <layout layout-style="full-screen">
+        <div class="left first-screen">
+          <div class="top-content">
+            <h1 class="large-title">Select assets</h1>
+            <input-file
+              accept="image/png, image/jpeg"
+              id="files"
+              button-style="secondary"
+              @click="$event.target.value = null"
+              @change="uploadAssets"
+            >
+              <span>Upload multiple assets</span>
+              <span v-if="assets.length > 0">Assets in pack {{ assets.length }} of {{ maxAssets }}</span>
+            </input-file>
+            <upload-description v-if="assets.length > 0"/>
+          </div>
+        </div>
+        <div class="right">
+          <upload-description v-if="assets.length === 0"/>
+          <div v-bar="{ preventParentScroll: true }">
+            <div>
+              <single-asset
+                v-for="(asset, index) in assets"
+                :remove="remove.bind(this, index)"
+                :index="index"
+                :toggleAttribute="toggleAttribute.bind(this)"
+                :asset="asset"
+                :key="index"
+              ></single-asset>
             </div>
+          </div>
         </div>
-        <div class="page-wrapper" v-if="currentStep === 1">
-            <layout layout-style="full-screen">
-                <test-asset-pack
-                        :selected-assets="assets"
-                        :changeStep="changeStep"
-                ></test-asset-pack>
-            </layout>
+      </layout>
+      <div class="container">
+        <separator></separator>
+        <div class="bottom-content">
+          <cg-button :disabled="assets.length === 0" @click="changeStep(1)">Next</cg-button>
         </div>
-        <div class="page-wrapper" v-show="currentStep === 2">
-            <layout layout-style="full-screen">
-                <div class="left-content">
-                    <h1 class="large-title">Submit asset pack</h1>
-                    <div class="graphic-preview">
-                        <canvas id="thumbnail-canvas"></canvas>
-                    </div>
-                    <div class="button-group submit">
-                        <cg-button button-style="secondary" @click="renderCanvas">
-                            Generate thumbnail
-                        </cg-button>
-                    </div>
-                </div>
-
-                <div class="right-content">
-                    <div class="input-content">
-                        <div class="inputs-wrapper">
-                            <div class="input-group">
-                                <label class="small-title">Asset pack name</label>
-                                <cg-input
-                                        v-on:input="checkErrors('name')"
-                                        :inputStyle="errors.name ? 'input error' : 'input'"
-                                        v-model="name"
-                                        :max-length="20"
-                                        name="packName"
-                                />
-                            </div>
-                            <div class="input-group">
-                                <label class="small-title">Asset pack price</label>
-                                <cg-input
-                                        v-on:input="checkErrors('price')"
-                                        :inputStyle="errors.price ? 'input error' : 'input'"
-                                        v-model="price"
-                                        inputType="number"
-                                        name="price"
-                                        placeholder="Value in ETH"
-                                />
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <label class="small-title">Description</label>
-                            <cg-textarea
-                                    v-model="description"
-                                    placeholder="Describe your asset pack"
-                                    :max-length="600"></cg-textarea>
-                        </div>
-                    </div>
-                </div>
-            </layout>
-            <div class="container">
-                <separator></separator>
-                <div class="submit-button">
-                    <cg-button
-                            @click="uploadToIpfs">
-                        Submit
-                    </cg-button>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="page-wrapper" v-if="currentStep === 1">
+      <layout layout-style="full-screen">
+        <test-asset-pack :selected-assets="assets" :changeStep="changeStep"></test-asset-pack>
+      </layout>
+    </div>
+    <div class="page-wrapper" v-show="currentStep === 2">
+      <layout layout-style="full-screen">
+        <div class="left-content">
+          <h1 class="large-title">Submit asset pack</h1>
+          <div class="graphic-preview">
+            <canvas id="thumbnail-canvas"></canvas>
+          </div>
+          <div class="button-group submit">
+            <cg-button button-style="secondary" @click="renderCanvas">Generate thumbnail</cg-button>
+          </div>
+        </div>
+
+        <div class="right-content">
+          <div class="input-content">
+            <div class="inputs-wrapper">
+              <div class="input-group">
+                <label class="small-title">Asset pack name</label>
+                <cg-input
+                  v-on:input="checkErrors('name')"
+                  :inputStyle="errors.name ? 'input error' : 'input'"
+                  v-model="name"
+                  :max-length="20"
+                  name="packName"
+                />
+              </div>
+              <div class="input-group">
+                <label class="small-title">Asset pack price</label>
+                <cg-input
+                  v-on:input="checkErrors('price')"
+                  :inputStyle="errors.price ? 'input error' : 'input'"
+                  v-model="price"
+                  inputType="number"
+                  name="price"
+                  placeholder="Value in ETH"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="small-title">Description</label>
+              <cg-textarea
+                v-model="description"
+                placeholder="Describe your asset pack"
+                :max-length="600"
+              ></cg-textarea>
+            </div>
+          </div>
+        </div>
+      </layout>
+      <div class="container">
+        <separator></separator>
+        <div class="submit-button">
+          <cg-button @click="uploadToIpfs">Submit</cg-button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -298,7 +288,6 @@ export default {
       const canvasClone = resizeCanvas(canvas, UPLOAD_WIDTH, UPLOAD_HEIGHT);
 
       try {
-        await this.openModal("");
         this.openLoadingModal("Uploading your asset pack to IPFS...");
         let coverImage = canvasClone.toDataURL("image/png", 1);
         let coverHash = await ipfsService.uploadFile(coverImage.substr(22));

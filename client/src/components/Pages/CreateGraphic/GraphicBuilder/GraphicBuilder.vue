@@ -1,93 +1,95 @@
 <template>
-    <div class="graphic-builder">
-        <!-- Tooltip for the price, needs to be out of context to be used in several areas -->
-        <div id="tooltip-1" class="hidden" v-tippy-html>
-            <div class="asset-pack-prices">
-                <div class="prices-list">
-                    <div>
-                        <div class="label">Asset pack name</div>
-                        <div class="label">Price in ETH</div>
-                    </div>
-                    <div v-for="(assetPack, index) in selectedAssetPacks" :key="index">
-                        <div>{{ assetPack.packName }}</div>
-                        <div>{{ customPrice(assetPack) }}</div>
-                    </div>
-                </div>
-                <separator></separator>
-                <div class="label">Total in ETH: <span>{{displayPrice()}}</span></div>
-            </div>
+  <div class="graphic-builder">
+    <!-- Tooltip for the price, needs to be out of context to be used in several areas -->
+    <div id="tooltip-1" class="hidden" v-tippy-html>
+      <div class="asset-pack-prices">
+        <div class="prices-list">
+          <div>
+            <div class="label">Asset pack name</div>
+            <div class="label">Price in ETH</div>
+          </div>
+          <div v-for="(assetPack, index) in selectedAssetPacks" :key="index">
+            <div>{{ assetPack.packName }}</div>
+            <div>{{ customPrice(assetPack) }}</div>
+          </div>
         </div>
+        <separator></separator>
+        <div class="label">
+          Total in ETH:
+          <span>{{displayPrice()}}</span>
+        </div>
+      </div>
+    </div>
 
-        <div class="left">
-            <div class="canvas-with-overlay-wrapper"
-                 @click="(currentStep === 1)
+    <div class="left">
+      <div
+        class="canvas-with-overlay-wrapper"
+        @click="(currentStep === 1)
                     ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
-                    : (download())">
-                <overlay v-if="currentStep === 2" key="1">
-                    <button-icon icon-type="download" />
-                    <p>Download</p>
-                </overlay>
-                <overlay v-if="currentStep === 1" key="2">
-                    <button-icon icon-type="recompose" />
-                    <p>Recompose</p>
-                </overlay>
-                <Canvas :canvasData="canvasData"></Canvas>
-            </div>
+                    : (download())"
+      >
+        <overlay v-if="currentStep === 2" key="1">
+          <button-icon icon-type="download"/>
+          <p>Download</p>
+        </overlay>
+        <overlay v-if="currentStep === 1" key="2">
+          <button-icon icon-type="recompose"/>
+          <p>Recompose</p>
+        </overlay>
+        <Canvas :canvasData="canvasData"></Canvas>
+      </div>
+    </div>
+    <!-- FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
+    <div v-if="currentStep === 1" class="right">
+      <div class="selected-asset-packs">
+        <h1 class="small-title">Selected asset packs</h1>
+        <div class="pack-list">
+          <asset-box
+            v-for="(assetPack, index) in selectedAssetPacks"
+            :key="index"
+            :assetPack="assetPack"
+            :small="true"
+            color="#eee"
+            action="close"
+            @click="toggleAsset(assetPack)"
+          />
+          <div @click="changeStep(0)" class="add-more">+</div>
         </div>
-        <!-- FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
-        <div v-if="currentStep === 1" class="right">
-            <div class="selected-asset-packs">
-                <h1 class="small-title">
-                    Selected asset packs
-                </h1>
-                <div class="pack-list">
-                    <asset-box
-                            v-for="(assetPack, index) in selectedAssetPacks"
-                            :key="index"
-                            :assetPack="assetPack"
-                            :small="true"
-                            color="#eee"
-                            action="close"
-                            @click="toggleAsset(assetPack)"
-                    />
-                    <div @click="changeStep(0)" class="add-more">
-                        +
-                    </div>
-                </div>
 
-                <div class="help">
-                    <p>Use the + button above to add more asset packs or change your selection. Click the asset pack and
-                        remove it from selection.</p>
-                    <p>Once you compose a unique variation that you like, simply click Next to save it and claim
-                        ownership.</p>
-                </div>
-            </div>
+        <div class="help">
+          <p>
+            Use the + button above to add more asset packs or change your selection. Click the asset pack and
+            remove it from selection.
+          </p>
+          <p>
+            Once you compose a unique variation that you like, simply click Next to save it and claim
+            ownership.
+          </p>
+        </div>
+      </div>
 
-            <div class="controls">
-                <div class="top-controls">
-                    <cg-checkbox
-                            v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
-                            :disabled="isCanvasDrawing || gettingImageData"
-                    >Add white frame
-                    </cg-checkbox>
-                    <cg-checkbox
-                            v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
-                            :disabled="isCanvasDrawing || gettingImageData"
-                    >Use square format
-                    </cg-checkbox>
-                    <cg-button
-                            :loading="isCanvasDrawing || gettingImageData"
-                            @click="renderCanvas(); track('Recompose')"
-                            :disabled="selectedAssetPacks.length === 0"
-                            button-style="secondary">
-                        Recompose
-                    </cg-button>
-                </div>
-                <separator></separator>
-                <div class="bottom-controls">
-                    <!--<cg-button @click="buyImage">Submit</cg-button>-->
-                    <price
-                            v-tippy="{
+      <div class="controls">
+        <div class="top-controls">
+          <cg-checkbox
+            v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
+            :disabled="isCanvasDrawing || gettingImageData"
+          >Add white frame</cg-checkbox>
+          <cg-checkbox
+            v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
+            :disabled="isCanvasDrawing || gettingImageData"
+          >Use square format</cg-checkbox>
+          <cg-button
+            :loading="isCanvasDrawing || gettingImageData"
+            @click="renderCanvas(); track('Recompose')"
+            :disabled="selectedAssetPacks.length === 0"
+            button-style="secondary"
+          >Recompose</cg-button>
+        </div>
+        <separator></separator>
+        <div class="bottom-controls">
+          <!--<cg-button @click="buyImage">Submit</cg-button>-->
+          <price
+            v-tippy="{
                                 html: '#tooltip-1',
                                 interactive : true,
                                 duration : 0,
@@ -96,86 +98,77 @@
                                 placement: 'top-start',
                                 flipBehavior: ['left', 'bottom-end']
                             }"
-                            size="medium"
-                            :value="displayPrice()"
-                    />
-                    <cg-button
-                            :loading="isCanvasDrawing || gettingImageData"
-                            @click="changeStep(2)"
-                            :disabled="selectedAssetPacks.length === 0"
-                    >
-                        Next
-                    </cg-button>
-                </div>
-            </div>
+            size="medium"
+            :value="displayPrice()"
+          />
+          <cg-button
+            :loading="isCanvasDrawing || gettingImageData"
+            @click="changeStep(2)"
+            :disabled="selectedAssetPacks.length === 0"
+          >Next</cg-button>
         </div>
-        <!-- END OF FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
-
-        <!-- SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
-        <div v-if="currentStep === 2" class="right">
-            <div class="selected-asset-packs">
-                <div class="final-pack-list">
-                    <div class="final-pack-item" v-for="(assetPack, index) in selectedAssetPacks" :key="index">
-                        <asset-box
-                                :key="index"
-                                :assetPack="assetPack"
-                                :small="true"
-                                color="#eee"
-                        />
-                        <div class="asset-pack-meta">
-                            <h1 class="small-title">{{ assetPack.packName }}</h1>
-                            <div :class="['small-title', customPrice(assetPack)]">{{ customPrice(assetPack) }}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="help">
-                    <p>This is your cryptographic.</p>
-                    <p>You can simply click it and download an image file to your device.</p>
-                    <p>
-                        However, in order to save it permanently on the blockchain and obtain true ownership, you
-                        need to claim the cryptographic.
-                    </p>
-                    <p>
-                        Claiming a cryptographic also means that the artists whose asset packs you used receive a
-                        payment for them, after which you can use them for any number of cryptographics in the future.
-                    </p>
-                    <p>
-                        You can also claim your graphic later by using <a :href="getLink()">this link</a>.
-                    </p>
-                </div>
+      </div>
+    </div>
+    <!-- END OF FIRST SCREEN OF GRAPHIC BUILDER FLOW  -->
+    <!-- SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
+    <div v-if="currentStep === 2" class="right">
+      <div class="selected-asset-packs">
+        <div class="final-pack-list">
+          <div
+            class="final-pack-item"
+            v-for="(assetPack, index) in selectedAssetPacks"
+            :key="index"
+          >
+            <asset-box :key="index" :assetPack="assetPack" :small="true" color="#eee"/>
+            <div class="asset-pack-meta">
+              <h1 class="small-title">{{ assetPack.packName }}</h1>
+              <div :class="['small-title', customPrice(assetPack)]">{{ customPrice(assetPack) }}</div>
             </div>
+          </div>
+        </div>
 
+        <div class="help">
+          <p>This is your cryptographic.</p>
+          <p>You can simply click it and download an image file to your device.</p>
+          <p>
+            However, in order to save it permanently on the blockchain and obtain true ownership, you
+            need to claim the cryptographic.
+          </p>
+          <p>
+            Claiming a cryptographic also means that the artists whose asset packs you used receive a
+            payment for them, after which you can use them for any number of cryptographics in the future.
+          </p>
+          <p>
+            You can also claim your graphic later by using
+            <a :href="getLink()">this link</a>.
+          </p>
+        </div>
+      </div>
 
-            <div class="controls">
-                <div class="top-controls buy-screen">
-                    <div class="small-title">Title</div>
-                    <cg-input
-                            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
-                            v-on:input="checkTitle"
-                            v-model="title"
-                            :max-length="40"
-                    />
-                    <div class="small-title">Description</div>
-                    <cg-textarea
-                            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
-                            v-model="description"
-                            :max-length="600"
-                    />
-                </div>
-                <separator></separator>
-                <div class="bottom-controls buy-screen">
-                    <div>
-                        <cg-button
-                                @click="changeStep(1)"
-                                button-style="secondary"
-                        >
-                            Back
-                        </cg-button>
-                    </div>
-                    <div class="separate-controls">
-                        <price
-                                v-tippy="{
+      <div class="controls">
+        <div class="top-controls buy-screen">
+          <div class="small-title">Title</div>
+          <cg-input
+            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
+            v-on:input="checkTitle"
+            v-model="title"
+            :max-length="40"
+          />
+          <div class="small-title">Description</div>
+          <cg-textarea
+            :inputStyle="errors.length > 0 ? 'input error' : 'input'"
+            v-model="description"
+            :max-length="600"
+          />
+        </div>
+        <separator></separator>
+        <div class="bottom-controls buy-screen">
+          <div>
+            <cg-button @click="changeStep(1)" button-style="secondary">Back</cg-button>
+          </div>
+          <div class="separate-controls">
+            <price
+              v-tippy="{
                                 html: '#tooltip-1',
                                 interactive : true,
                                 duration : 0,
@@ -184,21 +177,19 @@
                                 placement: 'top-start',
                                 flipBehavior: ['left', 'bottom-end']
                                 }"
-                                size="medium"
-                                :value="displayPrice()"
-                        />
-                        <cg-button
-                                :loading="isCanvasDrawing"
-                                @click="buyImage(); track('Claim')"
-                        >
-                            Claim cryptographic
-                        </cg-button>
-                    </div>
-                </div>
-            </div>
+              size="medium"
+              :value="displayPrice()"
+            />
+            <cg-button
+              :loading="isCanvasDrawing"
+              @click="buyImage(); track('Claim')"
+            >Claim cryptographic</cg-button>
+          </div>
         </div>
-        <!-- END OF SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
+      </div>
     </div>
+    <!-- END OF SECOND SCREEN OF GRAPHIC BUILDER FLOW  -->
+  </div>
 </template>
 
 <script>
@@ -380,7 +371,6 @@ export default {
       }
 
       try {
-        await this.openModal("");
         const UPLOAD_WIDTH = 307 * 2;
         const UPLOAD_HEIGHT =
           this.canvasData.ratio === "1:1" ? UPLOAD_WIDTH : 434 * 2;
@@ -475,7 +465,7 @@ export default {
         if (selectedAssets.length === 0) {
           this.imagePrice = 0;
         }
-
+        console.log(price);
         this.imagePrice = utils.scientificToDecimal(parseFloat(price));
 
         console.log("PRICE : " + this.imagePrice);

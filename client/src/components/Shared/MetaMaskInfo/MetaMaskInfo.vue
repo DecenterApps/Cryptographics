@@ -21,8 +21,12 @@
           rel="noopener noreferrer"
           href="https://metamask.io/"
         >Get MetaMask</a>
-        <p>Or if you need help
-          <a target="_blank" href="https://discordapp.com/invite/xnhfYRS">get in touch</a> with us.
+        <p>
+          Or if you need help
+          <a
+            target="_blank"
+            href="https://discordapp.com/invite/xnhfYRS"
+          >get in touch</a> with us.
         </p>
       </div>
     </div>
@@ -76,6 +80,7 @@ export default {
       try {
         await metamaskApprove();
         await this.setApproval();
+        await this.openModal("");
       } catch (e) {
         console.log(e);
       }
