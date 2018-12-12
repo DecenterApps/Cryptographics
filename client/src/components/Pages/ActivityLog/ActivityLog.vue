@@ -179,6 +179,7 @@ export default {
                 display: flex;
                 padding-bottom: 34px;
                 margin-bottom: 30px;
+                max-width: 100%;
                 width: max-content;
 
                 &:not(:last-child) {
