@@ -1,42 +1,39 @@
 <template>
-    <div class="modal">
-        <div class="overlay" @click="closeModal"></div>
-        <div :class="['content', smallerPadding(content)]">
-            <button-icon
-                icon-type="close"
-                @click="closeModal" />
-            <edit-profile
-                v-if="content === 'editProfile'" />
-            <edit-pack-price
-                v-else-if="content && content.name === 'editPackPrice'"
-                v-bind="content.data" />
-            <set-username
-                v-else-if="content === 'setUsername'" />
-            <meta-mask-info
-                v-else-if="content === 'metaMaskInfo'"
-                :hasMetaMask="hasMetaMask"
-                :isMetaMaskLocked="isMetaMaskLocked"
-                :isMetamaskApproved="approvedMetamask" />
-            <coinbase-info
-                v-else-if="content && content.name === 'coinbaseInfo'"
-                v-bind="content.data"
-                :isApple="isApple"
-                :isAndroid="isAndroid"/>
-            <transfer-history
-                v-else-if="content && content.name === 'transferHistory'"
-                v-bind="content.data" />
-            <asset-pack-upload-error
-                v-else-if="content && content.name === 'assetPackUploadError'"
-                v-bind="content.data" />
-            <balances-modal
-                v-else-if="content === 'balances'" />
-            <success-message
-                v-else :content="content" />
-            <div v-else>
-                <slot />
-            </div>
-        </div>
+  <div class="modal">
+    <div class="overlay" @click="closeModal"></div>
+    <div :class="['content', smallerPadding(content)]">
+      <button-icon icon-type="close" @click="closeModal"/>
+      <edit-profile v-if="content === 'editProfile'"/>
+      <edit-pack-price
+        v-else-if="content && content.name === 'editPackPrice'"
+        v-bind="content.data"
+      />
+      <set-username v-else-if="content === 'setUsername'"/>
+      <meta-mask-info
+        v-else-if="content === 'metaMaskInfo'"
+        :hasMetaMask="hasMetaMask"
+        :isMobile="isMobile"
+        :isMetaMaskLocked="isMetaMaskLocked"
+        :isMetamaskApproved="approvedMetamask"
+      />
+      <coinbase-info
+        v-else-if="content && content.name === 'coinbaseInfo'"
+        v-bind="content.data"
+        :isApple="isApple"
+        :isAndroid="isAndroid"
+      />
+      <transfer-history
+        v-else-if="content && content.name === 'transferHistory'"
+        v-bind="content.data"
+      />
+      <asset-pack-upload-error
+        v-else-if="content && content.name === 'assetPackUploadError'"
+        v-bind="content.data"
+      />
+      <balances-modal v-else-if="content === 'balances'"/>
+      <success-message v-else :content="content"/>
     </div>
+  </div>
 </template>
 
 <script>
@@ -59,7 +56,8 @@ export default {
   name: "Modal",
   data: () => ({
     hasMetaMask: false,
-    isMetaMaskLocked: false
+    isMetaMaskLocked: false,
+    isMobile
   }),
   props: {
     content: {
@@ -83,6 +81,7 @@ export default {
     this.hasMetaMask = !!cp.isMetaMask;
     this.isAndroid = ua.includes("Android");
     this.isApple = ua.includes("iPhone") || ua.includes("iPad");
+    this.isMobile = this.isAndroid || this.isApple;
     this.isMetaMaskLocked = await isMetaMaskLocked();
   },
   computed: {

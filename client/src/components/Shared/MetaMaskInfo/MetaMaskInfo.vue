@@ -1,7 +1,7 @@
 <template>
   <div class="meta-mask-info">
     <ico-error/>
-    <div v-if="!hasMetaMask">
+    <div v-if="!hasMetaMask && !isMobile">
       <div class="text-wrapper">
         You don’t have
         <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
@@ -30,15 +30,12 @@
         </p>
       </div>
     </div>
-    <div v-else-if="hasMetaMask && isMetamaskApproved || isMetaMaskLocked">
-      <div v-if="isMetaMaskLocked && !isMetamaskApproved">
+    <div v-else-if="!isMetaMaskLocked">
+      <div>
         <div
           class="text-wrapper secondary"
-        >In order to continue you need to connect your MetaMask account to Cryptographics dApp.</div>
+        >Your wallet is either not connected or is locked. In order to continue you need to connect it or unlock it.</div>
         <cg-button @click="approve()">Connect</cg-button>
-      </div>
-      <div v-else-if="isMetaMaskLocked && isMetamaskApproved">
-        <div class="text-wrapper">Your MetaMask account is locked, please log in.</div>
       </div>
     </div>
     <img class="round-logo" :src="roundLogo" alt>
@@ -58,7 +55,11 @@ export default {
   components: { IcoError },
   data: () => ({
     showMoreInfo: false,
-    roundLogo
+    roundLogo,
+    isMetaMask: false,
+    isStatus: false,
+    isTrust: false,
+    isCoinbase: false
   }),
   props: {
     hasMetaMask: {
@@ -69,7 +70,17 @@ export default {
     },
     isMetamaskApproved: {
       type: Boolean
+    },
+    isMobile: {
+      type: Boolean
     }
+  },
+  created() {
+    const { currentProvider: cp } = window.web3;
+    this.isMetaMask = !!cp.isMetaMask;
+    this.isStatus = !!cp.isStatus;
+    this.isTrust = !!cp.isTrust;
+    this.isCoinbase = !!cp.isToshi;
   },
   methods: {
     ...mapActions({
