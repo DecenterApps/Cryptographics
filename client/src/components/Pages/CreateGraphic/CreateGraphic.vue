@@ -68,7 +68,9 @@ export default {
     }),
     async changeStep(step) {
       const isLocked = await isMetaMaskLocked();
-      if (isLocked) {
+      const { currentProvider: cp } = window.web3;
+      const hasWallet = !!cp.isMetaMask || !!cp.isStatus || !!cp.isTrust || !!cp.isToshi;
+      if (isLocked && hasWallet) {
         this.approvePressed = true;
         return this.openModal("metaMaskInfo");
       }

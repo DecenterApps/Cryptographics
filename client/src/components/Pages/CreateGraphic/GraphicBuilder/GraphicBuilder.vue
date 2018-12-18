@@ -341,7 +341,6 @@ export default {
 
       if (this.username === "" || this.username === "Anon") {
         this.claimPressed = true;
-        await this.openModal("");
         return this.openModal("setUsername");
       }
 
