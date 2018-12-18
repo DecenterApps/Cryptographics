@@ -57,7 +57,7 @@ export default {
   data: () => ({
     hasMetaMask: false,
     isMetaMaskLocked: false,
-    isMobile
+    isMobile: false
   }),
   props: {
     content: {

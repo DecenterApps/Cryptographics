@@ -30,7 +30,7 @@
         </p>
       </div>
     </div>
-    <div v-else-if="!isMetaMaskLocked">
+    <div v-else-if="isMetaMaskLocked">
       <div>
         <div
           class="text-wrapper secondary"

@@ -40,6 +40,7 @@ import { METAMASK_APPROVED } from "store/user-config/types";
 import { mapActions, mapGetters } from "vuex";
 import { getLandingPacks } from "services/ethereumService";
 import StepHeader from "shared/StepHeader/StepHeader";
+import { isMetaMaskLocked } from "services/helpers";
 
 export default {
   name: "CreateGraphic",
@@ -65,9 +66,9 @@ export default {
       clearAssetPacks: CLEAR_ASSET_PACKS,
       openModal: TOGGLE_MODAL
     }),
-    changeStep(step) {
-      console.log();
-      if (!this.approvedMetamask) {
+    async changeStep(step) {
+      const isLocked = await isMetaMaskLocked();
+      if (isLocked) {
         this.approvePressed = true;
         return this.openModal("metaMaskInfo");
       }
