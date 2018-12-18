@@ -13,8 +13,8 @@
         v-else-if="content === 'metaMaskInfo'"
         :hasMetaMask="hasMetaMask"
         :isMobile="isMobile"
-        :isMetaMaskLocked="isMetaMaskLocked"
-        :isMetamaskApproved="approvedMetamask"
+        :isLocked="isLocked"
+        :isApproved="isApproved"
       />
       <coinbase-info
         v-else-if="content && content.name === 'coinbaseInfo'"
@@ -40,7 +40,7 @@
 import { mapActions, mapGetters } from "vuex";
 import { TOGGLE_MODAL } from "store/modal/types";
 import { isMetaMaskLocked } from "services/helpers";
-import { METAMASK_APPROVED } from "store/user-config/types";
+import { METAMASK_ADDRESS, METAMASK_APPROVED } from "store/user-config/types";
 
 import EditProfile from "shared/EditProfile/EditProfile.vue";
 import EditPackPrice from "shared/EditPackPrice/EditPackPrice.vue";
@@ -75,18 +75,23 @@ export default {
     CoinbaseInfo,
     AssetPackUploadError
   },
-  async created() {
+  watch: {
+    userAddress: function(val) {
+      this.isLocked = val;
+    },
+  },
+  async beforeMount() {
     const { currentProvider: cp } = window.web3;
     const { userAgent: ua } = navigator;
     this.hasMetaMask = !!cp.isMetaMask;
     this.isAndroid = ua.includes("Android");
     this.isApple = ua.includes("iPhone") || ua.includes("iPad");
     this.isMobile = this.isAndroid || this.isApple;
-    this.isMetaMaskLocked = await isMetaMaskLocked();
+    this.isLocked = this.userAddress;
   },
   computed: {
     ...mapGetters({
-      approvedMetamask: METAMASK_APPROVED
+      userAddress: METAMASK_ADDRESS,
     })
   },
   methods: {

@@ -36,7 +36,7 @@ import {
   CLEAR_ASSET_PACKS
 } from "store/canvas/types";
 import { TOGGLE_MODAL } from "store/modal/types";
-import { METAMASK_APPROVED } from "store/user-config/types";
+import { METAMASK_APPROVED, METAMASK_ADDRESS } from "store/user-config/types";
 import { mapActions, mapGetters } from "vuex";
 import { getLandingPacks } from "services/ethereumService";
 import StepHeader from "shared/StepHeader/StepHeader";
@@ -52,12 +52,12 @@ export default {
   data: () => ({
     steps: [],
     currentStep: 0,
-    approvePressed: false
   }),
   computed: {
     ...mapGetters({
       selectedAssetPacks: SELECTED_ASSET_PACKS,
-      approvedMetamask: METAMASK_APPROVED
+      approvedMetamask: METAMASK_APPROVED,
+      userAddress: METAMASK_ADDRESS
     })
   },
   methods: {
@@ -67,11 +67,9 @@ export default {
       openModal: TOGGLE_MODAL
     }),
     async changeStep(step) {
-      const isLocked = await isMetaMaskLocked();
       const { currentProvider: cp } = window.web3;
       const hasWallet = !!cp.isMetaMask || !!cp.isStatus || !!cp.isTrust || !!cp.isToshi;
-      if (isLocked && hasWallet) {
-        this.approvePressed = true;
+      if (!this.userAddress) {
         return this.openModal("metaMaskInfo");
       }
 
@@ -86,7 +84,7 @@ export default {
       if (window._paq) window._paq.push(["trackGoal", events[step]]);
     }
   },
-  created() {
+  async mounted() {
     const html = document.querySelector("html");
     html.classList.remove("no-scroll");
     if (window.sessionStorage.length > 0) {

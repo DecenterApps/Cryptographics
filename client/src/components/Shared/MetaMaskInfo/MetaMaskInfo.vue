@@ -1,7 +1,7 @@
 <template>
   <div class="meta-mask-info">
     <ico-error/>
-    <div v-if="!hasMetaMask && !isMobile">
+    <div v-if="!hasMetaMask && !isMobile && !isApproved">
       <div class="text-wrapper">
         You don’t have
         <span>MetaMask</span> enabled. Without MetaMask, you cannot buy Asset Packs, claim
@@ -30,7 +30,7 @@
         </p>
       </div>
     </div>
-    <div v-else-if="isMetaMaskLocked">
+    <div v-else-if="!isLocked">
       <div>
         <div
           class="text-wrapper secondary"
@@ -46,7 +46,7 @@
 import { mapActions } from "vuex";
 import { TOGGLE_MODAL } from "store/modal/types";
 import { SET_APPROVAL } from "store/user-config/types";
-import { metamaskApprove } from "services/helpers";
+import { metamaskApprove, isMetaMaskLocked } from "services/helpers";
 import roundLogo from "assets/round-logo.png";
 import IcoError from "../../Shared/UI/Icons/IcoError";
 
@@ -56,32 +56,33 @@ export default {
   data: () => ({
     showMoreInfo: false,
     roundLogo,
-    isMetaMask: false,
-    isStatus: false,
-    isTrust: false,
-    isCoinbase: false
+    // isMetaMask: false,
+    // isStatus: false,
+    // isTrust: false,
+    // isCoinbase: false
   }),
   props: {
     hasMetaMask: {
       type: Boolean
     },
-    isMetaMaskLocked: {
-      type: Boolean
-    },
-    isMetamaskApproved: {
+    isLocked: {
       type: Boolean
     },
     isMobile: {
       type: Boolean
+    },
+    isApproved: {
+      type: Boolean
     }
   },
-  created() {
-    const { currentProvider: cp } = window.web3;
-    this.isMetaMask = !!cp.isMetaMask;
-    this.isStatus = !!cp.isStatus;
-    this.isTrust = !!cp.isTrust;
-    this.isCoinbase = !!cp.isToshi;
-  },
+  async mounted() {
+    // const { currentProvider: cp } = window.web3;
+    // this.isMetaMask = !!cp.isMetaMask;
+    // this.isStatus = !!cp.isStatus;
+    // this.isTrust = !!cp.isTrust;
+    // this.isCoinbase = !!cp.isToshi;
+    // this.isLocked = await isMetaMaskLocked();
+},
   methods: {
     ...mapActions({
       openModal: TOGGLE_MODAL,

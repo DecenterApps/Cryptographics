@@ -38,7 +38,6 @@ import {
   getBoughtAssetPacks,
   userBalances,
 } from 'services/ethereumService';
-import { metamaskApprove } from '../../../services/helpers';
 
 export default {
   [SET_NETWORK]: async ({ commit }) => {
