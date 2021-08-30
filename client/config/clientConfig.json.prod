@@ -1,5 +1,6 @@
 {
     "network": 1,
-    "provider": "https://mainnet.infura.io",
+    "provider": "https://infura.io",
+    "rpcHttpProvider": "https://mainnet.infura.io/v3/c3c6dfae921c4f75b4507c3a4220a101",
     "deployBlockNumber": 6450000
 }
