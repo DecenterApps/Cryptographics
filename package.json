@@ -1,5 +1,5 @@
 {
-  "name": "Cryptographics",
+  "name": "cryptographics",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -17,10 +17,10 @@
     "copyConfig": "cp client/config/config.json.dist client/config/config.json && cp client/config/clientConfig.json.dev client/config/clientConfig.json"
   },
   "dependencies": {
+    "@walletconnect/web3-subprovider": "^1.6.2",
     "add-asset-html-webpack-plugin": "^2.1.3",
     "axios": "^0.18.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
     "big-integer": "^1.6.36",
     "bignumber.js": "^7.2.1",
     "bs58": "^4.0.1",
@@ -30,7 +30,7 @@
     "dotenv": "^6.0.0",
     "ethereumjs-tx": "^1.3.7",
     "ethereumjs-util": "^5.2.0",
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "file-loader": "^1.1.11",
     "hex-string": "^1.0.1",
     "html-webpack-plugin": "^3.2.0",
@@ -51,20 +51,21 @@
     "truffle-hdwallet-provider-privkey": "^0.2.0",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "url-loader": "^1.1.1",
-    "vue": "^2.5.17",
+    "vue": "^2.6.14",
     "vue-async-computed": "^3.4.0",
     "vue-class": "^2.0.1",
-    "vue-class-component": "^6.2.0",
+    "vue-class-component": "^6.3.2",
     "vue-loader": "^15.4.2",
     "vue-masonry": "^0.11.6",
     "vue-router": "^3.0.1",
     "vue-slick": "^1.1.13",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.17",
+    "vue-style-loader": "^4.1.3",
+    "vue-template-compiler": "^2.6.14",
     "vue-tippy": "^2.0.19",
     "vuebar": "0.0.18",
     "vuex": "^3.0.1",
     "web3": "1.0.0-beta.34",
+    "web3-provider-engine": "^16.0.3",
     "webpack": "^4.20.0",
     "webpack-cli": "^3.1.0",
     "webpack-dev-middleware": "^1.12.2",
@@ -77,6 +78,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "webpack-dev-server": "^3.1.9"
   },
   "repository": {
@@ -88,5 +90,6 @@
   "bugs": {
     "url": "https://github.com/DecenterApps/Cryptographics/issues"
   },
-  "homepage": "https://github.com/DecenterApps/Cryptographics#readme"
+  "homepage": "https://github.com/DecenterApps/Cryptographics#readme",
+  "engines" : { "node" : "8.0.0" }
 }
