@@ -315,7 +315,7 @@ export default {
           for (let i = 0; i < this.assets.length; i++) {
             try {
               let ipfsHash = await ipfsService.uploadFile(
-                loadedImages[i].image.result.substr(22)
+                  loadedImages[i].image.result.split("base64,")[1]
               );
               hashes.push(utils.getBytes32FromIpfsHash(ipfsHash));
               if (i === this.assets.length - 1) {
