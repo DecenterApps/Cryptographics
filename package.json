@@ -12,7 +12,9 @@
     "start": "node server.js",
     "prod": "webpack --config client/build/webpack.prod.js -p",
     "build": "webpack --config client/build/webpack.prod.js -p",
-    "dev": "webpack-dev-server --history-api-fallback --mode=development --open --host 0.0.0.0 --port 3300 --compress --config ./client/build/webpack.config.js",
+    "runDevServer": "webpack-dev-server --history-api-fallback --mode=development --open --host 0.0.0.0 --port 3300 --compress --config ./client/build/webpack.config.js",
+    "serveDev": "cp ./client/config/clientConfig.json.dev ./client/config/clientConfig.json && yarn runDevServer",
+    "serveProd": "cp ./client/config/clientConfig.json.prod ./client/config/clientConfig.json && yarn runDevServer",
     "generatePacks": "node client/config/generatePacks.js 0",
     "copyConfig": "cp client/config/config.json.dist client/config/config.json && cp client/config/clientConfig.json.dev client/config/clientConfig.json"
   },
@@ -37,7 +39,7 @@
     "image-size": "^0.6.3",
     "imagemin": "^6.0.0",
     "imagemin-pngquant": "^6.0.0",
-    "ipfs-api": "^24.0.2",
+    "ipfs-http-client": "^52.0.2",
     "jquery": "^3.3.1",
     "js-sha3": "^0.7.0",
     "left-pad": "^1.3.0",
@@ -91,5 +93,7 @@
     "url": "https://github.com/DecenterApps/Cryptographics/issues"
   },
   "homepage": "https://github.com/DecenterApps/Cryptographics#readme",
-  "engines" : { "node" : "8.0.0" }
+  "engines": {
+    "node": "8.0.0"
+  }
 }
