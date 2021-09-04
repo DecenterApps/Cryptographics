@@ -1,6 +1,10 @@
-import ipfsAPI from 'ipfs-api';
+import ipfsAPI from 'ipfs-http-client';
 
-const node = ipfsAPI('ipfs.decenter.com', '50001', { protocol: 'https' });
+const node = ipfsAPI.create({
+  host: 'ipfs.decenter.com',
+  port: '50001',
+  protocol: 'https',
+});
 
 const replicationNodes = [
   'https://ipfs.decenter.com',
@@ -14,40 +18,46 @@ export const bootstrapNodes = [
 
 export const getHash = async (data) =>
   new Promise((resolve, reject) => {
-    node.files.add([Buffer.from(data, 'base64')], { onlyHash: true }, (err, data) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(data[0].hash);
-    });
-
+    node.add([Buffer.from(data, 'base64')], { onlyHash: true, progress: (a) => console.log(`received: ${a}`) })
+    .then(       (res) => {
+      console.log(res);
+      resolve(res.path);
+    })
+    .catch((err) => {
+      console.log(err);
+      reject(err);
+    })
   });
 
 export const uploadFile = async (data) =>
   new Promise((resolve, reject) => {
-    node.files.add([Buffer.from(data, 'base64')], async (err, uploadedFile) => {
-      if (err) {
-        return reject(err);
-      }
-      const { hash } = uploadedFile[0];
-      try { await replicate(hash, 'file'); } catch (e) { reject(e); }
-      resolve(hash);
-    });
+    node.add([Buffer.from(data, 'base64')], { progress: (a) => console.log(`received: ${a}`) }).then(async (res) => {
+      console.log(res);
+      resolve(res.path);
+    })
+    .catch((err) => {
+      console.log(err);
+      reject(err);
+    })
   });
 
 export const uploadJSON = async (data) =>
   new Promise((resolve, reject) => {
     if (typeof data === 'object') data = JSON.stringify(data);
-    node.files.add([Buffer.from(data)], async (err, uploadedFile) => {
-      if (err) {
-        return reject(err);
-      }
-      const { hash } = uploadedFile[0];
-      try { await replicate(hash, 'file'); } catch (e) { reject(e); }
-      resolve(hash);
+    node.add([Buffer.from(data)], { progress: (a) => console.log(`received: ${a}`) })
+    .then(async (res) => {
+      console.log(res);
+      const { path } = res;
+      try { await replicate(path, 'file'); } catch (e) { reject(e); }
+      resolve(path);
+    })
+    .catch((err) => {
+      console.log(err);
+      reject(err);
     });
   });
 
+// TODO - allow pinning this way - await node.pin.add(res.cid)? (nginx is throwing cors)
 /*
  Replicates given hash on at least one node
  */
@@ -79,7 +89,7 @@ export const getFileContent = (hash) =>
       reject('Couldn\'t fetch data. (TIMEOUT)');
     }, 20000);
     try {
-      const file = await node.files.cat(hash);
+      const file = await node.files.read(hash);
       clearTimeout(ipfsTimeout);
       resolve(new TextDecoder('utf-8').decode(file));
     } catch (e) {
