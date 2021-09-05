@@ -133,10 +133,11 @@ export const getAssetIpfs = async (assetId) => {
 export const getAssetsIpfs = async (assets) => {
   const ids = assets.map(asset => asset.id);
   let ipfsHashes = await assetManagerContract().methods.getIpfsForAssets(ids).call();
+  let _hashes = {};
   for (let i = 0; i < ipfsHashes.length; i++) {
-    ipfsHashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
+    _hashes[i] = utils.getIpfsHashFromBytes32(ipfsHashes[i]);
   }
-  return ipfsHashes;
+  return _hashes;
 };
 
 export const getImageIpfs = async (imageId) => {

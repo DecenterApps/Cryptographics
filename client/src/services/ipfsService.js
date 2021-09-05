@@ -89,10 +89,17 @@ export const getFileContent = (hash) =>
       reject('Couldn\'t fetch data. (TIMEOUT)');
     }, 20000);
     try {
-      const file = await node.files.read(hash);
+      // console.log(node, hash);
+      // const file = await node.files.read([hash]); // TODO for unknown reason this returns read { [suspended] }
+      // console.log(file);
+      // resolve(new TextDecoder('utf-8').decode(file));
+      const req = await fetch(`https://ipfs.decenter.com/ipfs/${hash}`);
+      if (!req.ok) throw new Error('failed fetching');
+      const response = await req.json();
       clearTimeout(ipfsTimeout);
-      resolve(new TextDecoder('utf-8').decode(file));
+      resolve(JSON.stringify(response));
     } catch (e) {
+      console.log(e);
       reject(e.message);
     }
   });
