@@ -57,7 +57,7 @@ export function checkProvider() {
       window._paq.push(['trackEvent', 'Landing', 'Web3 not detected']);
     }
   } else {
-    window.web3 = new Web3(new Web3.providers.HttpProvider(clientConfig.provider));
+    window.web3 = new Web3(new Web3.providers.HttpProvider(clientConfig.rpcHttpProvider));
     console.log(`Using injected web3 from Infura`);
     if (window._paq) {
       window._paq.push(['trackEvent', 'Landing', 'Web3 not detected']);
