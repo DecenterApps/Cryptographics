@@ -85,11 +85,11 @@ export default {
   },
   [SET_CREATED_ASSETS_PACKS_IDS]: async ({ commit, state }) => {
     let createdIDs = await getCreatedAssetPacks(state.metamaskAddress);
-    commit(MUTATE_CREATED_ASSETS_PACKS_IDS, createdIDs.reverse());
+    commit(MUTATE_CREATED_ASSETS_PACKS_IDS, [...createdIDs].reverse());
   },
   [SET_BOUGHT_ASSETS_PACKS_IDS]: async ({ commit, state }) => {
     let boughtIDs = await getBoughtAssetPacks(state.metamaskAddress);
-    commit(MUTATE_BOUGHT_ASSETS_PACKS_IDS, boughtIDs.reverse());
+    commit(MUTATE_BOUGHT_ASSETS_PACKS_IDS, [...boughtIDs].reverse());
   },
   [SET_APPROVAL]: async ({ commit }) => {
     const metamaskApproved = await isMetamaskApproved();
