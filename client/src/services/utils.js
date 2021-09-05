@@ -75,6 +75,21 @@ function pickRandomHashes() {
   return arr;
 }
 
+function parseTimestamp(timestamp, unix = false) {
+  const a = unix
+    ? new Date(1000 * timestamp)
+    : new Date(timestamp);
+
+  const year = a.getFullYear();
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = monthNames[a.getMonth()];
+  const date = a.getDate();
+  const hour = a.getHours() < 10 ? `0${a.getHours()}` : a.getHours();
+  const min = a.getMinutes() < 10 ? `0${a.getMinutes()}` : a.getMinutes();
+
+  return `${month} ${date}. ${year}, ${hour}:${min}`;
+}
+
 function getIpfsHashFromBytes32(bytes32Hex) {
   // Add our default ipfs values for first 2 bytes:
   // function:0x12=sha2, size:0x20=256 bits
@@ -198,4 +213,5 @@ module.exports = {
   scientificToDecimal,
   encodeQueryString,
   getDateDiff,
+  parseTimestamp,
 };
