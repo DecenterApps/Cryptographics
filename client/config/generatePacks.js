@@ -20,7 +20,7 @@ const getFileContent = async (hash) => {
   //   throw Error('Couldn\'t fetch data. (TIMEOUT)');
   // }, 20000);
   try {
-    const file = await window.node.files.cat(hash);
+    const file = await window.node.files.read(hash);
     // clearTimeout(ipfsTimeout);
     return new TextDecoder('utf-8').decode(file);
   } catch (e) {
@@ -151,34 +151,38 @@ const readFiles = (dirname) =>
   });
 
 const buildConfig = async () => {
-  const path = `${__dirname}/../src/assets/landingart/`;
-  deleteFolderRecursive(path);
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
-  }
-  let assetPackIds = process.argv.slice(2);
-  if (assetPackIds.length === 0) {
-    assetPackIds = await getAssetPackIds();
-  }
-  console.log('Downloading images...');
-  const promises = assetPackIds.map(async assetPackId => await downloadAssetPack(assetPackId));
-  const assetPackData = await Promise.all(promises);
-  console.log('Download complete!');
+  try {
+    const path = `${__dirname}/../src/assets/landingart/`;
+    deleteFolderRecursive(path);
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path);
+    }
+    let assetPackIds = process.argv.slice(2);
+    if (assetPackIds.length === 0) {
+      assetPackIds = await getAssetPackIds();
+    }
+    console.log('Downloading images...');
+    const promises = assetPackIds.map(async assetPackId => await downloadAssetPack(assetPackId));
+    const assetPackData = await Promise.all(promises);
+    console.log('Download complete!');
 
-  console.log('Compressing...');
-  const compressPromises = assetPackIds.map(async assetPackId => {
-    imagemin([`${__dirname}/../src/assets/landingart/${assetPackId}/*.{jpg,png}`],
-      `${__dirname}/../src/assets/landingart/${assetPackId}/`, {
-      plugins: [imageminPngquant({quality: '90'})]
+    console.log('Compressing...');
+    const compressPromises = assetPackIds.map(async assetPackId => {
+      imagemin([`${__dirname}/../src/assets/landingart/${assetPackId}/*.{jpg,png}`],
+        `${__dirname}/../src/assets/landingart/${assetPackId}/`, {
+        plugins: [imageminPngquant({quality: '90'})]
+      });
     });
-  });
-  await Promise.all(compressPromises);
-  console.log('Done!');
+    await Promise.all(compressPromises);
+    console.log('Done!');
 
-  fs.writeFile(`${__dirname}/landingAssetPacks.json`, JSON.stringify(assetPackData), (err) => {
-    if (err) throw err;
-    console.log('Success!');
-  });
+    fs.writeFile(`${__dirname}/landingAssetPacks.json`, JSON.stringify(assetPackData), (err) => {
+      if (err) throw err;
+      console.log('Success!');
+    });
+  } catch (err) {
+    console.log('buildConfig err: ', err);
+  }
 };
 
 buildConfig();
