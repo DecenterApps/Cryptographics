@@ -35,6 +35,9 @@
             <div class="graphic-name">
                 <h3 class="large-title">{{ image.title }} <span class="graphic-id">no. {{ utils.padToFour(parseInt(image.id)) }}</span>
                 </h3>
+                <div class="metadata">
+                  <span>Created: {{ image.dateMinted }}</span>
+                </div>
                 <div v-if="image.creatorMeta.username !== image.username" class="user-links-wrapper">
                     <div class="user-link-wrapper" v-if="image.creatorMeta">
                         <user-link :to="'/user/' + image.creator" :name="image.creatorMeta.username"
@@ -375,6 +378,16 @@
 
     .graphic-name {
         width: 100%;
+        .metadata {
+          span {
+            font-family: Roboto, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-flex;
+            margin-bottom: 10px;
+            color: #858585;
+          }
+        }
         .graphic-id {
             font-family: Roboto, sans-serif;
             font-size: 12px;

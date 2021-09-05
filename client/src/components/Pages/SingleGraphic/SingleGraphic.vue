@@ -61,6 +61,7 @@
   } from 'services/ethereumService';
   import ShareIcons from './ShareIcons';
   import { resizeCanvas } from '../../../services/helpers';
+  import { parseTimestamp } from '../../../services/utils';
 
   export default {
     name: 'SingleGraphic',
@@ -168,6 +169,7 @@
             ...metadata,
             ...image,
             creatorMeta,
+            dateMinted: parseTimestamp(+metadata.timestamp),
             id: this.$route.params.id,
           };
         } catch (err) {
