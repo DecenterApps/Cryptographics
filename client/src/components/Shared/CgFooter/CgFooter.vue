@@ -29,7 +29,7 @@
                 </a>
             </div>
         </div>
-        
+
     </footer>
 </template>
 
@@ -47,9 +47,10 @@
     },
     data: () => ({
       social: [
-        { name: 'reddit', url: 'https://www.reddit.com/r/Cryptographics/' },
+        { name: 'opensea', url: 'https://opensea.io/collection/cryptographicsart' },
+        { name: 'twitter', url: 'https://twitter.com/_Cryptographics' },
         { name: 'discord', url: 'https://discord.gg/xnhfYRS' },
-        { name: 'twitter', url: 'https://twitter.com/_Cryptographics' }
+        { name: 'reddit', url: 'https://www.reddit.com/r/Cryptographics/' },
       ]
     })
   };
@@ -133,7 +134,7 @@
                 svg {
                     margin: 10px 0  30px;
                 }
-                p { 
+                p {
                     margin: 0;
                     font-size: 12px;
                     color: #fff;
