@@ -5,24 +5,24 @@ import clientConfig from 'config/clientConfig.json';
 import { ipfsNodePath } from 'config/constants';
 import landingAssetPacks from 'config/landingAssetPacks.json';
 import { layerCompare } from './imageService';
-import { getAccounts } from './helpers';
+import { getAccount } from './web3Service';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME } from 'config/constants';
 import * as ipfsService from './ipfsService';
 
 const cryptographicsGetterContractAddress = config.cryptographicsGetter.networks[clientConfig.network].address;
-const getterContract = () => new web3.eth.Contract(config.cryptographicsGetter.abi, cryptographicsGetterContractAddress);
+const getterContract = () => new window._web3.eth.Contract(config.cryptographicsGetter.abi, cryptographicsGetterContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
-export const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+export const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
-export const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+export const digitalPrintImageContract = () => new window._web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const marketPlaceContractAddress = config.marketplaceContract.networks[clientConfig.network].address;
-export const marketPlaceContract = () => new web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
+export const marketPlaceContract = () => new window._web3.eth.Contract(config.marketplaceContract.abi, marketPlaceContractAddress);
 
 const functionsContractAddress = config.functionsContract.networks[clientConfig.network].address;
-export const functionsContract = () => new web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
+export const functionsContract = () => new window._web3.eth.Contract(config.functionsContract.abi, functionsContractAddress);
 
 export const pickTenRandoms = () => {
   let randoms = [];
@@ -38,8 +38,8 @@ export const checkAssetPermission = async (address, assetPackId) => {
 
 export const changeAssetPackPrice = async (assetPackId, newPrice, address) =>
   new Promise(async (resolve, reject) => {
-      if (!web3.utils.isAddress(address)) return;
-      const wei = web3.utils.toWei(newPrice, 'ether');
+      if (!window._web3.utils.isAddress(address)) return;
+      const wei = window._web3.utils.toWei(newPrice, 'ether');
       try {
         const transactionPromise = assetManagerContract().methods.changeAssetPackPrice(assetPackId, wei).send({
           from: address
@@ -57,7 +57,7 @@ export const changeAssetPackPrice = async (assetPackId, newPrice, address) =>
 
 export const buyAssetPack = async (address, assetPackId) =>
   new Promise(async (resolve, reject) => {
-      if (!web3.utils.isAddress(address)) return;
+      if (!window._web3.utils.isAddress(address)) return;
       const price = await assetManagerContract().methods.getAssetPackPrice(assetPackId).call();
       try {
         const transactionPromise = assetManagerContract().methods.buyAssetPack(address, assetPackId).send({
@@ -92,7 +92,7 @@ export const getAllAssetsPacksInfo = async () =>
       //   userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
       //   name: data['name'],
       //   packCover: utils.getIpfsHashFromBytes32(data['packCover']),
-      //   price: web3.utils.fromWei(data['price'], 'ether'),
+      //   price: window._web3.utils.fromWei(data['price'], 'ether'),
       //   data
       // };
     }
@@ -237,7 +237,7 @@ export const getAssetPackData = async (assetPackId) => {
     packCoverIpfs,
     packCoverSrc: `${ipfsNodePath}${packCoverIpfs}`,
     creator,
-    price: web3.utils.fromWei(price, 'ether'),
+    price: window._web3.utils.fromWei(price, 'ether'),
     id: assetPackId,
     assets,
     username,
@@ -259,7 +259,7 @@ export const getAvatar = async (address) => {
 
 export const registerUser = (username, hashToProfilePicture, account) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(account)) return;
+    if (!window._web3.utils.isAddress(account)) return;
     try {
       const transactionPromise = digitalPrintImageContract().methods.register(username, hashToProfilePicture).send({
         from: account
@@ -280,7 +280,7 @@ export const isImageForSale = async (imageId) => {
 
 export const cancelSell = (address, imageId) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(address)) return;
+    if (!window._web3.utils.isAddress(address)) return;
     try {
       const transactionPromise = marketPlaceContract().methods.cancel(imageId).send({
         from: address
@@ -299,8 +299,8 @@ export const cancelSell = (address, imageId) =>
 
 export const buyImage = (address, imageId, price) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
-    const buyPrice = web3.utils.toWei(price, 'ether');
+    if (!window._web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+    const buyPrice = window._web3.utils.toWei(price, 'ether');
     try {
       const transactionPromise = marketPlaceContract().methods.buy(imageId).send({
         from: address,
@@ -320,8 +320,8 @@ export const buyImage = (address, imageId, price) =>
 
 export const sellImage = (address, imageId, price) =>
   new Promise(async (resolve, reject) => {
-    if (!web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
-    const sellPrice = web3.utils.toWei(price, 'ether');
+    if (!window._web3.utils.isAddress(address) && imageId < 0 && parseFloat(price) <= 0) return false;
+    const sellPrice = window._web3.utils.toWei(price, 'ether');
     try {
       const transactionPromise = marketPlaceContract().methods.sell(imageId, sellPrice).send({
         from: address,
@@ -343,7 +343,7 @@ export const calculatePrice = async (pickedAssets, owner) => {
     return 0;
   }
 
-  if (!web3.utils.isAddress(owner)) {
+  if (!window._web3.utils.isAddress(owner)) {
     return null;
   }
 
@@ -368,7 +368,7 @@ export const getImagesOnSale = () => marketPlaceContract().methods.getActiveAds(
 
 export const getImagePrice = async (imageId) => {
   const marketplaceAd = await marketPlaceContract().methods.sellAds(imageId).call();
-  return marketplaceAd.active ? web3.utils.fromWei(marketplaceAd.price, 'ether') : 0;
+  return marketplaceAd.active ? window._web3.utils.fromWei(marketplaceAd.price, 'ether') : 0;
 };
 
 export const getCreatedGraphics = async (address) => {
@@ -438,7 +438,7 @@ export const getImageMetadata = (imageId) =>
         usedAssetsInfo.push(getInfo);
       });
 
-      let hexFinalSeed = web3.utils.toHex(finalSeed);
+      let hexFinalSeed = window._web3.utils.toHex(finalSeed);
       if (hexFinalSeed.length < 66) hexFinalSeed = '0x' + hexFinalSeed.substr(2).padStart(64, '0');
 
       if (!imageMetadata) reject();
@@ -472,13 +472,13 @@ export const calculateFirstSeed = async (timestamp, rands) => {
 };
 
 export const calculateSeed = (random_seed, x) => {
-  return web3.utils.soliditySha3(random_seed, x);
+  return window._web3.utils.soliditySha3(random_seed, x);
 };
 
 export const calculateFinalSeed = (random_seed, iterations) => {
-  let seed = web3.utils.soliditySha3(random_seed, iterations);
+  let seed = window._web3.utils.soliditySha3(random_seed, iterations);
   for (let i = 0; i < iterations; i++) {
-    seed = web3.utils.soliditySha3(seed, i);
+    seed = window._web3.utils.soliditySha3(seed, i);
   }
   return seed;
 };
@@ -518,7 +518,7 @@ export const getImage = async (randomSeed, iterations, potentialAssets, finalSee
   let attributes = await getAttributesForAssets(potentialAssets);
 
   for (let i = 0; i < potentialAssets.length; i++) {
-    seed = web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
+    seed = window._web3.utils.soliditySha3(seed, parseInt(potentialAssets[i], 10));
     let metadata = getAssetMetadata(utils.hex2dec(seed), potentialAssets[i]);
 
     if (metadata !== null) {
@@ -537,7 +537,7 @@ export const getTestImage = async (randomSeed, iterations, potentialAssets) => {
   let pickedAssets = [];
 
   for (let i = 0; i < potentialAssets.length; i++) {
-    seed = web3.utils.soliditySha3(seed, parseInt(i, 10));
+    seed = window._web3.utils.soliditySha3(seed, parseInt(i, 10));
     let metadata = getAssetMetadata(utils.hex2dec(seed), i);
 
     if (metadata !== null) {
@@ -643,12 +643,12 @@ export const getAssetPackProfits = () =>
         filter: {},
         fromBlock: clientConfig.deployBlockNumber
       });
-      const promises = events.map(event => web3.eth.getTransaction(event.transactionHash));
+      const promises = events.map(event => window._web3.eth.getTransaction(event.transactionHash));
 
       Promise.all(promises)
         .then((transactions) => {
           const sum = transactions
-            .reduce((acc, item) => acc + parseFloat(web3.utils.fromWei(item.value, 'ether')), 0);
+            .reduce((acc, item) => acc + parseFloat(window._web3.utils.fromWei(item.value, 'ether')), 0);
           resolve(sum);
         });
     } catch (e) {
@@ -666,7 +666,7 @@ export const getSaleProfits = () =>
       });
       const sum = imageEvents
         .reduce((acc, item) =>
-          acc + parseFloat(web3.utils.fromWei(item.returnValues.price, 'ether')), 0);
+          acc + parseFloat(window._web3.utils.fromWei(item.returnValues.price, 'ether')), 0);
       resolve(sum);
     } catch (e) {
       resolve(0);
@@ -684,10 +684,10 @@ export const getImageTransferHistory = imageId =>
         fromBlock: clientConfig.deployBlockNumber
       });
 
-      const prices = events.map(event => web3.utils.fromWei(event.returnValues[2], 'ether'));
+      const prices = events.map(event => window._web3.utils.fromWei(event.returnValues[2], 'ether'));
 
       // get time from the events tx block numbers
-      const eventTimestampsPromise = events.map(event => web3.eth.getBlock(event.blockNumber));
+      const eventTimestampsPromise = events.map(event => window._web3.eth.getBlock(event.blockNumber));
       const eventsBlocks = await Promise.all(eventTimestampsPromise);
       const eventsTimes = eventsBlocks.map(block => utils.timeConverter(block.timestamp));
 
@@ -721,10 +721,10 @@ export const userBalances = async (address) => {
 export const fromWei = (value, decimals) => {
   let eth = value;
   if (decimals) {
-    const dec = web3.utils.toWei((10 ** (-decimals)).toString(), 'ether');
+    const dec = window._web3.utils.toWei((10 ** (-decimals)).toString(), 'ether');
     eth = Math.floor(eth / dec) * dec;
   }
-  eth = web3.utils.fromWei(eth.toString(), 'ether');
+  eth = window._web3.utils.fromWei(eth.toString(), 'ether');
   return eth;
 };
 
@@ -733,7 +733,7 @@ export const withdraw = (fromCt, address) =>
     const ct = fromCt === 'marketplace'
       ? marketPlaceContract()
       : assetManagerContract();
-    const account = await getAccounts();
+    const account = await getAccount();
     const transactionPromise = ct.methods.withdraw().send({ from: account },
       (error, txHash) => {
         console.log(error, txHash);
@@ -744,10 +744,10 @@ export const withdraw = (fromCt, address) =>
 
 export const sendETHtoAddress = (from, to, value) => {
   try {
-    web3.eth.sendTransaction({
+    window._web3.eth.sendTransaction({
       from,
       to,
-      value: web3.utils.toWei(value, 'ether')
+      value: window._web3.utils.toWei(value, 'ether')
     });
   } catch (err) {
     console.log(err);

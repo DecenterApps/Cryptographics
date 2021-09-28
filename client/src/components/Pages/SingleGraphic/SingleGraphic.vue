@@ -41,7 +41,7 @@
 </template>
 
 <script>
-  import { METAMASK_ADDRESS, USERNAME, BANNED_CRYPTOGRAPHIC_IDS } from 'store/user-config/types';
+  import { ADDRESS, USERNAME, BANNED_CRYPTOGRAPHIC_IDS } from 'store/user-config/types';
   import { CANVAS_DRAWING } from 'store/canvas/types';
   import { mapGetters } from 'vuex';
   import * as ipfsService from 'services/ipfsService';
@@ -100,7 +100,7 @@
     },
     computed: {
       ...mapGetters({
-        userAddress: METAMASK_ADDRESS,
+        userAddress: ADDRESS,
         isCanvasDrawing: CANVAS_DRAWING,
         bannedIDs: BANNED_CRYPTOGRAPHIC_IDS,
       }),
@@ -154,7 +154,6 @@
           link.click();
           document.body.removeChild(link);
         }, 'image/jpeg');
-        this.track('Download');
       },
       async getData() {
         isImageForSale(this.$route.params.id)
@@ -177,9 +176,6 @@
           return;
         }
         this.loggedIn = this.userAddress && (this.image.owner.toLowerCase() === this.userAddress.toLowerCase());
-      },
-      track(event) {
-        if (window._paq) window._paq.push(['trackEvent', 'Composer', event]);
       },
     },
     async created() {

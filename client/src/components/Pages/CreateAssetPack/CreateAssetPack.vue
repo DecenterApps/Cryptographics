@@ -114,7 +114,7 @@
 import * as ipfsService from "services/ipfsService";
 import { createAssetPack, makeCoverImage } from "services/imageService";
 import * as utils from "services/utils";
-import { METAMASK_ADDRESS, METAMASK_APPROVED } from "store/user-config/types";
+import { ADDRESS, PROVIDER_CONNECTED } from "store/user-config/types";
 import { mapGetters, mapActions } from "vuex";
 import {
   TOGGLE_MODAL,
@@ -128,8 +128,8 @@ import StepHeader from "shared/StepHeader/StepHeader";
 import {
   preloadImages,
   resizeCanvas,
-  isMetamaskApproved
 } from "services/helpers";
+import { isMetaMaskApproved } from '../../../services/web3Service';
 import SingleAsset from "./SingleAsset/SingleAsset";
 import UploadDescription from "./UploadDescription/UploadDescription";
 import TestAssetPack from "./TestAssetPack/TestAssetPack";
@@ -159,12 +159,12 @@ export default {
 
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
-      approvedMetamask: METAMASK_APPROVED
+      userAddress: ADDRESS,
+      providerConnected: PROVIDER_CONNECTED
     })
   },
   watch: {
-    approvedMetamask: function(val) {
+    providerConnected: function(val) {
       if (val && this.approvePressed) {
         this.uploadToIpfs();
       }
@@ -267,15 +267,15 @@ export default {
           ua.includes("iPad") ||
           ua.includes("iPhone");
         if (isMobile) return this.openModal({ name: "coinbaseInfo" });
-        this.approvedMetamask = await isMetamaskApproved();
-        if (!isMobile && !this.approvedMetamask) {
+        this.providerConnected = await isMetaMaskApproved();
+        if (!isMobile && !this.providerConnected) {
           this.approvePressed = true;
           return this.openModal("metaMaskInfo");
         }
       }
 
-      this.approvedMetamask = await isMetamaskApproved();
-      if (!this.approvedMetamask) {
+      this.providerConnected = await isMetaMaskApproved();
+      if (!this.providerConnected) {
         this.approvePressed = true;
         return this.openModal("metaMaskInfo");
       }

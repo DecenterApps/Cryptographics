@@ -78,7 +78,7 @@ export const createAssetPack = (coverImage, attributes, ipfsHashes, price, accou
         coverImage,
         attributes,
         ipfsHashes,
-        web3.utils.toWei(price),
+        window._web3.utils.toWei(price),
         metadataIpfsHash,
       ).send({
         from: account

@@ -1,5 +1,5 @@
 import {
-  METAMASK_ADDRESS,
+  ADDRESS,
   USERNAME,
   AVATAR,
   USERNAME_EXISTENCE,
@@ -11,15 +11,15 @@ import {
   BANNED_ASSET_PACK_IDS,
   BANNED_CRYPTOGRAPHIC_IDS,
   NOTIFICATIONS,
-  METAMASK_APPROVED
+  PROVIDER_CONNECTED
 } from './types';
 
 export default {
   [NETWORK]: state => {
     return state.network;
   },
-  [METAMASK_ADDRESS]: state => {
-    return state.metamaskAddress;
+  [ADDRESS]: state => {
+    return state.address;
   },
   [USERNAME]: state => {
     return state.username;
@@ -51,7 +51,7 @@ export default {
   [NOTIFICATIONS]: state => {
     return state.notifications;
   },
-  [METAMASK_APPROVED]: state => {
-    return state.metamaskApproved;
+  [PROVIDER_CONNECTED]: state => {
+    return !!state.address;
   }
 };

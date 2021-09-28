@@ -2,9 +2,7 @@
     <div>
         <graphic-playground />
         <div class="fab">
-            <button-link to="/create-cryptographic" button-style="primary"
-                         @click.native="track('Compose Floating CTA')">Compose
-            </button-link>
+            <button-link to="/create-cryptographic" button-style="primary">Compose</button-link>
         </div>
         <div class="stats-section">
             <div class="large-title">
@@ -138,8 +136,7 @@
                     background graphic. Once the asset pack is uploaded and ready, you set your own price in Ether and
                     receive earnings every time a new Creator uses it.
                 </p>
-                <button-link button-style="primary thin-text" to="/create-asset-pack"
-                             @click.native="track('Create AP')">Create asset pack
+                <button-link button-style="primary thin-text" to="/create-asset-pack">Create asset pack
                 </button-link>
                 <br>
                 <p class="wider">
@@ -188,6 +185,7 @@
   } from 'services/ethereumService';
   import PaginatedGallery from 'shared/PaginatedGallery/PaginatedGallery';
   import IcoArrowLong from '../../Shared/UI/Icons/IcoArrowLong';
+  import { checkProvider } from '../../../services/helpers';
 
   const toggleFab = (e) => {
     const scrollPos = window.pageYOffset;
@@ -215,27 +213,18 @@
       totalEthEarned: 0,
     }),
     methods: {
-      track(event) {
-        if (window._paq) window._paq.push(['trackEvent', 'Landing', event]);
-      },
       getData() {
         const profits = [getAssetPackProfits(), getSaleProfits()];
         Promise.all(profits)
           .then(([assetPackProfits, saleProfits]) => {
             this.totalEthEarned = (assetPackProfits + saleProfits).toFixed(2);
-          });
-        getNumberOfAssetPacks()
-          .then(data => {
-            this.numOfAssetPacks = data;
-          });
-        getNumberOfAssets()
-          .then(data => {
-            this.numOfAssets = data;
-          });
-        getCreatorCount()
-          .then(data => {
-            this.numOfCreators = data;
-          });
+          }).catch(() => console.error);
+        Promise.all([getNumberOfAssetPacks(), getNumberOfAssets(), getCreatorCount()])
+          .then(([numOfAssetPacks, numOfAssets, numOfCreators]) => {
+            this.numOfAssetPacks = numOfAssetPacks;
+            this.numOfAssets = numOfAssets;
+            this.numOfCreators = numOfCreators;
+          }).catch(() => console.error);
       },
       openMail() {
         window.location.href = 'mailto:info@decenter.com';
@@ -243,7 +232,7 @@
     },
     async created() {
       try {
-        this.getData();
+        await this.getData();
         let numOfImages = parseInt(await getImageCount());
         this.numOfImages = numOfImages;
         let imageIds = [...Array(numOfImages).keys()].reverse();
@@ -252,8 +241,8 @@
         if (typeof this.$redrawVueMasonry === 'function') {
           this.$redrawVueMasonry();
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.error(error);
       }
       window.addEventListener('scroll', toggleFab);
     },

@@ -35,7 +35,7 @@
         <div
           class="text-wrapper secondary"
         >Your wallet is either not connected or is locked. In order to continue you need to connect it or unlock it.</div>
-        <cg-button @click="approve()">Connect</cg-button>
+        <cg-button @click="connect()">Connect</cg-button>
       </div>
     </div>
     <img class="round-logo" :src="roundLogo" alt>
@@ -46,7 +46,8 @@
 import { mapActions } from "vuex";
 import { TOGGLE_MODAL } from "store/modal/types";
 import { SET_APPROVAL } from "store/user-config/types";
-import { metamaskApprove, isMetaMaskLocked } from "services/helpers";
+import { LOGIN_METAMASK } from "store/user-config/types";
+import { metamaskApprove } from "services/helpers";
 import roundLogo from "assets/round-logo.png";
 import IcoError from "../../Shared/UI/Icons/IcoError";
 
@@ -85,16 +86,18 @@ export default {
 },
   methods: {
     ...mapActions({
+      LOGIN_METAMASK,
       openModal: TOGGLE_MODAL,
       setApproval: SET_APPROVAL
     }),
-    async approve() {
+    async connect() {
       try {
-        await metamaskApprove();
-        await this.setApproval();
-        await this.openModal("");
-      } catch (e) {
-        console.log(e);
+        await this[LOGIN_METAMASK]();
+        // await metamaskApprove();
+        // await this.setApproval();
+        // await this.openModal("");
+      } catch (error) {
+        console.error(error);
       }
     }
   }

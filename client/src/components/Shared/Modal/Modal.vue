@@ -39,8 +39,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { TOGGLE_MODAL } from "store/modal/types";
-import { isMetaMaskLocked } from "services/helpers";
-import { METAMASK_ADDRESS, METAMASK_APPROVED } from "store/user-config/types";
+import { ADDRESS, PROVIDER_CONNECTED } from "store/user-config/types";
 
 import EditProfile from "shared/EditProfile/EditProfile.vue";
 import EditPackPrice from "shared/EditPackPrice/EditPackPrice.vue";
@@ -91,7 +90,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
+      userAddress: ADDRESS,
     })
   },
   methods: {

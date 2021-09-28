@@ -28,7 +28,7 @@
           </div>
           <div class="profile">
             <router-link
-              v-if="approvedMetamask"
+              v-if="providerConnected"
               class="profile-link"
               to="/profile"
               @click.native="closeMenu"
@@ -37,7 +37,7 @@
               <img class="avatar" :src="avatar">
             </router-link>
             <cg-button
-              v-else-if="!approvedMetamask"
+              v-else-if="!providerConnected"
               button-style="transparent inverted"
               @click="approve()"
             >Connect</cg-button>
@@ -60,8 +60,9 @@ import { metamaskApprove } from "services/helpers";
 import {
   USERNAME,
   AVATAR,
-  METAMASK_APPROVED,
-  SET_APPROVAL
+  PROVIDER_CONNECTED,
+  SET_APPROVAL,
+  LOGIN_METAMASK
 } from "store/user-config/types";
 
 import Logo from "../UI/Logo.vue";
@@ -89,11 +90,12 @@ export default {
     ...mapGetters({
       username: USERNAME,
       avatar: AVATAR,
-      approvedMetamask: METAMASK_APPROVED
+      providerConnected: PROVIDER_CONNECTED
     })
   },
   methods: {
     ...mapActions({
+      LOGIN_METAMASK,
       setApproval: SET_APPROVAL
     }),
     closeMenu() {
@@ -101,10 +103,11 @@ export default {
     },
     async approve() {
       try {
-        await metamaskApprove();
-        await this.setApproval();
-      } catch (e) {
-        console.log(e);
+        await this[LOGIN_METAMASK]();
+        // await metamaskApprove();
+        // await this.setApproval();
+      } catch (error) {
+        console.log(error);
       }
     }
   }

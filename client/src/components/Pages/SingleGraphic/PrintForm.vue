@@ -82,7 +82,7 @@
 import { sendETHtoAddress } from 'services/ethereumService';
 import axios from 'axios';
 import { PRINT_ORDERS_ADDRESS } from 'config/constants';
-import { METAMASK_ADDRESS } from 'store/user-config/types';
+import { ADDRESS } from 'store/user-config/types';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -117,7 +117,7 @@ export default {
   },
   computed: {
       ...mapGetters({
-          userAddress: METAMASK_ADDRESS
+          userAddress: ADDRESS
       })
   },
   created() {

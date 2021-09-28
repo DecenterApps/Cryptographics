@@ -1,5 +1,5 @@
 import {
-  MUTATE_METAMASK_ADDRESS,
+  MUTATE_ADDRESS,
   MUTATE_USERNAME,
   MUTATE_AVATAR,
   MUTATE_USERNAME_EXISTENCE,
@@ -9,15 +9,31 @@ import {
   MUTATE_NETWORK,
   MUTATE_BALANCES,
   MUTATE_NOTIFICATIONS,
-  MUTATE_APPROVAL
+  MUTATE_APPROVAL,
+  MUTATE_CONNECT_PROVIDER,
+  MUTATE_CONNECT_PROVIDER_SUCCESS,
+  MUTATE_LOGGING_IN,
 } from './types';
 
 export default {
+  [MUTATE_CONNECT_PROVIDER]: (state, connecting) => {
+    state.connectingProvider = connecting;
+  },
+  [MUTATE_LOGGING_IN]: (state, payload) => {
+    state.loggingIn = payload.loggingIn;
+    state.loggingInAccountType = payload.accountType;
+  },
+  [MUTATE_CONNECT_PROVIDER_SUCCESS]: (state, payload) => {
+    state.connectingProvider = false;
+    state.network = payload.network;
+    state.address = payload.address;
+    state.accountType = payload.accountType;
+  },
   [MUTATE_NETWORK]: (state, network) => {
     state.network = network;
   },
-  [MUTATE_METAMASK_ADDRESS]: (state, metamaskAddress) => {
-    state.metamaskAddress = metamaskAddress;
+  [MUTATE_ADDRESS]: (state, address) => {
+    state.address = address;
   },
   [MUTATE_USERNAME]: (state, username) => {
     state.username = username;

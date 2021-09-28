@@ -55,7 +55,6 @@
       @updatePage="changePage"
     />
     <button-link
-      @click.native="track('See more')"
       button-style="primary see-more"
       v-if="seeMore"
       to="gallery"
@@ -68,7 +67,7 @@ import { getGalleryImages } from "services/ethereumService";
 import { paginateArray } from "services/helpers";
 import { mapGetters } from "vuex";
 import {
-  METAMASK_ADDRESS,
+  ADDRESS,
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS,
   BANNED_CRYPTOGRAPHIC_IDS
@@ -115,7 +114,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      metamaskAddress: METAMASK_ADDRESS,
+      address: ADDRESS,
       bannedIDs: BANNED_CRYPTOGRAPHIC_IDS
     })
   },
@@ -145,7 +144,7 @@ export default {
         return images;
       },
       watch() {
-        this.metamaskAddress;
+        this.address;
       }
     }
   },
@@ -159,14 +158,7 @@ export default {
       );
       this.images = await getGalleryImages(selectedImages, true);
       this.loading = false;
-      this.track("Change page", currentPage);
     },
-    track(event, value) {
-      if (!window._paq) return;
-      if (value)
-        return window._paq.push(["trackEvent", "Gallery", event, event, value]);
-      window._paq.push(["trackEvent", "Gallery", event]);
-    }
   }
 };
 </script>

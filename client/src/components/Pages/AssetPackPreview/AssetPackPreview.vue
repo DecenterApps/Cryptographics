@@ -43,7 +43,7 @@
           <price size="medium" :value="this.assetPack.price" :showIfFree="true"/>
           <cg-button @click="composeWithAP" buttonStyle="secondary">Compose with this Asset Pack</cg-button>
           <cg-button
-            v-if="!alreadyBought && !isPackUsers && approvedMetamask"
+            v-if="!alreadyBought && !isPackUsers && providerConnected"
             @click="purchaseAssetPack"
           >Buy</cg-button>
           <cg-button
@@ -74,12 +74,12 @@ import {
 } from "services/ethereumService";
 import {
   USERNAME,
-  METAMASK_ADDRESS,
+  ADDRESS,
   AVATAR,
   NOTIFICATIONS,
   PUSH_NOTIFICATION,
   REMOVE_NOTIFICATION,
-  METAMASK_APPROVED
+  PROVIDER_CONNECTED
 } from "store/user-config/types";
 import { SELECT_SINGLE_ASSET_PACK } from "store/canvas/types";
 import {
@@ -110,9 +110,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
+      userAddress: ADDRESS,
       notifications: NOTIFICATIONS,
-      approvedMetamask: METAMASK_APPROVED
+      providerConnected: PROVIDER_CONNECTED
     })
   },
   methods: {
