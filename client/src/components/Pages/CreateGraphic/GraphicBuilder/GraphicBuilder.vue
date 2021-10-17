@@ -286,6 +286,15 @@ export default {
       if (newStep === 2) {
         this.saveImageToLS();
       }
+    },
+    userAddress: async function () {
+      let picked = [];
+      for (let i = 0; i < this.canvasData.assets.length; i++) { picked.push(this.canvasData.assets[i].id); }
+
+      let price = await calculatePrice(picked, this.userAddress);
+
+      if (this.selectedAssets.length === 0) { return this.imagePrice = 0; }
+      this.imagePrice = utils.scientificToDecimal(parseFloat(price));
     }
   },
   methods: {
@@ -361,6 +370,7 @@ export default {
         console.log(extraData);
 
         this.openLoadingModal("Please confirm the transaction in MetaMask.");
+
         let transactionPromise = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
@@ -430,7 +440,6 @@ export default {
         if (selectedAssets.length === 0) {
           this.imagePrice = 0;
         }
-        console.log(price);
         this.imagePrice = utils.scientificToDecimal(parseFloat(price));
 
         console.log("PRICE : " + this.imagePrice);
