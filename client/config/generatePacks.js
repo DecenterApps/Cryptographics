@@ -9,11 +9,19 @@ const sizeOf = require('image-size');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
 const { rpcHttpProvider } = require('./clientConfig.json');
+const ipfsAPI = require('ipfs-http-client');
+const _nodePath = require('path');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcHttpProvider));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
 const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+
+const node = ipfsAPI.create({
+  host: 'ipfs.decenter.com',
+  port: '50001',
+  protocol: 'https',
+});
 
 const getFileContent = async (hash) => {
   // const ipfsTimeout = setTimeout(() => {
@@ -54,6 +62,7 @@ const getAssetPackData = async (assetPackId) => {
   let metadata;
   try {
     const metadataIpfs = await getFileContent(response[6]);
+    console.log(metadataIpfs);
     metadata = JSON.parse(metadataIpfs);
   } catch (e) {
     metadata = {
@@ -99,9 +108,9 @@ const getAssetPackIds = () =>
 const download = (uri, filename, callback) => {
   request.head(uri, function (err, res, body) {
     request(uri)
-      .pipe(fs.createWriteStream(filename))
-      .on('close', callback)
-      .on('error', callback);
+    .pipe(fs.createWriteStream(filename))
+    .on('close', callback)
+    .on('error', callback);
   });
 };
 
@@ -171,10 +180,12 @@ const buildConfig = async () => {
 
     console.log('Compressing...');
     const compressPromises = assetPackIds.map(async assetPackId => {
-      imagemin([`${__dirname}/../src/assets/landingart/${assetPackId}/*.{jpg,png}`],
-        `${__dirname}/../src/assets/landingart/${assetPackId}/`, {
-        plugins: [imageminPngquant({quality: '90'})]
-      });
+      const path1 = _nodePath.resolve(`${__dirname}/../src/assets/landingart/${assetPackId}`);
+      const path2 = _nodePath.resolve(`${__dirname}/../src/assets/landingart/${assetPackId}/`);
+      imagemin([`${path1}/*.{jpg,png}`],
+        path2, {
+          plugins: [imageminPngquant({quality: '90'})]
+        });
     });
     await Promise.all(compressPromises);
     console.log('Done!');
