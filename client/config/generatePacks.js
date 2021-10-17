@@ -9,20 +9,30 @@ const sizeOf = require('image-size');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
 const { rpcHttpProvider } = require('./clientConfig.json');
+const ipfsAPI = require('ipfs-http-client');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcHttpProvider));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
 const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
+const node = ipfsAPI.create({
+  host: 'ipfs.decenter.com',
+  port: '50001',
+  protocol: 'https',
+});
+
 const getFileContent = async (hash) => {
   // const ipfsTimeout = setTimeout(() => {
   //   throw Error('Couldn\'t fetch data. (TIMEOUT)');
   // }, 20000);
   try {
-    const file = await window.node.files.read(hash);
-    // clearTimeout(ipfsTimeout);
-    return new TextDecoder('utf-8').decode(file);
+    const req = await fetch(`https://ipfs.decenter.com/ipfs/${hash}`);
+    if (!req.ok) throw new Error('failed fetching');
+    return await req.json();
+    // const file = await node.files.read(hash);
+    // // clearTimeout(ipfsTimeout);
+    // return new TextDecoder('utf-8').decode(file);
   } catch (e) {
     throw Error(e.message);
   }
