@@ -3,7 +3,8 @@
     <div class="overlay" @click="closeModal"></div>
     <div :class="['content', smallerPadding(content)]">
       <button-icon icon-type="close" @click="closeModal"/>
-      <edit-profile v-if="content === 'editProfile'"/>
+      <connection-modal v-if="content === 'connectionModal'"/>
+      <edit-profile v-else-if="content === 'editProfile'"/>
       <edit-pack-price
         v-else-if="content && content.name === 'editPackPrice'"
         v-bind="content.data"
@@ -42,6 +43,7 @@ import { TOGGLE_MODAL } from "store/modal/types";
 import { ADDRESS, PROVIDER_CONNECTED } from "store/user-config/types";
 
 import EditProfile from "shared/EditProfile/EditProfile.vue";
+import ConnectionModal from "shared/ConnectionModal/ConnectionModal.vue";
 import EditPackPrice from "shared/EditPackPrice/EditPackPrice.vue";
 import SetUsername from "shared/SetUsername/SetUsername.vue";
 import SuccessMessage from "shared/SuccessMessage/SuccessMessage.vue";
@@ -72,7 +74,8 @@ export default {
     BalancesModal,
     MetaMaskInfo,
     CoinbaseInfo,
-    AssetPackUploadError
+    AssetPackUploadError,
+    ConnectionModal,
   },
   watch: {
     userAddress: function(val) {

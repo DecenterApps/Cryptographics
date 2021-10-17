@@ -327,16 +327,7 @@ export default {
     async buyImage() {
       if (!this.checkTitle()) return;
       if (!this.userAddress) {
-        const { userAgent: ua } = navigator;
-        const isMobile =
-          ua.includes("Android") ||
-          ua.includes("iPad") ||
-          ua.includes("iPhone");
-        if (isMobile)
-          return this.openModal({
-            name: "coinbaseInfo",
-            data: { deeplink: this.getLink() }
-          });
+        return this.openModal("metaMaskInfo");
       }
 
       if (this.username === "" || this.username === "Anon") {

@@ -3,7 +3,6 @@ import {
   LOG_OUT,
   LOGIN_METAMASK,
   SET_PROVIDER,
-  SET_ADDRESS,
   SET_USERNAME,
   SET_AVATAR,
   SET_USER_CONFIG,
@@ -13,17 +12,13 @@ import {
   UPDATE_USER_CONFIG,
   CHECK_USERNAME_EXISTENCE,
   EDIT_PROFILE,
-  MUTATE_ADDRESS,
   MUTATE_USERNAME,
   MUTATE_AVATAR,
   MUTATE_USERNAME_EXISTENCE,
   MUTATE_EDIT_PROFILE_RESULT,
   MUTATE_CREATED_ASSETS_PACKS_IDS,
   MUTATE_BOUGHT_ASSETS_PACKS_IDS,
-  MUTATE_APPROVAL,
   SET_NEW_USERNAME,
-  SET_NETWORK,
-  MUTATE_NETWORK,
   FETCH_BALANCES,
   MUTATE_BALANCES,
   PUSH_NOTIFICATION,
@@ -33,22 +28,30 @@ import {
   MUTATE_CONNECT_PROVIDER_SUCCESS,
   MUTATE_LOGGING_IN,
   SET_ACC_CHANGE,
+  OPEN_CONNECTION_MODAL,
+  CONNECT_TO_SELECTED_WALLET,
+  LOGIN_WALLETCONNECT,
 } from './types';
-import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, HIDE_LOADING_MODAL } from '../modal/types';
+import {
+  TOGGLE_MODAL,
+  TOGGLE_LOADING_MODAL,
+  HIDE_LOADING_MODAL,
+  MUTATE_CONTENT,
+  TOGGLE_ERR_MODAL,
+} from '../modal/types';
 import { DEFAULT_AVATAR, DEFAULT_USERNAME, ipfsNodePath } from 'config/constants';
 import { testnets } from '../../../../config/constants';
 import clientConfig from '../../../../config/clientConfig.json';
 
-import { parseError, isMobileDevice, checkProvider } from '../../../services/helpers';
+import { parseError } from '../../../services/helpers';
 import { getIpfsHashFromBytes32 } from '../../../services/utils';
 import {
   getUsername, getAvatar, usernameExists, registerUser, getCreatedAssetPacks, getBoughtAssetPacks, userBalances,
 } from '../../../services/ethereumService';
 import {
-  isMetaMaskApproved, metamaskApprove, setWeb3toMetamask, getAccount, setupWeb3, getNetwork,
+  isMetaMaskApproved, metamaskApprove, setWeb3toMetamask, getAccount, setupWeb3, getNetwork, setupWalletConnect,
 } from '../../../services/web3Service';
 import { LS_ACCOUNT_TYPE } from './state';
-import { addToLsState } from '../../../services/localStorageService';
 
 export default {
   [SILENT_LOGIN]: async ({ dispatch, commit, state }) => {
@@ -115,8 +118,35 @@ export default {
         if (errorMessage.includes('wallet address undefined')) {
           errorMessage = 'No accounts locked';
         }
-        // notify(errorMessage, 'error')(dispatch);
+        dispatch(TOGGLE_ERR_MODAL, errorMessage);
         // if (getBrowserProviderName() === 'Browser' && isMobileDevice()) dispatch(openNonWeb3ProviderModal());
+      }
+
+      console.error(err);
+      throw new Error(err);
+    }
+  },
+  [LOGIN_WALLETCONNECT]: async ({ commit, dispatch }, silent) => {
+    const accountType = 'walletconnect';
+    commit(MUTATE_CONNECT_PROVIDER);
+    try {
+      await setupWalletConnect();
+      const accounts = await getAccount();
+
+      if (accounts.length > 0) {
+        const address = await getAccount();
+
+        if (!silent) console.log('not silent');
+        await dispatch(SET_PROVIDER, { address, accountType });
+      }
+    } catch (err) {
+      await dispatch(SET_PROVIDER, { address: undefined, accountType: undefined });
+
+      setupWeb3();
+
+      if (!silent) {
+        console.error(err)
+        dispatch(TOGGLE_ERR_MODAL, err);
       }
 
       console.error(err);
@@ -129,13 +159,7 @@ export default {
 
     commit(MUTATE_CONNECT_PROVIDER_SUCCESS, { address, accountType, network: clientConfig.network });
 
-    // dispatch(postLogin());
-
-    // addToLsState({
-    //   address,
-    // });
     localStorage.setItem(LS_ACCOUNT_TYPE, accountType);
-    // localStorage.setItem(LS_ADDRESS, accountType);
   },
   [LOG_OUT]: ({ commit, state }) => {
     console.log('LOG_OUT');
@@ -148,8 +172,9 @@ export default {
     if (accountType === 'coinbase') {
       if (window && window._web3 && window._web3.currentProvider && window._web3.currentProvider.close)
         window._web3.currentProvider.close();
-      localStorage.removeItem(LS_ACCOUNT_TYPE);
+      localStorage.removeItem('coinbase');
     }
+    localStorage.removeItem(LS_ACCOUNT_TYPE);
     commit(MUTATE_CONNECT_PROVIDER_SUCCESS, { address: undefined, accountType: undefined, network: clientConfig.network });
   },
   [SET_ACC_CHANGE]: async ({ dispatch, state }) => {
@@ -263,6 +288,26 @@ export default {
       let isExisting = false;
       commit(MUTATE_USERNAME_EXISTENCE, isExisting);
     }
+  },
+  [OPEN_CONNECTION_MODAL]: ({ dispatch, rootState, commit }) => {
+    if (rootState.modal.showModal) {
+      commit(MUTATE_CONTENT, 'connectionModal');
+    } else {
+      dispatch(TOGGLE_MODAL, 'connectionModal');
+    }
+  },
+  [CONNECT_TO_SELECTED_WALLET]: ({ dispatch }, selectedWallet) => {
+    switch (selectedWallet) {
+      case 'metamask': {
+        dispatch(LOGIN_METAMASK);
+        break;
+      }
+      case 'walletconnect': {
+        dispatch(LOGIN_WALLETCONNECT);
+        break;
+      }
+    }
+    dispatch(TOGGLE_MODAL, '');
   },
   [EDIT_PROFILE]: async ({ commit, dispatch, state }, { newUsername, newAvatarBytes32 }) => {
     try {

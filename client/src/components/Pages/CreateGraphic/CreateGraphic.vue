@@ -66,12 +66,6 @@ export default {
       openModal: TOGGLE_MODAL
     }),
     async changeStep(step) {
-      const { currentProvider: cp } = window.web3;
-      const hasWallet = !!cp.isMetaMask || !!cp.isStatus || !!cp.isTrust || !!cp.isToshi;
-      if (!this.userAddress) {
-        return this.openModal("metaMaskInfo");
-      }
-
       window.scrollTo(0, 0);
       this.currentStep = step;
       console.log("CHANGING STEP ", step);

@@ -9,24 +9,29 @@ import { default as WalletConnectSubprovider } from '@walletconnect/web3-subprov
 import clientConfig from '../../config/clientConfig.json';
 
 export const getBrowserProviderName = () => {
-  const provider = window.ethereum || (window.web3 && window.window._web3.currentProvider);
+  const provider = window.ethereum || (window.web3 && window.web3.currentProvider);
 
   if (!provider) return 'Browser';
 
-  if (provider.isMetaMask) return 'MetaMask';
   if (provider.isStatus) return 'Status';
   if (provider.isImToken) return 'imToken';
   if (provider.isTrust) return 'Trust';
   if (provider.isToshi) return 'Coinbase';
   if (provider.isTokenary) return 'Tokenary';
   if (navigator.userAgent.match(/Opera|OPR/)) return 'Opera';
+  if (provider.isRabby) return 'Rabby';
+  if (provider.isFrame) return 'Frame';
+  if (provider.isXDEFI || typeof provider.isXDEFI === 'boolean') return 'XDEFI';
+
+  // leave at last place because some providers set this as true in addition to their own flag
+  // ie. Rabby sets both isRabby and isMetamask as true
+  if (provider.isMetaMask) return 'MetaMask';
 
   return 'Browser';
 };
 
 export const setWeb3toMetamask = () => {
-  if (!window.ethereum && (window.web3 && !window.web3.currentProvider)) throw new Error('No wallet found.');
-  console.log('setWeb3toMetamask');
+  if (!window.ethereum && (!window.web3 || !window.web3.currentProvider)) throw new Error('No wallet found.');
   window._web3 = new Web3(window.ethereum || window.web3.currentProvider);
 };
 
@@ -52,11 +57,10 @@ export const setupWeb3WithSubProvider = (subProvider) => {
 };
 
 export const setupWalletConnect = async () => {
-  // const { default: WalletConnectSubprovider } = await import(/* webpackChunkName: "wallets" */ '@walletconnect/web3-subprovider');
   WalletConnectSubprovider.prototype.updateState = () => {};
   WalletConnectSubprovider.prototype.emit = () => {};
   setupWeb3WithSubProvider(new WalletConnectSubprovider({
-    bridge: 'https://defisaver.bridge.walletconnect.org', // TODO change this ?
+    bridge: 'https://bridge.walletconnect.org',
   }));
 };
 
