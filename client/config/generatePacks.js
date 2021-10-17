@@ -9,18 +9,11 @@ const sizeOf = require('image-size');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
 const { rpcHttpProvider } = require('./clientConfig.json');
-const ipfsAPI = require('ipfs-http-client');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcHttpProvider));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
-const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
-
-const node = ipfsAPI.create({
-  host: 'ipfs.decenter.com',
-  port: '50001',
-  protocol: 'https',
-});
+const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const getFileContent = async (hash) => {
   // const ipfsTimeout = setTimeout(() => {
@@ -83,7 +76,7 @@ const getAssetPackData = async (assetPackId) => {
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     creator,
-    price: window._web3.utils.fromWei(price, 'ether'),
+    price: web3.utils.fromWei(price, 'ether'),
     id: assetPackId,
     assets,
   };
