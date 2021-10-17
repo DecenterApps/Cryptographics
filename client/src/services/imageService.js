@@ -13,10 +13,10 @@ import * as helpers from 'services/helpers';
 import { preloadImages } from './helpers';
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
-const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContract = () => new window._web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
-const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const DELAY = 150;
 

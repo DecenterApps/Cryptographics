@@ -85,16 +85,6 @@ export const getAllAssetsPacksInfo = async () =>
     let promises = [];
     for (let i = 0; i < numOfAssetsPacks; i++) {
       promises.push(getAssetPackData(i));
-      // let object = {
-      //   id: i,
-      //   username: await getUsername(data['creator']),
-      //   userAddress: data['creator'],
-      //   userAvatar: utils.getIpfsHashFromBytes32(await getAvatar(data['creator'])),
-      //   name: data['name'],
-      //   packCover: utils.getIpfsHashFromBytes32(data['packCover']),
-      //   price: window._web3.utils.fromWei(data['price'], 'ether'),
-      //   data
-      // };
     }
 
     Promise.all(promises)

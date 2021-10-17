@@ -83,7 +83,7 @@ export default {
     },
   },
   async beforeMount() {
-    const { currentProvider: cp } = window.web3;
+    const { currentProvider: cp } = window._web3;
     const { userAgent: ua } = navigator;
     this.hasMetaMask = !!cp.isMetaMask;
     this.isAndroid = ua.includes("Android");
