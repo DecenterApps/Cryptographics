@@ -144,8 +144,11 @@ export default {
       setupWeb3();
 
       if (!silent) {
-        console.error(err)
-        dispatch(TOGGLE_ERR_MODAL, err);
+        console.error(err);
+        let errorMessage = err.message || err;
+        if (!errorMessage.includes('User closed modal')) {
+          dispatch(TOGGLE_ERR_MODAL, errorMessage);
+        }
       }
 
       console.error(err);
