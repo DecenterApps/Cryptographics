@@ -1,6 +1,6 @@
 <template>
     <div class="share-icons">
-        <a @click="open(`http://pinterest.com/pin/create/button/?` +
+        <a @click="open(`https://pinterest.com/pin/create/button/?` +
                     `url=https://cryptographics.app/cryptographic/${image.id}&` +
                     `media=${image.src}&` +
                     `description=${image.title} by ${image.creatorMeta.username}`)"
@@ -14,7 +14,7 @@
             <IcoTwitter />
         </a>
 
-        <a @click="open(`http://www.tumblr.com/share/link?` +
+        <a @click="open(`https://www.tumblr.com/share/link?` +
                     `url=https://cryptographics.app/cryptographic/${image.id}`)"
         >
             <IcoTumblr />

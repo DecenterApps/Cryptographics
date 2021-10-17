@@ -36,7 +36,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { changeAssetPackPrice } from 'services/ethereumService';
 import { TOGGLE_MODAL, SHOW_LOADING_MODAL, HIDE_LOADING_MODAL, CHANGE_LOADING_CONTENT }from 'store/modal/types';
-import { METAMASK_ADDRESS, NOTIFICATIONS, PUSH_NOTIFICATION, REMOVE_NOTIFICATION } from 'store/user-config/types';
+import { ADDRESS, NOTIFICATIONS, PUSH_NOTIFICATION, REMOVE_NOTIFICATION } from 'store/user-config/types';
 import { parseError } from '../../../services/helpers';
 
 export default {
@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      address: METAMASK_ADDRESS,
+      address: ADDRESS,
       notifications: NOTIFICATIONS
     })
   },

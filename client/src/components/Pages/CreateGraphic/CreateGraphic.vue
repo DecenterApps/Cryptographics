@@ -36,11 +36,10 @@ import {
   CLEAR_ASSET_PACKS
 } from "store/canvas/types";
 import { TOGGLE_MODAL } from "store/modal/types";
-import { METAMASK_APPROVED, METAMASK_ADDRESS } from "store/user-config/types";
+import { PROVIDER_CONNECTED, ADDRESS } from "store/user-config/types";
 import { mapActions, mapGetters } from "vuex";
 import { getLandingPacks } from "services/ethereumService";
 import StepHeader from "shared/StepHeader/StepHeader";
-import { isMetaMaskLocked } from "services/helpers";
 
 export default {
   name: "CreateGraphic",
@@ -56,8 +55,8 @@ export default {
   computed: {
     ...mapGetters({
       selectedAssetPacks: SELECTED_ASSET_PACKS,
-      approvedMetamask: METAMASK_APPROVED,
-      userAddress: METAMASK_ADDRESS
+      providerConnected: PROVIDER_CONNECTED,
+      userAddress: ADDRESS
     })
   },
   methods: {
@@ -67,12 +66,6 @@ export default {
       openModal: TOGGLE_MODAL
     }),
     async changeStep(step) {
-      const { currentProvider: cp } = window.web3;
-      const hasWallet = !!cp.isMetaMask || !!cp.isStatus || !!cp.isTrust || !!cp.isToshi;
-      if (!this.userAddress) {
-        return this.openModal("metaMaskInfo");
-      }
-
       window.scrollTo(0, 0);
       this.currentStep = step;
       console.log("CHANGING STEP ", step);
@@ -81,7 +74,6 @@ export default {
         "1": 4,
         "2": 2
       };
-      if (window._paq) window._paq.push(["trackGoal", events[step]]);
     }
   },
   async mounted() {

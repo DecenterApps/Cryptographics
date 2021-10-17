@@ -16,7 +16,7 @@
           <cg-button
             button-style="primary"
             v-if="userAddress && userProfile"
-            @click="openModal('balances'); track('Open withdraw')"
+            @click="openModal('balances');"
           >Withdraw</cg-button>
         </div>
       </div>
@@ -120,7 +120,7 @@ import { TOGGLE_MODAL } from "store/modal/types";
 import { DEFAULT_AVATAR } from "config/constants";
 import {
   USERNAME,
-  METAMASK_ADDRESS,
+  ADDRESS,
   AVATAR,
   SET_CREATED_ASSETS_PACKS_IDS,
   SET_BOUGHT_ASSETS_PACKS_IDS,
@@ -172,7 +172,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUserAddress: METAMASK_ADDRESS,
+      currentUserAddress: ADDRESS,
       currentUserUsername: USERNAME,
       currentUserAvatar: AVATAR,
       createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
@@ -236,7 +236,6 @@ export default {
       fetchBalances: FETCH_BALANCES,
       SET_CREATED_ASSETS_PACKS_IDS,
       SET_BOUGHT_ASSETS_PACKS_IDS,
-      openModal: TOGGLE_MODAL
     }),
     async onCreated() {
       if (this.userProfile) {
@@ -306,9 +305,6 @@ export default {
     changeTab(type) {
       this.currentTab = type;
     },
-    track(event) {
-      if (window._paq) window._paq.push(["trackEvent", "Profile", event]);
-    }
   }
 };
 </script>

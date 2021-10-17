@@ -13,10 +13,10 @@ import * as helpers from 'services/helpers';
 import { preloadImages } from './helpers';
 
 const digitalPrintImageContractAddress = config.digitalPrintImageContract.networks[clientConfig.network].address;
-const digitalPrintImageContract = () => new web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
+const digitalPrintImageContract = () => new window._web3.eth.Contract(config.digitalPrintImageContract.abi, digitalPrintImageContractAddress);
 
 const assetManagerContractAddress = config.assetManagerContract.networks[clientConfig.network].address;
-const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const DELAY = 150;
 
@@ -78,7 +78,7 @@ export const createAssetPack = (coverImage, attributes, ipfsHashes, price, accou
         coverImage,
         attributes,
         ipfsHashes,
-        web3.utils.toWei(price),
+        window._web3.utils.toWei(price),
         metadataIpfsHash,
       ).send({
         from: account
@@ -213,9 +213,8 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) =>
 
     image.onload = () => {
       const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
-      const leftAlign = left;
 
-      context.drawImage(image, leftAlign, verticalAlign, image.width, image.height);
+      context.drawImage(image, left, verticalAlign, image.width, image.height);
       resolve();
     };
     image.onerror = (err) => console.error(err);

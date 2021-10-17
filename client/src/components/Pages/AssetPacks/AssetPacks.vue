@@ -17,7 +17,7 @@
             @click="showPacks = 'all'"
           >All</cg-button>
           <cg-button
-            v-if="approvedMetamask"
+            v-if="providerConnected"
             :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
             @click="showPacks = 'created'"
           >Created by You</cg-button>
@@ -38,12 +38,12 @@
 import AssetPacksPagination from "../Profile/template/AssetPacksPagination.vue";
 import { mapGetters, mapActions } from "vuex";
 import {
-  METAMASK_ADDRESS,
+  ADDRESS,
   SET_CREATED_ASSETS_PACKS_IDS,
   SET_BOUGHT_ASSETS_PACKS_IDS,
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS,
-  METAMASK_APPROVED
+  PROVIDER_CONNECTED
 } from "store/user-config/types";
 import { getNumberOfAssetPacks } from "services/ethereumService";
 
@@ -64,9 +64,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      metamaskAddress: METAMASK_ADDRESS,
+      address: ADDRESS,
       createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
-      approvedMetamask: METAMASK_APPROVED
+      providerConnected: PROVIDER_CONNECTED
     })
   },
   watch: {

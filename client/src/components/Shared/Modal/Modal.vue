@@ -3,7 +3,8 @@
     <div class="overlay" @click="closeModal"></div>
     <div :class="['content', smallerPadding(content)]">
       <button-icon icon-type="close" @click="closeModal"/>
-      <edit-profile v-if="content === 'editProfile'"/>
+      <connection-modal v-if="content === 'connectionModal'"/>
+      <edit-profile v-else-if="content === 'editProfile'"/>
       <edit-pack-price
         v-else-if="content && content.name === 'editPackPrice'"
         v-bind="content.data"
@@ -39,10 +40,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { TOGGLE_MODAL } from "store/modal/types";
-import { isMetaMaskLocked } from "services/helpers";
-import { METAMASK_ADDRESS, METAMASK_APPROVED } from "store/user-config/types";
+import { ADDRESS, PROVIDER_CONNECTED } from "store/user-config/types";
 
 import EditProfile from "shared/EditProfile/EditProfile.vue";
+import ConnectionModal from "shared/ConnectionModal/ConnectionModal.vue";
 import EditPackPrice from "shared/EditPackPrice/EditPackPrice.vue";
 import SetUsername from "shared/SetUsername/SetUsername.vue";
 import SuccessMessage from "shared/SuccessMessage/SuccessMessage.vue";
@@ -73,7 +74,8 @@ export default {
     BalancesModal,
     MetaMaskInfo,
     CoinbaseInfo,
-    AssetPackUploadError
+    AssetPackUploadError,
+    ConnectionModal,
   },
   watch: {
     userAddress: function(val) {
@@ -81,7 +83,7 @@ export default {
     },
   },
   async beforeMount() {
-    const { currentProvider: cp } = window.web3;
+    const { currentProvider: cp } = window._web3;
     const { userAgent: ua } = navigator;
     this.hasMetaMask = !!cp.isMetaMask;
     this.isAndroid = ua.includes("Android");
@@ -91,7 +93,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
+      userAddress: ADDRESS,
     })
   },
   methods: {

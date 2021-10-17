@@ -66,7 +66,7 @@
   } from 'services/ethereumService';
   import { paginateArray } from 'services/helpers';
   import {
-    METAMASK_ADDRESS,
+    ADDRESS,
     CREATED_ASSETS_PACKS_IDS,
     BOUGHT_ASSETS_PACKS_IDS,
     BANNED_ASSET_PACK_IDS,
@@ -108,7 +108,7 @@
     },
     computed: {
       ...mapGetters({
-        metamaskAddress: METAMASK_ADDRESS,
+        address: ADDRESS,
         bannedIDs: BANNED_ASSET_PACK_IDS,
       })
     },
@@ -144,12 +144,6 @@
         const selectedPacks = paginateArray(this.filteredIds, currentPage, this.showPerPage);
         this.assetPacks = await getPackInformation(selectedPacks);
         this.loading = false;
-        this.track('Change page', currentPage)
-      },
-      track(event, value) {
-        if (!window._paq) return;
-        if (value) return window._paq.push(['trackEvent', 'Asset Packs', event, event, value]);
-        window._paq.push(['trackEvent', 'Asset Packs', event]);
       },
     }
   };

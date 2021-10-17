@@ -47,7 +47,7 @@
   import Canvas from '../../CreateGraphic/GraphicBuilder/Canvas.vue';
   import { resizeCanvas, shuffleArray, uniq } from 'services/helpers';
   import { mapGetters } from 'vuex';
-  import { METAMASK_ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
+  import { ADDRESS, USERNAME, BOUGHT_ASSETS_PACKS_IDS } from 'store/user-config/types';
   import { TOGGLE_MODAL, TOGGLE_LOADING_MODAL, CHANGE_LOADING_CONTENT, HIDE_LOADING_MODAL } from 'store/modal/types';
   import { CANVAS_DRAWING, SELECTED_ASSET_PACKS } from 'store/canvas/types';
 

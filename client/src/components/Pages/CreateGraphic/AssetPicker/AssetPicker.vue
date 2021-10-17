@@ -54,12 +54,12 @@
           @click="toggleAssetPacks('all')"
         >All</cg-button>
         <cg-button
-          v-if="approvedMetamask"
+          v-if="providerConnected"
           :button-style="showPacks === 'bought' ? 'tab-active' : 'tab-inactive'"
           @click="toggleAssetPacks('bought')"
         >Bought</cg-button>
         <cg-button
-          v-if="approvedMetamask"
+          v-if="providerConnected"
           :button-style="showPacks === 'created' ? 'tab-active' : 'tab-inactive'"
           @click="toggleAssetPacks('created')"
         >Created by You</cg-button>
@@ -91,10 +91,9 @@
 import Decimal from "decimal.js";
 import AssetPickerPagination from "../template/AssetPickerPagination.vue";
 import {
-  METAMASK_ADDRESS,
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS,
-  METAMASK_APPROVED
+  PROVIDER_CONNECTED
 } from "store/user-config/types";
 import { TOGGLE_ASSET_PACK, SELECTED_ASSET_PACKS } from "store/canvas/types";
 import { mapGetters, mapActions } from "vuex";
@@ -113,7 +112,7 @@ export default {
       createdPacksIDs: CREATED_ASSETS_PACKS_IDS,
       boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
       selectedAssetPacks: SELECTED_ASSET_PACKS,
-      approvedMetamask: METAMASK_APPROVED
+      providerConnected: PROVIDER_CONNECTED
     }),
     totalPrice() {
       const filteredPacks = this.selectedAssetPacks.filter(item => {

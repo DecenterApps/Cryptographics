@@ -82,7 +82,7 @@
 import { sendETHtoAddress } from 'services/ethereumService';
 import axios from 'axios';
 import { PRINT_ORDERS_ADDRESS } from 'config/constants';
-import { METAMASK_ADDRESS } from 'store/user-config/types';
+import { ADDRESS } from 'store/user-config/types';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -117,7 +117,7 @@ export default {
   },
   computed: {
       ...mapGetters({
-          userAddress: METAMASK_ADDRESS
+          userAddress: ADDRESS
       })
   },
   created() {
@@ -129,7 +129,7 @@ export default {
         this.shippingMethod = newValue;
     },
     validateEmail(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     },
     validateForm() {
@@ -139,7 +139,7 @@ export default {
       if (!this.isValidEmail || !this.isValidQuantity || !this.areFieldsEmpty) {
         this.isSubmitting = false;
         return false;
-      };
+      }
       return true;
     },
     orderPrint() {

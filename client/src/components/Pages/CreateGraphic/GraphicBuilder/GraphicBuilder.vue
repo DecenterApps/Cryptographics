@@ -25,7 +25,7 @@
       <div
         class="canvas-with-overlay-wrapper"
         @click="(currentStep === 1)
-                    ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas() && track('Recompose'))
+                    ? (isCanvasDrawing || gettingImageData) ? null : (renderCanvas())
                     : (download())"
       >
         <overlay v-if="currentStep === 2" key="1">
@@ -71,16 +71,16 @@
       <div class="controls">
         <div class="top-controls">
           <cg-checkbox
-            v-on:checked="(val) => { canvasData.frame = val; track('Toggle frame') }"
+            v-on:checked="(val) => { canvasData.frame = val; }"
             :disabled="isCanvasDrawing || gettingImageData"
           >Add white frame</cg-checkbox>
           <cg-checkbox
-            v-on:checked="(val) => { toggleRatio(val); track('Toggle format') }"
+            v-on:checked="(val) => { toggleRatio(val);}"
             :disabled="isCanvasDrawing || gettingImageData"
           >Use square format</cg-checkbox>
           <cg-button
             :loading="isCanvasDrawing || gettingImageData"
-            @click="renderCanvas(); track('Recompose')"
+            @click="renderCanvas();"
             :disabled="selectedAssetPacks.length === 0"
             button-style="secondary"
           >Recompose</cg-button>
@@ -182,7 +182,7 @@
             />
             <cg-button
               :loading="isCanvasDrawing"
-              @click="buyImage(); track('Claim')"
+              @click="buyImage();"
             >Claim cryptographic</cg-button>
           </div>
         </div>
@@ -208,7 +208,7 @@ import * as ipfsService from "services/ipfsService";
 import { parseError, resizeCanvas, shuffleArray, uniq } from "services/helpers";
 import { mapActions, mapGetters } from "vuex";
 import {
-  METAMASK_ADDRESS,
+  ADDRESS,
   USERNAME,
   BOUGHT_ASSETS_PACKS_IDS,
   NOTIFICATIONS,
@@ -263,7 +263,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      userAddress: METAMASK_ADDRESS,
+      userAddress: ADDRESS,
       username: USERNAME,
       isCanvasDrawing: CANVAS_DRAWING,
       boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
@@ -286,6 +286,15 @@ export default {
       if (newStep === 2) {
         this.saveImageToLS();
       }
+    },
+    userAddress: async function () {
+      let picked = [];
+      for (let i = 0; i < this.canvasData.assets.length; i++) { picked.push(this.canvasData.assets[i].id); }
+
+      let price = await calculatePrice(picked, this.userAddress);
+
+      if (this.selectedAssets.length === 0) { return this.imagePrice = 0; }
+      this.imagePrice = utils.scientificToDecimal(parseFloat(price));
     }
   },
   methods: {
@@ -327,16 +336,7 @@ export default {
     async buyImage() {
       if (!this.checkTitle()) return;
       if (!this.userAddress) {
-        const { userAgent: ua } = navigator;
-        const isMobile =
-          ua.includes("Android") ||
-          ua.includes("iPad") ||
-          ua.includes("iPhone");
-        if (isMobile)
-          return this.openModal({
-            name: "coinbaseInfo",
-            data: { deeplink: this.getLink() }
-          });
+        return this.openModal("metaMaskInfo");
       }
 
       if (this.username === "" || this.username === "Anon") {
@@ -370,6 +370,7 @@ export default {
         console.log(extraData);
 
         this.openLoadingModal("Please confirm the transaction in MetaMask.");
+
         let transactionPromise = await imageService.createImage(
           this.randomHashIds,
           this.timestamp,
@@ -439,7 +440,6 @@ export default {
         if (selectedAssets.length === 0) {
           this.imagePrice = 0;
         }
-        console.log(price);
         this.imagePrice = utils.scientificToDecimal(parseFloat(price));
 
         console.log("PRICE : " + this.imagePrice);
@@ -462,7 +462,6 @@ export default {
         link.click();
         document.body.removeChild(link);
       }, "image/jpeg");
-      this.track("Download");
     },
     changeStep(step) {
       this.$emit("stepChange", step);
@@ -472,10 +471,7 @@ export default {
     },
     displayPrice() {
       if (isNaN(this.imagePrice) || this.imagePrice === null) return null;
-      return web3.utils.fromWei(this.imagePrice.toString(), "ether");
-    },
-    track(event) {
-      if (window._paq) window._paq.push(["trackEvent", "Composer", event]);
+      return window._web3.utils.fromWei(this.imagePrice.toString(), "ether");
     },
     saveImageToLS() {
       const createdGraphic = {

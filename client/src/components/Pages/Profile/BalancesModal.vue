@@ -46,7 +46,7 @@
   import { mapActions, mapGetters } from 'vuex';
   import { fromWei, withdraw } from 'services/ethereumService';
   import {
-    METAMASK_ADDRESS,
+    ADDRESS,
     BOUGHT_ASSETS_PACKS_IDS,
     BALANCES,
     FETCH_BALANCES,
@@ -65,7 +65,7 @@
     },
     computed: {
       ...mapGetters({
-        currentUserAddress: METAMASK_ADDRESS,
+        currentUserAddress: ADDRESS,
         boughtPacksIDs: BOUGHT_ASSETS_PACKS_IDS,
         balances: BALANCES,
       }),
@@ -85,7 +85,6 @@
         changeLoadingContent: CHANGE_LOADING_CONTENT,
       }),
       async withdraw(from) {
-        this.track('Withdraw ' + from);
         this.openLoadingModal('Please confirm the transaction in MetaMask.');
         const transactionPromise = await withdraw(from);
         this.changeLoadingContent('Please wait while the transaction is written to the blockchain. You will receive your funds shortly.');
@@ -93,9 +92,6 @@
         this.closeLoadingModal();
         this.openModal('Transaction successful! Please check your wallet balance.');
         this.fetchBalances();
-      },
-      track(event) {
-        if (window._paq) window._paq.push(['trackEvent', 'Withdraw modal', event]);
       },
     }
   };

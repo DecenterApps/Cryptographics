@@ -55,7 +55,7 @@ import { getSelectedAssetPacksWithAssetData } from "services/ethereumService";
 import { paginateArray } from "services/helpers";
 import { mapGetters } from "vuex";
 import {
-  METAMASK_ADDRESS,
+  ADDRESS,
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS
 } from "store/user-config/types";
@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      metamaskAddress: METAMASK_ADDRESS
+      address: ADDRESS
     })
   },
   asyncComputed: {
@@ -129,7 +129,7 @@ export default {
         return assetPacks;
       },
       watch() {
-        this.metamaskAddress;
+        this.address;
       }
     }
   },

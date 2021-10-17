@@ -26,7 +26,7 @@
 
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
-  import { SET_USER_CONFIG, SET_USERNAME, UPDATE_USER_CONFIG, NETWORK } from 'store/user-config/types';
+  import { SET_USER_CONFIG, UPDATE_USER_CONFIG, NETWORK } from 'store/user-config/types';
   import { TOGGLE_MODAL } from 'store/modal/types';
 
   import CgHeader from 'shared/CgHeader/CgHeader.vue';
@@ -35,6 +35,7 @@
   import clientConfig from 'config/clientConfig.json';
   import { networksDisplay } from 'config/constants';
   import Notifications from './Shared/Notifications/Notifications';
+  import { checkProvider } from '../services/helpers';
 
   export default {
     name: 'App',
@@ -52,8 +53,14 @@
     beforeMount() {
       this[SET_USER_CONFIG]();
     },
-    mounted() {
-      this[UPDATE_USER_CONFIG]();
+    created() {
+       checkProvider();
+    },
+    watch: {
+      address: function (newAddress) {
+        console.log(newAddress);
+        this[UPDATE_USER_CONFIG]();
+      }
     },
     methods: {
       ...mapActions({
@@ -67,6 +74,7 @@
         network: NETWORK,
       }),
       ...mapState({
+        address: ({ userConfig }) => userConfig.address,
         showLoadingModal: ({ modal }) => modal.showLoadingModal,
         showModal: ({ modal }) => modal.showModal,
         content: ({ modal }) => modal.content

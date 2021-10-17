@@ -145,7 +145,7 @@ function scientificToDecimal(num) {
     }
   }
   return num;
-};
+}
 
 const padToFour = (number) => { return number <= 9999 ? ('000' + number).slice(-4) : number; };
 

@@ -27,19 +27,32 @@
             </div>
           </div>
           <div class="profile">
-            <router-link
-              v-if="approvedMetamask"
-              class="profile-link"
-              to="/profile"
-              @click.native="closeMenu"
-            >
-              {{ username }}
-              <img class="avatar" :src="avatar">
-            </router-link>
+            <div class="profile-connected" v-if="providerConnected">
+              <div class="profile-connected-controls">
+                <router-link
+                  class="profile-link"
+                  to="/profile"
+                  @click.native="closeMenu"
+                >
+                  {{ username }}
+                </router-link>
+                <cg-button
+                  button-style="transparent inverted"
+                  @click="disconnect()"
+                >Disconnect</cg-button>
+              </div>
+              <router-link
+                  class="profile-link"
+                  to="/profile"
+                  @click.native="closeMenu"
+              >
+                <img class="avatar" :src="avatar">
+              </router-link>
+            </div>
             <cg-button
-              v-else-if="!approvedMetamask"
+              v-else-if="!providerConnected"
               button-style="transparent inverted"
-              @click="approve()"
+              @click="openConnectionModal();"
             >Connect</cg-button>
             <button-link
               to="/create-cryptographic"
@@ -56,15 +69,16 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { ipfsNodePath } from "config/constants";
-import { metamaskApprove } from "services/helpers";
 import {
   USERNAME,
   AVATAR,
-  METAMASK_APPROVED,
-  SET_APPROVAL
+  PROVIDER_CONNECTED,
+  LOGIN_METAMASK,
+  LOG_OUT,
 } from "store/user-config/types";
 
 import Logo from "../UI/Logo.vue";
+import { OPEN_CONNECTION_MODAL } from '../../../store/modules/user-config/types';
 
 export default {
   name: "CgHeader",
@@ -89,24 +103,18 @@ export default {
     ...mapGetters({
       username: USERNAME,
       avatar: AVATAR,
-      approvedMetamask: METAMASK_APPROVED
+      providerConnected: PROVIDER_CONNECTED
     })
   },
   methods: {
     ...mapActions({
-      setApproval: SET_APPROVAL
+      LOGIN_METAMASK,
+      disconnect: LOG_OUT,
+      openConnectionModal: OPEN_CONNECTION_MODAL,
     }),
     closeMenu() {
       this.showMenu = false;
     },
-    async approve() {
-      try {
-        await metamaskApprove();
-        await this.setApproval();
-      } catch (e) {
-        console.log(e);
-      }
-    }
   }
 };
 </script>
@@ -296,6 +304,25 @@ export default {
     display: flex;
     margin-left: 100px;
     align-items: center;
+    &-connected {
+      display: inline-flex;
+      &-controls {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        a {
+          height: auto;
+          margin-bottom: 3px;
+        }
+        .button {
+          padding: 0;
+          height: auto;
+          opacity: 0.7;
+          font-size: 10px;
+        }
+      }
+    }
     .profile-link {
       display: flex;
       align-items: center;

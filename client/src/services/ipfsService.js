@@ -9,7 +9,7 @@ const node = ipfsAPI.create({
 const replicationNodes = [
   'https://ipfs.decenter.com',
   'https://ipfs.io',
-  'https://ipfs.infura.io:5001',
+  // 'https://ipfs.infura.io:5001',
 ];
 
 export const bootstrapNodes = [

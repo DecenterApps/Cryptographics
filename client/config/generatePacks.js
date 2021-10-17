@@ -13,7 +13,7 @@ const { rpcHttpProvider } = require('./clientConfig.json');
 const web3 = new Web3(new Web3.providers.HttpProvider(rpcHttpProvider));
 
 const assetManagerContractAddress = config.assetManagerContract.networks['1'].address;
-const assetManagerContract = () => new web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
+const assetManagerContract = () => new window._web3.eth.Contract(config.assetManagerContract.abi, assetManagerContractAddress);
 
 const getFileContent = async (hash) => {
   // const ipfsTimeout = setTimeout(() => {
@@ -73,7 +73,7 @@ const getAssetPackData = async (assetPackId) => {
     packCoverIpfs,
     packCoverSrc: `https://ipfs.decenter.com/ipfs/${packCoverIpfs}`,
     creator,
-    price: web3.utils.fromWei(price, 'ether'),
+    price: window._web3.utils.fromWei(price, 'ether'),
     id: assetPackId,
     assets,
   };

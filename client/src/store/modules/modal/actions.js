@@ -8,6 +8,7 @@ import {
   CHANGE_LOADING_CONTENT,
   HIDE_LOADING_MODAL,
   SHOW_LOADING_MODAL,
+  TOGGLE_ERR_MODAL,
 } from './types';
 
 export default {
@@ -28,5 +29,12 @@ export default {
   },
   [CHANGE_LOADING_CONTENT]: ({ commit, state }, loadingContent) => {
     commit(MUTATE_LOADING_CONTENT, loadingContent);
+  },
+  [TOGGLE_ERR_MODAL]: ({ commit, dispatch, rootState }, content) => {
+    if (rootState && rootState.modal && rootState.modal.showModal) {
+      commit(MUTATE_CONTENT, 'Error:\n\n' + content);
+    } else {
+      dispatch(TOGGLE_MODAL, 'Error:\n\n' + content);
+    }
   }
 };
