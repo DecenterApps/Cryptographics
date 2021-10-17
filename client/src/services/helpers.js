@@ -19,14 +19,11 @@ export const resizeCanvas = (oldCanvas, width, height) => {
 };
 
 export const isMetamaskApproved = async () => {
-  if (!window.ethereum || !window.ethereum.enable)
-    return true
-  if (window.ethereum._metamask && window.ethereum._metamask.isApproved)
-    return window.ethereum._metamask.isApproved()
+  if (!window.ethereum || !window.ethereum.enable) return true
+  if (window.ethereum._metamask && window.ethereum._metamask.isApproved) return window.ethereum._metamask.isApproved()
   const acc = await window._web3.eth.getAccounts()
-  if (acc.length)
-    return true
-  return false
+  return !!acc.length;
+
 }
 
 export const metamaskApprove = async () => {
@@ -39,8 +36,7 @@ export const metamaskApprove = async () => {
 
 export const isMetaMaskLocked = async () => {
   const accounts = await window._web3.eth.getAccounts();
-  if (!accounts.length) return true;
-  return false;
+  return !accounts.length;
 };
 
 export function checkProvider() {

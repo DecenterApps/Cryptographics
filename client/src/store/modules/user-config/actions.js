@@ -8,7 +8,6 @@ import {
   SET_USER_CONFIG,
   SET_CREATED_ASSETS_PACKS_IDS,
   SET_BOUGHT_ASSETS_PACKS_IDS,
-  SET_APPROVAL,
   UPDATE_USER_CONFIG,
   CHECK_USERNAME_EXISTENCE,
   EDIT_PROFILE,
@@ -191,7 +190,7 @@ export default {
         if (accounts[0] !== address && await isMetaMaskApproved()) dispatch(LOGIN_METAMASK, false);
       });
 
-      window.ethereum.on('chainChanged', async (chainId) => {
+      window.ethereum.on('chainChanged', async () => {
         if (state.accountType === 'metamask' && await isMetaMaskApproved()) {
           dispatch(LOGIN_METAMASK, false);
         }
@@ -254,31 +253,16 @@ export default {
     let boughtIDs = await getBoughtAssetPacks(state.address);
     commit(MUTATE_BOUGHT_ASSETS_PACKS_IDS, [...boughtIDs].reverse());
   },
-  [SET_APPROVAL]: async ({ commit }) => {
-    // const metamaskApproved = await isMetaMaskApproved();
-    // commit(MUTATE_APPROVAL, metamaskApproved);
-  },
   [SET_USER_CONFIG]: async ({ dispatch }) => {
     await dispatch(SET_ACC_CHANGE);
     await dispatch(SILENT_LOGIN);
-    console.log('ovde');
     console.log(window._web3);
-
-    // dispatch(SET_APPROVAL);
-    // dispatch(UPDATE_USER_CONFIG);
   },
-  [UPDATE_USER_CONFIG]: async ({ dispatch, state }) => {
+  [UPDATE_USER_CONFIG]: async ({ dispatch }) => {
     dispatch(SET_AVATAR);
     dispatch(SET_USERNAME);
     dispatch(SET_CREATED_ASSETS_PACKS_IDS);
     dispatch(SET_BOUGHT_ASSETS_PACKS_IDS);
-    // setInterval(async function () {
-    //   let changedAddress = await getAccount();
-    //   if (changedAddress !== state.address) {
-    //     dispatch(SET_USER_CONFIG);
-    //   }
-    // }, 1000);
-    // return true;
   },
   [CHECK_USERNAME_EXISTENCE]: async ({ commit, state }, newUsername) => {
     let isExisting = await usernameExists(newUsername);
@@ -320,8 +304,7 @@ export default {
         }
         if (newAvatarBytes32 === '') {
           if (state.avatar === DEFAULT_AVATAR) {
-            const initialAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
-            newAvatarBytes32 = initialAvatarBytes32;
+            newAvatarBytes32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
           }
           if (state.avatar !== DEFAULT_AVATAR) {
             newAvatarBytes32 = await getAvatar(state.address);

@@ -73,7 +73,6 @@ import {
   USERNAME,
   AVATAR,
   PROVIDER_CONNECTED,
-  SET_APPROVAL,
   LOGIN_METAMASK,
   LOG_OUT,
 } from "store/user-config/types";
@@ -110,7 +109,6 @@ export default {
   methods: {
     ...mapActions({
       LOGIN_METAMASK,
-      setApproval: SET_APPROVAL,
       disconnect: LOG_OUT,
       openConnectionModal: OPEN_CONNECTION_MODAL,
     }),

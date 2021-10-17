@@ -91,7 +91,6 @@
 import Decimal from "decimal.js";
 import AssetPickerPagination from "../template/AssetPickerPagination.vue";
 import {
-  ADDRESS,
   CREATED_ASSETS_PACKS_IDS,
   BOUGHT_ASSETS_PACKS_IDS,
   PROVIDER_CONNECTED

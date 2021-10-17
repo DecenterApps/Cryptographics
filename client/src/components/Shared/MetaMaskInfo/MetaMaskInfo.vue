@@ -16,7 +16,7 @@ import { mapActions } from "vuex";
 import roundLogo from "assets/round-logo.png";
 import IcoError from "../../Shared/UI/Icons/IcoError";
 import { TOGGLE_MODAL } from "store/modal/types";
-import { OPEN_CONNECTION_MODAL, LOGIN_METAMASK, SET_APPROVAL } from '../../../store/modules/user-config/types';
+import { OPEN_CONNECTION_MODAL, LOGIN_METAMASK } from '../../../store/modules/user-config/types';
 
 export default {
   name: "MetaMaskInfo",
@@ -44,7 +44,6 @@ export default {
       LOGIN_METAMASK,
       openConnectionModal: OPEN_CONNECTION_MODAL,
       openModal: TOGGLE_MODAL,
-      setApproval: SET_APPROVAL
     }),
   }
 };

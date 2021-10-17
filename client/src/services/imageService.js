@@ -213,9 +213,8 @@ const drawBottomFrame = (context, canvasHeight, canvasWidth, frame) =>
 
     image.onload = () => {
       const verticalAlign = canvasHeight - bottom / 2 - image.height / 2;
-      const leftAlign = left;
 
-      context.drawImage(image, leftAlign, verticalAlign, image.width, image.height);
+      context.drawImage(image, left, verticalAlign, image.width, image.height);
       resolve();
     };
     image.onerror = (err) => console.error(err);

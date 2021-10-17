@@ -507,9 +507,7 @@ export const getAssetMetadata = (seed, assetId) => {
 
 export const getAssetsOrigins = async (assetIds) => {
   const assetPacks = await assetManagerContract().methods.pickUniquePacks(assetIds).call();
-  const onlyUnique = [...new Set(assetPacks)];
-
-  return onlyUnique;
+  return [...new Set(assetPacks)];
 };
 
 export const getImage = async (randomSeed, iterations, potentialAssets, finalSeed) => {
@@ -570,8 +568,7 @@ export const getAssetStats = async (id) => {
 };
 
 export const getAssetInfo = async id => {
-  let info = await assetManagerContract().methods.getAssetInfo(id).call();
-  return info;
+  return await assetManagerContract().methods.getAssetInfo(id).call();
 };
 
 export const getPositionsOfAssetsInImage = async (finalSeed, potentialAssets, width, height) => {
