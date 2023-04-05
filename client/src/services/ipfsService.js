@@ -83,24 +83,31 @@ export const replicate = async (hash, type) =>
     });
   });
 
-export const getFileContent = (hash) =>
+export const getFileContent = (hash, node = 0) =>
   new Promise(async (resolve, reject) => {
-    const ipfsTimeout = setTimeout(() => {
-      reject('Couldn\'t fetch data. (TIMEOUT)');
-    }, 20000);
+    let ipfsTimeout;
     try {
-      // console.log(node, hash);
-      // const file = await node.files.read([hash]); // TODO for unknown reason this returns read { [suspended] }
-      // console.log(file);
-      // resolve(new TextDecoder('utf-8').decode(file));
-      const req = await fetch(`https://ipfs.decenter.com/ipfs/${hash}`);
-      if (!req.ok) throw new Error('failed fetching');
+      if (node > replicationNodes.length - 1) {
+        throw new Error('Couldn\'t fetch data. (RUN-OUT-OF-REPLICATION-NODES)');
+      }
+      ipfsTimeout = setTimeout(() => {
+        throw new Error('Couldn\'t fetch data. (TIMEOUT)');
+      }, 6000);
+      const req = await fetch(`${replicationNodes[node]}/ipfs/${hash}`);
+      if (req && !req.ok) {
+        throw new Error('failed fetching');
+      }
       const response = await req.json();
       clearTimeout(ipfsTimeout);
       resolve(JSON.stringify(response));
     } catch (e) {
       console.log(e);
-      reject(e.message);
+      if (ipfsTimeout) clearTimeout(ipfsTimeout);
+      if (node + 1 > replicationNodes.length - 1) {
+        reject(e.message)
+      } else {
+        await getFileContent(hash, node + 1);
+      }
     }
   });
 
