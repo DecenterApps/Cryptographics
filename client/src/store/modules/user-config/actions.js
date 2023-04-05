@@ -259,7 +259,6 @@ export default {
   [SET_USER_CONFIG]: async ({ dispatch }) => {
     await dispatch(SET_ACC_CHANGE);
     await dispatch(SILENT_LOGIN);
-    console.log(window._web3);
   },
   [UPDATE_USER_CONFIG]: async ({ dispatch }) => {
     dispatch(SET_AVATAR);

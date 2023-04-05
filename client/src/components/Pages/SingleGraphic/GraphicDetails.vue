@@ -73,7 +73,6 @@
                         Ownership history
                     </cg-button>
                     <div class="button-group">
-                        <cg-button button-style="secondary" @click="$emit('showPrintForm')">Order print</cg-button>
                         <cg-button @click="sellGraphic = !sellGraphic">List for sale</cg-button>
                     </div>
                 </div>
@@ -114,7 +113,6 @@
                         <cg-button button-style="secondary" class="remove-button" @click="changePrice = true">
                             Change price
                         </cg-button>
-                        <cg-button @click="$emit('showPrintForm')">Order print</cg-button>
                     </div>
                 </div>
                 <div class="bottom-controls" v-else>

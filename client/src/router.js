@@ -12,7 +12,6 @@ import CreateAssetPack from 'pages/CreateAssetPack/CreateAssetPack.vue';
 import AssetPackPreview from 'pages/AssetPackPreview/AssetPackPreview.vue';
 import FAQ from 'pages/FAQ/FAQ.vue';
 import Tutorial from 'pages/Tutorial/Tutorial.vue';
-import ActivityLog from 'pages/ActivityLog/ActivityLog.vue';
 import UIShowcase from 'shared/UI/UIShowcase.vue';
 
 Vue.use(VueRouter);
@@ -56,7 +55,6 @@ const router = new VueRouter({
     // { path: '/ui-test', component: UIShowcase },
     { path: '/faq', component: FAQ, meta: { title: 'FAQ | Cryptographics' } },
     { path: '/tutorial', component: Tutorial, meta: { title: 'Tutorial | Cryptographics' } },
-    { path: '/activity-log', component: ActivityLog, meta: { title: 'Activity log | Cryptographics' } },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };
