@@ -7,7 +7,6 @@ node_modules
 scripts/doxity/node_modules
 dev-scripts
 contracts/.env
-yarn.lock
 lib/core/metadata.js
 lib/core/MetadataBlog.js
 website/translated_docs
@@ -16,7 +15,6 @@ website/yarn.lock
 website/node_modules
 website/i18n/*
 !website/i18n/en.json
-package-lock.json
 client/config/config.json
 client/config/clientConfig.json
 client/config/landingAssetPacks.json
